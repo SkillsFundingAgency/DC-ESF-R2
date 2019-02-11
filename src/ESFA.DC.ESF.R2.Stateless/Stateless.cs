@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Fabric;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
@@ -16,7 +15,8 @@ namespace ESFA.DC.ESF.R2.Stateless
     {
         public Stateless(StatelessServiceContext context)
             : base(context)
-        { }
+        {
+        }
 
         /// <summary>
         /// Optional override to create listeners (e.g., TCP, HTTP) for this service replica to handle client or user requests.
@@ -33,7 +33,7 @@ namespace ESFA.DC.ESF.R2.Stateless
         /// <param name="cancellationToken">Canceled when Service Fabric needs to shut down this service instance.</param>
         protected override async Task RunAsync(CancellationToken cancellationToken)
         {
-            // TODO: Replace the following sample code with your own logic 
+            // TODO: Replace the following sample code with your own logic
             //       or remove this RunAsync override if it's not needed in your service.
 
             long iterations = 0;
@@ -42,7 +42,7 @@ namespace ESFA.DC.ESF.R2.Stateless
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                ServiceEventSource.Current.ServiceMessage(this.Context, "Working-{0}", ++iterations);
+                ServiceEventSource.Current.ServiceMessage(Context, "Working-{0}", ++iterations);
 
                 await Task.Delay(TimeSpan.FromSeconds(1), cancellationToken);
             }
