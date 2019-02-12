@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
-using Microsoft.ServiceFabric.Services.Runtime;
+using Autofac.Integration.ServiceFabric;
+using ESFA.DC.ServiceFabric.Helpers;
 
 namespace ESFA.DC.ESF.R2.Stateless
 {
@@ -18,16 +19,21 @@ namespace ESFA.DC.ESF.R2.Stateless
                 // Registering a service maps a service type name to a .NET type.
                 // When Service Fabric creates an instance of this service type,
                 // an instance of the class is created in this host process.
-                ServiceRuntime.RegisterServiceAsync(
-                    "ESFA.DC.ESF.R2.StatelessType",
-                    context => new Stateless(context))
-                    .GetAwaiter()
-                    .GetResult();
 
-                ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(Stateless).Name);
+                var builder = DIComposition.BuildContainer(new ConfigurationHelper());
 
-                // Prevents this host process from terminating so services keep running.
-                Thread.Sleep(Timeout.Infinite);
+                builder.RegisterServiceFabricSupport();
+
+                // Register the stateless service.
+                builder.RegisterStatelessService<Stateless>("ESFA.DC.ESF.Service.StatelessType");
+
+                using (var container = builder.Build())
+                {
+                    ServiceEventSource.Current.ServiceTypeRegistered(Process.GetCurrentProcess().Id, typeof(Stateless).Name);
+
+                    // Prevents this host process from terminating so services keep running.
+                    Thread.Sleep(Timeout.Infinite);
+                }
             }
             catch (Exception e)
             {

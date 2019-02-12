@@ -1,0 +1,16 @@
+﻿using System.IO.Compression;
+using System.Threading;
+using System.Threading.Tasks;
+using ESFA.DC.ESF.R2.Models;
+
+namespace ESFA.DC.ESF.R2.Interfaces.Reports
+{
+    public interface IModelReport
+    {
+        Task GenerateReport(
+            SupplementaryDataWrapper supplementaryDataWrapper,
+            SourceFileModel sourceFile,
+            ZipArchive archive,
+            CancellationToken cancellationToken);
+    }
+}
