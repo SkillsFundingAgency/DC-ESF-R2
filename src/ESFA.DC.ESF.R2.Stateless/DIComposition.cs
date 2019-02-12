@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using Autofac;
 using Autofac.Features.AttributeFilters;
 using ESFA.DC.Auditing.Interface;
+using ESFA.DC.Data.LARS.Model;
+using ESFA.DC.Data.LARS.Model.Interfaces;
+using ESFA.DC.Data.Postcodes.Model;
+using ESFA.DC.Data.Postcodes.Model.Interfaces;
+using ESFA.DC.Data.ULN.Model;
+using ESFA.DC.Data.ULN.Model.Interfaces;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
@@ -11,6 +17,9 @@ using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Service;
 using ESFA.DC.ESF.R2.Service.Config;
 using ESFA.DC.ESF.Service.Stateless.Handlers;
+using ESFA.DC.IO.AzureStorage;
+using ESFA.DC.IO.AzureStorage.Config.Interfaces;
+using ESFA.DC.IO.Interfaces;
 using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager;
 using ESFA.DC.JobContextManager.Interface;
@@ -24,9 +33,14 @@ using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.Mapping.Interface;
 using ESFA.DC.Queueing;
 using ESFA.DC.Queueing.Interface;
+using ESFA.DC.ReferenceData.FCS.Model;
+using ESFA.DC.ReferenceData.FCS.Model.Interface;
+using ESFA.DC.ReferenceData.Organisations.Model;
+using ESFA.DC.ReferenceData.Organisations.Model.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
 using ESFA.DC.ServiceFabric.Helpers.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace ESFA.DC.ESF.R2.Stateless
 {
@@ -38,7 +52,7 @@ namespace ESFA.DC.ESF.R2.Stateless
 
             RegisterLogger(container, configHelper);
 
-            var versionInfo = configHelper.GetSectionValues<VersionInfo>("VersionSection");
+            var versionInfo = configHelper.GetSectionValues<Service.Config.VersionInfo>("VersionSection");
             container.RegisterInstance(versionInfo).As<IVersionInfo>().SingleInstance();
 
             RegisterPersistence(container, configHelper);
@@ -84,16 +98,16 @@ namespace ESFA.DC.ESF.R2.Stateless
         private static void RegisterPersistence(ContainerBuilder containerBuilder, IConfigurationHelper configHelper)
         {
             // register azure blob storage service
-            //var azureBlobStorageOptions = configHelper.GetSectionValues<AzureStorageOptions>("AzureStorageSection");
-            //containerBuilder.Register(c =>
-            //        new AzureStorageKeyValuePersistenceConfig(
-            //            azureBlobStorageOptions.AzureBlobConnectionString,
-            //            azureBlobStorageOptions.AzureBlobContainerName))
-            //    .As<IAzureStorageKeyValuePersistenceServiceConfig>().SingleInstance();
+            var azureBlobStorageOptions = configHelper.GetSectionValues<AzureStorageOptions>("AzureStorageSection");
+            containerBuilder.Register(c =>
+                    new AzureStorageKeyValuePersistenceConfig(
+                        azureBlobStorageOptions.AzureBlobConnectionString,
+                        azureBlobStorageOptions.AzureBlobContainerName))
+                .As<IAzureStorageKeyValuePersistenceServiceConfig>().SingleInstance();
 
-            //containerBuilder.RegisterType<AzureStorageKeyValuePersistenceService>()
-            //    .As<IStreamableKeyValuePersistenceService>()
-            //    .InstancePerLifetimeScope();
+            containerBuilder.RegisterType<AzureStorageKeyValuePersistenceService>()
+                .As<IStreamableKeyValuePersistenceService>()
+                .InstancePerLifetimeScope();
 
             //var ilrConfig = configHelper.GetSectionValues<IRL1819Configuration>("ILR1819Section");
             //containerBuilder.Register(c => new ILR1819_DataStoreEntities(ilrConfig.ILR1819ConnectionString))
@@ -103,56 +117,52 @@ namespace ESFA.DC.ESF.R2.Stateless
             //    .As<IILR1819_DataStoreEntitiesValid>()
             //    .InstancePerLifetimeScope();
 
-            //_ilrLegacyConfiguration.ILR1617ConnectionString = ilrConfig.ILR1617ConnectionString;
-            //_ilrLegacyConfiguration.ILR1718ConnectionString = ilrConfig.ILR1718ConnectionString;
-            //containerBuilder.Register(c => _ilrLegacyConfiguration).As<ILRConfiguration>();
-
             //var esfConfig = configHelper.GetSectionValues<ESFConfiguration>("ESFSection");
             //containerBuilder.Register(c => new ESF_DataStoreEntities(esfConfig.ESFConnectionString))
             //    .As<IESF_DataStoreEntities>()
             //    .InstancePerLifetimeScope();
             //containerBuilder.RegisterInstance(esfConfig).As<ESFConfiguration>().SingleInstance();
 
-            //var fcsConfig = configHelper.GetSectionValues<FCSConfiguration>("FCSSection");
-            //var optionsBuilder = new DbContextOptionsBuilder<FcsContext>();
-            //optionsBuilder.UseSqlServer(
-            //    fcsConfig.FCSConnectionString,
-            //    providerOptions => providerOptions.CommandTimeout(60));
+            var fcsConfig = configHelper.GetSectionValues<FCSConfiguration>("FCSSection");
+            var optionsBuilder = new DbContextOptionsBuilder<FcsContext>();
+            optionsBuilder.UseSqlServer(
+                fcsConfig.FCSConnectionString,
+                providerOptions => providerOptions.CommandTimeout(60));
 
-            //containerBuilder.Register(c => new FcsContext(optionsBuilder.Options))
-            //    .As<IFcsContext>()
-            //    .InstancePerLifetimeScope();
+            containerBuilder.Register(c => new FcsContext(optionsBuilder.Options))
+                .As<IFcsContext>()
+                .InstancePerLifetimeScope();
 
-            //var referenceData = configHelper.GetSectionValues<ReferenceDataConfig>("ReferenceDataSection");
-            //containerBuilder.RegisterInstance(referenceData).As<IReferenceDataConfig>().SingleInstance();
+            var referenceData = configHelper.GetSectionValues<ReferenceDataConfig>("ReferenceDataSection");
+            containerBuilder.RegisterInstance(referenceData).As<IReferenceDataConfig>().SingleInstance();
 
-            //containerBuilder.Register(c =>
-            //{
-            //    var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
-            //    return new LARS(referenceDataConfig.LARSConnectionString);
-            //}).As<ILARS>().InstancePerLifetimeScope();
+            containerBuilder.Register(c =>
+            {
+                var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
+                return new LARS(referenceDataConfig.LARSConnectionString);
+            }).As<ILARS>().InstancePerLifetimeScope();
 
-            //containerBuilder.Register(c =>
-            //{
-            //    var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
-            //    return new Postcodes(referenceDataConfig.PostcodesConnectionString);
-            //}).As<IPostcodes>().InstancePerLifetimeScope();
+            containerBuilder.Register(c =>
+            {
+                var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
+                return new Postcodes(referenceDataConfig.PostcodesConnectionString);
+            }).As<IPostcodes>().InstancePerLifetimeScope();
 
-            //containerBuilder.Register(c =>
-            //{
-            //    var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
-            //    var orgOptionsBuilder = new DbContextOptionsBuilder<OrganisationsContext>();
-            //    orgOptionsBuilder.UseSqlServer(
-            //        referenceDataConfig.OrganisationConnectionString,
-            //        providerOptions => providerOptions.CommandTimeout(60));
-            //    return new OrganisationsContext(orgOptionsBuilder.Options);
-            //}).As<IOrganisationsContext>().InstancePerLifetimeScope();
+            containerBuilder.Register(c =>
+            {
+                var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
+                var orgOptionsBuilder = new DbContextOptionsBuilder<OrganisationsContext>();
+                orgOptionsBuilder.UseSqlServer(
+                    referenceDataConfig.OrganisationConnectionString,
+                    providerOptions => providerOptions.CommandTimeout(60));
+                return new OrganisationsContext(orgOptionsBuilder.Options);
+            }).As<IOrganisationsContext>().InstancePerLifetimeScope();
 
-            //containerBuilder.Register(c =>
-            //{
-            //    var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
-            //    return new ULN(referenceDataConfig.ULNConnectionString);
-            //}).As<IULN>().InstancePerLifetimeScope();
+            containerBuilder.Register(c =>
+            {
+                var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
+                return new ULN(referenceDataConfig.ULNConnectionString);
+            }).As<IULN>().InstancePerLifetimeScope();
         }
 
         private static void RegisterServiceBusConfig(
