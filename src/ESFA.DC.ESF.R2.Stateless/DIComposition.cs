@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Autofac;
-using Autofac.Features.AttributeFilters;
 using ESFA.DC.Auditing.Interface;
 using ESFA.DC.Data.LARS.Model;
 using ESFA.DC.Data.LARS.Model.Interfaces;
@@ -16,7 +15,7 @@ using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Service;
 using ESFA.DC.ESF.R2.Service.Config;
-using ESFA.DC.ESF.Service.Stateless.Handlers;
+using ESFA.DC.ESF.R2.Stateless.Handlers;
 using ESFA.DC.IO.AzureStorage;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.IO.Interfaces;
@@ -182,21 +181,21 @@ namespace ESFA.DC.ESF.R2.Stateless
 
             containerBuilder.Register(c =>
             {
-                var topicSubscriptionSevice =
+                var topicSubscriptionService =
                     new TopicSubscriptionSevice<JobContextDto>(
                         topicConfig,
                         c.Resolve<IJsonSerializationService>(),
                         c.Resolve<ILogger>());
-                return topicSubscriptionSevice;
+                return topicSubscriptionService;
             }).As<ITopicSubscriptionService<JobContextDto>>();
 
             containerBuilder.Register(c =>
             {
-                var topicPublishSevice =
+                var topicPublishService =
                     new TopicPublishService<JobContextDto>(
                         topicConfig,
                         c.Resolve<IJsonSerializationService>());
-                return topicPublishSevice;
+                return topicPublishService;
             }).As<ITopicPublishService<JobContextDto>>();
 
             containerBuilder.Register(c =>
@@ -227,13 +226,8 @@ namespace ESFA.DC.ESF.R2.Stateless
         private static void RegisterMessageHandler(ContainerBuilder containerBuilder)
         {
             // register MessageHandler
-            containerBuilder.RegisterType<MessageHandler>().As<IMessageHandler<JobContextMessage>>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<JobContextMessageHandler>().As<IMessageHandler<JobContextMessage>>();
             containerBuilder.RegisterType<DefaultJobContextMessageMapper<JobContextMessage>>().As<IMapper<JobContextMessage, JobContextMessage>>();
-
-            // register EntryPoint
-            containerBuilder.RegisterType<EntryPoint>()
-                .WithAttributeFiltering()
-                .InstancePerLifetimeScope();
         }
 
         private static void RegisterSerializers(ContainerBuilder containerBuilder)

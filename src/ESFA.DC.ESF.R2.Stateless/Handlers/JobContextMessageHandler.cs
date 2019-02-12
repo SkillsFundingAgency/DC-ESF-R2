@@ -2,18 +2,19 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
+using ESFA.DC.JobContextManager.Interface;
 using ESFA.DC.JobContextManager.Model;
 using ESFA.DC.Logging.Interfaces;
 
-namespace ESFA.DC.ESF.R2.Service
+namespace ESFA.DC.ESF.R2.Stateless.Handlers
 {
-    public class EntryPoint
+    public class JobContextMessageHandler : IMessageHandler<JobContextMessage>
     {
         private readonly ILogger _logger;
 
         private readonly IServiceController _controller;
 
-        public EntryPoint(
+        public JobContextMessageHandler(
             IServiceController controller,
             ILogger logger)
         {
@@ -21,7 +22,7 @@ namespace ESFA.DC.ESF.R2.Service
             _logger = logger;
         }
 
-        public async Task<bool> Callback(JobContextMessage jobContextMessage, CancellationToken cancellationToken)
+        public async Task<bool> HandleAsync(JobContextMessage jobContextMessage, CancellationToken cancellationToken)
         {
             _logger.LogInfo("ESF callback invoked");
 

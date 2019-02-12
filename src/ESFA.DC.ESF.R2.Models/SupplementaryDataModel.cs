@@ -1,4 +1,6 @@
-﻿namespace ESFA.DC.ESF.R2.Models
+﻿using System;
+
+namespace ESFA.DC.ESF.R2.Models
 {
     public class SupplementaryDataModel
     {
@@ -24,13 +26,9 @@
 
         public decimal? Value { get; set; }
 
-        public decimal? HourlyRate { get; set; }
+        public string LearnAimRef { get; set; }
 
-        public decimal? TotalHoursWorked { get; set; }
-
-        public decimal? ProjectHours { get; set; }
-
-        public decimal? OrgHours { get; set; }
+        public DateTime? SupplementaryDataPanelDate { get; set; }
 
         public string OfficialSensitive { get; }
     }
