@@ -6,10 +6,9 @@ using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.Helpers;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
-using ESFA.DC.ESF.R2.Service;
 using ESFA.DC.JobContextManager.Model.Interface;
 
-namespace ESFA.DC.ESF
+namespace ESFA.DC.ESF.R2.Service
 {
     public class ServiceController : IServiceController
     {

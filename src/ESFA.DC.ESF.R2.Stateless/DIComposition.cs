@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Autofac;
+using Autofac.Features.AttributeFilters;
 using ESFA.DC.Auditing.Interface;
 using ESFA.DC.Data.LARS.Model;
 using ESFA.DC.Data.LARS.Model.Interfaces;
@@ -10,11 +11,16 @@ using ESFA.DC.Data.ULN.Model;
 using ESFA.DC.Data.ULN.Model.Interfaces;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces.Config;
+using ESFA.DC.ESF.R2.Interfaces.Controllers;
+using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.Helpers;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Service;
 using ESFA.DC.ESF.R2.Service.Config;
+using ESFA.DC.ESF.R2.Service.Helpers;
+using ESFA.DC.ESF.R2.Service.Services;
 using ESFA.DC.ESF.R2.Stateless.Handlers;
 using ESFA.DC.IO.AzureStorage;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
@@ -272,12 +278,11 @@ namespace ESFA.DC.ESF.R2.Stateless
 
         private static void RegisterServices(ContainerBuilder containerBuilder)
         {
-            //containerBuilder.RegisterType<ESFProviderService>().As<IESFProviderService>()
-            //    .WithAttributeFiltering()
-            //    .InstancePerLifetimeScope();
+            containerBuilder.RegisterType<ESFProviderService>().As<IESFProviderService>()
+                .WithAttributeFiltering()
+                .InstancePerLifetimeScope();
 
             //containerBuilder.RegisterType<SupplementaryDataService>().As<ISupplementaryDataService>();
-            //containerBuilder.RegisterType<LegacyILRService>().As<ILegacyILRService>();
             //containerBuilder.RegisterType<ILRService>().As<IILRService>();
 
             //containerBuilder.RegisterType<FileValidationService>().As<IFileValidationService>();
@@ -290,7 +295,7 @@ namespace ESFA.DC.ESF.R2.Stateless
 
         private static void RegisterControllers(ContainerBuilder containerBuilder)
         {
-            //containerBuilder.RegisterType<ServiceController>().As<IServiceController>();
+            containerBuilder.RegisterType<ServiceController>().As<IServiceController>();
             //containerBuilder.RegisterType<ReportingController>().As<IReportingController>();
             //containerBuilder.RegisterType<ValidationController>().As<IValidationController>();
             //containerBuilder.RegisterType<StorageController>().As<IStorageController>();
@@ -309,9 +314,9 @@ namespace ESFA.DC.ESF.R2.Stateless
 
         private static void RegisterHelpers(ContainerBuilder containerBuilder)
         {
-            //containerBuilder.RegisterType<FileHelper>().As<IFileHelper>();
-            //containerBuilder.RegisterType<TaskHelper>().As<ITaskHelper>();
-            //containerBuilder.RegisterType<PeriodHelper>().As<IPeriodHelper>();
+            containerBuilder.RegisterType<FileHelper>().As<IFileHelper>();
+            containerBuilder.RegisterType<TaskHelper>().As<ITaskHelper>();
+            containerBuilder.RegisterType<PeriodHelper>().As<IPeriodHelper>();
             //containerBuilder.RegisterType<FcsCodeMappingHelper>().As<IFcsCodeMappingHelper>();
         }
 
