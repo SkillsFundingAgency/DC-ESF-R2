@@ -10,6 +10,8 @@ using ESFA.DC.Data.Postcodes.Model.Interfaces;
 using ESFA.DC.Data.ULN.Model;
 using ESFA.DC.Data.ULN.Model.Interfaces;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.ESF.Database.EF.Interfaces;
+using ESFA.DC.ESF.R2.Database.EF;
 using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
@@ -22,6 +24,10 @@ using ESFA.DC.ESF.R2.Service.Config;
 using ESFA.DC.ESF.R2.Service.Helpers;
 using ESFA.DC.ESF.R2.Service.Services;
 using ESFA.DC.ESF.R2.Stateless.Handlers;
+using ESFA.DC.ILR1819.DataStore.EF;
+using ESFA.DC.ILR1819.DataStore.EF.Interfaces;
+using ESFA.DC.ILR1819.DataStore.EF.Valid;
+using ESFA.DC.ILR1819.DataStore.EF.Valid.Interfaces;
 using ESFA.DC.IO.AzureStorage;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.IO.Interfaces;
@@ -114,19 +120,19 @@ namespace ESFA.DC.ESF.R2.Stateless
                 .As<IStreamableKeyValuePersistenceService>()
                 .InstancePerLifetimeScope();
 
-            //var ilrConfig = configHelper.GetSectionValues<IRL1819Configuration>("ILR1819Section");
-            //containerBuilder.Register(c => new ILR1819_DataStoreEntities(ilrConfig.ILR1819ConnectionString))
-            //    .As<IILR1819_DataStoreEntities>()
-            //    .InstancePerLifetimeScope();
-            //containerBuilder.Register(c => new ILR1819_DataStoreEntitiesValid(ilrConfig.ILR1819ValidConnectionString))
-            //    .As<IILR1819_DataStoreEntitiesValid>()
-            //    .InstancePerLifetimeScope();
+            var ilrConfig = configHelper.GetSectionValues<IRL1819Configuration>("ILR1819Section");
+            containerBuilder.Register(c => new ILR1819_DataStoreEntities(ilrConfig.ILR1819ConnectionString))
+                .As<IILR1819_DataStoreEntities>()
+                .InstancePerLifetimeScope();
+            containerBuilder.Register(c => new ILR1819_DataStoreEntitiesValid(ilrConfig.ILR1819ValidConnectionString))
+                .As<IILR1819_DataStoreEntitiesValid>()
+                .InstancePerLifetimeScope();
 
-            //var esfConfig = configHelper.GetSectionValues<ESFConfiguration>("ESFSection");
-            //containerBuilder.Register(c => new ESF_DataStoreEntities(esfConfig.ESFConnectionString))
-            //    .As<IESF_DataStoreEntities>()
-            //    .InstancePerLifetimeScope();
-            //containerBuilder.RegisterInstance(esfConfig).As<ESFConfiguration>().SingleInstance();
+            var esfConfig = configHelper.GetSectionValues<ESFConfiguration>("ESFSection");
+            containerBuilder.Register(c => new ESF_R2Entities(esfConfig.ESFConnectionString))
+                .As<IESF_R2Entities>()
+                .InstancePerLifetimeScope();
+            containerBuilder.RegisterInstance(esfConfig).As<ESFConfiguration>().SingleInstance();
 
             var fcsConfig = configHelper.GetSectionValues<FCSConfiguration>("FCSSection");
             var optionsBuilder = new DbContextOptionsBuilder<FcsContext>();
