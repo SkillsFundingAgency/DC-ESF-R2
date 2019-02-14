@@ -10,8 +10,8 @@ using ESFA.DC.Data.Postcodes.Model.Interfaces;
 using ESFA.DC.Data.ULN.Model;
 using ESFA.DC.Data.ULN.Model.Interfaces;
 using ESFA.DC.DateTimeProvider.Interface;
-using ESFA.DC.ESF.Database.EF.Interfaces;
 using ESFA.DC.ESF.R2.Database.EF;
+using ESFA.DC.ESF.R2.Database.EF.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
@@ -129,10 +129,14 @@ namespace ESFA.DC.ESF.R2.Stateless
                 .InstancePerLifetimeScope();
 
             var esfConfig = configHelper.GetSectionValues<ESFConfiguration>("ESFSection");
-            containerBuilder.Register(c => new ESF_R2Entities(esfConfig.ESFConnectionString))
-                .As<IESF_R2Entities>()
-                .InstancePerLifetimeScope();
-            containerBuilder.RegisterInstance(esfConfig).As<ESFConfiguration>().SingleInstance();
+            containerBuilder.Register(c =>
+            {
+                var options = new DbContextOptionsBuilder<ESFR2Context>()
+                    .UseSqlServer(esfConfig.ESFConnectionString)
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+                    .Options;
+                return new ESFR2Context(options);
+            }).As<IESFR2Context>().InstancePerDependency();
 
             var fcsConfig = configHelper.GetSectionValues<FCSConfiguration>("FCSSection");
             var optionsBuilder = new DbContextOptionsBuilder<FcsContext>();
