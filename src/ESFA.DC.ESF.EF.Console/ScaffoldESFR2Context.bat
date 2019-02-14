@@ -1,0 +1,1 @@
+dotnet.exe ef dbcontext scaffold "Server=.;Database=ESF_R2;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -c ESFR2Context --schema dbo --force --output-dir ..\ESFA.DC.ESF.R2.Database.EF --verbose

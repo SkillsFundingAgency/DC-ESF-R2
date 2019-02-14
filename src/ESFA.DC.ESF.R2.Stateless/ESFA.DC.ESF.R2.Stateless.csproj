@@ -394,7 +394,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Database.EF\ESFA.DC.ESF.R2.Database.EF.csproj">
-      <Project>{e00b6aa9-70cf-4322-aa4a-20590312cd63}</Project>
+      <Project>{FA5D4376-7328-4828-AD72-5A7891600137}</Project>
       <Name>ESFA.DC.ESF.R2.Database.EF</Name>
     </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Interfaces\ESFA.DC.ESF.R2.Interfaces.csproj">
