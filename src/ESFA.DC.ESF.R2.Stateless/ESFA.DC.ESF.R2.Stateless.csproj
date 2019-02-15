@@ -393,6 +393,10 @@
     <Folder Include="Modules\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.DataAccessLayer\ESFA.DC.ESF.R2.DataAccessLayer.csproj">
+      <Project>{e113d0a4-8cf5-46bf-a181-8c3bb92f785c}</Project>
+      <Name>ESFA.DC.ESF.R2.DataAccessLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Database.EF\ESFA.DC.ESF.R2.Database.EF.csproj">
       <Project>{FA5D4376-7328-4828-AD72-5A7891600137}</Project>
       <Name>ESFA.DC.ESF.R2.Database.EF</Name>
