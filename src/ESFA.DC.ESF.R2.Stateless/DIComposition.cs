@@ -3,12 +3,8 @@ using System.Collections.Generic;
 using Autofac;
 using Autofac.Features.AttributeFilters;
 using ESFA.DC.Auditing.Interface;
-using ESFA.DC.Data.LARS.Model;
-using ESFA.DC.Data.LARS.Model.Interfaces;
 using ESFA.DC.Data.Postcodes.Model;
 using ESFA.DC.Data.Postcodes.Model.Interfaces;
-using ESFA.DC.Data.ULN.Model;
-using ESFA.DC.Data.ULN.Model.Interfaces;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.DataAccessLayer;
 using ESFA.DC.ESF.R2.DataAccessLayer.Mappers;
@@ -50,8 +46,12 @@ using ESFA.DC.Queueing;
 using ESFA.DC.Queueing.Interface;
 using ESFA.DC.ReferenceData.FCS.Model;
 using ESFA.DC.ReferenceData.FCS.Model.Interface;
+using ESFA.DC.ReferenceData.LARS.Model;
+using ESFA.DC.ReferenceData.LARS.Model.Interface;
 using ESFA.DC.ReferenceData.Organisations.Model;
 using ESFA.DC.ReferenceData.Organisations.Model.Interface;
+using ESFA.DC.ReferenceData.ULN.Model;
+using ESFA.DC.ReferenceData.ULN.Model.Interface;
 using ESFA.DC.Serialization.Interfaces;
 using ESFA.DC.Serialization.Json;
 using ESFA.DC.ServiceFabric.Helpers.Interfaces;
@@ -143,12 +143,15 @@ namespace ESFA.DC.ESF.R2.Stateless
             }).As<IESFR2Context>().InstancePerDependency();
 
             var fcsConfig = configHelper.GetSectionValues<FCSConfiguration>("FCSSection");
-            var optionsBuilder = new DbContextOptionsBuilder<FcsContext>();
-            optionsBuilder.UseSqlServer(
-                fcsConfig.FCSConnectionString,
-                providerOptions => providerOptions.CommandTimeout(60));
 
-            containerBuilder.Register(c => new FcsContext(optionsBuilder.Options))
+            containerBuilder.Register(c =>
+                {
+                    var optionsBuilder = new DbContextOptionsBuilder<FcsContext>();
+                    optionsBuilder.UseSqlServer(
+                        fcsConfig.FCSConnectionString,
+                        providerOptions => providerOptions.CommandTimeout(60));
+                    return new FcsContext(optionsBuilder.Options);
+                })
                 .As<IFcsContext>()
                 .InstancePerLifetimeScope();
 
@@ -158,8 +161,12 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.Register(c =>
             {
                 var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
-                return new LARS(referenceDataConfig.LARSConnectionString);
-            }).As<ILARS>().InstancePerLifetimeScope();
+                var optionsBuilder = new DbContextOptionsBuilder<LarsContext>();
+                optionsBuilder.UseSqlServer(
+                    referenceDataConfig.LARSConnectionString,
+                    providerOptions => providerOptions.CommandTimeout(60));
+                return new LarsContext(optionsBuilder.Options);
+            }).As<ILARSContext>().InstancePerLifetimeScope();
 
             containerBuilder.Register(c =>
             {
@@ -180,8 +187,12 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.Register(c =>
             {
                 var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
-                return new ULN(referenceDataConfig.ULNConnectionString);
-            }).As<IULN>().InstancePerLifetimeScope();
+                var optionsBuilder = new DbContextOptionsBuilder<UlnContext>();
+                optionsBuilder.UseSqlServer(
+                    referenceDataConfig.ULNConnectionString,
+                    providerOptions => providerOptions.CommandTimeout(60));
+                return new UlnContext(optionsBuilder.Options);
+            }).As<IUlnContext>().InstancePerLifetimeScope();
         }
 
         private static void RegisterServiceBusConfig(

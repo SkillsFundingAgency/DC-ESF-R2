@@ -2,23 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using ESFA.DC.Data.LARS.Model;
-using ESFA.DC.Data.LARS.Model.Interfaces;
 using ESFA.DC.Data.Postcodes.Model.Interfaces;
-using ESFA.DC.Data.ULN.Model;
-using ESFA.DC.Data.ULN.Model.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.Logging.Interfaces;
+using ESFA.DC.ReferenceData.LARS.Model;
+using ESFA.DC.ReferenceData.LARS.Model.Interface;
 using ESFA.DC.ReferenceData.Organisations.Model.Interface;
+using ESFA.DC.ReferenceData.ULN.Model;
+using ESFA.DC.ReferenceData.ULN.Model.Interface;
 
 namespace ESFA.DC.ESF.R2.DataAccessLayer
 {
     public class ReferenceDataRepository : IReferenceDataRepository
     {
-        private readonly IPostcodes _postcodes;
-        private readonly ILARS _lars;
-        private readonly IOrganisationsContext _organisations;
-        private readonly IULN _ulnContext;
+        private readonly Func<IPostcodes> _postcodes;
+        private readonly Func<ILARSContext> _larsContext;
+        private readonly Func<IOrganisationsContext> _organisations;
+        private readonly Func<IUlnContext> _ulnContext;
         private readonly ILogger _logger;
 
         private readonly object _ulnLock = new object();
@@ -26,14 +26,14 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
         public ReferenceDataRepository(
             ILogger logger,
-            IPostcodes postcodes,
-            ILARS lars,
-            IOrganisationsContext organisations,
-            IULN ulnContext)
+            Func<IPostcodes> postcodes,
+            Func<ILARSContext> lars,
+            Func<IOrganisationsContext> organisations,
+            Func<IUlnContext> ulnContext)
         {
             _logger = logger;
             _postcodes = postcodes;
-            _lars = lars;
+            _larsContext = lars;
             _organisations = organisations;
             _ulnContext = ulnContext;
         }
@@ -48,8 +48,13 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                     return null;
                 }
 
-                version = _postcodes.VersionInfos.OrderByDescending(v => v.VersionNumber).Select(v => v.VersionNumber)
-                    .FirstOrDefault();
+                using (var context = _postcodes())
+                {
+                    version = context.VersionInfos
+                        .OrderByDescending(v => v.VersionNumber)
+                        .Select(v => v.VersionNumber)
+                        .FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -69,7 +74,13 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                     return null;
                 }
 
-                version = _lars.LARS_Version.OrderByDescending(v => v.MainDataSchemaName).Select(lv => lv.MainDataSchemaName).FirstOrDefault();
+                using (var context = _larsContext())
+                {
+                    version = context.LARS_Versions
+                        .OrderByDescending(v => v.MainDataSchemaName)
+                        .Select(lv => lv.MainDataSchemaName)
+                        .FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -79,9 +90,9 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             return version;
         }
 
-        public IList<LARS_LearningDelivery> GetLarsLearningDelivery(IList<string> learnAimRefs, CancellationToken cancellationToken)
+        public IList<LarsLearningDelivery> GetLarsLearningDelivery(IList<string> learnAimRefs, CancellationToken cancellationToken)
         {
-            List<LARS_LearningDelivery> learningDelivery = null;
+            List<LarsLearningDelivery> learningDelivery = null;
             try
             {
                 if (cancellationToken.IsCancellationRequested)
@@ -91,8 +102,12 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
                 lock (_larsDeliveryLock)
                 {
-                    learningDelivery = _lars.LARS_LearningDelivery
-                        .Where(x => learnAimRefs.Contains(x.LearnAimRef)).ToList();
+                    using (var context = _larsContext())
+                    {
+                        learningDelivery = context.LARS_LearningDeliveries
+                            .Where(x => learnAimRefs.Contains(x.LearnAimRef))
+                            .ToList();
+                    }
                 }
             }
             catch (Exception ex)
@@ -113,7 +128,13 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                     return null;
                 }
 
-                version = _organisations.OrgVersions.OrderByDescending(v => v.MainDataSchemaName).Select(lv => lv.MainDataSchemaName).FirstOrDefault();
+                using (var context = _organisations())
+                {
+                    version = context.OrgVersions
+                        .OrderByDescending(v => v.MainDataSchemaName)
+                        .Select(lv => lv.MainDataSchemaName)
+                        .FirstOrDefault();
+                }
             }
             catch (Exception ex)
             {
@@ -133,7 +154,12 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                     return null;
                 }
 
-                providerName = _organisations.OrgDetails.FirstOrDefault(o => o.Ukprn == ukPrn)?.Name;
+                using (var context = _organisations())
+                {
+                    providerName = context.OrgDetails
+                        .FirstOrDefault(o => o.Ukprn == ukPrn)
+                        ?.Name;
+                }
             }
             catch (Exception ex)
             {
@@ -157,13 +183,17 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                 {
                     var result = new List<UniqueLearnerNumber>();
                     var ulnShards = SplitList(searchUlns, 5000);
-                    foreach (var shard in ulnShards)
+                    using (var context = _ulnContext())
                     {
-                        result.AddRange(_ulnContext.UniqueLearnerNumbers
-                            .Where(u => shard.Contains(u.ULN)).ToList());
-                    }
+                        foreach (var shard in ulnShards)
+                        {
+                            result.AddRange(context.UniqueLearnerNumbers
+                                .Where(u => shard.Contains(u.Uln))
+                                .ToList());
+                        }
 
-                    ulns.AddRange(result);
+                        ulns.AddRange(result);
+                    }
                 }
             }
             catch (Exception ex)

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Database.EF;
 using ESFA.DC.ESF.R2.Database.EF.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.Logging.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,14 +14,14 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 {
     public class EsfRepository : IEsfRepository
     {
-        private readonly IESFR2Context _context;
+        private readonly Func<IESFR2Context> _contextFactory;
         private readonly ILogger _logger;
 
         public EsfRepository(
-            IESFR2Context context,
+            Func<IESFR2Context> contextFactory,
             ILogger logger)
         {
-            _context = context;
+            _contextFactory = contextFactory;
             _logger = logger;
         }
 
@@ -36,11 +37,15 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                     return null;
                 }
 
-                contractRefNums = await _context.SourceFiles
-                    .Join(_context.SupplementaryDatas, sf => sf.SourceFileId, sd => sd.SourceFileId, (sf, sd) => sf) // not all files will have data
-                    .Where(sf => sf.Ukprn == ukPrn)
-                    .Select(sf => sf.ConRefNumber)
-                    .ToListAsync(cancellationToken);
+                using (var context = _contextFactory())
+                {
+                    contractRefNums = await context.SourceFiles
+                        .Join(context.SupplementaryDatas, sf => sf.SourceFileId, sd => sd.SourceFileId,
+                            (sf, sd) => sf) // not all files will have data
+                        .Where(sf => sf.Ukprn.CaseInsensitiveEquals(ukPrn))
+                        .Select(sf => sf.ConRefNumber)
+                        .ToListAsync(cancellationToken);
+                }
 
                 contractRefNums = contractRefNums.Distinct().ToList();
             }
@@ -62,10 +67,14 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                     return null;
                 }
 
-                sourceFile = await _context.SourceFiles
-                    .Join(_context.SupplementaryDatas, sf => sf.SourceFileId, sd => sd.SourceFileId, (sf, sd) => sf) // not all files will have data
-                    .Where(s => s.Ukprn == ukPrn && s.ConRefNumber == conRefNumber)
-                    .FirstOrDefaultAsync(cancellationToken);
+                using (var context = _contextFactory())
+                {
+                    sourceFile = await context.SourceFiles
+                        .Join(context.SupplementaryDatas, sf => sf.SourceFileId, sd => sd.SourceFileId,
+                            (sf, sd) => sf) // not all files will have data
+                        .Where(s => s.Ukprn == ukPrn && s.ConRefNumber.CaseInsensitiveEquals(conRefNumber))
+                        .FirstOrDefaultAsync(cancellationToken);
+                }
             }
             catch (Exception ex)
             {
@@ -88,9 +97,12 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                     return null;
                 }
 
-                sourceFiles = await _context.SourceFiles
-                    .Where(sf => sf.Ukprn == ukPrn && sf.ConRefNumber == conRefNum)
-                    .ToListAsync(cancellationToken);
+                using (var context = _contextFactory())
+                {
+                    sourceFiles = await context.SourceFiles
+                        .Where(sf => sf.Ukprn == ukPrn && sf.ConRefNumber.CaseInsensitiveEquals(conRefNum))
+                        .ToListAsync(cancellationToken);
+                }
             }
             catch (Exception ex)
             {
@@ -112,8 +124,12 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                     return null;
                 }
 
-                data = await _context.SupplementaryDatas.Where(s => s.SourceFileId == sourceFileId)
-                    .ToListAsync(cancellationToken);
+                using (var context = _contextFactory())
+                {
+                    data = await context.SupplementaryDatas
+                        .Where(s => s.SourceFileId == sourceFileId)
+                        .ToListAsync(cancellationToken);
+                }
             }
             catch (Exception ex)
             {

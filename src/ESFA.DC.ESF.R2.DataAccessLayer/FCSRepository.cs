@@ -5,6 +5,7 @@ using System.Threading;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 using ESFA.DC.ESF.R2.Models.Validation;
+using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.Logging.Interfaces;
 using ESFA.DC.ReferenceData.FCS.Model;
 using ESFA.DC.ReferenceData.FCS.Model.Interface;
@@ -13,17 +14,17 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 {
     public class FCSRepository : IFCSRepository
     {
-        private readonly IFcsContext _fcsContext;
+        private readonly Func<IFcsContext> _fcsContextFactory;
         private readonly ILogger _logger;
 
         private readonly object _fcsContextLock = new object();
 
         public FCSRepository(
-            IFcsContext fcsContext,
+            Func<IFcsContext> fcsContextFactory,
             ILogger logger)
         {
             _logger = logger;
-            _fcsContext = fcsContext;
+            _fcsContextFactory = fcsContextFactory;
         }
 
         public IList<ContractDeliverableCodeMapping> GetContractDeliverableCodeMapping(IList<string> deliverableCodes, CancellationToken cancellationToken)
@@ -38,8 +39,12 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
                 lock (_fcsContextLock)
                 {
-                    codeMapping = _fcsContext.ContractDeliverableCodeMappings
-                            .Where(x => deliverableCodes.Contains(x.ExternalDeliverableCode)).ToList();
+                    using (var fcsContext = _fcsContextFactory())
+                    {
+                        codeMapping = fcsContext.ContractDeliverableCodeMappings
+                            .Where(x => deliverableCodes.Any(dc => dc.CaseInsensitiveEquals(x.ExternalDeliverableCode)))
+                            .ToList();
+                    }
                 }
             }
             catch (Exception ex)
@@ -62,17 +67,21 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
                 lock (_fcsContextLock)
                 {
-                    contractAllocationModel = _fcsContext.ContractAllocations
-                        .Where(ca => ca.DeliveryUkprn == ukPrn
-                                     && ca.ContractAllocationNumber == conRefNum
-                                     && ca.ContractDeliverables.Any(cd => cd.DeliverableCode == deliverableCode))
-                        .Select(ca => new ContractAllocationCacheModel
-                        {
-                            DeliverableCode = deliverableCode,
-                            ContractAllocationNumber = ca.ContractAllocationNumber,
-                            StartDate = ca.StartDate,
-                            EndDate = ca.EndDate
-                        }).FirstOrDefault();
+                    using (var fcsContext = _fcsContextFactory())
+                    {
+                        contractAllocationModel = fcsContext.ContractAllocations
+                            .Where(ca => ca.DeliveryUkprn == ukPrn
+                                         && ca.ContractAllocationNumber.CaseInsensitiveEquals(conRefNum)
+                                         && ca.ContractDeliverables.Any(cd => cd.DeliverableCode == deliverableCode))
+                            .Select(ca => new ContractAllocationCacheModel
+                            {
+                                DeliverableCode = deliverableCode,
+                                ContractAllocationNumber = ca.ContractAllocationNumber,
+                                StartDate = ca.StartDate,
+                                EndDate = ca.EndDate
+                            })
+                            .FirstOrDefault();
+                    }
                 }
             }
             catch (Exception ex)
@@ -101,18 +110,25 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
                 lock (_fcsContextLock)
                 {
-                    deliverableUnitCosts = _fcsContext.ContractDeliverables
-                        .Join(mappings, cd => (cd.DeliverableCode ?? 0).ToString(), m => m.FcsdeliverableCode, (cd, m) => cd)
-                        .Where(cd => cd.ContractAllocation.ContractAllocationNumber == conRefNum
-                                     && cd.ContractAllocation.DeliveryUkprn == ukPrn)
-                        .Select(cd => new DeliverableUnitCost
-                        {
-                            UkPrn = ukPrn,
-                            ConRefNum = conRefNum,
-                            DeliverableCode = mappings.Where(m => m.FcsdeliverableCode == (cd.DeliverableCode ?? 0).ToString())
-                                .Select(m => m.ExternalDeliverableCode).FirstOrDefault(),
-                            UnitCost = cd.UnitCost ?? 0
-                        }).ToList();
+                    using (var fcsContext = _fcsContextFactory())
+                    {
+                        deliverableUnitCosts = fcsContext.ContractDeliverables
+                            .Join(mappings, cd => (cd.DeliverableCode ?? 0).ToString(), m => m.FcsdeliverableCode,
+                                (cd, m) => cd)
+                            .Where(cd => cd.ContractAllocation.ContractAllocationNumber.CaseInsensitiveEquals(conRefNum)
+                                         && cd.ContractAllocation.DeliveryUkprn == ukPrn)
+                            .Select(cd => new DeliverableUnitCost
+                            {
+                                UkPrn = ukPrn,
+                                ConRefNum = conRefNum,
+                                DeliverableCode = mappings
+                                    .Where(m => m.FcsdeliverableCode == (cd.DeliverableCode ?? 0).ToString())
+                                    .Select(m => m.ExternalDeliverableCode)
+                                    .FirstOrDefault(),
+                                UnitCost = cd.UnitCost ?? 0
+                            })
+                            .ToList();
+                    }
                 }
             }
             catch (Exception ex)

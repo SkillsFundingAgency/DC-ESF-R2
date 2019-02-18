@@ -15,14 +15,14 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 {
     public class FM70Repository : IFM70Repository
     {
-        private readonly IILR1819_DataStoreEntities _context;
+        private readonly Func<IILR1819_DataStoreEntities> _validContext;
         private readonly ILogger _logger;
 
         public FM70Repository(
-            IILR1819_DataStoreEntities context,
+            Func<IILR1819_DataStoreEntities> context,
             ILogger logger)
         {
-            _context = context;
+            _validContext = context;
             _logger = logger;
         }
 
@@ -36,15 +36,18 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                     return null;
                 }
 
-                fileDetail = await _context.FileDetails
-                    .Where(fd => fd.UKPRN == ukPrn)
-                    .OrderBy(fd => fd.SubmittedTime)
-                    .Select(fd => new ILRFileDetailsModel
-                    {
-                        FileName = fd.Filename,
-                        LastSubmission = fd.SubmittedTime
-                    })
-                    .FirstOrDefaultAsync(cancellationToken);
+                using (var context = _validContext())
+                {
+                    fileDetail = await context.FileDetails
+                        .Where(fd => fd.UKPRN == ukPrn)
+                        .OrderBy(fd => fd.SubmittedTime)
+                        .Select(fd => new ILRFileDetailsModel
+                        {
+                            FileName = fd.Filename,
+                            LastSubmission = fd.SubmittedTime
+                        })
+                        .FirstOrDefaultAsync(cancellationToken);
+                }
             }
             catch (Exception ex)
             {
@@ -69,9 +72,12 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                     return null;
                 }
 
-                values = await _context.ESF_LearningDelivery
-                    .Where(v => v.UKPRN == ukPrn)
-                    .ToListAsync(cancellationToken);
+                using (var context = _validContext())
+                {
+                    values = await context.ESF_LearningDelivery
+                        .Where(v => v.UKPRN == ukPrn)
+                        .ToListAsync(cancellationToken);
+                }
             }
             catch (Exception ex)
             {
@@ -91,9 +97,12 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                     return null;
                 }
 
-                values = await _context.ESF_LearningDeliveryDeliverable
-                    .Where(v => v.UKPRN == ukPrn)
-                    .ToListAsync(cancellationToken);
+                using (var context = _validContext())
+                {
+                    values = await context.ESF_LearningDeliveryDeliverable
+                        .Where(v => v.UKPRN == ukPrn)
+                        .ToListAsync(cancellationToken);
+                }
             }
             catch (Exception ex)
             {
@@ -113,9 +122,12 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                     return null;
                 }
 
-                values = await _context.ESF_LearningDeliveryDeliverable_Period
-                    .Where(v => v.UKPRN == ukPrn)
-                    .ToListAsync(cancellationToken);
+                using (var context = _validContext())
+                {
+                    values = await context.ESF_LearningDeliveryDeliverable_Period
+                        .Where(v => v.UKPRN == ukPrn)
+                        .ToListAsync(cancellationToken);
+                }
             }
             catch (Exception ex)
             {
@@ -135,30 +147,33 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                     return null;
                 }
 
-                values = await _context.ESF_LearningDeliveryDeliverable_PeriodisedValues
-                    .Where(v => v.UKPRN == ukPrn).
-                    Select(v => new FM70PeriodisedValuesModel
-                    {
-                        FundingYear = 2018,
-                        UKPRN = v.UKPRN,
-                        LearnRefNumber = v.LearnRefNumber,
-                        DeliverableCode = v.DeliverableCode,
-                        AimSeqNumber = v.AimSeqNumber,
-                        AttributeName = v.AttributeName,
-                        Period1 = v.Period_1,
-                        Period2 = v.Period_2,
-                        Period3 = v.Period_3,
-                        Period4 = v.Period_4,
-                        Period5 = v.Period_5,
-                        Period6 = v.Period_6,
-                        Period7 = v.Period_7,
-                        Period8 = v.Period_8,
-                        Period9 = v.Period_9,
-                        Period10 = v.Period_10,
-                        Period11 = v.Period_11,
-                        Period12 = v.Period_12
-                    })
-                    .ToListAsync(cancellationToken);
+                using (var context = _validContext())
+                {
+                    values = await context.ESF_LearningDeliveryDeliverable_PeriodisedValues
+                        .Where(v => v.UKPRN == ukPrn)
+                        .Select(v => new FM70PeriodisedValuesModel
+                        {
+                            FundingYear = 2018,
+                            UKPRN = v.UKPRN,
+                            LearnRefNumber = v.LearnRefNumber,
+                            DeliverableCode = v.DeliverableCode,
+                            AimSeqNumber = v.AimSeqNumber,
+                            AttributeName = v.AttributeName,
+                            Period1 = v.Period_1,
+                            Period2 = v.Period_2,
+                            Period3 = v.Period_3,
+                            Period4 = v.Period_4,
+                            Period5 = v.Period_5,
+                            Period6 = v.Period_6,
+                            Period7 = v.Period_7,
+                            Period8 = v.Period_8,
+                            Period9 = v.Period_9,
+                            Period10 = v.Period_10,
+                            Period11 = v.Period_11,
+                            Period12 = v.Period_12
+                        })
+                        .ToListAsync(cancellationToken);
+                }
             }
             catch (Exception ex)
             {
@@ -178,9 +193,12 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                     return null;
                 }
 
-                values = await _context.ESF_DPOutcome
-                    .Where(v => v.UKPRN == ukPrn)
-                    .ToListAsync(cancellationToken);
+                using (var context = _validContext())
+                {
+                    values = await context.ESF_DPOutcome
+                        .Where(v => v.UKPRN == ukPrn)
+                        .ToListAsync(cancellationToken);
+                }
             }
             catch (Exception ex)
             {
