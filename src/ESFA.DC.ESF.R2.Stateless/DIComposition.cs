@@ -10,9 +10,11 @@ using ESFA.DC.ESF.R2.DataAccessLayer;
 using ESFA.DC.ESF.R2.DataAccessLayer.Mappers;
 using ESFA.DC.ESF.R2.Database.EF;
 using ESFA.DC.ESF.R2.Database.EF.Interfaces;
+using ESFA.DC.ESF.R2.DataStore;
 using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.DataStore;
 using ESFA.DC.ESF.R2.Interfaces.Helpers;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Interfaces.Services;
@@ -323,7 +325,7 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.RegisterType<ServiceController>().As<IServiceController>();
             //containerBuilder.RegisterType<ReportingController>().As<IReportingController>();
             //containerBuilder.RegisterType<ValidationController>().As<IValidationController>();
-            //containerBuilder.RegisterType<StorageController>().As<IStorageController>();
+            containerBuilder.RegisterType<StorageController>().As<IStorageController>();
         }
 
         private static void RegisterRepositories(ContainerBuilder containerBuilder)
@@ -563,9 +565,9 @@ namespace ESFA.DC.ESF.R2.Stateless
 
         private static void RegisterStorage(ContainerBuilder containerBuilder)
         {
-            //containerBuilder.RegisterType<StoreFileDetails>().As<IStoreFileDetails>();
-            //containerBuilder.RegisterType<StoreESF>().As<IStoreESF>();
-            //containerBuilder.RegisterType<StoreValidation>().As<IStoreValidation>();
+            containerBuilder.RegisterType<StoreFileDetails>().As<IStoreFileDetails>();
+            containerBuilder.RegisterType<StoreESF>().As<IStoreESF>();
+            containerBuilder.RegisterType<StoreValidation>().As<IStoreValidation>();
         }
     }
 }
