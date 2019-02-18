@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using ESFA.DC.Data.LARS.Model;
-using ESFA.DC.Data.ULN.Model;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 using ESFA.DC.ESF.R2.Models.Validation;
 using ESFA.DC.ReferenceData.FCS.Model;
+using ESFA.DC.ReferenceData.LARS.Model;
+using ESFA.DC.ReferenceData.ULN.Model;
 
 namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
 {
@@ -20,7 +20,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
 
         IDictionary<int, string> ProviderNameByUkprn { get; }
 
-        List<LARS_LearningDelivery> LarsLearningDeliveries { get; }
+        List<LarsLearningDelivery> LarsLearningDeliveries { get; }
 
         int CurrentPeriod { get; set; }
 
@@ -47,7 +47,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
             int ukPrn,
             CancellationToken cancellationToken);
 
-        IList<LARS_LearningDelivery> GetLarsLearningDelivery(
+        IList<LarsLearningDelivery> GetLarsLearningDelivery(
             IList<string> learnAimRefs,
             CancellationToken cancellationToken);
 

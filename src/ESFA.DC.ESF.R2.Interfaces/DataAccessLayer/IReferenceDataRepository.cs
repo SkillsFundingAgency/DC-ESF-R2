@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using ESFA.DC.Data.LARS.Model;
-using ESFA.DC.Data.ULN.Model;
+using ESFA.DC.ReferenceData.LARS.Model;
+using ESFA.DC.ReferenceData.ULN.Model;
 
 namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
 {
@@ -17,6 +17,6 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
 
         IList<UniqueLearnerNumber> GetUlnLookup(IList<long?> searchUlns, CancellationToken cancellationToken);
 
-        IList<LARS_LearningDelivery> GetLarsLearningDelivery(IList<string> learnAimRefs, CancellationToken cancellationToken);
+        IList<LarsLearningDelivery> GetLarsLearningDelivery(IList<string> learnAimRefs, CancellationToken cancellationToken);
     }
 }

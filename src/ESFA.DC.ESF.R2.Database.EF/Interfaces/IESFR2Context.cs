@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace ESFA.DC.ESF.R2.Database.EF.Interfaces
 {
-    public interface IESFR2Context
+    public interface IESFR2Context : IDisposable
     {
         DbSet<SourceFile> SourceFiles { get; }
 
