@@ -16,7 +16,6 @@ using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.DataStore;
 using ESFA.DC.ESF.R2.Interfaces.Helpers;
-using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Interfaces.Strategies;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
@@ -26,6 +25,13 @@ using ESFA.DC.ESF.R2.Service.Helpers;
 using ESFA.DC.ESF.R2.Service.Services;
 using ESFA.DC.ESF.R2.Service.Strategies;
 using ESFA.DC.ESF.R2.Stateless.Handlers;
+using ESFA.DC.ESF.R2.ValidationService;
+using ESFA.DC.ESF.R2.ValidationService.Commands;
+using ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules;
+using ESFA.DC.ESF.R2.ValidationService.Commands.CrossRecord;
+using ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition;
+using ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel;
+using ESFA.DC.ESF.R2.ValidationService.Services;
 using ESFA.DC.ILR1819.DataStore.EF;
 using ESFA.DC.ILR1819.DataStore.EF.Interfaces;
 using ESFA.DC.ILR1819.DataStore.EF.Valid;
@@ -312,19 +318,19 @@ namespace ESFA.DC.ESF.R2.Stateless
             //containerBuilder.RegisterType<SupplementaryDataService>().As<ISupplementaryDataService>();
             //containerBuilder.RegisterType<ILRService>().As<IILRService>();
 
-            //containerBuilder.RegisterType<FileValidationService>().As<IFileValidationService>();
+            containerBuilder.RegisterType<FileValidationService>().As<IFileValidationService>();
 
             //containerBuilder.RegisterType<ExcelStyleProvider>().As<IExcelStyleProvider>();
 
             //containerBuilder.RegisterType<ValueProvider>().As<IValueProvider>().SingleInstance();
-            //containerBuilder.RegisterType<PopulationService>().As<IPopulationService>();
+            containerBuilder.RegisterType<PopulationService>().As<IPopulationService>();
         }
 
         private static void RegisterControllers(ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterType<ServiceController>().As<IServiceController>();
             //containerBuilder.RegisterType<ReportingController>().As<IReportingController>();
-            //containerBuilder.RegisterType<ValidationController>().As<IValidationController>();
+            containerBuilder.RegisterType<ValidationController>().As<IValidationController>();
             containerBuilder.RegisterType<StorageController>().As<IStorageController>();
         }
 
@@ -355,13 +361,13 @@ namespace ESFA.DC.ESF.R2.Stateless
 
         private static void RegisterCommands(ContainerBuilder containerBuilder)
         {
-            //containerBuilder.RegisterType<FieldDefinitionCommand>().As<ILooseValidatorCommand>();
+            containerBuilder.RegisterType<FieldDefinitionCommand>().As<ILooseValidatorCommand>();
 
-            //containerBuilder.RegisterType<BusinessRuleCommands>().As<IValidatorCommand>();
-            //containerBuilder.RegisterType<CrossRecordCommands>().As<IValidatorCommand>();
+            containerBuilder.RegisterType<BusinessRuleCommands>().As<IValidatorCommand>();
+            containerBuilder.RegisterType<CrossRecordCommands>().As<IValidatorCommand>();
 
-            //containerBuilder.Register(c => new List<IValidatorCommand>(c.Resolve<IEnumerable<IValidatorCommand>>()))
-            //    .As<IList<IValidatorCommand>>();
+            containerBuilder.Register(c => new List<IValidatorCommand>(c.Resolve<IEnumerable<IValidatorCommand>>()))
+                .As<IList<IValidatorCommand>>();
         }
 
         private static void RegisterStrategies(ContainerBuilder containerBuilder)
@@ -455,90 +461,76 @@ namespace ESFA.DC.ESF.R2.Stateless
 
         private static void RegisterFileLevelValidators(ContainerBuilder containerBuilder)
         {
-            //containerBuilder.RegisterType<FileNameRule08>().As<IFileLevelValidator>();
-            //containerBuilder.RegisterType<ConRefNumberRule01>().As<IFileLevelValidator>();
+            containerBuilder.RegisterType<FileNameRule08>().As<IFileLevelValidator>();
+            containerBuilder.RegisterType<ConRefNumberRule01>().As<IFileLevelValidator>();
 
-            //containerBuilder.Register(c => new List<IFileLevelValidator>(c.Resolve<IEnumerable<IFileLevelValidator>>()))
-            //    .As<IList<IFileLevelValidator>>();
+            containerBuilder.Register(c => new List<IFileLevelValidator>(c.Resolve<IEnumerable<IFileLevelValidator>>()))
+                .As<IList<IFileLevelValidator>>();
         }
 
         private static void RegisterCrossRecordValidators(ContainerBuilder containerBuilder)
         {
-            //containerBuilder.RegisterType<Duplicate01>().As<ICrossRecordValidator>();
+            containerBuilder.RegisterType<Duplicate01>().As<ICrossRecordValidator>();
 
-            //containerBuilder.Register(c => new List<ICrossRecordValidator>(c.Resolve<IEnumerable<ICrossRecordValidator>>()))
-            //    .As<IList<ICrossRecordValidator>>();
+            containerBuilder.Register(c => new List<ICrossRecordValidator>(c.Resolve<IEnumerable<ICrossRecordValidator>>()))
+                .As<IList<ICrossRecordValidator>>();
         }
 
         private static void RegisterBusinessRuleValidators(ContainerBuilder containerBuilder)
         {
-            //containerBuilder.RegisterType<CalendarMonthRule01>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<CalendarYearCalendarMonthRule01>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<CalendarYearCalendarMonthRule02>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<CalendarYearCalendarMonthRule03>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<CalendarYearRule01>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<CostTypeRule01>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<CostTypeRule02>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<DeliverableCodeRule01>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<DeliverableCodeRule02>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<HourlyRateRule01>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<HourlyRateRule02>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<OrgHoursRule01>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<OrgHoursRule02>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<ProjectHoursOrgHoursRule01>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<ProjectHoursRule01>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<ProjectHoursRule02>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<ProviderSpecifiedReferenceRule01>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<ReferenceRule01>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<ReferenceTypeRule01>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<ReferenceTypeRule02>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<StaffNameRule01>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<StaffNameRule02>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<StaffNameRule03>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<TotalHoursWorkedRule01>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<TotalHoursWorkedRule02>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<ULNRule01>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<ULNRule02>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<ULNRule03>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<ULNRule04>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<ValueRule01>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<ValueRule02>().As<IBusinessRuleValidator>();
-            //containerBuilder.RegisterType<ValueRule03>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<CalendarMonthRule01>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<CalendarYearCalendarMonthRule01>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<CalendarYearCalendarMonthRule02>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<CalendarYearCalendarMonthRule03>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<CalendarYearRule01>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<CostTypeRule01>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<CostTypeRule02>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<DeliverableCodeRule01>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<DeliverableCodeRule02>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<ProviderSpecifiedReferenceRule01>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<ReferenceRule01>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<ReferenceTypeRule01>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<ReferenceTypeRule02>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<StaffNameRule01>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<StaffNameRule02>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<StaffNameRule03>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<ULNRule01>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<ULNRule02>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<ULNRule03>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<ULNRule04>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<ValueRule01>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<ValueRule02>().As<IBusinessRuleValidator>();
 
-            //containerBuilder.Register(c => new List<IBusinessRuleValidator>(c.Resolve<IEnumerable<IBusinessRuleValidator>>()))
-            //    .As<IList<IBusinessRuleValidator>>();
+            containerBuilder.Register(c => new List<IBusinessRuleValidator>(c.Resolve<IEnumerable<IBusinessRuleValidator>>()))
+                .As<IList<IBusinessRuleValidator>>();
         }
 
         private static void RegisterFieldDefinitionValidators(ContainerBuilder containerBuilder)
         {
-            //containerBuilder.RegisterType<FDCalendarMonthAL>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDCalendarMonthDT>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDCalendarMonthMA>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDCalendarYearAL>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDCalendarYearDT>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDCalendarYearMA>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDConRefNumberAL>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDConRefNumberMA>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDCostTypeAL>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDCostTypeMA>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDDeliverableCodeAL>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDDeliverableCodeMA>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDHourlyRateAL>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDOrgHoursAL>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDProjectHoursAL>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDProviderSpecifiedReferenceAL>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDReferenceAL>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDReferenceMA>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDReferenceTypeAL>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDReferenceTypeMA>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDStaffNameAL>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDTotalHoursWorkedAL>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDULNAL>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDULNDT>().As<IFieldDefinitionValidator>();
-            //containerBuilder.RegisterType<FDValueAL>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDCalendarMonthAL>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDCalendarMonthDT>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDCalendarMonthMA>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDCalendarYearAL>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDCalendarYearDT>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDCalendarYearMA>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDConRefNumberAL>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDConRefNumberMA>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDCostTypeAL>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDCostTypeMA>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDDeliverableCodeAL>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDDeliverableCodeMA>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDProviderSpecifiedReferenceAL>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDReferenceAL>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDReferenceMA>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDReferenceTypeAL>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDReferenceTypeMA>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDStaffNameAL>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDULNAL>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDULNDT>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDValueAL>().As<IFieldDefinitionValidator>();
 
-            //containerBuilder.Register(c => new List<IFieldDefinitionValidator>(c.Resolve<IEnumerable<IFieldDefinitionValidator>>()))
-            //    .As<IList<IFieldDefinitionValidator>>();
+            containerBuilder.Register(c => new List<IFieldDefinitionValidator>(c.Resolve<IEnumerable<IFieldDefinitionValidator>>()))
+                .As<IList<IFieldDefinitionValidator>>();
         }
 
         private static void RegisterReports(ContainerBuilder containerBuilder)
