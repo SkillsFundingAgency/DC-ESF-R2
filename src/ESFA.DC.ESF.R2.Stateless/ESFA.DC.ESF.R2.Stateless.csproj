@@ -403,6 +403,10 @@
       <Project>{FA5D4376-7328-4828-AD72-5A7891600137}</Project>
       <Name>ESFA.DC.ESF.R2.Database.EF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.DataStore\ESFA.DC.ESF.R2.DataStore.csproj">
+      <Project>{d32c4bfc-7222-4c67-9301-45268ff5ce45}</Project>
+      <Name>ESFA.DC.ESF.R2.DataStore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Interfaces\ESFA.DC.ESF.R2.Interfaces.csproj">
       <Project>{3eb1948d-7f0f-446f-a8b3-c3ab19531fe6}</Project>
       <Name>ESFA.DC.ESF.R2.Interfaces</Name>

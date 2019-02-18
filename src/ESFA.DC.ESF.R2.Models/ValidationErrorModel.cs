@@ -30,13 +30,9 @@
 
         public string Value { get; set; }
 
-        public string HourlyRate { get; set; }
+        public string LearnAimRef { get; set; }
 
-        public string TotalHoursWorked { get; set; }
-
-        public string ProjectHours { get; set; }
-
-        public string OrgHours { get; set; }
+        public string SupplementaryDataPanelDate { get; set; }
 
         public string OfficialSensitive { get; }
     }
