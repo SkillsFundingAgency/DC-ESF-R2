@@ -1,17 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\xunit.runner.visualstudio.2.4.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.4.0\build\net20\xunit.runner.visualstudio.props')" />
+  <Import Project="..\packages\xunit.core.2.4.0\build\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.4.0\build\xunit.core.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3EB1948D-7F0F-446F-A8B3-C3AB19531FE6}</ProjectGuid>
+    <ProjectGuid>{533909DB-C6F5-40AA-8E98-C000129D566F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ESFA.DC.ESF.R2.Interfaces</RootNamespace>
-    <AssemblyName>ESFA.DC.ESF.R2.Interfaces</AssemblyName>
+    <RootNamespace>ESFA.DC.ESF.R2.ValidationService.Tests</RootNamespace>
+    <AssemblyName>ESFA.DC.ESF.R2.ValidationService.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,7 +25,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\ESFA.DC.ESF.R2.ValidationService.Tests\ESFA.DC.ESF.R2.ValidationService.Tests.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>ESFA.DC.ESF.ValidationService.Tests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,14 +34,38 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\ESFA.DC.ESF.R2.ValidationService.Tests\ESFA.DC.ESF.R2.ValidationService.Tests.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>ESFA.DC.ESF.ValidationService.Tests.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>ESFA.DC.ESF.ValidationService.Tests.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>ESFA.DC.ESF.ValidationService.Tests.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <!-- Default TransformOnBuild values for file types -->
+    <_NoneWithTargetPath>
+      <TransformOnBuild>false</TransformOnBuild>
+    </_NoneWithTargetPath>
+    <ContentWithTargetPath>
+      <TransformOnBuild>false</TransformOnBuild>
+    </ContentWithTargetPath>
+  </ItemDefinitionGroup>
   <ItemGroup>
-    <Reference Include="Aspose.Cells, Version=19.1.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
-      <HintPath>..\packages\Aspose.Cells.19.1.0\lib\net40\Aspose.Cells.dll</HintPath>
-    </Reference>
-    <Reference Include="CsvHelper, Version=12.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
-      <HintPath>..\packages\CsvHelper.12.1.2\lib\net45\CsvHelper.dll</HintPath>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.4.3.1\lib\net45\Castle.Core.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
@@ -45,48 +73,19 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.Auditing.Interface, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.Auditing.Interface.0.2.0-beta0001\lib\netstandard2.0\ESFA.DC.Auditing.Interface.dll</HintPath>
-    </Reference>
-    <Reference Include="ESFA.DC.ILR1819.Database.EF, Version=0.1.15.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR1819.Database.EF.0.1.15-beta0001\lib\net46\ESFA.DC.ILR1819.Database.EF.dll</HintPath>
-    </Reference>
-    <Reference Include="ESFA.DC.ILR1819.DataStore.EF, Version=0.1.15.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR1819.Database.EF.0.1.15-beta0001\lib\net46\ESFA.DC.ILR1819.DataStore.EF.dll</HintPath>
-    </Reference>
-    <Reference Include="ESFA.DC.ILR1819.DataStore.EF.Invalid, Version=0.1.15.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR1819.Database.EF.0.1.15-beta0001\lib\net46\ESFA.DC.ILR1819.DataStore.EF.Invalid.dll</HintPath>
-    </Reference>
-    <Reference Include="ESFA.DC.ILR1819.DataStore.EF.Valid, Version=0.1.15.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR1819.Database.EF.0.1.15-beta0001\lib\net46\ESFA.DC.ILR1819.DataStore.EF.Valid.dll</HintPath>
-    </Reference>
-    <Reference Include="ESFA.DC.JobContext.Interface, Version=0.2.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.JobContext.Interface.0.2.5-beta0001\lib\netstandard2.0\ESFA.DC.JobContext.Interface.dll</HintPath>
-    </Reference>
-    <Reference Include="ESFA.DC.JobContextManager, Version=0.2.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.JobContextManager.0.2.5-beta0001\lib\netstandard2.0\ESFA.DC.JobContextManager.dll</HintPath>
-    </Reference>
-    <Reference Include="ESFA.DC.JobStatus.Interface, Version=0.2.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.JobStatus.Interface.0.2.5-beta0001\lib\netstandard2.0\ESFA.DC.JobStatus.Interface.dll</HintPath>
+    <Reference Include="ESFA.DC.DateTimeProvider.Interface, Version=0.1.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.DateTimeProvider.Interface.0.1.6-beta0001\lib\netstandard2.0\ESFA.DC.DateTimeProvider.Interface.dll</HintPath>
     </Reference>
     <Reference Include="ESFA.DC.Logging, Version=0.1.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.Logging.0.1.1-beta0001\lib\netstandard2.0\ESFA.DC.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.Mapping.Interface, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.Mapping.Interface.0.1.0-beta0001\lib\netstandard2.0\ESFA.DC.Mapping.Interface.dll</HintPath>
-    </Reference>
-    <Reference Include="ESFA.DC.Queueing.Interface, Version=0.1.14.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.Queueing.Interface.0.1.14-beta0001\lib\netstandard2.0\ESFA.DC.Queueing.Interface.dll</HintPath>
-    </Reference>
-    <Reference Include="ESFA.DC.ReferenceData.FCS.Model, Version=0.1.150.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ReferenceData.FCS.Model.0.1.150\lib\netstandard2.0\ESFA.DC.ReferenceData.FCS.Model.dll</HintPath>
-    </Reference>
-    <Reference Include="ESFA.DC.ReferenceData.LARS.Model, Version=0.1.150.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ReferenceData.LARS.Model.0.1.150\lib\netstandard2.0\ESFA.DC.ReferenceData.LARS.Model.dll</HintPath>
+    <Reference Include="ESFA.DC.ReferenceData.FCS.Model, Version=0.1.98.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ReferenceData.FCS.Model.0.1.98\lib\netstandard2.0\ESFA.DC.ReferenceData.FCS.Model.dll</HintPath>
     </Reference>
     <Reference Include="ESFA.DC.ReferenceData.ULN.Model, Version=0.1.150.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.ReferenceData.ULN.Model.0.1.150\lib\netstandard2.0\ESFA.DC.ReferenceData.ULN.Model.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.EntityFrameworkCore, Version=2.2.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.EntityFrameworkCore.2.2.2\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>
     </Reference>
@@ -131,6 +130,9 @@
     </Reference>
     <Reference Include="Microsoft.Extensions.Primitives, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Primitives.2.2.0\lib\netstandard2.0\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq, Version=4.10.0.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.10.0\lib\net45\Moq.dll</HintPath>
     </Reference>
     <Reference Include="Remotion.Linq, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\packages\Remotion.Linq.2.2.0\lib\net45\Remotion.Linq.dll</HintPath>
@@ -188,83 +190,99 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.1\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.ValueTuple, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.4.0\lib\net461\System.ValueTuple.dll</HintPath>
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.abstractions.2.0.2\lib\net35\xunit.abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.assert, Version=2.4.0.4049, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.assert.2.4.0\lib\netstandard2.0\xunit.assert.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.4.0.4049, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.extensibility.core.2.4.0\lib\net452\xunit.core.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.execution.desktop, Version=2.4.0.4049, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.extensibility.execution.2.4.0\lib\net452\xunit.execution.desktop.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Config\ILoggerOptions.cs" />
-    <Compile Include="Config\IReferenceDataConfig.cs" />
-    <Compile Include="Config\IVersionInfo.cs" />
-    <Compile Include="Controllers\IReportingController.cs" />
-    <Compile Include="Controllers\IServiceController.cs" />
-    <Compile Include="Controllers\IStorageController.cs" />
-    <Compile Include="Controllers\IValidationController.cs" />
-    <Compile Include="DataAccessLayer\IEsfRepository.cs" />
-    <Compile Include="DataAccessLayer\IFCSRepository.cs" />
-    <Compile Include="DataAccessLayer\IFM70Repository.cs" />
-    <Compile Include="DataAccessLayer\IReferenceDataCache.cs" />
-    <Compile Include="DataAccessLayer\IReferenceDataRepository.cs" />
-    <Compile Include="DataAccessLayer\ISourceFileModelMapper.cs" />
-    <Compile Include="DataAccessLayer\ISupplementaryDataModelMapper.cs" />
-    <Compile Include="DataAccessLayer\IValidRepository.cs" />
-    <Compile Include="DataStore\IStoreClear.cs" />
-    <Compile Include="DataStore\IStoreESF.cs" />
-    <Compile Include="DataStore\IStoreFileDetails.cs" />
-    <Compile Include="DataStore\IStoreValidation.cs" />
-    <Compile Include="Helpers\IFileHelper.cs" />
-    <Compile Include="Helpers\IPeriodHelper.cs" />
-    <Compile Include="Helpers\ITaskHelper.cs" />
-    <Compile Include="IClassMapper.cs" />
-    <Compile Include="PersistenceStorageKeys.cs" />
+    <Compile Include="BusinessRuleTests\CalendarRuleTests.cs" />
+    <Compile Include="BusinessRuleTests\CostTypeRuleTests.cs" />
+    <Compile Include="BusinessRuleTests\DeliverableCodeTests.cs" />
+    <Compile Include="BusinessRuleTests\ReferenceRuleTests.cs" />
+    <Compile Include="BusinessRuleTests\UlnRuleTests.cs" />
+    <Compile Include="BusinessRuleTests\ValueRuleTests.cs" />
+    <Compile Include="ControllerTest.cs" />
+    <Compile Include="CrossRecordRuleTests\DuplicateTests.cs" />
+    <Compile Include="FieldDefinitionRuleTests\CalendarRuleTests.cs" />
+    <Compile Include="FieldDefinitionRuleTests\ValueTests.cs" />
+    <Compile Include="FieldDefinitionRuleTests\ULNTests.cs" />
+    <Compile Include="FieldDefinitionRuleTests\ReferenceTests.cs" />
+    <Compile Include="FieldDefinitionRuleTests\CostTypeRuleTests.cs" />
+    <Compile Include="FieldDefinitionRuleTests\ConRefNumberTests.cs" />
+    <Compile Include="FieldDefinitionRuleTests\DeliverableCodeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reports\IAimAndDeliverableComparer.cs" />
-    <Compile Include="Reports\IModelReport.cs" />
-    <Compile Include="Reports\IValidationReport.cs" />
-    <Compile Include="Reports\IValidationResultReport.cs" />
-    <Compile Include="Reports\Services\IILRService.cs" />
-    <Compile Include="Reports\Services\ILegacyILRService.cs" />
-    <Compile Include="Reports\Services\ISupplementaryDataService.cs" />
-    <Compile Include="Reports\Strategies\IILRDataStrategy.cs" />
-    <Compile Include="Reports\Strategies\ISupplementaryDataStrategy.cs" />
-    <Compile Include="Services\IESFProviderService.cs" />
-    <Compile Include="Services\IExcelStyleProvider.cs" />
-    <Compile Include="Services\IFileValidationService.cs" />
-    <Compile Include="Services\IValueProvider.cs" />
-    <Compile Include="Strategies\IRowHelper.cs" />
-    <Compile Include="Strategies\ITaskStrategy.cs" />
-    <Compile Include="Validation\IBaseValidator.cs" />
-    <Compile Include="Validation\IBusinessRuleValidator.cs" />
-    <Compile Include="Validation\ICrossRecordCommand.cs" />
-    <Compile Include="Validation\ICrossRecordValidator.cs" />
-    <Compile Include="Validation\IFcsCodeMappingHelper.cs" />
-    <Compile Include="Validation\IFieldDefinitionValidator.cs" />
-    <Compile Include="Validation\IFileLevelValidator.cs" />
-    <Compile Include="Validation\ILooseValidatorCommand.cs" />
-    <Compile Include="Validation\IPopulationService.cs" />
-    <Compile Include="Validation\IValidatorCommand.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <TransformOnBuild>true</TransformOnBuild>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="ESFA.DC.ESF.R2.ValidationService.Tests.ruleset">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
+    <None Include="Samples\Supplementary_data.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ESFA.DC.ESF.R2.Database.EF\ESFA.DC.ESF.R2.Database.EF.csproj">
-      <Project>{fa5d4376-7328-4828-ad72-5a7891600137}</Project>
-      <Name>ESFA.DC.ESF.R2.Database.EF</Name>
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+    <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.DataAccessLayer\ESFA.DC.ESF.R2.DataAccessLayer.csproj">
+      <Project>{e113d0a4-8cf5-46bf-a181-8c3bb92f785c}</Project>
+      <Name>ESFA.DC.ESF.R2.DataAccessLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.Interfaces\ESFA.DC.ESF.R2.Interfaces.csproj">
+      <Project>{3eb1948d-7f0f-446f-a8b3-c3ab19531fe6}</Project>
+      <Name>ESFA.DC.ESF.R2.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Models\ESFA.DC.ESF.R2.Models.csproj">
       <Project>{5e5aac56-e3d6-4a45-9028-d8a992e422b0}</Project>
       <Name>ESFA.DC.ESF.R2.Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.Service.Config\ESFA.DC.ESF.R2.Service.Config.csproj">
+      <Project>{5cdfb079-a857-42cf-95f8-f6af0fe0c179}</Project>
+      <Name>ESFA.DC.ESF.R2.Service.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.ValidationService\ESFA.DC.ESF.R2.ValidationService.csproj">
+      <Project>{a76d6f3b-0803-4ef7-a021-221d0bb214f7}</Project>
+      <Name>ESFA.DC.ESF.R2.ValidationService</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\xunit.core.2.4.0\build\xunit.core.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.4.0\build\xunit.core.props'))" />
+    <Error Condition="!Exists('..\packages\xunit.core.2.4.0\build\xunit.core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.core.2.4.0\build\xunit.core.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.VisualStudio.SlowCheetah.3.1.66\build\Microsoft.VisualStudio.SlowCheetah.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VisualStudio.SlowCheetah.3.1.66\build\Microsoft.VisualStudio.SlowCheetah.targets'))" />
+    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.4.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.4.0\build\net20\xunit.runner.visualstudio.props'))" />
+  </Target>
+  <Import Project="..\packages\xunit.core.2.4.0\build\xunit.core.targets" Condition="Exists('..\packages\xunit.core.2.4.0\build\xunit.core.targets')" />
+  <Import Project="..\packages\Microsoft.VisualStudio.SlowCheetah.3.1.66\build\Microsoft.VisualStudio.SlowCheetah.targets" Condition="Exists('..\packages\Microsoft.VisualStudio.SlowCheetah.3.1.66\build\Microsoft.VisualStudio.SlowCheetah.targets')" />
 </Project>
