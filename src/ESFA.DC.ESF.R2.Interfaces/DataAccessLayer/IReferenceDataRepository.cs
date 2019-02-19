@@ -17,6 +17,6 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
 
         IEnumerable<long> GetUlnLookup(IEnumerable<long?> searchUlns, CancellationToken cancellationToken);
 
-        IList<LarsLearningDelivery> GetLarsLearningDelivery(IList<string> learnAimRefs, CancellationToken cancellationToken);
+        IEnumerable<string> GetLarsLearningDelivery(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken);
     }
 }

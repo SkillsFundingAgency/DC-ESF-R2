@@ -6,20 +6,19 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
     public class LearnAimRef03 : IBusinessRuleValidator
     {
+        public LearnAimRef03()
+        {
+        }
+
         public string ErrorName => "LearnAimRef_03";
 
         public bool IsWarning => false;
 
         public string ErrorMessage => "LearnAimRef does not exist on LARS.";
 
-        public LearnAimRef03()
-        {
-            
-        }
-
         public bool IsValid(SupplementaryDataModel model)
         {
-            if(string.IsNullOrEmpty(model.LearnAimRef?.Trim()))
+            if (string.IsNullOrEmpty(model.LearnAimRef?.Trim()))
             {
                 return true;
             }

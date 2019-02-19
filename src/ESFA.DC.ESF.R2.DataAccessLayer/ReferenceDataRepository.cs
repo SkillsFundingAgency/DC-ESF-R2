@@ -4,11 +4,8 @@ using System.Linq;
 using System.Threading;
 using ESFA.DC.Data.Postcodes.Model.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
-using ESFA.DC.Logging.Interfaces;
-using ESFA.DC.ReferenceData.LARS.Model;
 using ESFA.DC.ReferenceData.LARS.Model.Interface;
 using ESFA.DC.ReferenceData.Organisations.Model.Interface;
-using ESFA.DC.ReferenceData.ULN.Model;
 using ESFA.DC.ReferenceData.ULN.Model.Interface;
 
 namespace ESFA.DC.ESF.R2.DataAccessLayer
@@ -19,19 +16,16 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         private readonly Func<ILARSContext> _larsContext;
         private readonly Func<IOrganisationsContext> _organisations;
         private readonly Func<IUlnContext> _ulnContext;
-        private readonly ILogger _logger;
 
         private readonly object _ulnLock = new object();
         private readonly object _larsDeliveryLock = new object();
 
         public ReferenceDataRepository(
-            ILogger logger,
             Func<IPostcodes> postcodes,
             Func<ILARSContext> lars,
             Func<IOrganisationsContext> organisations,
             Func<IUlnContext> ulnContext)
         {
-            _logger = logger;
             _postcodes = postcodes;
             _larsContext = lars;
             _organisations = organisations;
@@ -40,25 +34,19 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
         public string GetPostcodeVersion(CancellationToken cancellationToken)
         {
-            var version = string.Empty;
-            try
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return null;
-                }
+            string version;
 
-                using (var context = _postcodes())
-                {
-                    version = context.VersionInfos
-                        .OrderByDescending(v => v.VersionNumber)
-                        .Select(v => v.VersionNumber)
-                        .FirstOrDefault();
-                }
-            }
-            catch (Exception ex)
+            if (cancellationToken.IsCancellationRequested)
             {
-                _logger.LogError("Failed to get postcode version", ex);
+                return null;
+            }
+
+            using (var context = _postcodes())
+            {
+                version = context.VersionInfos
+                    .OrderByDescending(v => v.VersionNumber)
+                    .Select(v => v.VersionNumber)
+                    .FirstOrDefault();
             }
 
             return version;
@@ -66,33 +54,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
         public string GetLarsVersion(CancellationToken cancellationToken)
         {
-            var version = string.Empty;
-            try
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return null;
-                }
-
-                using (var context = _larsContext())
-                {
-                    version = context.LARS_Versions
-                        .OrderByDescending(v => v.MainDataSchemaName)
-                        .Select(lv => lv.MainDataSchemaName)
-                        .FirstOrDefault();
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Failed to get lars version", ex);
-            }
-
-            return version;
-        }
-
-        public IList<LarsLearningDelivery> GetLarsLearningDelivery(IList<string> learnAimRefs, CancellationToken cancellationToken)
-        {
-            List<LarsLearningDelivery> learningDelivery;
+            string version;
 
             if (cancellationToken.IsCancellationRequested)
             {
@@ -103,9 +65,32 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             {
                 using (var context = _larsContext())
                 {
-                    learningDelivery = context.LARS_LearningDeliveries
+                    version = context.LARS_Versions
+                        .OrderByDescending(v => v.MainDataSchemaName)
+                        .Select(lv => lv.MainDataSchemaName)
+                        .FirstOrDefault();
+                }
+            }
+
+            return version;
+        }
+
+        public IEnumerable<string> GetLarsLearningDelivery(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken)
+        {
+            var learningDelivery = new HashSet<string>();
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return null;
+            }
+
+            lock (_larsDeliveryLock)
+            {
+                using (var context = _larsContext())
+                {
+                    learningDelivery.UnionWith(context.LARS_LearningDeliveries
                         .Where(x => learnAimRefs.Contains(x.LearnAimRef))
-                        .ToList();
+                        .Select(x => x.LearnAimRef));
                 }
             }
 
@@ -114,7 +99,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
         public string GetOrganisationVersion(CancellationToken cancellationToken)
         {
-            var version = string.Empty;
+            string version;
 
             if (cancellationToken.IsCancellationRequested)
             {
@@ -134,7 +119,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
         public string GetProviderName(int ukPrn, CancellationToken cancellationToken)
         {
-            var providerName = string.Empty;
+            string providerName;
 
             if (cancellationToken.IsCancellationRequested)
             {

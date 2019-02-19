@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 using ESFA.DC.ESF.R2.Models.Validation;
-using ESFA.DC.ReferenceData.FCS.Model;
-using ESFA.DC.ReferenceData.LARS.Model;
-using ESFA.DC.ReferenceData.ULN.Model;
 
 namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
 {
@@ -12,7 +10,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
     {
         HashSet<long> Ulns { get; }
 
-        List<ContractDeliverableCodeMapping> CodeMappings { get; }
+        List<FcsDeliverableCodeMapping> CodeMappings { get; }
 
         List<ContractAllocationCacheModel> ContractAllocations { get; }
 
@@ -20,7 +18,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
 
         IDictionary<int, string> ProviderNameByUkprn { get; }
 
-        List<LarsLearningDelivery> LarsLearningDeliveries { get; }
+        HashSet<string> LarsLearnAimRefs { get; }
 
         int CurrentPeriod { get; set; }
 
@@ -28,8 +26,8 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
             int ukPrn,
             CancellationToken cancellationToken);
 
-        IList<ContractDeliverableCodeMapping> GetContractDeliverableCodeMapping(
-            IList<string> deliverableCodes,
+        IEnumerable<FcsDeliverableCodeMapping> GetContractDeliverableCodeMapping(
+            IEnumerable<string> deliverableCodes,
             CancellationToken cancellationToken);
 
         IEnumerable<long> GetUlnLookup(
@@ -47,8 +45,8 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
             int ukPrn,
             CancellationToken cancellationToken);
 
-        IList<LarsLearningDelivery> GetLarsLearningDelivery(
-            IList<string> learnAimRefs,
+        IEnumerable<string> GetLarsLearningDelivery(
+            IEnumerable<string> learnAimRefs,
             CancellationToken cancellationToken);
 
         string GetPostcodeVersion(CancellationToken cancellationToken);

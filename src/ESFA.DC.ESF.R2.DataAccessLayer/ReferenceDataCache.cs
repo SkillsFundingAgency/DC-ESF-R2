@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 using ESFA.DC.ESF.R2.Models.Validation;
 using ESFA.DC.ESF.R2.Utils;
-using ESFA.DC.ReferenceData.FCS.Model;
-using ESFA.DC.ReferenceData.LARS.Model;
 
 namespace ESFA.DC.ESF.R2.DataAccessLayer
 {
@@ -22,10 +22,10 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             IReferenceDataRepository referenceDataRepository)
         {
             Ulns = new HashSet<long>();
-            CodeMappings = new List<ContractDeliverableCodeMapping>();
+            CodeMappings = new List<FcsDeliverableCodeMapping>();
             DeliverableUnitCosts = new List<DeliverableUnitCost>();
             ProviderNameByUkprn = new Dictionary<int, string>();
-            LarsLearningDeliveries = new List<LarsLearningDelivery>();
+            LarsLearnAimRefs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             ContractAllocations = new List<ContractAllocationCacheModel>();
 
             _referenceDataRepository = referenceDataRepository;
@@ -35,13 +35,13 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
         public HashSet<long> Ulns { get; }
 
-        public List<ContractDeliverableCodeMapping> CodeMappings { get; }
+        public List<FcsDeliverableCodeMapping> CodeMappings { get; }
 
         public List<ContractAllocationCacheModel> ContractAllocations { get; }
 
         public IDictionary<int, string> ProviderNameByUkprn { get; }
 
-        public List<LarsLearningDelivery> LarsLearningDeliveries { get; }
+        public HashSet<string> LarsLearnAimRefs { get; }
 
         public List<DeliverableUnitCost> DeliverableUnitCosts { get; }
 
@@ -57,8 +57,8 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             return ProviderNameByUkprn[ukPrn];
         }
 
-        public IList<ContractDeliverableCodeMapping> GetContractDeliverableCodeMapping(
-            IList<string> deliverableCodes,
+        public IEnumerable<FcsDeliverableCodeMapping> GetContractDeliverableCodeMapping(
+            IEnumerable<string> deliverableCodes,
             CancellationToken cancellationToken)
         {
             var uncached = deliverableCodes
@@ -68,7 +68,11 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
             if (uncached.Any())
             {
-                CodeMappings.AddRange(_fcsRepository.GetContractDeliverableCodeMapping(uncached, cancellationToken));
+                var mappings = _fcsRepository.GetContractDeliverableCodeMapping(uncached, cancellationToken);
+                foreach (var mapping in mappings)
+                {
+                    CodeMappings.Add(mapping);
+                }
             }
 
             return CodeMappings;
@@ -143,18 +147,18 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             return DeliverableUnitCosts;
         }
 
-        public IList<LarsLearningDelivery> GetLarsLearningDelivery(
-            IList<string> learnAimRefs,
+        public IEnumerable<string> GetLarsLearningDelivery(
+            IEnumerable<string> learnAimRefs,
             CancellationToken cancellationToken)
         {
-            var uncached = learnAimRefs.Where(learnAimRef => LarsLearningDeliveries.All(x => !x.LearnAimRef.CaseInsensitiveEquals(learnAimRef))).ToList();
+            var uncached = learnAimRefs.Where(learnAimRef => LarsLearnAimRefs.All(x => x != learnAimRef)).ToList();
 
             if (uncached.Any())
             {
-                LarsLearningDeliveries.AddRange(_referenceDataRepository.GetLarsLearningDelivery(uncached, cancellationToken));
+                LarsLearnAimRefs.UnionWith(_referenceDataRepository.GetLarsLearningDelivery(uncached, cancellationToken));
             }
 
-            return LarsLearningDeliveries.Where(l => learnAimRefs.Any(la => la.CaseInsensitiveEquals(l.LearnAimRef))).ToList();
+            return LarsLearnAimRefs.Where(l => learnAimRefs.Any(la => la.CaseInsensitiveEquals(l))).ToList();
         }
 
         public string GetPostcodeVersion(CancellationToken cancellationToken)
