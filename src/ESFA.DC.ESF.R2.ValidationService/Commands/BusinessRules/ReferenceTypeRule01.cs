@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -8,14 +10,10 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
     {
         private List<string> _validReferenceTypes = new List<string>
         {
-            "Employee ID",
-            "Invoice",
-            "Grant Recipient",
-            "LearnRefNumber",
-            "Company Name",
-            "Other",
-            "Authorised Claims",
-            "Audit Adjustment"
+            Constants.ReferenceType_Invoice,
+            Constants.ReferenceType_GrantRecipient,
+            Constants.ReferenceType_LearnRefNumber,
+            Constants.ReferenceType_Other
         };
 
         public string ErrorMessage => "The ReferenceType is not valid.";
@@ -26,7 +24,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
         public bool Execute(SupplementaryDataModel model)
         {
-            return _validReferenceTypes.Contains(model.ReferenceType?.Trim());
+            return _validReferenceTypes.Any(vrt => vrt.CaseInsensitiveEquals(model.ReferenceType?.Trim()));
         }
     }
 }

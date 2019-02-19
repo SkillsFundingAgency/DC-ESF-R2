@@ -1,5 +1,6 @@
 ﻿using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -13,9 +14,8 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
         public bool Execute(SupplementaryDataModel model)
         {
-            return !(model.CostType == "Unit Cost" || model.CostType == "Unit Cost Deduction")
-                        ||
-                        model.Value == null;
+            return !(model.CostType.CaseInsensitiveEquals(Constants.CostType_UnitCost) || model.CostType.CaseInsensitiveEquals(Constants.CostType_UnitCostDeduction))
+                        || model.Value == null;
         }
     }
 }

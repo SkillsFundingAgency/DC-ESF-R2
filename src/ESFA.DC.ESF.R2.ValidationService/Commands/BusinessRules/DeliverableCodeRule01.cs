@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -8,9 +10,23 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
     {
         private readonly List<string> _validValues = new List<string>
         {
-            "ST01", "AC01", "CG01", "CG02", "FS01", "SD01", "SD02", "SD03", "SD04", "SD05", "SD06", "SD07",
-            "SD08", "SD09", "SD10", "NR01", "RQ01", "PG01", "PG02", "PG03", "PG04", "PG05", "PG06", "SU01",
-            "SU02", "SU03", "SU04", "SU05", "SU11", "SU12", "SU13", "SU14", "SU15", "SU21", "SU22", "SU23", "SU24"
+            Constants.DeliverableCode_ST01,
+            Constants.DeliverableCode_CG01,
+            Constants.DeliverableCode_CG02,
+            Constants.DeliverableCode_SD01,
+            Constants.DeliverableCode_SD02,
+            Constants.DeliverableCode_SD10,
+            Constants.DeliverableCode_NR01,
+            Constants.DeliverableCode_RQ01,
+            Constants.DeliverableCode_PG01,
+            Constants.DeliverableCode_PG03,
+            Constants.DeliverableCode_PG04,
+            Constants.DeliverableCode_PG05,
+            Constants.DeliverableCode_SU15,
+            Constants.DeliverableCode_SU21,
+            Constants.DeliverableCode_SU22,
+            Constants.DeliverableCode_SU23,
+            Constants.DeliverableCode_SU24
         };
 
         public string ErrorMessage => "The DeliverableCode is not valid.";
@@ -21,7 +37,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
         public bool Execute(SupplementaryDataModel model)
         {
-            return _validValues.Contains(model.DeliverableCode?.Trim());
+            return _validValues.Any(dc => dc.CaseInsensitiveEquals(model.DeliverableCode?.Trim()));
         }
     }
 }

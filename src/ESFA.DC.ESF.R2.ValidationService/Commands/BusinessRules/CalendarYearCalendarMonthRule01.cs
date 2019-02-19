@@ -19,7 +19,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public string ErrorMessage => "The CalendarMonth you have submitted data for cannot be in the future.";
+        public string ErrorMessage => "The CalendarMonth you have submitted data for cannot be in the future for the current collection period.";
 
         public string ErrorName => "CalendarYearCalendarMonth_01";
 

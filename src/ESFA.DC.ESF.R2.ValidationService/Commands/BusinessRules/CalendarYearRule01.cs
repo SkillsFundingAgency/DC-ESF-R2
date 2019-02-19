@@ -13,7 +13,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
         public bool Execute(SupplementaryDataModel model)
         {
-            return model.CalendarYear != null && model.CalendarYear >= 2016 && model.CalendarYear <= 2019;
+            return model.CalendarYear != null && model.CalendarYear >= 2019 && model.CalendarYear <= 2021;
         }
     }
 }

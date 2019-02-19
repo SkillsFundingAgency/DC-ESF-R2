@@ -491,9 +491,6 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.RegisterType<ReferenceRule01>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ReferenceTypeRule01>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ReferenceTypeRule02>().As<IBusinessRuleValidator>();
-            containerBuilder.RegisterType<StaffNameRule01>().As<IBusinessRuleValidator>();
-            containerBuilder.RegisterType<StaffNameRule02>().As<IBusinessRuleValidator>();
-            containerBuilder.RegisterType<StaffNameRule03>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ULNRule01>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ULNRule02>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ULNRule03>().As<IBusinessRuleValidator>();
@@ -524,7 +521,6 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.RegisterType<FDReferenceMA>().As<IFieldDefinitionValidator>();
             containerBuilder.RegisterType<FDReferenceTypeAL>().As<IFieldDefinitionValidator>();
             containerBuilder.RegisterType<FDReferenceTypeMA>().As<IFieldDefinitionValidator>();
-            containerBuilder.RegisterType<FDStaffNameAL>().As<IFieldDefinitionValidator>();
             containerBuilder.RegisterType<FDULNAL>().As<IFieldDefinitionValidator>();
             containerBuilder.RegisterType<FDULNDT>().As<IFieldDefinitionValidator>();
             containerBuilder.RegisterType<FDValueAL>().As<IFieldDefinitionValidator>();

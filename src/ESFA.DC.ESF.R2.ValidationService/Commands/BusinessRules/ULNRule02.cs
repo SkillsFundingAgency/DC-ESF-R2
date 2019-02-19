@@ -24,7 +24,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
         public bool Execute(SupplementaryDataModel model)
         {
-            return model.ReferenceType != "LearnRefNumber" ||
+            return model.ReferenceType != Constants.ReferenceType_LearnRefNumber ||
                       (model.ULN ?? 0) == 9999999999 ||
                    _referenceDataCache.GetUlnLookup(new List<long?> { model.ULN ?? 0 }, CancellationToken.None).Any(u => u.Uln == model.ULN);
         }
