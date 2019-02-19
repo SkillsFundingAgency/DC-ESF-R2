@@ -18,7 +18,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ProviderSpecifiedReferenceRule01();
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ProviderSpecifiedReferenceRule01();
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ReferenceRule01();
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ReferenceRule01();
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ReferenceTypeRule01();
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ReferenceTypeRule01();
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
 
         [Fact]
@@ -99,7 +99,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ReferenceTypeRule02();
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -113,7 +113,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ReferenceTypeRule02();
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
     }
 }

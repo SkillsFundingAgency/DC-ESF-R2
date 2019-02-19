@@ -23,7 +23,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
 
         public bool IsWarning => false;
 
-        public bool Execute(SourceFileModel sourceFileModel, SupplementaryDataLooseModel model)
+        public bool IsValid(SourceFileModel sourceFileModel, SupplementaryDataLooseModel model)
         {
             var previousFiles = _esfRepository.AllPreviousFilesForValidation(sourceFileModel.UKPRN, sourceFileModel.ConRefNumber, CancellationToken.None).Result;
 

@@ -12,7 +12,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
         public bool IsWarning => false;
 
-        public bool Execute(SupplementaryDataModel model)
+        public bool IsValid(SupplementaryDataModel model)
         {
             return !(model.CostType.CaseInsensitiveEquals(Constants.CostType_UnitCost) || model.CostType.CaseInsensitiveEquals(Constants.CostType_UnitCostDeduction))
                         || model.Value == null;

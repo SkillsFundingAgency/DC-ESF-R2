@@ -13,7 +13,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.CrossRecord
 
         public string ErrorMessage => "This record is a duplicate.";
 
-        public bool Execute(IList<SupplementaryDataModel> allRecords, SupplementaryDataModel model)
+        public bool IsValid(IList<SupplementaryDataModel> allRecords, SupplementaryDataModel model)
         {
             return allRecords != null && allRecords.Count(
                           m => m.ConRefNumber == model.ConRefNumber &&

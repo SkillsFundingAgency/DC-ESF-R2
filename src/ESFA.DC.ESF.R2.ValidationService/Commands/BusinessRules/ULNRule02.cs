@@ -22,11 +22,11 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
         public bool IsWarning => false;
 
-        public bool Execute(SupplementaryDataModel model)
+        public bool IsValid(SupplementaryDataModel model)
         {
             return model.ReferenceType != Constants.ReferenceType_LearnRefNumber ||
                       (model.ULN ?? 0) == 9999999999 ||
-                   _referenceDataCache.GetUlnLookup(new List<long?> { model.ULN ?? 0 }, CancellationToken.None).Any(u => u.Uln == model.ULN);
+                   _referenceDataCache.GetUlnLookup(new List<long?> { model.ULN ?? 0 }, CancellationToken.None).Any(u => u == model.ULN);
         }
     }
 }

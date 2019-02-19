@@ -12,15 +12,12 @@ namespace ESFA.DC.ESF.R2.ValidationService.Services
     {
         private readonly IReferenceDataCache _cache;
         private readonly IFcsCodeMappingHelper _mappingHelper;
-        private readonly ILogger _logger;
 
         public PopulationService(
             IReferenceDataCache cache,
-            IFcsCodeMappingHelper mappingHelper,
-            ILogger logger)
+            IFcsCodeMappingHelper mappingHelper)
         {
             _cache = cache;
-            _logger = logger;
             _mappingHelper = mappingHelper;
         }
 

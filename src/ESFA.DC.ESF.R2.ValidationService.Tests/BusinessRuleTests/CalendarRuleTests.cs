@@ -22,7 +22,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             };
             var rule = new CalendarMonthRule01();
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -34,7 +34,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             };
             var rule = new CalendarMonthRule01();
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new CalendarYearCalendarMonthRule01(dateProvider.Object, cache.Object);
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -74,7 +74,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new CalendarYearCalendarMonthRule01(dateProvider.Object, cache.Object);
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
 
         [Fact]
@@ -103,7 +103,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             };
             var rule = new CalendarYearCalendarMonthRule02(referenceRepo.Object, mapper.Object);
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             };
             var rule = new CalendarYearCalendarMonthRule02(referenceRepo.Object, mapper.Object);
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
 
         [Fact]
@@ -161,7 +161,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             };
             var rule = new CalendarYearCalendarMonthRule03(referenceRepo.Object, mapper.Object);
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -190,7 +190,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             };
             var rule = new CalendarYearCalendarMonthRule03(referenceRepo.Object, mapper.Object);
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
 
         [Fact]
@@ -202,7 +202,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             };
             var rule = new CalendarYearRule01();
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -214,7 +214,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             };
             var rule = new CalendarYearRule01();
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
     }
 }

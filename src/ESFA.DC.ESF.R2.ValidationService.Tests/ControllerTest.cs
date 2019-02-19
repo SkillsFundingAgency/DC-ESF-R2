@@ -10,7 +10,6 @@ using ESFA.DC.ESF.R2.ValidationService.Commands;
 using ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules;
 using ESFA.DC.ESF.R2.ValidationService.Commands.CrossRecord;
 using ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition;
-using ESFA.DC.ReferenceData.ULN.Model;
 using Moq;
 using Xunit;
 
@@ -22,7 +21,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests
         public void TestController()
         {
             Mock<IReferenceDataCache> cacheMock = new Mock<IReferenceDataCache>();
-            cacheMock.Setup(m => m.GetUlnLookup(It.IsAny<IList<long?>>(), It.IsAny<CancellationToken>())).Returns(new List<UniqueLearnerNumber>());
+            cacheMock.Setup(m => m.GetUlnLookup(It.IsAny<IList<long?>>(), It.IsAny<CancellationToken>())).Returns(new HashSet<long>());
             cacheMock.Setup(m => m.CurrentPeriod).Returns(10);
 
             Mock<IFcsCodeMappingHelper> mapperMock = new Mock<IFcsCodeMappingHelper>();

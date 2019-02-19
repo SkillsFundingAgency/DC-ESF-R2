@@ -10,7 +10,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
 {
     public interface IReferenceDataCache
     {
-        List<UniqueLearnerNumber> Ulns { get; }
+        HashSet<long> Ulns { get; }
 
         List<ContractDeliverableCodeMapping> CodeMappings { get; }
 
@@ -32,8 +32,8 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
             IList<string> deliverableCodes,
             CancellationToken cancellationToken);
 
-        IList<UniqueLearnerNumber> GetUlnLookup(
-            IList<long?> searchUlns,
+        IEnumerable<long> GetUlnLookup(
+            IEnumerable<long?> searchUlns,
             CancellationToken cancellationToken);
 
         ContractAllocationCacheModel GetContractAllocation(

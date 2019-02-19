@@ -15,7 +15,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             };
             var rule = new FDCalendarMonthAL();
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -27,7 +27,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             };
             var rule = new FDCalendarMonthAL();
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             };
             var rule = new FDCalendarMonthDT();
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             };
             var rule = new FDCalendarMonthDT();
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             };
             var rule = new FDCalendarMonthMA();
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             };
             var rule = new FDCalendarMonthMA();
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
 
         [Fact]
@@ -87,7 +87,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             };
             var rule = new FDCalendarYearAL();
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -99,7 +99,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             };
             var rule = new FDCalendarYearAL();
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
 
         [Fact]
@@ -111,7 +111,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             };
             var rule = new FDCalendarYearDT();
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -123,7 +123,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             };
             var rule = new FDCalendarYearDT();
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
 
         [Fact]
@@ -135,7 +135,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             };
             var rule = new FDCalendarYearMA();
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -147,7 +147,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             };
             var rule = new FDCalendarYearMA();
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
     }
 }

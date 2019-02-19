@@ -5,7 +5,6 @@ using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules;
-using ESFA.DC.ReferenceData.ULN.Model;
 using Moq;
 using Xunit;
 
@@ -24,7 +23,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ULNRule01();
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -38,7 +37,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ULNRule01();
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
 
         [Fact]
@@ -47,7 +46,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             var referenceRepo = new Mock<IReferenceDataCache>();
             referenceRepo
                 .Setup(x => x.GetUlnLookup(It.IsAny<IList<long?>>(), It.IsAny<CancellationToken>()))
-                .Returns(new List<UniqueLearnerNumber> { new UniqueLearnerNumber { Uln = 1990909009 } });
+                .Returns(new HashSet<long> { 1990909009 });
 
             var model = new SupplementaryDataModel
             {
@@ -57,7 +56,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ULNRule02(referenceRepo.Object);
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
 
         [Fact]
@@ -78,7 +77,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ULNRule03(dateTimeProvider.Object);
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -97,7 +96,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ULNRule03(dateTimeProvider.Object);
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
 
         [Fact]
@@ -111,7 +110,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ULNRule04();
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -125,7 +124,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ULNRule04();
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
     }
 }

@@ -27,7 +27,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands
 
             foreach (var validator in _validators)
             {
-                if (!validator.Execute(model))
+                if (!validator.IsValid(model))
                 {
                     Errors.Add(ValidationErrorBuilder.BuildValidationErrorModel(model, validator));
                 }

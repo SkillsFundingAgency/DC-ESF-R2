@@ -113,7 +113,10 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                     using (var fcsContext = _fcsContextFactory())
                     {
                         deliverableUnitCosts = fcsContext.ContractDeliverables
-                            .Join(mappings, cd => (cd.DeliverableCode ?? 0).ToString(), m => m.FcsdeliverableCode,
+                            .Join(
+                                mappings,
+                                cd => (cd.DeliverableCode ?? 0).ToString(),
+                                m => m.FcsdeliverableCode,
                                 (cd, m) => cd)
                             .Where(cd => cd.ContractAllocation.ContractAllocationNumber.CaseInsensitiveEquals(conRefNum)
                                          && cd.ContractAllocation.DeliveryUkprn == ukPrn)

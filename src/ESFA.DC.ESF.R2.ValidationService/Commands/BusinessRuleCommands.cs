@@ -21,13 +21,13 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands
 
         public bool RejectFile => false;
 
-        public bool Execute(SupplementaryDataModel model)
+        public bool IsValid(SupplementaryDataModel model)
         {
             Errors = new List<ValidationErrorModel>();
 
             foreach (var validator in _validators)
             {
-                if (!validator.Execute(model))
+                if (!validator.IsValid(model))
                 {
                     Errors.Add(ValidationErrorBuilder.BuildValidationErrorModel(model, validator));
                 }

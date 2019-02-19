@@ -13,7 +13,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition
 
         public bool IsWarning => false;
 
-        public bool Execute(SupplementaryDataLooseModel model)
+        public bool IsValid(SupplementaryDataLooseModel model)
         {
             var month = model.CalendarMonth;
 

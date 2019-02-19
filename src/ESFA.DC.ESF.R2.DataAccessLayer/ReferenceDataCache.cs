@@ -7,7 +7,6 @@ using ESFA.DC.ESF.R2.Models.Validation;
 using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.ReferenceData.FCS.Model;
 using ESFA.DC.ReferenceData.LARS.Model;
-using ESFA.DC.ReferenceData.ULN.Model;
 
 namespace ESFA.DC.ESF.R2.DataAccessLayer
 {
@@ -22,7 +21,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             IFCSRepository fcsRepository,
             IReferenceDataRepository referenceDataRepository)
         {
-            Ulns = new List<UniqueLearnerNumber>();
+            Ulns = new HashSet<long>();
             CodeMappings = new List<ContractDeliverableCodeMapping>();
             DeliverableUnitCosts = new List<DeliverableUnitCost>();
             ProviderNameByUkprn = new Dictionary<int, string>();
@@ -34,7 +33,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             _esfRepository = esfRepository;
         }
 
-        public List<UniqueLearnerNumber> Ulns { get; }
+        public HashSet<long> Ulns { get; }
 
         public List<ContractDeliverableCodeMapping> CodeMappings { get; }
 
@@ -75,17 +74,17 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             return CodeMappings;
         }
 
-        public IList<UniqueLearnerNumber> GetUlnLookup(IList<long?> searchUlns, CancellationToken cancellationToken)
+        public IEnumerable<long> GetUlnLookup(IEnumerable<long?> searchUlns, CancellationToken cancellationToken)
         {
             var uniqueUlns = searchUlns.Distinct();
-            var unknownUlns = uniqueUlns.Where(uln => Ulns.All(u => u.Uln != uln)).ToList();
+            var unknownUlns = uniqueUlns.Where(uln => Ulns.All(u => u != uln)).ToList();
 
             if (unknownUlns.Any())
             {
-                Ulns.AddRange(_referenceDataRepository.GetUlnLookup(unknownUlns, cancellationToken));
+                Ulns.UnionWith(_referenceDataRepository.GetUlnLookup(unknownUlns, cancellationToken));
             }
 
-            return Ulns.Where(x => searchUlns.Contains(x.Uln)).ToList();
+            return Ulns.Where(u => searchUlns.Contains(u));
         }
 
         public ContractAllocationCacheModel GetContractAllocation(

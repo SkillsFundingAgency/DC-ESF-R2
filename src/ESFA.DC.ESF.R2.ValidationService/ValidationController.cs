@@ -76,7 +76,7 @@ namespace ESFA.DC.ESF.R2.ValidationService
 
                 foreach (var model in wrapper.SupplementaryDataModels)
                 {
-                    if (command.Execute(model))
+                    if (command.IsValid(model))
                     {
                         continue;
                     }

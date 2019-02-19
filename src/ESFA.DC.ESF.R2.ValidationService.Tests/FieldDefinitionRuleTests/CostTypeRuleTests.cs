@@ -15,7 +15,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             };
             var rule = new FDCostTypeAL();
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -27,7 +27,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             };
             var rule = new FDCostTypeAL();
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             };
             var rule = new FDCostTypeMA();
 
-            Assert.False(rule.Execute(model));
+            Assert.False(rule.IsValid(model));
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             };
             var rule = new FDCostTypeMA();
 
-            Assert.True(rule.Execute(model));
+            Assert.True(rule.IsValid(model));
         }
     }
 }

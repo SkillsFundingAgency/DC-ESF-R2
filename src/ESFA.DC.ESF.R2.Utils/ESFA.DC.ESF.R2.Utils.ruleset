@@ -45,7 +45,5 @@
     <Rule Id="SA1633" Action="None" />
     <Rule Id="SA1649" Action="Error" />
     <Rule Id="SA1652" Action="None" />
-    <Rule Id="SA0000" Action="Error" />
-    <Rule Id="SA1019" Action="Info" />
   </Rules>
 </RuleSet>

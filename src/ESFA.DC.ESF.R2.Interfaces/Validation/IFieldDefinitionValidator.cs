@@ -4,6 +4,6 @@ namespace ESFA.DC.ESF.R2.Interfaces.Validation
 {
     public interface IFieldDefinitionValidator : IBaseValidator
     {
-        bool Execute(SupplementaryDataLooseModel model);
+        bool IsValid(SupplementaryDataLooseModel model);
     }
 }

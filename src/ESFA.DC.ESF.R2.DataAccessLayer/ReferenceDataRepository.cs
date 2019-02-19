@@ -92,27 +92,21 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
         public IList<LarsLearningDelivery> GetLarsLearningDelivery(IList<string> learnAimRefs, CancellationToken cancellationToken)
         {
-            List<LarsLearningDelivery> learningDelivery = null;
-            try
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return null;
-                }
+            List<LarsLearningDelivery> learningDelivery;
 
-                lock (_larsDeliveryLock)
-                {
-                    using (var context = _larsContext())
-                    {
-                        learningDelivery = context.LARS_LearningDeliveries
-                            .Where(x => learnAimRefs.Contains(x.LearnAimRef))
-                            .ToList();
-                    }
-                }
-            }
-            catch (Exception ex)
+            if (cancellationToken.IsCancellationRequested)
             {
-                _logger.LogError($"Failed to get lars learning delivery", ex);
+                return null;
+            }
+
+            lock (_larsDeliveryLock)
+            {
+                using (var context = _larsContext())
+                {
+                    learningDelivery = context.LARS_LearningDeliveries
+                        .Where(x => learnAimRefs.Contains(x.LearnAimRef))
+                        .ToList();
+                }
             }
 
             return learningDelivery;
@@ -121,24 +115,18 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         public string GetOrganisationVersion(CancellationToken cancellationToken)
         {
             var version = string.Empty;
-            try
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return null;
-                }
 
-                using (var context = _organisations())
-                {
-                    version = context.OrgVersions
-                        .OrderByDescending(v => v.MainDataSchemaName)
-                        .Select(lv => lv.MainDataSchemaName)
-                        .FirstOrDefault();
-                }
-            }
-            catch (Exception ex)
+            if (cancellationToken.IsCancellationRequested)
             {
-                _logger.LogError("Failed to get org version", ex);
+                return null;
+            }
+
+            using (var context = _organisations())
+            {
+                version = context.OrgVersions
+                    .OrderByDescending(v => v.MainDataSchemaName)
+                    .Select(lv => lv.MainDataSchemaName)
+                    .FirstOrDefault();
             }
 
             return version;
@@ -147,58 +135,46 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         public string GetProviderName(int ukPrn, CancellationToken cancellationToken)
         {
             var providerName = string.Empty;
-            try
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return null;
-                }
 
-                using (var context = _organisations())
-                {
-                    providerName = context.OrgDetails
-                        .FirstOrDefault(o => o.Ukprn == ukPrn)
-                        ?.Name;
-                }
-            }
-            catch (Exception ex)
+            if (cancellationToken.IsCancellationRequested)
             {
-                _logger.LogError("Failed to get org provider name", ex);
+                return null;
+            }
+
+            using (var context = _organisations())
+            {
+                providerName = context.OrgDetails
+                    .FirstOrDefault(o => o.Ukprn == ukPrn)
+                    ?.Name;
             }
 
             return providerName;
         }
 
-        public IList<UniqueLearnerNumber> GetUlnLookup(IList<long?> searchUlns, CancellationToken cancellationToken)
+        public IEnumerable<long> GetUlnLookup(IEnumerable<long?> searchUlns, CancellationToken cancellationToken)
         {
-            List<UniqueLearnerNumber> ulns = new List<UniqueLearnerNumber>();
-            try
+            var ulns = new HashSet<long>();
+
+            if (cancellationToken.IsCancellationRequested)
             {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return null;
-                }
-
-                lock (_ulnLock)
-                {
-                    var result = new List<UniqueLearnerNumber>();
-                    var ulnShards = SplitList(searchUlns, 5000);
-                    using (var context = _ulnContext())
-                    {
-                        foreach (var shard in ulnShards)
-                        {
-                            result.AddRange(context.UniqueLearnerNumbers
-                                .Where(u => shard.Contains(u.Uln))
-                                .ToList());
-                        }
-
-                        ulns.AddRange(result);
-                    }
-                }
+                return null;
             }
-            catch (Exception ex)
+
+            lock (_ulnLock)
             {
-                _logger.LogError("Failed to get uln data", ex);
+                var result = new List<long>();
+                var ulnShards = SplitList(searchUlns, 5000);
+                using (var context = _ulnContext())
+                {
+                    foreach (var shard in ulnShards)
+                    {
+                        result.AddRange(context.UniqueLearnerNumbers
+                            .Where(u => shard.Contains(u.Uln))
+                            .Select(u => u.Uln));
+                    }
+
+                    ulns.UnionWith(result);
+                }
             }
 
             return ulns;

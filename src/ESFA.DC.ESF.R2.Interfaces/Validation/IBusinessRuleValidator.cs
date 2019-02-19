@@ -4,6 +4,6 @@ namespace ESFA.DC.ESF.R2.Interfaces.Validation
 {
     public interface IBusinessRuleValidator : IBaseValidator
     {
-        bool Execute(SupplementaryDataModel model);
+        bool IsValid(SupplementaryDataModel model);
     }
 }

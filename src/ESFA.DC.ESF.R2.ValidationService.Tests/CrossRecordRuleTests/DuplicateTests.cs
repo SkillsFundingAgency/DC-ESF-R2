@@ -29,7 +29,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.CrossRecordRuleTests
 
             var rule = new Duplicate01();
 
-            Assert.False(rule.Execute(records, record));
+            Assert.False(rule.IsValid(records, record));
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.CrossRecordRuleTests
 
             var rule = new Duplicate01();
 
-            Assert.True(rule.Execute(records, record));
+            Assert.True(rule.IsValid(records, record));
         }
     }
 }

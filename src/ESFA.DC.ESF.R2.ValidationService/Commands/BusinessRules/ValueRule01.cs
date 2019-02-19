@@ -22,7 +22,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
         public bool IsWarning => false;
 
-        public bool Execute(SupplementaryDataModel model)
+        public bool IsValid(SupplementaryDataModel model)
         {
             return !_costTypesRequiringValue.Any(ct => ct.CaseInsensitiveEquals(model.CostType)) || model.Value != null;
         }

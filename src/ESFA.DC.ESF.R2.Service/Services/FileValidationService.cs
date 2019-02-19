@@ -69,7 +69,7 @@ namespace ESFA.DC.ESF.R2.Service.Services
             {
                 foreach (var validator in _validators)
                 {
-                    if (validator.Execute(sourceFileModel, model))
+                    if (validator.IsValid(sourceFileModel, model))
                     {
                         continue;
                     }
