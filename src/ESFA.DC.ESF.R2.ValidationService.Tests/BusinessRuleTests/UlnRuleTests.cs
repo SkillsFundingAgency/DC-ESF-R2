@@ -43,7 +43,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         [Fact]
         public void ULNRule02PassesULNsFoundInLookup()
         {
-            var referenceRepo = new Mock<IReferenceDataCache>();
+            var referenceRepo = new Mock<IReferenceDataService>();
             referenceRepo
                 .Setup(x => x.GetUlnLookup(It.IsAny<IList<long?>>(), It.IsAny<CancellationToken>()))
                 .Returns(new HashSet<long> { 1990909009 });

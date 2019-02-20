@@ -8,6 +8,7 @@ using ESFA.DC.Data.Postcodes.Model.Interfaces;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.DataAccessLayer;
 using ESFA.DC.ESF.R2.DataAccessLayer.Mappers;
+using ESFA.DC.ESF.R2.DataAccessLayer.Services;
 using ESFA.DC.ESF.R2.Database.EF;
 using ESFA.DC.ESF.R2.Database.EF.Interfaces;
 using ESFA.DC.ESF.R2.DataStore;
@@ -323,6 +324,7 @@ namespace ESFA.DC.ESF.R2.Stateless
             //containerBuilder.RegisterType<ExcelStyleProvider>().As<IExcelStyleProvider>();
 
             //containerBuilder.RegisterType<ValueProvider>().As<IValueProvider>().SingleInstance();
+            containerBuilder.RegisterType<ReferenceDataService>().As<IReferenceDataService>();
             containerBuilder.RegisterType<PopulationService>().As<IPopulationService>();
         }
 

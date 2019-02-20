@@ -8,37 +8,38 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
 {
     public interface IReferenceDataCache
     {
-        HashSet<long> Ulns { get; }
-
-        List<FcsDeliverableCodeMapping> CodeMappings { get; }
-
-        List<ContractAllocationCacheModel> ContractAllocations { get; }
-
-        List<DeliverableUnitCost> DeliverableUnitCosts { get; }
-
-        IDictionary<int, string> ProviderNameByUkprn { get; }
-
-        HashSet<string> LarsLearnAimRefs { get; }
-
-        int CurrentPeriod { get; set; }
-
         string GetProviderName(
             int ukPrn,
             CancellationToken cancellationToken);
+
+        void PopulateContractDeliverableCodeMappings(IEnumerable<string> uncached, CancellationToken cancellationToken);
 
         IEnumerable<FcsDeliverableCodeMapping> GetContractDeliverableCodeMapping(
             IEnumerable<string> deliverableCodes,
             CancellationToken cancellationToken);
 
+        void PopulateUlnLookup(IEnumerable<long?> unknownUlns, CancellationToken cancellationToken);
+
         IEnumerable<long> GetUlnLookup(
             IEnumerable<long?> searchUlns,
             CancellationToken cancellationToken);
+
+        void PopulateContractAllocations(
+            string conRefNum,
+            int deliverableCode,
+            CancellationToken cancellationToken,
+            int? ukPrn);
 
         ContractAllocationCacheModel GetContractAllocation(
             string conRefNum,
             int deliverableCode,
             CancellationToken cancellationToken,
             int? ukPrn = null);
+
+        void PopulateDeliverableUnitCosts(
+            List<string> newItemsNotInCache,
+            int ukPrn,
+            CancellationToken cancellationToken);
 
         IList<DeliverableUnitCost> GetDeliverableUnitCosts(
             IList<string> deliverableCodes,
@@ -48,11 +49,5 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
         IEnumerable<string> GetLarsLearningDelivery(
             IEnumerable<string> learnAimRefs,
             CancellationToken cancellationToken);
-
-        string GetPostcodeVersion(CancellationToken cancellationToken);
-
-        string GetLarsVersion(CancellationToken cancellationToken);
-
-        string GetOrganisationVersion(CancellationToken cancellationToken);
     }
 }

@@ -46,13 +46,13 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 CalendarYear = 2050
             };
 
-            var cache = new Mock<IReferenceDataCache>();
-            cache.Setup(m => m.CurrentPeriod).Returns(10);
+            var service = new Mock<IReferenceDataService>();
+            service.Setup(m => m.CurrentPeriod).Returns(10);
 
             var dateProvider = new Mock<IDateTimeProvider>();
             dateProvider.Setup(m => m.GetNowUtc()).Returns(DateTime.Now);
 
-            var rule = new CalendarYearCalendarMonthRule01(dateProvider.Object, cache.Object);
+            var rule = new CalendarYearCalendarMonthRule01(dateProvider.Object, service.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -66,13 +66,13 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 CalendarYear = 2017
             };
 
-            var cache = new Mock<IReferenceDataCache>();
-            cache.Setup(m => m.CurrentPeriod).Returns(10);
+            var service = new Mock<IReferenceDataService>();
+            service.Setup(m => m.CurrentPeriod).Returns(10);
 
             var dateProvider = new Mock<IDateTimeProvider>();
             dateProvider.Setup(m => m.GetNowUtc()).Returns(DateTime.Now);
 
-            var rule = new CalendarYearCalendarMonthRule01(dateProvider.Object, cache.Object);
+            var rule = new CalendarYearCalendarMonthRule01(dateProvider.Object, service.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -90,7 +90,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                     x => x.GetFcsDeliverableCode(It.IsAny<SupplementaryDataModel>(), It.IsAny<CancellationToken>()))
                 .Returns(3);
 
-            var referenceRepo = new Mock<IReferenceDataCache>();
+            var referenceRepo = new Mock<IReferenceDataService>();
             referenceRepo
                 .Setup(x => x.GetContractAllocation(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<CancellationToken>(), It.IsAny<int?>()))
                 .Returns(allocation);
@@ -119,7 +119,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                     x => x.GetFcsDeliverableCode(It.IsAny<SupplementaryDataModel>(), It.IsAny<CancellationToken>()))
                 .Returns(3);
 
-            var referenceRepo = new Mock<IReferenceDataCache>();
+            var referenceRepo = new Mock<IReferenceDataService>();
             referenceRepo
                 .Setup(x => x.GetContractAllocation(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<CancellationToken>(), It.IsAny<int?>()))
                 .Returns(allocation);
@@ -148,7 +148,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                     x => x.GetFcsDeliverableCode(It.IsAny<SupplementaryDataModel>(), It.IsAny<CancellationToken>()))
                 .Returns(3);
 
-            var referenceRepo = new Mock<IReferenceDataCache>();
+            var referenceRepo = new Mock<IReferenceDataService>();
             referenceRepo
                 .Setup(x => x.GetContractAllocation(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<CancellationToken>(), It.IsAny<int?>()))
                 .Returns(allocation);
@@ -177,7 +177,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                     x => x.GetFcsDeliverableCode(It.IsAny<SupplementaryDataModel>(), It.IsAny<CancellationToken>()))
                 .Returns(3);
 
-            var referenceRepo = new Mock<IReferenceDataCache>();
+            var referenceRepo = new Mock<IReferenceDataService>();
             referenceRepo
                 .Setup(x => x.GetContractAllocation(It.IsAny<string>(), It.IsAny<int>(), It.IsAny<CancellationToken>(), It.IsAny<int?>()))
                 .Returns(allocation);

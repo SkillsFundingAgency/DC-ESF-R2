@@ -8,14 +8,14 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
     public class CalendarYearCalendarMonthRule01 : IBusinessRuleValidator
     {
-        private readonly IReferenceDataCache _referenceDataCache;
+        private readonly IReferenceDataService _referenceDataService;
         private readonly IDateTimeProvider _dateTimeProvider;
 
         public CalendarYearCalendarMonthRule01(
             IDateTimeProvider dateTimeProvider,
-            IReferenceDataCache referenceDataCache)
+            IReferenceDataService referenceDataService)
         {
-            _referenceDataCache = referenceDataCache;
+            _referenceDataService = referenceDataService;
             _dateTimeProvider = dateTimeProvider;
         }
 
@@ -32,7 +32,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
                 return false;
             }
 
-            return model.CalendarYear <= _dateTimeProvider.GetNowUtc().Year && ESFConstants.MonthToCollection[model.CalendarMonth.Value] <= _referenceDataCache.CurrentPeriod;
+            return model.CalendarYear <= _dateTimeProvider.GetNowUtc().Year && ESFConstants.MonthToCollection[model.CalendarMonth.Value] <= _referenceDataService.CurrentPeriod;
         }
     }
 }

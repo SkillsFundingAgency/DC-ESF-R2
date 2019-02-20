@@ -20,9 +20,9 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests
         [Fact]
         public void TestController()
         {
-            Mock<IReferenceDataCache> cacheMock = new Mock<IReferenceDataCache>();
-            cacheMock.Setup(m => m.GetUlnLookup(It.IsAny<IList<long?>>(), It.IsAny<CancellationToken>())).Returns(new HashSet<long>());
-            cacheMock.Setup(m => m.CurrentPeriod).Returns(10);
+            Mock<IReferenceDataService> cacheService = new Mock<IReferenceDataService>();
+            cacheService.Setup(m => m.GetUlnLookup(It.IsAny<IList<long?>>(), It.IsAny<CancellationToken>())).Returns(new HashSet<long>());
+            cacheService.Setup(m => m.CurrentPeriod).Returns(10);
 
             Mock<IFcsCodeMappingHelper> mapperMock = new Mock<IFcsCodeMappingHelper>();
             mapperMock.Setup(m =>
@@ -34,7 +34,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests
             SupplementaryDataModelMapper mapper = new SupplementaryDataModelMapper();
 
             var looseValidation = GetLooseValidators();
-            var validators = GetValidators(cacheMock, mapperMock);
+            var validators = GetValidators(cacheService, mapperMock);
             var controller = new ValidationController(looseValidation, validators, popMock.Object, mapper);
 
             var wrapper = new SupplementaryDataWrapper
@@ -112,7 +112,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests
                 });
         }
 
-        private IList<IValidatorCommand> GetValidators(Mock<IReferenceDataCache> cacheMock, Mock<IFcsCodeMappingHelper> mapperMock)
+        private IList<IValidatorCommand> GetValidators(Mock<IReferenceDataService> serviceMock, Mock<IFcsCodeMappingHelper> mapperMock)
         {
             var dateTimeProvider = new Mock<IDateTimeProvider>();
             dateTimeProvider.Setup(m => m.GetNowUtc()).Returns(DateTime.Now);
@@ -123,20 +123,20 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests
                     new List<IBusinessRuleValidator>
                     {
                         new CalendarMonthRule01(),
-                        new CalendarYearCalendarMonthRule01(dateTimeProvider.Object, cacheMock.Object),
-                        new CalendarYearCalendarMonthRule02(cacheMock.Object, mapperMock.Object),
-                        new CalendarYearCalendarMonthRule03(cacheMock.Object, mapperMock.Object),
+                        new CalendarYearCalendarMonthRule01(dateTimeProvider.Object, serviceMock.Object),
+                        new CalendarYearCalendarMonthRule02(serviceMock.Object, mapperMock.Object),
+                        new CalendarYearCalendarMonthRule03(serviceMock.Object, mapperMock.Object),
                         new CalendarYearRule01(),
                         new CostTypeRule01(),
                         new CostTypeRule02(),
                         new DeliverableCodeRule01(),
-                        new DeliverableCodeRule02(cacheMock.Object, mapperMock.Object),
+                        new DeliverableCodeRule02(serviceMock.Object, mapperMock.Object),
                         new ProviderSpecifiedReferenceRule01(),
                         new ReferenceRule01(),
                         new ReferenceTypeRule02(),
                         new ReferenceTypeRule01(),
                         new ULNRule01(),
-                        new ULNRule02(cacheMock.Object),
+                        new ULNRule02(serviceMock.Object),
                         new ULNRule03(dateTimeProvider.Object),
                         new ULNRule04(),
                         new ValueRule01(),

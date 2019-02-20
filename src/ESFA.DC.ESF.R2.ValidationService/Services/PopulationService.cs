@@ -4,7 +4,6 @@ using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
-using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Services
 {
@@ -23,7 +22,12 @@ namespace ESFA.DC.ESF.R2.ValidationService.Services
 
         public void PrePopulateUlnCache(IList<long?> ulns, CancellationToken cancellationToken)
         {
-            _cache.GetUlnLookup(ulns, cancellationToken);
+            _cache.PopulateUlnLookup(ulns, cancellationToken);
+        }
+
+        public void PrePopulateContractDeliverableCodeMappings(IEnumerable<string> deliverableCodes, CancellationToken cancellationToken)
+        {
+            _cache.PopulateContractDeliverableCodeMappings(deliverableCodes, cancellationToken);
         }
 
         public void PrePopulateContractAllocations(int ukPrn, IList<SupplementaryDataModel> models, CancellationToken cancellationToken)
@@ -31,13 +35,13 @@ namespace ESFA.DC.ESF.R2.ValidationService.Services
             foreach (var model in models)
             {
                 var fcsDeliverableCode = _mappingHelper.GetFcsDeliverableCode(model, cancellationToken);
-                _cache.GetContractAllocation(model.ConRefNumber, fcsDeliverableCode, cancellationToken, ukPrn);
+                _cache.PopulateContractAllocations(model.ConRefNumber, fcsDeliverableCode, cancellationToken, ukPrn);
             }
         }
 
         public void PrePopulateContractDeliverableUnitCosts(int ukPrn, CancellationToken cancellationToken)
         {
-            _cache.GetDeliverableUnitCosts(ESFConstants.UnitCostDeliverableCodes, ukPrn, cancellationToken);
+            _cache.PopulateDeliverableUnitCosts(ESFConstants.UnitCostDeliverableCodes, ukPrn, cancellationToken);
         }
     }
 }

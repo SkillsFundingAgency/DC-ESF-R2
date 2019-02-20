@@ -213,6 +213,7 @@
     <Compile Include="DataAccessLayer\IFM70Repository.cs" />
     <Compile Include="DataAccessLayer\IReferenceDataCache.cs" />
     <Compile Include="DataAccessLayer\IReferenceDataRepository.cs" />
+    <Compile Include="DataAccessLayer\IReferenceDataService.cs" />
     <Compile Include="DataAccessLayer\ISourceFileModelMapper.cs" />
     <Compile Include="DataAccessLayer\ISupplementaryDataModelMapper.cs" />
     <Compile Include="DataAccessLayer\IValidRepository.cs" />
