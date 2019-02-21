@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ReferenceData.LARS.Model;
 using ESFA.DC.ReferenceData.ULN.Model;
 
@@ -15,8 +16,8 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
 
         string GetProviderName(int ukPrn, CancellationToken cancellationToken);
 
-        IList<UniqueLearnerNumber> GetUlnLookup(IList<long?> searchUlns, CancellationToken cancellationToken);
+        IEnumerable<long> GetUlnLookup(IEnumerable<long?> searchUlns, CancellationToken cancellationToken);
 
-        IList<LarsLearningDelivery> GetLarsLearningDelivery(IList<string> learnAimRefs, CancellationToken cancellationToken);
+        IDictionary<string, LarsLearningDeliveryModel> GetLarsLearningDelivery(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken);
     }
 }

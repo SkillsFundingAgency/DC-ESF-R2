@@ -16,7 +16,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition
 
         public string ErrorMessage => $"The Value does not conform to the decimal ({IntegerPartLength + PrecisionLength},{PrecisionLength}) field type. Please adjust the value and resubmit the file.";
 
-        public bool Execute(SupplementaryDataLooseModel model)
+        public bool IsValid(SupplementaryDataLooseModel model)
         {
             return string.IsNullOrEmpty(model.Value?.Trim())
                       || (decimal.TryParse(model.Value, out var value) &&

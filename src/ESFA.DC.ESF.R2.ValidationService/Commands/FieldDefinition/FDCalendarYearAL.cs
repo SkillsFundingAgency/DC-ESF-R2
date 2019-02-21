@@ -13,7 +13,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition
 
         public string ErrorMessage => $"The CalendarYear must not exceed {FieldLength} characters in length. Please adjust the value and resubmit the file.";
 
-        public bool Execute(SupplementaryDataLooseModel model)
+        public bool IsValid(SupplementaryDataLooseModel model)
         {
             var year = model.CalendarYear;
 

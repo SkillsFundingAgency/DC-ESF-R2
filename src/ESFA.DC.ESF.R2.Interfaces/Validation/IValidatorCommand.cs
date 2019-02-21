@@ -11,6 +11,6 @@ namespace ESFA.DC.ESF.R2.Interfaces.Validation
 
         int Priority { get; }
 
-        bool Execute(SupplementaryDataModel model);
+        bool IsValid(SupplementaryDataModel model);
     }
 }

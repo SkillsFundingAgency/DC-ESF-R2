@@ -14,7 +14,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
 
         public bool RejectFile => true;
 
-        public bool Execute(SourceFileModel sourceFileModel, SupplementaryDataLooseModel model)
+        public bool IsValid(SourceFileModel sourceFileModel, SupplementaryDataLooseModel model)
         {
             string[] filenameParts = FileNameHelper.SplitFileName(sourceFileModel.FileName);
 

@@ -8,6 +8,7 @@ using ESFA.DC.Data.Postcodes.Model.Interfaces;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.DataAccessLayer;
 using ESFA.DC.ESF.R2.DataAccessLayer.Mappers;
+using ESFA.DC.ESF.R2.DataAccessLayer.Services;
 using ESFA.DC.ESF.R2.Database.EF;
 using ESFA.DC.ESF.R2.Database.EF.Interfaces;
 using ESFA.DC.ESF.R2.DataStore;
@@ -323,6 +324,7 @@ namespace ESFA.DC.ESF.R2.Stateless
             //containerBuilder.RegisterType<ExcelStyleProvider>().As<IExcelStyleProvider>();
 
             //containerBuilder.RegisterType<ValueProvider>().As<IValueProvider>().SingleInstance();
+            containerBuilder.RegisterType<ReferenceDataService>().As<IReferenceDataService>();
             containerBuilder.RegisterType<PopulationService>().As<IPopulationService>();
         }
 
@@ -491,15 +493,16 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.RegisterType<ReferenceRule01>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ReferenceTypeRule01>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ReferenceTypeRule02>().As<IBusinessRuleValidator>();
-            containerBuilder.RegisterType<StaffNameRule01>().As<IBusinessRuleValidator>();
-            containerBuilder.RegisterType<StaffNameRule02>().As<IBusinessRuleValidator>();
-            containerBuilder.RegisterType<StaffNameRule03>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ULNRule01>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ULNRule02>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ULNRule03>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ULNRule04>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ValueRule01>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ValueRule02>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<LearnAimRef01>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<LearnAimRef02>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<LearnAimRef03>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<LearnAimRef04>().As<IBusinessRuleValidator>();
 
             containerBuilder.Register(c => new List<IBusinessRuleValidator>(c.Resolve<IEnumerable<IBusinessRuleValidator>>()))
                 .As<IList<IBusinessRuleValidator>>();
@@ -524,7 +527,6 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.RegisterType<FDReferenceMA>().As<IFieldDefinitionValidator>();
             containerBuilder.RegisterType<FDReferenceTypeAL>().As<IFieldDefinitionValidator>();
             containerBuilder.RegisterType<FDReferenceTypeMA>().As<IFieldDefinitionValidator>();
-            containerBuilder.RegisterType<FDStaffNameAL>().As<IFieldDefinitionValidator>();
             containerBuilder.RegisterType<FDULNAL>().As<IFieldDefinitionValidator>();
             containerBuilder.RegisterType<FDULNDT>().As<IFieldDefinitionValidator>();
             containerBuilder.RegisterType<FDValueAL>().As<IFieldDefinitionValidator>();

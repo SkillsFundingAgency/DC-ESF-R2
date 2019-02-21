@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>ESFA.DC.ESF.R2.Interfaces.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>ESFA.DC.ESF.R2.Interfaces.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Aspose.Cells, Version=19.1.0.0, Culture=neutral, PublicKeyToken=716fcc553a201e56, processorArchitecture=MSIL">
@@ -211,6 +213,7 @@
     <Compile Include="DataAccessLayer\IFM70Repository.cs" />
     <Compile Include="DataAccessLayer\IReferenceDataCache.cs" />
     <Compile Include="DataAccessLayer\IReferenceDataRepository.cs" />
+    <Compile Include="DataAccessLayer\IReferenceDataService.cs" />
     <Compile Include="DataAccessLayer\ISourceFileModelMapper.cs" />
     <Compile Include="DataAccessLayer\ISupplementaryDataModelMapper.cs" />
     <Compile Include="DataAccessLayer\IValidRepository.cs" />
@@ -252,6 +255,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ESFA.DC.ESF.R2.Interfaces.ruleset">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -263,6 +269,10 @@
       <Project>{5e5aac56-e3d6-4a45-9028-d8a992e422b0}</Project>
       <Name>ESFA.DC.ESF.R2.Models</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

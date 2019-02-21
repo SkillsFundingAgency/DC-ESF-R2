@@ -8,14 +8,14 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
     public class CalendarYearCalendarMonthRule03 : IBusinessRuleValidator
     {
-        private readonly IReferenceDataCache _referenceDataCache;
+        private readonly IReferenceDataService _referenceDataService;
         private readonly IFcsCodeMappingHelper _mappingHelper;
 
         public CalendarYearCalendarMonthRule03(
-            IReferenceDataCache referenceDataCache,
+            IReferenceDataService referenceDataService,
             IFcsCodeMappingHelper mappingHelper)
         {
-            _referenceDataCache = referenceDataCache;
+            _referenceDataService = referenceDataService;
             _mappingHelper = mappingHelper;
         }
 
@@ -25,7 +25,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
         public bool IsWarning => false;
 
-        public bool Execute(SupplementaryDataModel model)
+        public bool IsValid(SupplementaryDataModel model)
         {
             var year = model.CalendarYear ?? 0;
             var month = model.CalendarMonth ?? 0;
@@ -38,7 +38,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             var startDateMonth = new DateTime(year, month, 1);
 
             var fcsDeliverableCode = _mappingHelper.GetFcsDeliverableCode(model, CancellationToken.None);
-            var contractAllocation = _referenceDataCache.GetContractAllocation(model.ConRefNumber, fcsDeliverableCode, CancellationToken.None);
+            var contractAllocation = _referenceDataService.GetContractAllocation(model.ConRefNumber, fcsDeliverableCode, CancellationToken.None);
 
             return contractAllocation != null && contractAllocation.EndDate > startDateMonth;
         }

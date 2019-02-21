@@ -23,13 +23,13 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands
 
         public IList<SupplementaryDataModel> AllRecords { get; set; }
 
-        public bool Execute(SupplementaryDataModel model)
+        public bool IsValid(SupplementaryDataModel model)
         {
             Errors = new List<ValidationErrorModel>();
 
             foreach (var validator in _validators)
             {
-                if (!validator.Execute(AllRecords, model))
+                if (!validator.IsValid(AllRecords, model))
                 {
                     Errors.Add(ValidationErrorBuilder.BuildValidationErrorModel(model, validator));
                 }

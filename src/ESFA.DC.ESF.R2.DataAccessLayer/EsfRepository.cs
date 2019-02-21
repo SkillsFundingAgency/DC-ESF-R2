@@ -40,7 +40,10 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                 using (var context = _contextFactory())
                 {
                     contractRefNums = await context.SourceFiles
-                        .Join(context.SupplementaryDatas, sf => sf.SourceFileId, sd => sd.SourceFileId,
+                        .Join(
+                            context.SupplementaryDatas,
+                            sf => sf.SourceFileId,
+                            sd => sd.SourceFileId,
                             (sf, sd) => sf) // not all files will have data
                         .Where(sf => sf.Ukprn.CaseInsensitiveEquals(ukPrn))
                         .Select(sf => sf.ConRefNumber)
@@ -70,7 +73,10 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                 using (var context = _contextFactory())
                 {
                     sourceFile = await context.SourceFiles
-                        .Join(context.SupplementaryDatas, sf => sf.SourceFileId, sd => sd.SourceFileId,
+                        .Join(
+                            context.SupplementaryDatas,
+                            sf => sf.SourceFileId,
+                            sd => sd.SourceFileId,
                             (sf, sd) => sf) // not all files will have data
                         .Where(s => s.Ukprn == ukPrn && s.ConRefNumber.CaseInsensitiveEquals(conRefNumber))
                         .FirstOrDefaultAsync(cancellationToken);

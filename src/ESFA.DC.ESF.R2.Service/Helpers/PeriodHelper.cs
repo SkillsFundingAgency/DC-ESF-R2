@@ -8,16 +8,16 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
 {
     public class PeriodHelper : IPeriodHelper
     {
-        private readonly IReferenceDataCache _cache;
+        private readonly IReferenceDataService _service;
 
-        public PeriodHelper(IReferenceDataCache cache)
+        public PeriodHelper(IReferenceDataService service)
         {
-            _cache = cache;
+            _service = service;
         }
 
         public void CacheCurrentPeriod(IJobContextMessage jobContextMessage)
         {
-            _cache.CurrentPeriod = Convert.ToInt32(jobContextMessage.KeyValuePairs[JobContextMessageKey.ReturnPeriod]);
+            _service.CurrentPeriod = Convert.ToInt32(jobContextMessage.KeyValuePairs[JobContextMessageKey.ReturnPeriod]);
         }
     }
 }

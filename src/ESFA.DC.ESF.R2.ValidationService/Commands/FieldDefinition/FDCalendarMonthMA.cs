@@ -12,7 +12,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition
         public string ErrorMessage =>
             "The CalendarMonth is mandatory. Please resubmit the file including the appropriate value.";
 
-        public bool Execute(SupplementaryDataLooseModel model)
+        public bool IsValid(SupplementaryDataLooseModel model)
         {
             return !string.IsNullOrEmpty(model.CalendarMonth?.Trim());
         }

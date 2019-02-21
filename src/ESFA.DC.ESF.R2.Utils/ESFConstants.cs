@@ -8,7 +8,7 @@ namespace ESFA.DC.ESF.R2.Utils
 
         public static readonly List<string> UnitCostDeliverableCodes = new List<string>
         {
-            "ST01", "FS01", "PG01", "PG02", "PG03", "PG04", "PG05", "PG06", "SU01", "SU02", "SU03", "SU04", "SU05", "SU11", "SU12", "SU13", "SU14", "SU15", "SU21", "SU22", "SU23", "SU24"
+            "ST01", "PG01", "PG03", "PG04", "PG05", "PG06"
         };
 
         public static readonly Dictionary<int, int> MonthToCollection = new Dictionary<int, int>

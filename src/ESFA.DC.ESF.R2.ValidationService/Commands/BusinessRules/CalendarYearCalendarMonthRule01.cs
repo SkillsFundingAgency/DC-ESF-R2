@@ -8,31 +8,31 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
     public class CalendarYearCalendarMonthRule01 : IBusinessRuleValidator
     {
-        private readonly IReferenceDataCache _referenceDataCache;
+        private readonly IReferenceDataService _referenceDataService;
         private readonly IDateTimeProvider _dateTimeProvider;
 
         public CalendarYearCalendarMonthRule01(
             IDateTimeProvider dateTimeProvider,
-            IReferenceDataCache referenceDataCache)
+            IReferenceDataService referenceDataService)
         {
-            _referenceDataCache = referenceDataCache;
+            _referenceDataService = referenceDataService;
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public string ErrorMessage => "The CalendarMonth you have submitted data for cannot be in the future.";
+        public string ErrorMessage => "The CalendarMonth you have submitted data for cannot be in the future for the current collection period.";
 
         public string ErrorName => "CalendarYearCalendarMonth_01";
 
         public bool IsWarning => false;
 
-        public bool Execute(SupplementaryDataModel model)
+        public bool IsValid(SupplementaryDataModel model)
         {
             if (model.CalendarMonth == null || model.CalendarYear == null)
             {
                 return false;
             }
 
-            return model.CalendarYear <= _dateTimeProvider.GetNowUtc().Year && ESFConstants.MonthToCollection[model.CalendarMonth.Value] <= _referenceDataCache.CurrentPeriod;
+            return model.CalendarYear <= _dateTimeProvider.GetNowUtc().Year && ESFConstants.MonthToCollection[model.CalendarMonth.Value] <= _referenceDataService.CurrentPeriod;
         }
     }
 }

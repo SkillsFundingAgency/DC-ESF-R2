@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -12,34 +14,23 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
         public bool IsWarning => false;
 
-        public bool Execute(SupplementaryDataModel model)
+        public bool IsValid(SupplementaryDataModel model)
         {
             var referenceType = model.ReferenceType?.Trim();
             var costType = model.CostType?.Trim();
 
-            var employeeIdCostTypes = new List<string>
-                { "Staff Part Time", "Staff Full Time", "Staff Expenses", "Apportioned Cost" };
+            var grantRecipientCostTypes = new List<string> { Constants.CostType_Grant, Constants.CostType_GrantManagement };
 
-            var invoiceCostTypes = new List<string> { "Other Costs", "Apportioned Cost" };
-
-            var grantRecipientCostTypes = new List<string> { "Grant", "Grant Management" };
-
-            var unitReferenceTypes = new List<string> { "LearnRefNumber", "Company Name", "Other" };
-
-            var unitCostTypes = new List<string> { "Unit Cost", "Unit Cost Deduction" };
-
-            var adjustmentReferenceTypes = new List<string> { "Authorised Claims", "Audit Adjustment" };
+            var unitCostTypes = new List<string> { Constants.CostType_UnitCost, Constants.CostType_UnitCostDeduction };
 
             var errorCondition =
-                (referenceType == "Employee ID" && !employeeIdCostTypes.Contains(costType))
+                (referenceType.CaseInsensitiveEquals(Constants.ReferenceType_Invoice) && !costType.CaseInsensitiveEquals(Constants.CostType_OtherCosts))
                 ||
-                (referenceType == "Invoice" && !invoiceCostTypes.Contains(costType))
+                (referenceType.CaseInsensitiveEquals(Constants.ReferenceType_GrantRecipient) && !grantRecipientCostTypes.Any(g => g.CaseInsensitiveEquals(costType)))
                 ||
-                (referenceType == "Grant Recipient" && !grantRecipientCostTypes.Contains(costType))
+                (referenceType.CaseInsensitiveEquals(Constants.ReferenceType_LearnRefNumber) && !unitCostTypes.Any(uct => uct.CaseInsensitiveEquals(costType)) && !costType.CaseInsensitiveEquals(Constants.CostType_AuthorisedClaims))
                 ||
-                (unitReferenceTypes.Contains(referenceType) && !unitCostTypes.Contains(costType))
-                ||
-                (adjustmentReferenceTypes.Contains(referenceType) && costType != "Funding Adjustment");
+                referenceType.CaseInsensitiveEquals(Constants.ReferenceType_Other) && !unitCostTypes.Any(uct => uct.CaseInsensitiveEquals(costType));
 
             return !errorCondition;
         }

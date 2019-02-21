@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 
 namespace ESFA.DC.ESF.R2.ValidationService
 {
@@ -59,13 +59,7 @@ namespace ESFA.DC.ESF.R2.ValidationService
 
             wrapper.SupplementaryDataModels = wrapper.SupplementaryDataLooseModels.Select(m => _mapper.GetSupplementaryDataModelFromLooseModel(m)).ToList();
 
-            var allUlns = wrapper.SupplementaryDataModels.Select(m => m.ULN).ToList();
-            _populationService.PrePopulateUlnCache(allUlns, cancellationToken);
-
-            var ukPrn = Convert.ToInt32(sourceFile.UKPRN);
-            _populationService.PrePopulateContractAllocations(ukPrn, wrapper.SupplementaryDataModels, cancellationToken);
-
-            _populationService.PrePopulateContractDeliverableUnitCosts(ukPrn, cancellationToken);
+            PrePopulateReferenceDataCache(wrapper, sourceFile, cancellationToken);
 
             foreach (var command in _validatorCommands)
             {
@@ -76,7 +70,7 @@ namespace ESFA.DC.ESF.R2.ValidationService
 
                 foreach (var model in wrapper.SupplementaryDataModels)
                 {
-                    if (command.Execute(model))
+                    if (command.IsValid(model))
                     {
                         continue;
                     }
@@ -97,6 +91,26 @@ namespace ESFA.DC.ESF.R2.ValidationService
             }
 
             wrapper.SupplementaryDataModels = FilterOutInvalidRows(wrapper);
+        }
+
+        private void PrePopulateReferenceDataCache(
+            SupplementaryDataWrapper wrapper,
+            SourceFileModel sourceFile,
+            CancellationToken cancellationToken)
+        {
+            var allUlns = wrapper.SupplementaryDataModels.Select(m => m.ULN).ToList();
+            _populationService.PrePopulateUlnCache(allUlns, cancellationToken);
+
+            var ukPrn = Convert.ToInt32(sourceFile.UKPRN);
+            _populationService.PrePopulateContractAllocations(ukPrn, wrapper.SupplementaryDataModels, cancellationToken);
+
+            _populationService.PrePopulateContractDeliverableUnitCosts(ukPrn, cancellationToken);
+
+            var deliverableCodes = wrapper.SupplementaryDataModels.Select(m => m.DeliverableCode).ToList();
+            _populationService.PrePopulateContractDeliverableCodeMappings(deliverableCodes, cancellationToken);
+
+            var learnAimRefs = wrapper.SupplementaryDataModels.Select(m => m.LearnAimRef).ToList();
+            _populationService.PrePopulateLarsLearningDeliveries(learnAimRefs, cancellationToken);
         }
 
         private IList<SupplementaryDataLooseModel> FilterOutInvalidLooseRows(
