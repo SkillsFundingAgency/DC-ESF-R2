@@ -15,5 +15,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.Validation
         void PrePopulateContractDeliverableCodeMappings(
             IEnumerable<string> deliverableCodes,
             CancellationToken cancellationToken);
+
+        void PrePopulateLarsLearningDeliveries(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken);
     }
 }

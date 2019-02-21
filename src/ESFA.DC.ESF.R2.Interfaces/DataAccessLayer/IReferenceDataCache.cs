@@ -46,8 +46,8 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
             int ukPrn,
             CancellationToken cancellationToken);
 
-        IEnumerable<string> GetLarsLearningDelivery(
-            IEnumerable<string> learnAimRefs,
-            CancellationToken cancellationToken);
+        void PopulateLarsLearningDeliveries(IEnumerable<string> uncached, CancellationToken cancellationToken);
+
+        LarsLearningDeliveryModel GetLarsLearningDelivery(string learnAimRef);
     }
 }

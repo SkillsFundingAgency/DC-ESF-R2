@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 using ESFA.DC.ESF.R2.Models.Validation;
 
@@ -54,11 +55,9 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer.Services
             return _referenceDataCache.GetDeliverableUnitCosts(deliverableCodes, ukPrn, cancellationToken);
         }
 
-        public IEnumerable<string> GetLarsLearningDelivery(
-            IEnumerable<string> learnAimRefs,
-            CancellationToken cancellationToken)
+        public LarsLearningDeliveryModel GetLarsLearningDelivery(string learnAimRef)
         {
-            return _referenceDataCache.GetLarsLearningDelivery(learnAimRefs, cancellationToken);
+            return _referenceDataCache.GetLarsLearningDelivery(learnAimRef);
         }
 
         public ContractAllocationCacheModel GetContractAllocation(

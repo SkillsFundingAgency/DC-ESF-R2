@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 using ESFA.DC.ESF.R2.Models.Validation;
 
@@ -24,9 +25,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
             int ukPrn,
             CancellationToken cancellationToken);
 
-        IEnumerable<string> GetLarsLearningDelivery(
-            IEnumerable<string> learnAimRefs,
-            CancellationToken cancellationToken);
+        LarsLearningDeliveryModel GetLarsLearningDelivery(string learnAimRef);
 
         ContractAllocationCacheModel GetContractAllocation(
             string conRefNum,

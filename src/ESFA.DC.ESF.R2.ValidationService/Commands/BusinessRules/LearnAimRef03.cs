@@ -1,13 +1,16 @@
-﻿using ESFA.DC.ESF.R2.Interfaces.Validation;
+﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
-using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
     public class LearnAimRef03 : IBusinessRuleValidator
     {
-        public LearnAimRef03()
+        private readonly IReferenceDataService _referenceDataService;
+
+        public LearnAimRef03(IReferenceDataService referenceDataService)
         {
+            _referenceDataService = referenceDataService;
         }
 
         public string ErrorName => "LearnAimRef_03";
@@ -23,7 +26,9 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
                 return true;
             }
 
-            return false;
+            var larsLearningDelivery = _referenceDataService.GetLarsLearningDelivery(model.LearnAimRef);
+
+            return larsLearningDelivery != null;
         }
     }
 }

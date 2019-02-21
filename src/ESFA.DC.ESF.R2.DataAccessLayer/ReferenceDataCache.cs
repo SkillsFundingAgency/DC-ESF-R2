@@ -25,7 +25,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             CodeMappings = new List<FcsDeliverableCodeMapping>();
             DeliverableUnitCosts = new List<DeliverableUnitCost>();
             ProviderNameByUkprn = new Dictionary<int, string>();
-            LarsLearnAimRefs = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            LarsLearnAimRefs = new Dictionary<string, LarsLearningDeliveryModel>(StringComparer.OrdinalIgnoreCase);
             ContractAllocations = new List<ContractAllocationCacheModel>();
 
             _referenceDataRepository = referenceDataRepository;
@@ -41,7 +41,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
         public IDictionary<int, string> ProviderNameByUkprn { get; }
 
-        public HashSet<string> LarsLearnAimRefs { get; }
+        public IDictionary<string, LarsLearningDeliveryModel> LarsLearnAimRefs { get; }
 
         public List<DeliverableUnitCost> DeliverableUnitCosts { get; }
 
@@ -195,18 +195,27 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             }
         }
 
-        public IEnumerable<string> GetLarsLearningDelivery(
-            IEnumerable<string> learnAimRefs,
-            CancellationToken cancellationToken)
+        public LarsLearningDeliveryModel GetLarsLearningDelivery(string learnAimRef)
         {
-            var uncached = learnAimRefs.Where(learnAimRef => LarsLearnAimRefs.All(x => x != learnAimRef)).ToList();
+            LarsLearnAimRefs.TryGetValue(learnAimRef, out var learningDeliveryModel);
 
-            if (uncached.Any())
+            return learningDeliveryModel;
+        }
+
+        public void PopulateLarsLearningDeliveries(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken)
+        {
+            var larsLearningDeliveries =
+                _referenceDataRepository.GetLarsLearningDelivery(learnAimRefs, cancellationToken);
+
+            if (larsLearningDeliveries == null)
             {
-                LarsLearnAimRefs.UnionWith(_referenceDataRepository.GetLarsLearningDelivery(uncached, cancellationToken));
+                return;
             }
 
-            return LarsLearnAimRefs.Where(l => learnAimRefs.Any(la => la.CaseInsensitiveEquals(l))).ToList();
+            foreach (var larsLearningDelivery in larsLearningDeliveries)
+            {
+                LarsLearnAimRefs.Add(larsLearningDelivery.Key, larsLearningDelivery.Value);
+            }
         }
     }
 }

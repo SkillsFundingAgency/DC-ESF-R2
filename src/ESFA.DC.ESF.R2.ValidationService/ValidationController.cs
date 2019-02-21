@@ -108,6 +108,9 @@ namespace ESFA.DC.ESF.R2.ValidationService
 
             var deliverableCodes = wrapper.SupplementaryDataModels.Select(m => m.DeliverableCode).ToList();
             _populationService.PrePopulateContractDeliverableCodeMappings(deliverableCodes, cancellationToken);
+
+            var learnAimRefs = wrapper.SupplementaryDataModels.Select(m => m.LearnAimRef).ToList();
+            _populationService.PrePopulateLarsLearningDeliveries(learnAimRefs, cancellationToken);
         }
 
         private IList<SupplementaryDataLooseModel> FilterOutInvalidLooseRows(

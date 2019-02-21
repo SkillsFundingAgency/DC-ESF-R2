@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using ESFA.DC.Data.Postcodes.Model.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ReferenceData.LARS.Model.Interface;
 using ESFA.DC.ReferenceData.Organisations.Model.Interface;
 using ESFA.DC.ReferenceData.ULN.Model.Interface;
@@ -75,9 +76,9 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             return version;
         }
 
-        public IEnumerable<string> GetLarsLearningDelivery(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken)
+        public IDictionary<string, LarsLearningDeliveryModel> GetLarsLearningDelivery(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken)
         {
-            var learningDelivery = new HashSet<string>();
+            var learningDeliveries = new Dictionary<string, LarsLearningDeliveryModel>();
 
             if (cancellationToken.IsCancellationRequested)
             {
@@ -88,13 +89,27 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             {
                 using (var context = _larsContext())
                 {
-                    learningDelivery.UnionWith(context.LARS_LearningDeliveries
+                    var deliveries = context.LARS_LearningDeliveries
                         .Where(x => learnAimRefs.Contains(x.LearnAimRef))
-                        .Select(x => x.LearnAimRef));
+                        .Select(x => new LarsLearningDeliveryModel
+                        {
+                            LearnAimRef = x.LearnAimRef,
+                            LearningDeliveryGenre = x.LearningDeliveryGenre,
+                            ValidityPeriods = x.LarsValidities.Select(lv => new LarsValidityPeriod
+                            {
+                                ValidityStartDate = lv.StartDate,
+                                ValidityEndDate = lv.EndDate
+                            })
+                        });
+
+                    foreach (var delivery in deliveries)
+                    {
+                        learningDeliveries.Add(delivery.LearnAimRef, delivery);
+                    }
                 }
             }
 
-            return learningDelivery;
+            return learningDeliveries;
         }
 
         public string GetOrganisationVersion(CancellationToken cancellationToken)
