@@ -106,5 +106,54 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             Assert.True(rule.IsValid(suppData));
         }
+
+        [Theory]
+        [InlineData("ST01")]
+        [InlineData("NR01")]
+        [InlineData("RQ01")]
+        [InlineData("PG01")]
+        [InlineData("PG03")]
+        [InlineData("PG04")]
+        [InlineData("PG05")]
+        public void SupplementaryDataPanelDate03FailsNoSupplementaryDataPanelDate(string deliverableCode)
+        {
+            var suppData = new SupplementaryDataModel
+            {
+                SupplementaryDataPanelDate = null,
+                DeliverableCode = deliverableCode
+            };
+
+            var rule = new SupplementaryDataPanelDate03();
+
+            Assert.False(rule.IsValid(suppData));
+        }
+
+        [Fact]
+        public void SupplementaryDataPanelDate03PassesIrrelevantDeliverableCode()
+        {
+            var suppData = new SupplementaryDataModel
+            {
+                DeliverableCode = "Foo",
+                SupplementaryDataPanelDate = null
+            };
+
+            var rule = new SupplementaryDataPanelDate03();
+
+            Assert.True(rule.IsValid(suppData));
+        }
+
+        [Fact]
+        public void SupplementaryDataPanelDate03PassesSupplementaryDataPanelDatePresent()
+        {
+            var suppData = new SupplementaryDataModel
+            {
+                DeliverableCode = "Foo",
+                SupplementaryDataPanelDate = new DateTime(2019, 5, 1)
+            };
+
+            var rule = new SupplementaryDataPanelDate03();
+
+            Assert.True(rule.IsValid(suppData));
+        }
     }
 }
