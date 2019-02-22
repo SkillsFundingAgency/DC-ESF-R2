@@ -67,5 +67,44 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             Assert.True(rule.IsValid(suppData));
         }
+
+        [Fact]
+        public void SupplementaryDataPanelDate02FailsDateBeforeStartDate()
+        {
+            var suppData = new SupplementaryDataModel
+            {
+                SupplementaryDataPanelDate = new DateTime(2019, 3, 31)
+            };
+
+            var rule = new SupplementaryDataPanelDate02();
+
+            Assert.False(rule.IsValid(suppData));
+        }
+
+        [Fact]
+        public void SupplementaryDataPanelDate02PassesNoSupplementaryDataPanelDate()
+        {
+            var suppData = new SupplementaryDataModel
+            {
+                SupplementaryDataPanelDate = null
+            };
+
+            var rule = new SupplementaryDataPanelDate02();
+
+            Assert.True(rule.IsValid(suppData));
+        }
+
+        [Fact]
+        public void SupplementaryDataPanelDate02PassesSupplementaryDataPanelDateAfterStartDate()
+        {
+            var suppData = new SupplementaryDataModel
+            {
+                SupplementaryDataPanelDate = new DateTime(2019, 4, 1)
+            };
+
+            var rule = new SupplementaryDataPanelDate02();
+
+            Assert.True(rule.IsValid(suppData));
+        }
     }
 }
