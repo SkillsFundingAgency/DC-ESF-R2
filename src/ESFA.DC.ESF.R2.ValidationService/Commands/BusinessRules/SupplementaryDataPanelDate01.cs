@@ -26,7 +26,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
                 return true;
             }
 
-            return model.SupplementaryDataPanelDate <= _dateTimeProvider.GetNowUtc();
+            return model.SupplementaryDataPanelDate <= _dateTimeProvider.ConvertUtcToUk(_dateTimeProvider.GetNowUtc());
         }
     }
 }
