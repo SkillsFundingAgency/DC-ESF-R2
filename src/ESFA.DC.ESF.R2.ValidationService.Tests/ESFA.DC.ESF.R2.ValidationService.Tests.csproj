@@ -220,6 +220,7 @@
     <Compile Include="BusinessRuleTests\DeliverableCodeTests.cs" />
     <Compile Include="BusinessRuleTests\LearnAimRefTests.cs" />
     <Compile Include="BusinessRuleTests\ReferenceRuleTests.cs" />
+    <Compile Include="BusinessRuleTests\SupplementaryDataPanelDateTests.cs" />
     <Compile Include="BusinessRuleTests\UlnRuleTests.cs" />
     <Compile Include="BusinessRuleTests\ValueRuleTests.cs" />
     <Compile Include="ControllerTest.cs" />
