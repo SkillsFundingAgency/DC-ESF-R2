@@ -17,10 +17,14 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 SupplementaryDataPanelDate = new DateTime(2018, 9, 2)
             };
 
+            var date = new DateTime(2018, 9, 1);
             var mock = new Mock<IDateTimeProvider>();
             mock
                 .Setup(m => m.GetNowUtc())
-                .Returns(new DateTime(2018, 9, 1));
+                .Returns(date);
+            mock
+                .Setup(m => m.ConvertUtcToUk(It.IsAny<DateTime>()))
+                .Returns(date);
 
             var rule = new SupplementaryDataPanelDate01(mock.Object);
 
@@ -43,17 +47,21 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
-        public void SupplementaryDataPanelDate0PassesSupplementaryDataPanelDateNotInFuture()
+        public void SupplementaryDataPanelDate01PassesSupplementaryDataPanelDateNotInFuture()
         {
             var suppData = new SupplementaryDataModel
             {
                 SupplementaryDataPanelDate = new DateTime(2018, 9, 1)
             };
 
+            var date = new DateTime(2018, 9, 1);
             var mock = new Mock<IDateTimeProvider>();
             mock
                 .Setup(m => m.GetNowUtc())
-                .Returns(new DateTime(2018, 9, 1));
+                .Returns(date);
+            mock
+                .Setup(m => m.ConvertUtcToUk(It.IsAny<DateTime>()))
+                .Returns(date);
 
             var rule = new SupplementaryDataPanelDate01(mock.Object);
 
