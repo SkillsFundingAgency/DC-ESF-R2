@@ -31,5 +31,10 @@
         public const string ReferenceType_GrantRecipient = "Grant Recipient";
         public const string ReferenceType_LearnRefNumber = "LearnRefNumber";
         public const string ReferenceType_Other = "Other";
+
+        public const string LarsLearningDeliveryGenre_EOQ = "EOQ";
+        public const string LarsLearningDeliveryGenre_EQQ = "EQQ";
+        public const string LarsLearningDeliveryGenre_EOU = "EOU";
+        public const string LarsLearningDeliveryGenre_IHE = "IHE";
     }
 }
