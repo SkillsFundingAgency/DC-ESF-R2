@@ -263,5 +263,106 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             Assert.True(rule.IsValid(suppData));
         }
+
+        [Fact]
+        public void LearnAimRef05FailsGenreWrong()
+        {
+            var suppData = new SupplementaryDataModel
+            {
+                LearnAimRef = "Foo",
+                DeliverableCode = "RQ01"
+            };
+
+            var refDataServiceMock = new Mock<IReferenceDataService>();
+            refDataServiceMock
+                .Setup(m => m.GetLarsLearningDelivery(suppData.LearnAimRef))
+                .Returns(new LarsLearningDeliveryModel
+                {
+                    LearnAimRef = suppData.LearnAimRef,
+                    LearningDeliveryGenre = "Foo"
+                });
+
+            var rule = new LearnAimRef05(refDataServiceMock.Object);
+
+            Assert.False(rule.IsValid(suppData));
+        }
+
+        [Fact]
+        public void LearnAimRef05PassesNoLearnAimRef()
+        {
+            var suppData = new SupplementaryDataModel
+            {
+                LearnAimRef = null,
+                DeliverableCode = "RQ01"
+            };
+
+            var refDataServiceMock = new Mock<IReferenceDataService>();
+
+            var rule = new LearnAimRef05(refDataServiceMock.Object);
+
+            Assert.True(rule.IsValid(suppData));
+        }
+
+        [Fact]
+        public void LearnAimRef05PassesIrrelevantDeliveryCode()
+        {
+            var suppData = new SupplementaryDataModel
+            {
+                LearnAimRef = "Foo",
+                DeliverableCode = "Foo"
+            };
+
+            var refDataServiceMock = new Mock<IReferenceDataService>();
+
+            var rule = new LearnAimRef05(refDataServiceMock.Object);
+
+            Assert.True(rule.IsValid(suppData));
+        }
+
+        [Fact]
+        public void LearnAimRef05PassesNoLarsLearningDelivery()
+        {
+            var suppData = new SupplementaryDataModel
+            {
+                LearnAimRef = "Foo",
+                DeliverableCode = "RQ01"
+            };
+
+            var refDataServiceMock = new Mock<IReferenceDataService>();
+            refDataServiceMock
+                .Setup(m => m.GetLarsLearningDelivery(suppData.LearnAimRef))
+                .Returns((LarsLearningDeliveryModel)null);
+
+            var rule = new LearnAimRef05(refDataServiceMock.Object);
+
+            Assert.True(rule.IsValid(suppData));
+        }
+
+        [Theory]
+        [InlineData("EOQ")]
+        [InlineData("EQQ")]
+        [InlineData("EOU")]
+        [InlineData("IHE")]
+        public void LearnAimRef05PassesGenreCorrect(string genre)
+        {
+            var suppData = new SupplementaryDataModel
+            {
+                LearnAimRef = "Foo",
+                DeliverableCode = "RQ01"
+            };
+
+            var refDataServiceMock = new Mock<IReferenceDataService>();
+            refDataServiceMock
+                .Setup(m => m.GetLarsLearningDelivery(suppData.LearnAimRef))
+                .Returns(new LarsLearningDeliveryModel
+                {
+                    LearnAimRef = suppData.LearnAimRef,
+                    LearningDeliveryGenre = genre
+                });
+
+            var rule = new LearnAimRef05(refDataServiceMock.Object);
+
+            Assert.True(rule.IsValid(suppData));
+        }
     }
 }

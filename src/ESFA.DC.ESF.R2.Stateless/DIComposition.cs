@@ -503,6 +503,7 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.RegisterType<LearnAimRef02>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<LearnAimRef03>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<LearnAimRef04>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<LearnAimRef05>().As<IBusinessRuleValidator>();
 
             containerBuilder.Register(c => new List<IBusinessRuleValidator>(c.Resolve<IEnumerable<IBusinessRuleValidator>>()))
                 .As<IList<IBusinessRuleValidator>>();
