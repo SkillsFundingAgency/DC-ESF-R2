@@ -21,9 +21,8 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
         IEnumerable<long> GetUlnLookup(IEnumerable<long?> searchUlns, CancellationToken cancellationToken);
 
         IList<DeliverableUnitCost> GetDeliverableUnitCosts(
-            IList<string> deliverableCodes,
-            int ukPrn,
-            CancellationToken cancellationToken);
+            string conRefNum,
+            IList<string> deliverableCodes);
 
         LarsLearningDeliveryModel GetLarsLearningDelivery(string learnAimRef);
 
@@ -32,5 +31,11 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
             int deliverableCode,
             CancellationToken cancellationToken,
             int? ukPrn = null);
+
+        IEnumerable<FcsDeliverableCodeMapping> GetContractDeliverableCodeMapping(
+            IEnumerable<string> deliverableCodes,
+            CancellationToken cancellationToken);
+
+        IEnumerable<LarsLearningDeliveryModel> GetLarsLearningDelivery(IEnumerable<string> learnAimRefs);
     }
 }

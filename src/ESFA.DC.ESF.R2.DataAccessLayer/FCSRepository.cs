@@ -42,8 +42,10 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                         .Where(x => deliverableCodes.Any(dc => dc.CaseInsensitiveEquals(x.ExternalDeliverableCode)))
                         .Select(x => new FcsDeliverableCodeMapping
                             {
+                                FundingStreamPeriodCode = x.FundingStreamPeriodCode,
                                 FcsDeliverableCode = x.FcsdeliverableCode,
-                                ExternalDeliverableCode = x.ExternalDeliverableCode
+                                ExternalDeliverableCode = x.ExternalDeliverableCode,
+                                DeliverableName = x.DeliverableName
                             })
                         .ToList();
                 }
@@ -91,7 +93,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         {
             List<FcsDeliverableCodeMapping> mappings = GetContractDeliverableCodeMapping(deliverableCodes, cancellationToken).ToList();
 
-            List<DeliverableUnitCost> deliverableUnitCosts = null;
+            List<DeliverableUnitCost> deliverableUnitCosts;
 
                 if (cancellationToken.IsCancellationRequested)
                 {

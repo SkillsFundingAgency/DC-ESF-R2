@@ -42,12 +42,13 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
             CancellationToken cancellationToken);
 
         IList<DeliverableUnitCost> GetDeliverableUnitCosts(
-            IList<string> deliverableCodes,
-            int ukPrn,
-            CancellationToken cancellationToken);
+            string conRefNum,
+            IList<string> deliverableCodes);
 
         void PopulateLarsLearningDeliveries(IEnumerable<string> uncached, CancellationToken cancellationToken);
 
         LarsLearningDeliveryModel GetLarsLearningDelivery(string learnAimRef);
+
+        IEnumerable<LarsLearningDeliveryModel> GetLarsLearningDelivery(IEnumerable<string> learnAimRefs);
     }
 }

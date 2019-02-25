@@ -7,5 +7,7 @@
         public string ExternalDeliverableCode { get; set; }
 
         public string FcsDeliverableCode { get; set; }
+
+        public string DeliverableName { get; set; }
     }
 }
