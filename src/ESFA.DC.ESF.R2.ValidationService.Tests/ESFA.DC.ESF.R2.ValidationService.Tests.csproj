@@ -226,6 +226,7 @@
     <Compile Include="ControllerTest.cs" />
     <Compile Include="CrossRecordRuleTests\DuplicateTests.cs" />
     <Compile Include="FieldDefinitionRuleTests\CalendarRuleTests.cs" />
+    <Compile Include="FieldDefinitionRuleTests\LearnAimRefTests.cs" />
     <Compile Include="FieldDefinitionRuleTests\ValueTests.cs" />
     <Compile Include="FieldDefinitionRuleTests\ULNTests.cs" />
     <Compile Include="FieldDefinitionRuleTests\ReferenceTests.cs" />
