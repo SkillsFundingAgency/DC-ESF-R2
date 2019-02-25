@@ -15,6 +15,7 @@ using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports;
 using ESFA.DC.ESF.R2.ReportingService.Comparers;
 using ESFA.DC.ESF.R2.ReportingService.Mappers;
+using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.IO.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Reports
@@ -22,6 +23,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
     public class AimAndDeliverableReport : AbstractReportBuilder, IModelReport
     {
         private const string FundingStreamPeriodCode = "ESF1420";
+
+        private const string EsfR2ConRefNum = "ESF-5000";
 
         private readonly IKeyValuePersistenceService _storage;
 
@@ -65,7 +68,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             _fm70Repository = fm70Repository;
             _comparer = comparer as AimAndDeliverableComparer;
 
-            ReportFileName = "ESF Aim and Deliverable Report";
+            ReportFileName = "ESF Round 2 Aim and Deliverable Report";
         }
 
         public async Task GenerateReport(
@@ -131,43 +134,46 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             var deliverableCodes = fm70Deliverables?.Select(d => d.DeliverableCode).ToList();
 
             var fcsCodeMappings =
-                _referenceDataService.GetContractDeliverableCodeMapping(deliverableCodes, cancellationToken);
-            var larsDeliveries = _referenceDataService.GetLarsLearningDelivery(learnAimRefs);
+                _referenceDataService.GetContractDeliverableCodeMapping(deliverableCodes, cancellationToken).ToList();
+            var larsDeliveries = _referenceDataService.GetLarsLearningDelivery(learnAimRefs).ToList();
 
             var reportData = new List<AimAndDeliverableModel>();
 
             foreach (var learner in learners)
             {
-                var deliveries = learningDeliveries.Where(ld => ld.LearnRefNumber == learner.LearnRefNumber).ToList();
+                var deliveries = learningDeliveries
+                    .Where(ld => ld.LearnRefNumber.CaseInsensitiveEquals(learner.LearnRefNumber)
+                                 && ld.ConRefNumber.CaseInsensitiveEquals(EsfR2ConRefNum))
+                    .ToList();
                 foreach (var delivery in deliveries)
                 {
                     var fm70Delivery = fm70LearningDeliveries?.SingleOrDefault(d =>
-                        d.LearnRefNumber == learner.LearnRefNumber
+                        d.LearnRefNumber.CaseInsensitiveEquals(learner.LearnRefNumber)
                         && d.AimSeqNumber == delivery.AimSeqNumber);
                     var fm70DeliveryDeliverables = fm70Deliverables?.Where(d =>
-                        d.LearnRefNumber == learner.LearnRefNumber
+                        d.LearnRefNumber.CaseInsensitiveEquals(learner.LearnRefNumber)
                         && d.AimSeqNumber == delivery.AimSeqNumber).ToList();
 
                     var deliveryFam = learnerDeliveryFams?.SingleOrDefault(l =>
-                        l.LearnRefNumber == learner.LearnRefNumber
+                        l.LearnRefNumber.CaseInsensitiveEquals(learner.LearnRefNumber)
                         && l.AimSeqNumber == delivery.AimSeqNumber
-                        && l.LearnDelFAMType == "RES");
+                        && l.LearnDelFAMType.CaseInsensitiveEquals(Constants.LearnDelFamType_RES));
 
                     var outcomeType = fm70Delivery?.EligibleProgressionOutcomeType;
                     var outcomeCode = fm70Delivery?.EligibleProgressionOutcomeCode;
                     var outcomeStartDate = fm70Delivery?.EligibleProgressionOutomeStartDate;
-                    var outcome = outcomes?.SingleOrDefault(o => o.OutType == outcomeType
+                    var outcome = outcomes?.SingleOrDefault(o => o.OutType.CaseInsensitiveEquals(outcomeType)
                                                                 && o.OutCode == outcomeCode
                                                                 && o.OutStartDate == outcomeStartDate);
 
-                    var fm70Outcome = fm70Outcomes?.SingleOrDefault(o => o.OutType == outcomeType
+                    var fm70Outcome = fm70Outcomes?.SingleOrDefault(o => o.OutType.CaseInsensitiveEquals(outcomeType)
                                                                         && o.OutCode == outcomeCode
                                                                         && o.OutStartDate == outcomeStartDate);
 
                     var learnerMonitorings =
-                        learnMonitorings?.Where(m => m.LearnRefNumber == learner.LearnRefNumber).ToList();
+                        learnMonitorings?.Where(m => m.LearnRefNumber.CaseInsensitiveEquals(learner.LearnRefNumber)).ToList();
                     var learnerDeliveryMonitorings = deliveryMonitorings
-                        ?.Where(m => m.LearnRefNumber == learner.LearnRefNumber && m.AimSeqNumber == delivery.AimSeqNumber).ToList();
+                        ?.Where(m => m.LearnRefNumber.CaseInsensitiveEquals(learner.LearnRefNumber) && m.AimSeqNumber == delivery.AimSeqNumber).ToList();
                     var larsDelivery = larsDeliveries?.SingleOrDefault(l => l.LearnAimRef == delivery.LearnAimRef);
 
                     if (fm70DeliveryDeliverables == null || !fm70DeliveryDeliverables.Any())
