@@ -151,29 +151,12 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         }
 
         public IList<DeliverableUnitCost> GetDeliverableUnitCosts(
-            IList<string> deliverableCodes,
-            int ukPrn,
-            CancellationToken cancellationToken)
+            string conRefNum,
+            IList<string> deliverableCodes)
         {
-            var contractRefNumsForProvider = _esfRepository.GetContractsForProvider(ukPrn.ToString(), cancellationToken).Result;
-
-            var contractDeliverableCodeUnitCosts = DeliverableUnitCosts
-                .Where(uc => contractRefNumsForProvider
-                    .Any(cp => cp.CaseInsensitiveEquals(uc.ConRefNum)));
-
-            var newItemsNotInCache = deliverableCodes
-                .Where(dc => !contractDeliverableCodeUnitCosts
-                .Any(cache => dc.CaseInsensitiveEquals(cache.DeliverableCode)))
-                .ToList();
-
-            if (!newItemsNotInCache.Any())
-            {
-                return DeliverableUnitCosts;
-            }
-
-            PopulateDeliverableUnitCosts(newItemsNotInCache, ukPrn, cancellationToken);
-
-            return DeliverableUnitCosts;
+            return DeliverableUnitCosts.Where(duc => duc.ConRefNum.CaseInsensitiveEquals(conRefNum)
+                                              && deliverableCodes.Any(dc =>
+                                                  dc.CaseInsensitiveEquals(duc.DeliverableCode))).ToList();
         }
 
         public void PopulateDeliverableUnitCosts(
@@ -200,6 +183,19 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             LarsLearnAimRefs.TryGetValue(learnAimRef, out var learningDeliveryModel);
 
             return learningDeliveryModel;
+        }
+
+        public IEnumerable<LarsLearningDeliveryModel> GetLarsLearningDelivery(IEnumerable<string> learnAimRefs)
+        {
+            var larsLearningDeliveries = new List<LarsLearningDeliveryModel>();
+
+            foreach (var learnAimRef in learnAimRefs)
+            {
+                LarsLearnAimRefs.TryGetValue(learnAimRef, out var learningDeliveryModel);
+                larsLearningDeliveries.Add(learningDeliveryModel);
+            }
+
+            return larsLearningDeliveries;
         }
 
         public void PopulateLarsLearningDeliveries(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken)

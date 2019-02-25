@@ -9,6 +9,12 @@ namespace ESFA.DC.ESF.R2.Models
 
         public string LearningDeliveryGenre { get; set; }
 
+        public string LearnAimRefTitle { get; set; }
+
+        public string NotionalNVQLevelv2 { get; set; }
+
+        public decimal? SectorSubjectAreaTier2 { get; set; }
+
         public IEnumerable<LarsValidityPeriod> ValidityPeriods { get; set; }
     }
 }

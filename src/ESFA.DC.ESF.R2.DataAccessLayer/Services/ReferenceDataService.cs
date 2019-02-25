@@ -48,16 +48,20 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer.Services
         }
 
         public IList<DeliverableUnitCost> GetDeliverableUnitCosts(
-            IList<string> deliverableCodes,
-            int ukPrn,
-            CancellationToken cancellationToken)
+            string conRefNum,
+            IList<string> deliverableCodes)
         {
-            return _referenceDataCache.GetDeliverableUnitCosts(deliverableCodes, ukPrn, cancellationToken);
+            return _referenceDataCache.GetDeliverableUnitCosts(conRefNum, deliverableCodes);
         }
 
         public LarsLearningDeliveryModel GetLarsLearningDelivery(string learnAimRef)
         {
             return _referenceDataCache.GetLarsLearningDelivery(learnAimRef);
+        }
+
+        public IEnumerable<LarsLearningDeliveryModel> GetLarsLearningDelivery(IEnumerable<string> learnAimRefs)
+        {
+            return _referenceDataCache.GetLarsLearningDelivery(learnAimRefs);
         }
 
         public ContractAllocationCacheModel GetContractAllocation(
@@ -67,6 +71,13 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer.Services
             int? ukPrn = null)
         {
             return _referenceDataCache.GetContractAllocation(conRefNum, deliverableCode, cancellationToken);
+        }
+
+        public IEnumerable<FcsDeliverableCodeMapping> GetContractDeliverableCodeMapping(
+            IEnumerable<string> deliverableCodes,
+            CancellationToken cancellationToken)
+        {
+            return _referenceDataCache.GetContractDeliverableCodeMapping(deliverableCodes, cancellationToken);
         }
     }
 }

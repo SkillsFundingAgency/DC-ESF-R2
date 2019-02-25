@@ -95,6 +95,9 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                         {
                             LearnAimRef = x.LearnAimRef,
                             LearningDeliveryGenre = x.LearningDeliveryGenre,
+                            LearnAimRefTitle = x.LearnAimRefTitle,
+                            NotionalNVQLevelv2 = x.NotionalNvqlevelv2,
+                            SectorSubjectAreaTier2 = x.SectorSubjectAreaTier2,
                             ValidityPeriods = x.LarsValidities.Select(lv => new LarsValidityPeriod
                             {
                                 ValidityStartDate = lv.StartDate,
