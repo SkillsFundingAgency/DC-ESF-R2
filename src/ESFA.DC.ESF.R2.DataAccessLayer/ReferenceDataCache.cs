@@ -192,7 +192,10 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             foreach (var learnAimRef in learnAimRefs)
             {
                 LarsLearnAimRefs.TryGetValue(learnAimRef, out var learningDeliveryModel);
-                larsLearningDeliveries.Add(learningDeliveryModel);
+                if (learningDeliveryModel != null)
+                {
+                    larsLearningDeliveries.Add(learningDeliveryModel);
+                }
             }
 
             return larsLearningDeliveries;
