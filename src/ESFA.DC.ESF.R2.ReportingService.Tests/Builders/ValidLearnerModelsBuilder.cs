@@ -44,7 +44,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.Builders
                     FundModel = 70,
                     PartnerUKPRN = 10048217,
                     DelLocPostCode = "BH12 4AR",
-                    ConRefNumber = "ESF-2108",
+                    ConRefNumber = "ESF-5000",
                     CompStatus = 2,
                     LearnActEndDate = new DateTime(2016, 10, 19),
                     Outcome = 1,

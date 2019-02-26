@@ -24,7 +24,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
         {
             var csv = string.Empty;
             var dateTime = DateTime.UtcNow;
-            var filename = $"10005752_2_ESF Aim and Deliverable Report {dateTime:yyyyMMdd-HHmmss}";
+            var filename = $"10005752_2_ESF Round 2 Aim and Deliverable Report {dateTime:yyyyMMdd-HHmmss}";
 
             var dateTimeProviderMock = new Mock<IDateTimeProvider>();
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(dateTime);
@@ -98,7 +98,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             {
                 UKPRN = "10005752",
                 JobId = 2,
-                ConRefNumber = "ESF-2108",
+                ConRefNumber = "ESF-5000",
                 FileName = "SUPPDATA-10005752-ESF-2108-20180909-090911.CSV",
                 SuppliedDate = DateTime.Now,
                 PreparationDate = DateTime.Now.AddDays(-1)
