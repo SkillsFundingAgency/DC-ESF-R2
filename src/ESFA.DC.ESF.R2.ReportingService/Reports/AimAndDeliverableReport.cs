@@ -68,7 +68,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             _fm70Repository = fm70Repository;
             _comparer = comparer as AimAndDeliverableComparer;
 
-            ReportFileName = "ESF Aim and Deliverable Report";
+            ReportFileName = "ESF Round 2 Aim and Deliverable Report";
         }
 
         public async Task GenerateReport(
