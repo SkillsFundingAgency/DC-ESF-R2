@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
-using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Ilr;
 using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.ILR1819.DataStore.EF;
 using ESFA.DC.ILR1819.DataStore.EF.Interfaces;
@@ -52,61 +52,61 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             return fileDetail;
         }
 
-        public async Task<IList<ESF_LearningDelivery>> GetLearningDeliveries(int ukPrn, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Fm70LearningDeliveryModel>> GetLearningDeliveries(int ukPrn, CancellationToken cancellationToken)
         {
-            IList<ESF_LearningDelivery> values;
-
             if (cancellationToken.IsCancellationRequested)
             {
                 return null;
             }
 
+            IEnumerable<Fm70LearningDeliveryModel> learningDeliveries;
             using (var context = _validContext())
             {
-                values = await context.ESF_LearningDelivery
+                learningDeliveries = await context.ESF_LearningDelivery
                     .Where(v => v.UKPRN == ukPrn)
+                    .Select(ld => new Fm70LearningDeliveryModel
+                    {
+                        UkPrn = ld.UKPRN,
+                        LearnRefNumber = ld.LearnRefNumber,
+                        AimSeqNumber = ld.AimSeqNumber,
+                        AimValue = ld.AimValue,
+                        AdjustedAreaCostFactor = ld.AdjustedAreaCostFactor,
+                        AdjustedPremiumFactor = ld.AdjustedPremiumFactor,
+                        ApplicWeightFundRate = ld.ApplicWeightFundRate,
+                        LdEsfEngagementStartDate = ld.LDESFEngagementStartDate,
+                        LatestPossibleStartDate = ld.LatestPossibleStartDate,
+                        EligibleProgressionOutcomeType = ld.EligibleProgressionOutcomeType,
+                        EligibleProgressionOutcomeCode = ld.EligibleProgressionOutcomeCode,
+                        EligibleProgressionOutomeStartDate = ld.EligibleProgressionOutomeStartDate,
+                        Fm70LearningDeliveryDeliverables = ld.ESF_LearningDeliveryDeliverable
+                            .Select(ldd => new Fm70LearningDeliveryDeliverableModel
+                        {
+                                UkPrn = ldd.UKPRN,
+                                LearnRefNumber = ldd.LearnRefNumber,
+                                AimSeqNumber = ldd.AimSeqNumber,
+                                DeliverableCode = ldd.DeliverableCode,
+                                DeliverableUnitCost = ldd.DeliverableUnitCost
+                        }),
+                        Fm70LearningDeliveryDeliverablePeriods = ld.ESF_LearningDeliveryDeliverable_Period
+                            .Select(lddp => new Fm70LearningDeliveryDeliverablePeriodModel
+                        {
+                                UkPrn = lddp.UKPRN,
+                                LearnRefNumber = lddp.LearnRefNumber,
+                                AimSeqNumber = lddp.AimSeqNumber,
+                                DeliverableCode = lddp.DeliverableCode,
+                                Period = lddp.Period,
+                                StartEarnings = lddp.StartEarnings,
+                                AchievementEarnings = lddp.AchievementEarnings,
+                                AdditionalProgCostEarnings = lddp.AdditionalProgCostEarnings,
+                                DeliverableVolume = lddp.DeliverableVolume,
+                                ProgressionEarnings = lddp.ProgressionEarnings,
+                                ReportingVolume = lddp.ReportingVolume
+                            })
+                    })
                     .ToListAsync(cancellationToken);
             }
 
-            return values;
-        }
-
-        public async Task<IList<ESF_LearningDeliveryDeliverable>> GetLearningDeliveryDeliverables(int ukPrn, CancellationToken cancellationToken)
-        {
-            IList<ESF_LearningDeliveryDeliverable> values;
-
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return null;
-            }
-
-            using (var context = _validContext())
-            {
-                values = await context.ESF_LearningDeliveryDeliverable
-                    .Where(v => v.UKPRN == ukPrn)
-                    .ToListAsync(cancellationToken);
-            }
-
-            return values;
-        }
-
-        public async Task<IList<ESF_LearningDeliveryDeliverable_Period>> GetLearningDeliveryDeliverablePeriods(int ukPrn, CancellationToken cancellationToken)
-        {
-            IList<ESF_LearningDeliveryDeliverable_Period> values;
-
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return null;
-            }
-
-            using (var context = _validContext())
-            {
-                values = await context.ESF_LearningDeliveryDeliverable_Period
-                    .Where(v => v.UKPRN == ukPrn)
-                    .ToListAsync(cancellationToken);
-            }
-
-            return values;
+            return learningDeliveries;
         }
 
         public async Task<IList<FM70PeriodisedValuesModel>> GetPeriodisedValues(int ukPrn, CancellationToken cancellationToken)
@@ -149,9 +149,9 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             return values;
         }
 
-        public async Task<IList<ESF_DPOutcome>> GetOutcomes(int ukPrn, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Fm70DpOutcome>> GetOutcomes(int ukPrn, CancellationToken cancellationToken)
         {
-            IList<ESF_DPOutcome> values;
+            IEnumerable<Fm70DpOutcome> outcomes;
 
             if (cancellationToken.IsCancellationRequested)
             {
@@ -160,12 +160,21 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
             using (var context = _validContext())
             {
-                values = await context.ESF_DPOutcome
+                outcomes = await context.ESF_DPOutcome
                     .Where(v => v.UKPRN == ukPrn)
+                    .Select(o => new Fm70DpOutcome
+                    {
+                        UkPrn = o.UKPRN,
+                        LearnRefNumber = o.LearnRefNumber,
+                        OutType = o.OutType,
+                        OutCode = o.OutCode,
+                        OutStartDate = o.OutStartDate,
+                        OutcomeDateForProgression = o.OutcomeDateForProgression
+                    })
                     .ToListAsync(cancellationToken);
             }
 
-            return values;
+            return outcomes;
         }
     }
 }

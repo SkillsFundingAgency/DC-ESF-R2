@@ -3,6 +3,7 @@ using System.Linq;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Strategies;
 using ESFA.DC.ESF.R2.Interfaces.Strategies;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Ilr;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRowHelpers

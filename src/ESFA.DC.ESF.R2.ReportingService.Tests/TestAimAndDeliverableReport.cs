@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
-using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Models;
-using ESFA.DC.ESF.R2.ReportingService.Comparers;
 using ESFA.DC.ESF.R2.ReportingService.Reports;
 using ESFA.DC.ESF.R2.ReportingService.Services;
 using ESFA.DC.ESF.R2.ReportingService.Tests.Builders;
-using ESFA.DC.ILR1819.DataStore.EF;
-using ESFA.DC.ILR1819.DataStore.EF.Valid;
 using ESFA.DC.IO.Interfaces;
 using Moq;
 using Xunit;
@@ -35,51 +33,18 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
                 .Callback<string, string, CancellationToken>((key, value, ct) => csv = value)
                 .Returns(Task.CompletedTask);
 
-            var refRepoMock = new Mock<IReferenceDataService>();
-            refRepoMock.Setup(m =>
-                    m.GetContractDeliverableCodeMapping(It.IsAny<IList<string>>(), It.IsAny<CancellationToken>()))
-                .Returns(ReferenceDataBuilder.BuildContractDeliverableCodeMapping());
-            refRepoMock.Setup(m => m.GetLarsLearningDelivery(It.IsAny<IList<string>>()))
-                .Returns(ReferenceDataBuilder.BuildLarsLearningDeliveries());
+            var aimAndDeliverableServiceMock = new Mock<IAimAndDeliverableService>();
+            aimAndDeliverableServiceMock
+                .Setup(m => m.GetAimAndDeliverableModel(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(AimAndDeliverableBuilder.BuildAimAndDeliverableModels());
 
-            var validRepoMock = new Mock<IValidRepository>();
-            validRepoMock.Setup(m => m.GetLearners(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(ValidLearnerModelsBuilder.BuildLearners());
-            validRepoMock.Setup(m => m.GetLearningDeliveries(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(ValidLearnerModelsBuilder.BuildLearningDeliveries());
-            validRepoMock.Setup(m => m.GetLearningDeliveryFAMs(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(ValidLearnerModelsBuilder.BuildLearningDeliveryFams());
-            validRepoMock.Setup(m => m.GetDPOutcomes(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<DPOutcome>());
-            validRepoMock.Setup(m =>
-                    m.GetProviderSpecDeliveryMonitorings(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<ProviderSpecDeliveryMonitoring>());
-            validRepoMock
-                .Setup(m => m.GetProviderSpecLearnerMonitorings(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<ProviderSpecLearnerMonitoring>());
-
-            var fm70RepoMock = new Mock<IFM70Repository>();
-            fm70RepoMock.Setup(m => m.GetLearningDeliveries(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(FM70ModelsBuilder.BuildLearningDeliveries());
-            fm70RepoMock.Setup(m => m.GetLearningDeliveryDeliverables(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(FM70ModelsBuilder.BuildLearningDeliveryDeliverables());
-            fm70RepoMock.Setup(m =>
-                    m.GetLearningDeliveryDeliverablePeriods(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(FM70ModelsBuilder.BuildDeliveryDeliverablePeriods());
-            fm70RepoMock.Setup(m => m.GetOutcomes(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<ESF_DPOutcome>());
-
-            var comparer = new AimAndDeliverableComparer();
             var valueProvider = new ValueProvider();
 
             var aimAndDeliverableReport = new AimAndDeliverableReport(
                 dateTimeProviderMock.Object,
                 storage.Object,
-                refRepoMock.Object,
-                validRepoMock.Object,
-                fm70RepoMock.Object,
                 valueProvider,
-                comparer);
+                aimAndDeliverableServiceMock.Object);
 
             var wrapper = new SupplementaryDataWrapper
             {
