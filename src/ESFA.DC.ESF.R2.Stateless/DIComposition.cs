@@ -338,6 +338,8 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.RegisterType<ValueProvider>().As<IValueProvider>().SingleInstance();
             containerBuilder.RegisterType<ReferenceDataService>().As<IReferenceDataService>();
             containerBuilder.RegisterType<PopulationService>().As<IPopulationService>();
+
+            containerBuilder.RegisterType<AimAndDeliverableService>().As<IAimAndDeliverableService>();
         }
 
         private static void RegisterControllers(ContainerBuilder containerBuilder)

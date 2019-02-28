@@ -17,5 +17,7 @@
         public const string SD08Tag = "<FCS-SD08>";
         public const string SD09Tag = "<FCS-SD09>";
         public const string SD10Tag = "<FCS-SD10>";
+
+        public const string LearnDelFamType_RES = "RES";
     }
 }

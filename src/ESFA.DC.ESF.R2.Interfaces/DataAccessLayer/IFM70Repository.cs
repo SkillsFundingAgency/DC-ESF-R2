@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.ESF.R2.Models;
-using ESFA.DC.ILR1819.DataStore.EF;
+using ESFA.DC.ESF.R2.Models.Ilr;
 
 namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
 {
@@ -10,14 +9,10 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
     {
         Task<ILRFileDetailsModel> GetFileDetails(int ukPrn, CancellationToken cancellationToken);
 
-        Task<IList<ESF_LearningDelivery>> GetLearningDeliveries(int ukPrn, CancellationToken cancellationToken);
-
-        Task<IList<ESF_LearningDeliveryDeliverable>> GetLearningDeliveryDeliverables(int ukPrn, CancellationToken cancellationToken);
-
-        Task<IList<ESF_LearningDeliveryDeliverable_Period>> GetLearningDeliveryDeliverablePeriods(int ukPrn, CancellationToken cancellationToken);
+        Task<IEnumerable<Fm70LearningDeliveryModel>> GetLearningDeliveries(int ukPrn, CancellationToken cancellationToken);
 
         Task<IList<FM70PeriodisedValuesModel>> GetPeriodisedValues(int ukPrn, CancellationToken cancellationToken);
 
-        Task<IList<ESF_DPOutcome>> GetOutcomes(int ukPrn, CancellationToken cancellationToken);
+        Task<IEnumerable<Fm70DpOutcome>> GetOutcomes(int ukPrn, CancellationToken cancellationToken);
     }
 }

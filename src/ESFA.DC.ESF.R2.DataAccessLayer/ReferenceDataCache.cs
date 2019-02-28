@@ -33,17 +33,17 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             _esfRepository = esfRepository;
         }
 
-        public HashSet<long> Ulns { get; }
+        private HashSet<long> Ulns { get; }
 
-        public List<FcsDeliverableCodeMapping> CodeMappings { get; }
+        private List<FcsDeliverableCodeMapping> CodeMappings { get; }
 
-        public List<ContractAllocationCacheModel> ContractAllocations { get; }
+        private List<ContractAllocationCacheModel> ContractAllocations { get; }
 
-        public IDictionary<int, string> ProviderNameByUkprn { get; }
+        private IDictionary<int, string> ProviderNameByUkprn { get; }
 
-        public IDictionary<string, LarsLearningDeliveryModel> LarsLearnAimRefs { get; }
+        private IDictionary<string, LarsLearningDeliveryModel> LarsLearnAimRefs { get; }
 
-        public List<DeliverableUnitCost> DeliverableUnitCosts { get; }
+        private List<DeliverableUnitCost> DeliverableUnitCosts { get; }
 
         public string GetProviderName(int ukPrn, CancellationToken cancellationToken)
         {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Ilr;
 
 namespace ESFA.DC.ESF.R2.Interfaces.Reports.Services
 {

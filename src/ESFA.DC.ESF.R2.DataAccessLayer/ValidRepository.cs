@@ -1,145 +1,105 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
-using ESFA.DC.ILR1819.DataStore.EF.Valid;
+using ESFA.DC.ESF.R2.Models.Ilr;
 using ESFA.DC.ILR1819.DataStore.EF.Valid.Interfaces;
-using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.DataAccessLayer
 {
     public class ValidRepository : IValidRepository
     {
         private readonly IILR1819_DataStoreEntitiesValid _context;
-        private readonly ILogger _logger;
 
         public ValidRepository(
-            IILR1819_DataStoreEntitiesValid context,
-            ILogger logger)
+            IILR1819_DataStoreEntitiesValid context)
         {
             _context = context;
-            _logger = logger;
         }
 
-        public async Task<List<Learner>> GetLearners(int ukPrn, CancellationToken cancellationToken)
+        public async Task<IEnumerable<LearnerModel>> GetValidLearnerData(
+            int ukPrn,
+            string conRefNum,
+            CancellationToken cancellationToken)
         {
-            List<Learner> learners = null;
-            try
+            if (cancellationToken.IsCancellationRequested)
             {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return null;
-                }
+                return null;
+            }
 
-                learners = await _context.Learners.Where(l => l.UKPRN == ukPrn).ToListAsync(cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Failed to get valid learners with ukPrn {ukPrn}", ex);
-            }
+            var learners = await _context
+                .Learners
+                .Where(l => l.UKPRN == ukPrn && l.LearningDeliveries.Any(ld => ld.ConRefNumber == conRefNum))
+                .Select(
+                    l => new LearnerModel
+                    {
+                        UkPrn = l.UKPRN,
+                        Uln = l.ULN,
+                        LearnRefNumber = l.LearnRefNumber,
+                        CampId = l.CampId,
+                        PmUkPrn = l.PMUKPRN,
+                        LearningDeliveries = l.LearningDeliveries
+                            .Select(ld => new LearningDeliveryModel
+                        {
+                            ConRefNum = ld.ConRefNumber,
+                            LearnRefNumber = ld.LearnRefNumber,
+                            LearnAimRef = ld.LearnAimRef,
+                            AimSequenceNumber = ld.AimSeqNumber,
+                            FundModel = ld.FundModel,
+                            LearnStartDate = ld.LearnStartDate,
+                            LearnPlanEndDate = ld.LearnPlanEndDate,
+                            LearnActEndDate = ld.LearnActEndDate,
+                            CompStatus = ld.CompStatus,
+                            DelLocPostCode = ld.DelLocPostCode,
+                            Outcome = ld.Outcome,
+                            AddHours = ld.AddHours,
+                            PartnerUkPrn = ld.PartnerUKPRN,
+                            SwSupAimId = ld.SWSupAimId,
+                            LearningDeliveryFams = ld.LearningDeliveryFAMs
+                                .Select(ldf => new LearningDeliveryFamModel
+                            {
+                                LearnDelFamType = ldf.LearnDelFAMType,
+                                LearnDelFamCode = ldf.LearnDelFAMCode
+                            }),
+                            ProviderSpecDeliveryMonitorings = ld.ProviderSpecDeliveryMonitorings
+                                .Select(psdm => new ProviderSpecDeliveryMonitoringModel
+                            {
+                                ProvSpecDelMonOccur = psdm.ProvSpecDelMonOccur,
+                                ProvSpecDelMon = psdm.ProvSpecDelMon
+                            })
+                        }),
+                        ProviderSpecLearnerMonitorings = l.ProviderSpecLearnerMonitorings
+                            .Select(pslm => new ProviderSpecLearnerMonitoringModel
+                            {
+                                ProvSpecLearnMonOccur = pslm.ProvSpecLearnMonOccur,
+                                ProvSpecLearnMon = pslm.ProvSpecLearnMon
+                            })
+                    }).ToListAsync(cancellationToken);
 
             return learners;
         }
 
-        public async Task<List<LearningDelivery>> GetLearningDeliveries(int ukPrn, CancellationToken cancellationToken)
+        public async Task<IEnumerable<DpOutcomeModel>> GetDPOutcomes(int ukPrn, CancellationToken cancellationToken)
         {
-            List<LearningDelivery> deliveries = null;
-            try
+            if (cancellationToken.IsCancellationRequested)
             {
-                if (cancellationToken.IsCancellationRequested)
+                return null;
+            }
+
+            var outcomes = await _context.DPOutcomes
+                .Where(l => l.UKPRN == ukPrn)
+                .Select(dpo => new DpOutcomeModel
                 {
-                    return null;
-                }
-
-                deliveries = await _context.LearningDeliveries.Where(l => l.UKPRN == ukPrn && l.FundModel == 70).ToListAsync(cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Failed to get valid LearningDeliveries with ukPrn {ukPrn}", ex);
-            }
-
-            return deliveries;
-        }
-
-        public async Task<List<LearningDeliveryFAM>> GetLearningDeliveryFAMs(int ukPrn, CancellationToken cancellationToken)
-        {
-            List<LearningDeliveryFAM> deliveryFams = null;
-            try
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return null;
-                }
-
-                deliveryFams = await _context.LearningDeliveryFAMs.Where(l => l.UKPRN == ukPrn).ToListAsync(cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Failed to get valid LearningDeliveryFAMs with ukPrn {ukPrn}", ex);
-            }
-
-            return deliveryFams;
-        }
-
-        public async Task<List<ProviderSpecLearnerMonitoring>> GetProviderSpecLearnerMonitorings(int ukPrn, CancellationToken cancellationToken)
-        {
-            List<ProviderSpecLearnerMonitoring> monitorings = null;
-            try
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return null;
-                }
-
-                monitorings = await _context.ProviderSpecLearnerMonitorings.Where(l => l.UKPRN == ukPrn).ToListAsync(cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Failed to get valid ProviderSpecLearnerMonitorings with ukPrn {ukPrn}", ex);
-            }
-
-            return monitorings;
-        }
-
-        public async Task<List<ProviderSpecDeliveryMonitoring>> GetProviderSpecDeliveryMonitorings(int ukPrn, CancellationToken cancellationToken)
-        {
-            List<ProviderSpecDeliveryMonitoring> monitorings = null;
-            try
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return null;
-                }
-
-                monitorings = await _context.ProviderSpecDeliveryMonitorings.Where(l => l.UKPRN == ukPrn).ToListAsync(cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Failed to get valid ProviderSpecDeliveryMonitorings with ukPrn {ukPrn}", ex);
-            }
-
-            return monitorings;
-        }
-
-        public async Task<List<DPOutcome>> GetDPOutcomes(int ukPrn, CancellationToken cancellationToken)
-        {
-            List<DPOutcome> outcomes = null;
-            try
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return null;
-                }
-
-                outcomes = await _context.DPOutcomes.Where(l => l.UKPRN == ukPrn).ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Failed to get valid DPOutcomes with ukPrn {ukPrn}", ex);
-            }
+                    UkPrn = dpo.UKPRN,
+                    OutType = dpo.OutType,
+                    OutCode = dpo.OutCode,
+                    OutStartDate = dpo.OutStartDate,
+                    OutEndDate = dpo.OutEndDate,
+                    OutCollDate = dpo.OutCollDate
+                })
+                .ToListAsync(cancellationToken);
 
             return outcomes;
         }

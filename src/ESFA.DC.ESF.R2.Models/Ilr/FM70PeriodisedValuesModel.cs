@@ -1,4 +1,4 @@
-﻿namespace ESFA.DC.ESF.R2.Models
+﻿namespace ESFA.DC.ESF.R2.Models.Ilr
 {
     public class FM70PeriodisedValuesModel
     {
