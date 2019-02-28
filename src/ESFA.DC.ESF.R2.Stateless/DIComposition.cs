@@ -550,6 +550,7 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.RegisterType<FDULNDT>().As<IFieldDefinitionValidator>();
             containerBuilder.RegisterType<FDValueAL>().As<IFieldDefinitionValidator>();
             containerBuilder.RegisterType<FDLearnAimRefAL>().As<IFieldDefinitionValidator>();
+            containerBuilder.RegisterType<FDSupplementaryDataPanelDateDT>().As<IFieldDefinitionValidator>();
 
             containerBuilder.Register(c => new List<IFieldDefinitionValidator>(c.Resolve<IEnumerable<IFieldDefinitionValidator>>()))
                 .As<IList<IFieldDefinitionValidator>>();
