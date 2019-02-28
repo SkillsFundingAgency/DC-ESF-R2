@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 
@@ -15,7 +16,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition
         public bool IsValid(SupplementaryDataLooseModel model)
         {
             return !string.IsNullOrEmpty(model.SupplementaryDataPanelDate)
-                   && DateTime.TryParse(model.SupplementaryDataPanelDate, out _);
+                   && DateTime.TryParseExact(model.SupplementaryDataPanelDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
         }
     }
 }
