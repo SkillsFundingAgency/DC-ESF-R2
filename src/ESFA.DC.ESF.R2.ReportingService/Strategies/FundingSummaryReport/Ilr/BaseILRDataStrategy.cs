@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using ESFA.DC.ESF.R2.Models.Ilr;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
+using ESFA.DC.ILR.DataService.Models;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.Ilr
 {
@@ -26,7 +26,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.Ilr
         }
 
         public void Execute(
-            IEnumerable<FM70PeriodisedValuesYearlyModel> ilrData,
+            IEnumerable<FM70PeriodisedValuesYearly> ilrData,
             IList<FundingSummaryReportYearlyValueModel> yearlyData)
         {
             var fm70PeriodisedValuesYearlyModels = ilrData.ToList();
@@ -54,7 +54,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.Ilr
             }
         }
 
-        private static decimal GetPeriodValueSum(IEnumerable<FM70PeriodisedValuesModel> data, int period)
+        private static decimal GetPeriodValueSum(IEnumerable<FM70PeriodisedValues> data, int period)
         {
             return data.Sum(v => (decimal)(v.GetType().GetProperty($"{PeriodPrefix}{period.ToString()}")?.GetValue(v) ?? 0M));
         }

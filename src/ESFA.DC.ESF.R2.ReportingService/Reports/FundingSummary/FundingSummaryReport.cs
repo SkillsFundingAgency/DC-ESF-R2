@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -17,12 +19,12 @@ using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Interfaces.Strategies;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Generation;
-using ESFA.DC.ESF.R2.Models.Ilr;
 using ESFA.DC.ESF.R2.Models.Reports;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 using ESFA.DC.ESF.R2.Models.Styling;
 using ESFA.DC.ESF.R2.ReportingService.Mappers;
 using ESFA.DC.ESF.R2.Utils;
+using ESFA.DC.ILR.DataService.Models;
 using ESFA.DC.IO.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
@@ -87,7 +89,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             var supplementaryData =
                 await _supplementaryDataService.GetSupplementaryData(sourceFiles, cancellationToken);
 
-            var ilrYearlyFileData = await _ilrService.GetIlrFileDetails(ukPrn, cancellationToken);
+            var ilrYearlyFileData = (await _ilrService.GetIlrFileDetails(ukPrn, cancellationToken)).ToList();
             var fm70YearlyData = (await _ilrService.GetYearlyIlrData(ukPrn, cancellationToken)).ToList();
 
             FundingSummaryHeaderModel fundingSummaryHeaderModel =
@@ -101,7 +103,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 var fundingSummaryModels = PopulateReportData(fm70YearlyData, supplementaryData[file.SourceFileId]).ToList();
 
                 ReplaceConRefNumInTitle(fundingSummaryModels, file);
-                ReplaceFCSDescriptionsInTitle(fundingSummaryModels);
+                ReplaceFcsDescriptionsInTitle(fundingSummaryModels);
 
                 FundingSummaryFooterModel fundingSummaryFooterModel = PopulateReportFooter(cancellationToken);
 
@@ -128,11 +130,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 sheet.Cells.Columns[0].Width = 63.93;
                 sheet.IsGridlinesVisible = false;
 
+                AddImageToReport(sheet);
+
                 workbook = GetWorkbookReport(workbook, sheet, fundingSummaryHeaderModel, fundingSummaryModels, fundingSummaryFooterModel);
                 ApplyAdditionalRowFormatting(sheet, rowOfData);
             }
 
-            ApplyAdditionalHeaderFormatting(workbook, ilrYearlyFileData.Count());
+            ApplyAdditionalHeaderFormatting(workbook, ilrYearlyFileData.Count);
 
             string externalFileName = GetExternalFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
             string fileName = GetFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
@@ -145,11 +149,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             }
         }
 
-        private void ApplyAdditionalHeaderFormatting(Workbook workbook, int noOfILRFiles)
+        private void ApplyAdditionalHeaderFormatting(Workbook workbook, int noOfIlrFiles)
         {
             foreach (var worksheet in workbook.Worksheets)
             {
-                worksheet.Cells.CreateRange(1, 3 + (noOfILRFiles * 2), 4, 1).ApplyStyle(_cellStyles[8].Style, _cellStyles[8].StyleFlag); // Header
+                worksheet.Cells.CreateRange(1, 3 + (noOfIlrFiles * 2), 4, 1).ApplyStyle(_cellStyles[8].Style, _cellStyles[8].StyleFlag); // Header
             }
         }
 
@@ -173,9 +177,21 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             worksheet.Cells.CreateRange(9, valCount + rowOfData.Totals.Count, 110, 1).ApplyStyle(_cellStyles[5].Style, _cellStyles[5].StyleFlag); // Current Year Subtotal
         }
 
+        private void AddImageToReport(Worksheet worksheet)
+        {
+            var esfImage = Image.FromFile("ESF.png");
+
+            using (var ms = new MemoryStream())
+            {
+                esfImage.Save(ms, ImageFormat.Png);
+                ms.Close();
+                worksheet.Pictures.Add(3, 7, ms);
+            }
+        }
+
         private FundingSummaryHeaderModel PopulateReportHeader(
             SourceFileModel sourceFile,
-            IEnumerable<ILRFileDetailsModel> fileData,
+            IEnumerable<ILRFileDetails> fileData,
             int ukPrn,
             CancellationToken cancellationToken)
         {
@@ -231,7 +247,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         }
 
         private IEnumerable<FundingSummaryModel> PopulateReportData(
-            IEnumerable<FM70PeriodisedValuesYearlyModel> fm70YearlyData,
+            IEnumerable<FM70PeriodisedValuesYearly> fm70YearlyData,
             IEnumerable<SupplementaryDataYearlyModel> data)
         {
             var fundingSummaryModels = new List<FundingSummaryModel>();
@@ -396,9 +412,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             }
         }
 
-        private void ReplaceFCSDescriptionsInTitle(IEnumerable<FundingSummaryModel> fundingSummaryModels)
+        private void ReplaceFcsDescriptionsInTitle(IEnumerable<FundingSummaryModel> fundingSummaryModels)
         {
-            List<string> deliverableCodeTags = new List<string>
+            var deliverableCodeTags = new List<string>
             {
                 Constants.SD01Tag,
                 Constants.SD02Tag,

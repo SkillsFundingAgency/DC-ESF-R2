@@ -2,6 +2,8 @@
 {
     public class IRL1819Configuration
     {
+        public string ILR1516ConnectionString { get; set; }
+
         public string ILR1617ConnectionString { get; set; }
 
         public string ILR1718ConnectionString { get; set; }

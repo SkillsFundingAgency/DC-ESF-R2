@@ -10,7 +10,6 @@ using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Strategies;
 using ESFA.DC.ESF.R2.Interfaces.Strategies;
 using ESFA.DC.ESF.R2.Models;
-using ESFA.DC.ESF.R2.Models.Ilr;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 using ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary;
 using ESFA.DC.ESF.R2.ReportingService.Services;
@@ -18,6 +17,7 @@ using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRowHelp
 using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.Ilr;
 using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppData;
 using ESFA.DC.ESF.R2.ReportingService.Tests.Builders;
+using ESFA.DC.ILR.DataService.Models;
 using ESFA.DC.IO.Interfaces;
 using Moq;
 using Xunit;
@@ -74,7 +74,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             var valueProvider = new ValueProvider();
             var excelStyleProvider = new ExcelStyleProvider();
 
-            IList<FM70PeriodisedValuesYearlyModel> periodisedValues = new List<FM70PeriodisedValuesYearlyModel>();
+            IEnumerable<FM70PeriodisedValuesYearly> periodisedValues = new List<FM70PeriodisedValuesYearly>();
             var ilrMock = new Mock<IILRService>();
             ilrMock.Setup(m => m.GetYearlyIlrData(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(periodisedValues);
@@ -108,11 +108,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
 #endif
         }
 
-        private IEnumerable<ILRFileDetailsModel> GetTestFileDetail()
+        private IEnumerable<ILRFileDetails> GetTestFileDetail()
         {
-            return new List<ILRFileDetailsModel>
+            return new List<ILRFileDetails>
             {
-                new ILRFileDetailsModel
+                new ILRFileDetails
                 {
                     FileName = "ILR-10005752-1819-20181004-152148-02.xml",
                     LastSubmission = DateTime.Now

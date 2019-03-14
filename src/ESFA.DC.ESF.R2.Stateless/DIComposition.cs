@@ -45,10 +45,12 @@ using ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition;
 using ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel;
 using ESFA.DC.ESF.R2.ValidationService.Helpers;
 using ESFA.DC.ESF.R2.ValidationService.Services;
+using ESFA.DC.ILR.DataService.Models;
+using ESFA.DC.ILR.DataService.Services;
 using ESFA.DC.ILR1819.DataStore.EF;
-using ESFA.DC.ILR1819.DataStore.EF.Interfaces;
+using ESFA.DC.ILR1819.DataStore.EF.Interface;
 using ESFA.DC.ILR1819.DataStore.EF.Valid;
-using ESFA.DC.ILR1819.DataStore.EF.Valid.Interfaces;
+using ESFA.DC.ILR1819.DataStore.EF.Valid.Interface;
 using ESFA.DC.IO.AzureStorage;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.IO.Interfaces;
@@ -82,6 +84,8 @@ namespace ESFA.DC.ESF.R2.Stateless
 {
     public class DIComposition
     {
+        private static ILRConfiguration _ilrLegacyConfiguration = new ILRConfiguration();
+
         public static ContainerBuilder BuildContainer(IConfigurationHelper configHelper)
         {
             var container = new ContainerBuilder();
@@ -90,6 +94,14 @@ namespace ESFA.DC.ESF.R2.Stateless
 
             var versionInfo = configHelper.GetSectionValues<Service.Config.VersionInfo>("VersionSection");
             container.RegisterInstance(versionInfo).As<IVersionInfo>().SingleInstance();
+
+            var ilrConfig = configHelper.GetSectionValues<IRL1819Configuration>("ILR1819Section");
+            _ilrLegacyConfiguration.ILR1617ConnectionString = ilrConfig.ILR1617ConnectionString;
+            _ilrLegacyConfiguration.ILR1718ConnectionString = ilrConfig.ILR1718ConnectionString;
+            container.RegisterModule(new DependencyInjectionModule
+            {
+                Configuration = _ilrLegacyConfiguration
+            });
 
             RegisterPersistence(container, configHelper);
             RegisterServiceBusConfig(container, configHelper);
@@ -146,10 +158,25 @@ namespace ESFA.DC.ESF.R2.Stateless
                 .InstancePerLifetimeScope();
 
             var ilrConfig = configHelper.GetSectionValues<IRL1819Configuration>("ILR1819Section");
-            containerBuilder.Register(c => new ILR1819_DataStoreEntities(ilrConfig.ILR1819ConnectionString))
+            containerBuilder.Register(c =>
+                {
+                    var optionsBuilder = new DbContextOptionsBuilder<ILR1819_DataStoreEntities>();
+                    optionsBuilder.UseSqlServer(
+                        ilrConfig.ILR1718ConnectionString,
+                        providerOptions => providerOptions.CommandTimeout(60));
+                    return new ILR1819_DataStoreEntities(optionsBuilder.Options);
+                })
                 .As<IILR1819_DataStoreEntities>()
                 .InstancePerLifetimeScope();
-            containerBuilder.Register(c => new ILR1819_DataStoreEntitiesValid(ilrConfig.ILR1819ValidConnectionString))
+
+            containerBuilder.Register(c =>
+                {
+                    var optionsBuilder = new DbContextOptionsBuilder<ILR1819_DataStoreEntitiesValid>();
+                    optionsBuilder.UseSqlServer(
+                        ilrConfig.ILR1819ValidConnectionString,
+                        providerOptions => providerOptions.CommandTimeout(60));
+                    return new ILR1819_DataStoreEntitiesValid(optionsBuilder.Options);
+                })
                 .As<IILR1819_DataStoreEntitiesValid>()
                 .InstancePerLifetimeScope();
 
@@ -162,6 +189,7 @@ namespace ESFA.DC.ESF.R2.Stateless
                     .Options;
                 return new ESFR2Context(options);
             }).As<IESFR2Context>().InstancePerDependency();
+            containerBuilder.RegisterInstance(esfConfig).As<ESFConfiguration>().SingleInstance();
 
             var fcsConfig = configHelper.GetSectionValues<FCSConfiguration>("FCSSection");
 
@@ -353,8 +381,6 @@ namespace ESFA.DC.ESF.R2.Stateless
         private static void RegisterRepositories(ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterType<EsfRepository>().As<IEsfRepository>();
-            containerBuilder.RegisterType<FM70Repository>().As<IFM70Repository>();
-            containerBuilder.RegisterType<ValidRepository>().As<IValidRepository>();
             containerBuilder.RegisterType<ReferenceDataRepository>().As<IReferenceDataRepository>();
             containerBuilder.RegisterType<FCSRepository>().As<IFCSRepository>();
             containerBuilder.RegisterType<ReferenceDataCache>().As<IReferenceDataCache>()
