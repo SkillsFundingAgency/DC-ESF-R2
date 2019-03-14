@@ -180,7 +180,6 @@
   <ItemGroup>
     <Compile Include="EsfRepository.cs" />
     <Compile Include="FCSRepository.cs" />
-    <Compile Include="FM70Repository.cs" />
     <Compile Include="Mappers\SourceFileModelMapper.cs" />
     <Compile Include="Mappers\SupplementaryDataModelMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
