@@ -45,10 +45,12 @@ using ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition;
 using ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel;
 using ESFA.DC.ESF.R2.ValidationService.Helpers;
 using ESFA.DC.ESF.R2.ValidationService.Services;
+using ESFA.DC.ILR.DataService.Models;
+using ESFA.DC.ILR.DataService.Services;
 using ESFA.DC.ILR1819.DataStore.EF;
-using ESFA.DC.ILR1819.DataStore.EF.Interfaces;
+using ESFA.DC.ILR1819.DataStore.EF.Interface;
 using ESFA.DC.ILR1819.DataStore.EF.Valid;
-using ESFA.DC.ILR1819.DataStore.EF.Valid.Interfaces;
+using ESFA.DC.ILR1819.DataStore.EF.Valid.Interface;
 using ESFA.DC.IO.AzureStorage;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.IO.Interfaces;
@@ -82,6 +84,8 @@ namespace ESFA.DC.ESF.R2.Stateless
 {
     public class DIComposition
     {
+        private static ILRConfiguration _ilrLegacyConfiguration = new ILRConfiguration();
+
         public static ContainerBuilder BuildContainer(IConfigurationHelper configHelper)
         {
             var container = new ContainerBuilder();
@@ -90,6 +94,14 @@ namespace ESFA.DC.ESF.R2.Stateless
 
             var versionInfo = configHelper.GetSectionValues<Service.Config.VersionInfo>("VersionSection");
             container.RegisterInstance(versionInfo).As<IVersionInfo>().SingleInstance();
+
+            var ilrConfig = configHelper.GetSectionValues<IRL1819Configuration>("ILR1819Section");
+            _ilrLegacyConfiguration.ILR1617ConnectionString = ilrConfig.ILR1617ConnectionString;
+            _ilrLegacyConfiguration.ILR1718ConnectionString = ilrConfig.ILR1718ConnectionString;
+            container.RegisterModule(new DependencyInjectionModule
+            {
+                Configuration = _ilrLegacyConfiguration
+            });
 
             RegisterPersistence(container, configHelper);
             RegisterServiceBusConfig(container, configHelper);
@@ -146,10 +158,25 @@ namespace ESFA.DC.ESF.R2.Stateless
                 .InstancePerLifetimeScope();
 
             var ilrConfig = configHelper.GetSectionValues<IRL1819Configuration>("ILR1819Section");
-            containerBuilder.Register(c => new ILR1819_DataStoreEntities(ilrConfig.ILR1819ConnectionString))
+            containerBuilder.Register(c =>
+                {
+                    var optionsBuilder = new DbContextOptionsBuilder<ILR1819_DataStoreEntities>();
+                    optionsBuilder.UseSqlServer(
+                        ilrConfig.ILR1718ConnectionString,
+                        providerOptions => providerOptions.CommandTimeout(60));
+                    return new ILR1819_DataStoreEntities(optionsBuilder.Options);
+                })
                 .As<IILR1819_DataStoreEntities>()
                 .InstancePerLifetimeScope();
-            containerBuilder.Register(c => new ILR1819_DataStoreEntitiesValid(ilrConfig.ILR1819ValidConnectionString))
+
+            containerBuilder.Register(c =>
+                {
+                    var optionsBuilder = new DbContextOptionsBuilder<ILR1819_DataStoreEntitiesValid>();
+                    optionsBuilder.UseSqlServer(
+                        ilrConfig.ILR1819ValidConnectionString,
+                        providerOptions => providerOptions.CommandTimeout(60));
+                    return new ILR1819_DataStoreEntitiesValid(optionsBuilder.Options);
+                })
                 .As<IILR1819_DataStoreEntitiesValid>()
                 .InstancePerLifetimeScope();
 
@@ -162,6 +189,7 @@ namespace ESFA.DC.ESF.R2.Stateless
                     .Options;
                 return new ESFR2Context(options);
             }).As<IESFR2Context>().InstancePerDependency();
+            containerBuilder.RegisterInstance(esfConfig).As<ESFConfiguration>().SingleInstance();
 
             var fcsConfig = configHelper.GetSectionValues<FCSConfiguration>("FCSSection");
 
@@ -353,8 +381,6 @@ namespace ESFA.DC.ESF.R2.Stateless
         private static void RegisterRepositories(ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterType<EsfRepository>().As<IEsfRepository>();
-            containerBuilder.RegisterType<FM70Repository>().As<IFM70Repository>();
-            containerBuilder.RegisterType<ValidRepository>().As<IValidRepository>();
             containerBuilder.RegisterType<ReferenceDataRepository>().As<IReferenceDataRepository>();
             containerBuilder.RegisterType<FCSRepository>().As<IFCSRepository>();
             containerBuilder.RegisterType<ReferenceDataCache>().As<IReferenceDataCache>()
@@ -403,74 +429,29 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.Register(c => new List<IRowHelper>(c.Resolve<IEnumerable<IRowHelper>>()))
                 .As<IList<IRowHelper>>();
 
-            containerBuilder.RegisterType<AC01ActualCosts>().As<ISupplementaryDataStrategy>();
             containerBuilder.RegisterType<CG01CommunityGrantPayment>().As<ISupplementaryDataStrategy>();
             containerBuilder.RegisterType<CG02CommunityGrantManagementCost>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<FS01AdditionalProgrammeCostAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<NR01NonRegulatedActivityAuditAdjustment>().As<ISupplementaryDataStrategy>();
             containerBuilder.RegisterType<NR01NonRegulatedActivityAuthorisedClaims>().As<ISupplementaryDataStrategy>();
             containerBuilder.RegisterType<PG01ProgressionPaidEmploymentAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<PG02ProgressionUnpaidEmploymentAdjustments>().As<ISupplementaryDataStrategy>();
             containerBuilder.RegisterType<PG03ProgressionEducationAdjustments>().As<ISupplementaryDataStrategy>();
             containerBuilder.RegisterType<PG04ProgressionApprenticeshipAdjustments>().As<ISupplementaryDataStrategy>();
             containerBuilder.RegisterType<PG05ProgressionTraineeshipAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<PG06ProgressionJobSearchAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<RQ01RegulatedLearningAuditAdjustment>().As<ISupplementaryDataStrategy>();
             containerBuilder.RegisterType<RQ01RegulatedLearningAuthorisedClaims>().As<ISupplementaryDataStrategy>();
             containerBuilder.RegisterType<SD01FCSDeliverableDescription>().As<ISupplementaryDataStrategy>();
             containerBuilder.RegisterType<SD02FCSDeliverableDescription>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SD03FCSDeliverableDescription>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SD04FCSDeliverableDescription>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SD05FCSDeliverableDescription>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SD06FCSDeliverableDescription>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SD07FCSDeliverableDescription>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SD08FCSDeliverableDescription>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SD09FCSDeliverableDescription>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SD10FCSDeliverableDescription>().As<ISupplementaryDataStrategy>();
             containerBuilder.RegisterType<ST01LearnerAssessmentAndPlanAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SU01SustainedPaidEmployment3MonthsAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SU02SustainedUnpaidEmployment3MonthsAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SU03SustainedEducation3MonthsAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SU04SustainedApprenticeship3MonthsAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SU05SustainedTraineeship3MonthsAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SU11SustainedPaidEmployment6MonthsAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SU12SustainedUnpaidEmployment6MonthsAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SU13SustainedEducation6MonthsAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SU14SustainedApprenticeship6MonthsAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SU15SustainedTraineeship6MonthsAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SU21SustainedPaidEmployment12MonthsAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SU22SustainedUnpaidEmployment12MonthsAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SU23SustainedEducation12MonthsAdjustments>().As<ISupplementaryDataStrategy>();
-            containerBuilder.RegisterType<SU24SustainedApprenticeship12MonthsAdjustments>().As<ISupplementaryDataStrategy>();
             containerBuilder.Register(c => new List<ISupplementaryDataStrategy>(c.Resolve<IEnumerable<ISupplementaryDataStrategy>>()))
                 .As<IList<ISupplementaryDataStrategy>>();
 
-            containerBuilder.RegisterType<FS01AdditionalProgrammeCost>().As<IILRDataStrategy>();
             containerBuilder.RegisterType<NR01NonRegulatedActivityAchievementEarnings>().As<IILRDataStrategy>();
             containerBuilder.RegisterType<NR01NonRegulatedActivityStartFunding>().As<IILRDataStrategy>();
             containerBuilder.RegisterType<PG01ProgressionPaidEmployment>().As<IILRDataStrategy>();
-            containerBuilder.RegisterType<PG02ProgressionUnpaidEmployment>().As<IILRDataStrategy>();
             containerBuilder.RegisterType<PG03ProgressionEducation>().As<IILRDataStrategy>();
             containerBuilder.RegisterType<PG04ProgressionApprenticeship>().As<IILRDataStrategy>();
             containerBuilder.RegisterType<PG05ProgressionTraineeship>().As<IILRDataStrategy>();
-            containerBuilder.RegisterType<PG06ProgressionJobSearch>().As<IILRDataStrategy>();
             containerBuilder.RegisterType<RQ01RegulatedLearningAchievementEarnings>().As<IILRDataStrategy>();
             containerBuilder.RegisterType<RQ01RegulatedLearningStartFunding>().As<IILRDataStrategy>();
             containerBuilder.RegisterType<ST01LearnerAssessmentAndPlan>().As<IILRDataStrategy>();
-            containerBuilder.RegisterType<SU01SustainedPaidEmployment3Months>().As<IILRDataStrategy>();
-            containerBuilder.RegisterType<SU02SustainedUnpaidEmployment3Months>().As<IILRDataStrategy>();
-            containerBuilder.RegisterType<SU03SustainedEducation3Months>().As<IILRDataStrategy>();
-            containerBuilder.RegisterType<SU04SustainedApprenticeship3Months>().As<IILRDataStrategy>();
-            containerBuilder.RegisterType<SU05SustainedTraineeship3Months>().As<IILRDataStrategy>();
-            containerBuilder.RegisterType<SU11SustainedPaidEmployment6Months>().As<IILRDataStrategy>();
-            containerBuilder.RegisterType<SU12SustainedUnpaidEmployment6Months>().As<IILRDataStrategy>();
-            containerBuilder.RegisterType<SU13SustainedEducation6Months>().As<IILRDataStrategy>();
-            containerBuilder.RegisterType<SU14SustainedApprenticeship6Months>().As<IILRDataStrategy>();
-            containerBuilder.RegisterType<SU15SustainedTraineeship6Months>().As<IILRDataStrategy>();
-            containerBuilder.RegisterType<SU21SustainedPaidEmployment12Months>().As<IILRDataStrategy>();
-            containerBuilder.RegisterType<SU22SustainedUnpaidEmployment12Months>().As<IILRDataStrategy>();
-            containerBuilder.RegisterType<SU23SustainedEducation12Months>().As<IILRDataStrategy>();
-            containerBuilder.RegisterType<SU24SustainedApprenticeship12Months>().As<IILRDataStrategy>();
             containerBuilder.Register(c => new List<IILRDataStrategy>(c.Resolve<IEnumerable<IILRDataStrategy>>()))
                 .As<IList<IILRDataStrategy>>();
         }

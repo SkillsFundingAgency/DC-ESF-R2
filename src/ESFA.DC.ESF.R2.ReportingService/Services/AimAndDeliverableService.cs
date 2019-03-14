@@ -8,6 +8,7 @@ using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Models.Reports;
 using ESFA.DC.ESF.R2.ReportingService.Comparers;
 using ESFA.DC.ESF.R2.Utils;
+using ESFA.DC.ILR.DataService.Interfaces.Services;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Services
 {
@@ -33,20 +34,20 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             "Jul-19",
         };
 
-        private readonly IFM70Repository _fm70Repository;
-        private readonly IValidRepository _validRepository;
+        private readonly IValidLearnerDataService _validLearnerDataService;
         private readonly IReferenceDataService _referenceDataService;
+        private readonly IFm70DataService _fm70DataService;
 
         private readonly AimAndDeliverableComparer _comparer;
 
         public AimAndDeliverableService(
-            IFM70Repository fm70Repository,
-            IValidRepository validRepository,
+            IFm70DataService fm70DataService,
+            IValidLearnerDataService validLearnerDataService,
             IReferenceDataService referenceDataService,
             IAimAndDeliverableComparer comparer)
         {
-            _fm70Repository = fm70Repository;
-            _validRepository = validRepository;
+            _fm70DataService = fm70DataService;
+            _validLearnerDataService = validLearnerDataService;
             _referenceDataService = referenceDataService;
             _comparer = comparer as AimAndDeliverableComparer;
         }
@@ -57,11 +58,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
         {
             List<AimAndDeliverableModel> reportData = null;
 
-            var validLearners = (await _validRepository.GetValidLearnerData(ukPrn, EsfR2ConRefNum, cancellationToken)).ToList();
-            var fm70LearningDeliveries = (await _fm70Repository.GetLearningDeliveries(ukPrn, cancellationToken)).ToList();
+            var validLearners = (await _validLearnerDataService.GetValidLearnerData(ukPrn, EsfR2ConRefNum, cancellationToken)).ToList();
+            var fm70LearningDeliveries = (await _fm70DataService.GetLearningDeliveries(ukPrn, cancellationToken)).ToList();
 
-            var fm70Outcomes = (await _fm70Repository.GetOutcomes(ukPrn, cancellationToken)).ToList();
-            var outcomes = (await _validRepository.GetDPOutcomes(ukPrn, cancellationToken)).ToList();
+            var fm70Outcomes = (await _fm70DataService.GetOutcomes(ukPrn, cancellationToken)).ToList();
+            var outcomes = (await _validLearnerDataService.GetDPOutcomes(ukPrn, cancellationToken)).ToList();
 
             var learnAimRefs = validLearners.SelectMany(l => l.LearningDeliveries).Select(ld => ld.LearnAimRef).ToList();
             var deliverableCodes = fm70LearningDeliveries.SelectMany(d => d.Fm70LearningDeliveryDeliverables).Select(ldd => ldd.DeliverableCode).ToList();

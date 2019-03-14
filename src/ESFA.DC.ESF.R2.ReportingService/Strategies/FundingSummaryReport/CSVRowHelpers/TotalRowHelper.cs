@@ -2,9 +2,9 @@
 using System.Linq;
 using ESFA.DC.ESF.R2.Interfaces.Strategies;
 using ESFA.DC.ESF.R2.Models;
-using ESFA.DC.ESF.R2.Models.Ilr;
 using ESFA.DC.ESF.R2.Models.Reports;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
+using ESFA.DC.ILR.DataService.Models;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRowHelpers
 {
@@ -19,7 +19,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRow
             IList<FundingSummaryModel> reportOutput,
             FundingReportRow row,
             IEnumerable<SupplementaryDataYearlyModel> esfDataModels,
-            IEnumerable<FM70PeriodisedValuesYearlyModel> ilrData)
+            IEnumerable<FM70PeriodisedValuesYearly> ilrData)
         {
             List<string> deliverableCodes = row.DeliverableCode?.Split(',').Select(x => x.Trim())
                 .Where(x => !string.IsNullOrWhiteSpace(x)).ToList();
