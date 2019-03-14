@@ -258,7 +258,6 @@
     <Compile Include="Reports\IValidationResultReport.cs" />
     <Compile Include="Reports\Services\IAimAndDeliverableService.cs" />
     <Compile Include="Reports\Services\IILRService.cs" />
-    <Compile Include="Reports\Services\ILegacyILRService.cs" />
     <Compile Include="Reports\Services\ISupplementaryDataService.cs" />
     <Compile Include="Reports\Strategies\IILRDataStrategy.cs" />
     <Compile Include="Reports\Strategies\ISupplementaryDataStrategy.cs" />
