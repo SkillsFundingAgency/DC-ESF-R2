@@ -11,7 +11,6 @@ variables:
   BuildConfiguration: 'Release'
   BuildPlatform: 'x64'
   BuildPlatformAnyCPU: 'Any CPU'
-  NugetFilter: 'DC.ReferenceData'
 
 pool:
   name: DCT
