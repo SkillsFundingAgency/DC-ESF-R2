@@ -38,8 +38,8 @@ steps:
   inputs:
     solution: '**/*.sln'
     msbuildArchitecture: x64
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildPlatformAnyCPU)'
+    platform: '$(BuildPlatformAnyCPU)'
+    configuration: '$(BuildConfiguration)'
     msbuildArguments: '-t:restore /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
     clean: true
     maximumCpuCount: true
