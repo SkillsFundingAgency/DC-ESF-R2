@@ -39,8 +39,8 @@ steps:
     solution: '**/*.sln'
     msbuildArchitecture: x64
     platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
-    msbuildArguments: '/p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
+    configuration: '$(BuildPlatformAnyCPU)'
+    msbuildArguments: '-t:restore /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
     clean: true
     maximumCpuCount: true
     logProjectEvents: true
@@ -53,7 +53,7 @@ steps:
     msbuildArchitecture: x64
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
-    msbuildArguments: '/p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /t:Package /p:PackageLocation="$(build.artifactstagingdirectory)\$(ArtifactFolderName)\ApplicationPackage" /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
+    msbuildArguments: '-t:restore /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /t:Package /p:PackageLocation="$(build.artifactstagingdirectory)\$(ArtifactFolderName)\ApplicationPackage" /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
     clean: true
     maximumCpuCount: true
     logProjectEvents: true
