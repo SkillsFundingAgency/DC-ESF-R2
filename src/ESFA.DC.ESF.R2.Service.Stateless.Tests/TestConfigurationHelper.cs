@@ -1,4 +1,5 @@
 ﻿using ESFA.DC.ESF.R2.Service.Config;
+using ESFA.DC.ILR.DataService.Models;
 using ESFA.DC.ServiceFabric.Helpers.Interfaces;
 
 namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
@@ -35,7 +36,7 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
                         LoggerConnectionstring = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;"
                     };
                 case "ILRSection":
-                    return (T)(object)new IRLConfiguration
+                    return (T)(object)new ILRConfiguration
                     {
                         ILR1516ConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;",
                         ILR1617ConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;",
