@@ -115,7 +115,6 @@ steps:
      !**\*SmokeTests.dll
      !**\*AcceptanceTests.dll
      !**\obj\**
-    configuration: '$(BuildConfiguration)'
     runInParallel: true
     codeCoverageEnabled: true
     platform: '$(BuildPlatform)'
