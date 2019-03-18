@@ -9,8 +9,9 @@ variables:
   VersionNumberMajor: '0'
   VersionNumberMinor: '2'
   BuildConfiguration: 'Release'
-  BuildPlatform: 'x64'
+  BuildPlatform: 'Any CPU'
   BuildPlatformAnyCPU: 'Any CPU'
+  BuildPlatformX64: 'X64'
   ServiceFabricProjectFolderName: 'ESFA.DC.ESF.R2'
 
 pool:
@@ -39,7 +40,7 @@ steps:
   inputs:
     solution: '**/*.sln'
     msbuildArchitecture: x64
-    platform: '$(BuildPlatformAnyCPU)'
+    platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
     msbuildArguments: '-t:restore /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
     clean: true
@@ -115,6 +116,11 @@ steps:
      !**\*AcceptanceTests.dll
      !**\obj\**
     configuration: '$(BuildConfiguration)'
+    runInParallel: true
+    codeCoverageEnabled: true
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+
 
 #- task: PublishSymbols@2
 #  displayName: 'Publish symbols path'
