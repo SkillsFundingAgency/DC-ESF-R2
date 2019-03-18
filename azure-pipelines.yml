@@ -6,14 +6,12 @@ resources:
   fetchDepth: 15
 
 variables:
-  ServiceFabricProjectFolderName: 'ESFA.DC.ESF.R2'
   VersionNumberMajor: '0'
   VersionNumberMinor: '2'
   BuildConfiguration: 'Release'
   BuildPlatform: 'x64'
   BuildPlatformAnyCPU: 'Any CPU'
   NugetFilter: 'DC.ReferenceData'
-  ServiceFabricProjectFolderName: 'ESFA.DC.ReferenceData'
 
 pool:
   name: DCT
