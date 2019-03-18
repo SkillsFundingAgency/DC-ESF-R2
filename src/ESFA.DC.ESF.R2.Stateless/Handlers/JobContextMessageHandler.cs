@@ -33,10 +33,7 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
                 return true;
             }
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return true;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             await _controller.RunTasks(jobContextMessage, tasks, cancellationToken);
 

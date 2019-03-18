@@ -34,10 +34,7 @@ namespace ESFA.DC.ESF.R2.DataStore
                     return;
                 }
 
-                if (_cancellationToken.IsCancellationRequested)
-                {
-                    return;
-                }
+                _cancellationToken.ThrowIfCancellationRequested();
 
                 _sqlBulkCopy.ColumnMappings.Clear();
                 using (ObjectReader reader = ObjectReader.Create(source))

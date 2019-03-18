@@ -38,10 +38,7 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
                     var subTasks = taskItem.Tasks;
                     foreach (var task in subTasks)
                     {
-                        if (cancellationToken.IsCancellationRequested)
-                        {
-                            break;
-                        }
+                        cancellationToken.ThrowIfCancellationRequested();
 
                         await HandleTask(supplementaryDataWrapper, task, sourceFileModel, cancellationToken);
                     }

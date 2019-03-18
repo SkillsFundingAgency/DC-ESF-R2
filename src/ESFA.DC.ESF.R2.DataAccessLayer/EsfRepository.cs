@@ -7,7 +7,6 @@ using ESFA.DC.ESF.R2.Database.EF;
 using ESFA.DC.ESF.R2.Database.EF.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Utils;
-using ESFA.DC.Logging.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace ESFA.DC.ESF.R2.DataAccessLayer
@@ -15,76 +14,54 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
     public class EsfRepository : IEsfRepository
     {
         private readonly Func<IESFR2Context> _contextFactory;
-        private readonly ILogger _logger;
 
         public EsfRepository(
-            Func<IESFR2Context> contextFactory,
-            ILogger logger)
+            Func<IESFR2Context> contextFactory)
         {
             _contextFactory = contextFactory;
-            _logger = logger;
         }
 
         public async Task<IList<string>> GetContractsForProvider(
             string ukPrn,
             CancellationToken cancellationToken)
         {
-            List<string> contractRefNums = null;
-            try
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return null;
-                }
+            List<string> contractRefNums;
 
-                using (var context = _contextFactory())
-                {
-                    contractRefNums = await context.SourceFiles
-                        .Join(
-                            context.SupplementaryDatas,
-                            sf => sf.SourceFileId,
-                            sd => sd.SourceFileId,
-                            (sf, sd) => sf) // not all files will have data
-                        .Where(sf => sf.Ukprn.CaseInsensitiveEquals(ukPrn))
-                        .Select(sf => sf.ConRefNumber)
-                        .ToListAsync(cancellationToken);
-                }
+            cancellationToken.ThrowIfCancellationRequested();
 
-                contractRefNums = contractRefNums.Distinct().ToList();
-            }
-            catch (Exception ex)
+            using (var context = _contextFactory())
             {
-                _logger.LogError("Failed to get Additional ESF SuppData source file data", ex);
+                contractRefNums = await context.SourceFiles
+                    .Join(
+                        context.SupplementaryDatas,
+                        sf => sf.SourceFileId,
+                        sd => sd.SourceFileId,
+                        (sf, sd) => sf) // not all files will have data
+                    .Where(sf => sf.Ukprn.CaseInsensitiveEquals(ukPrn))
+                    .Select(sf => sf.ConRefNumber)
+                    .ToListAsync(cancellationToken);
             }
+
+            contractRefNums = contractRefNums.Distinct().ToList();
 
             return contractRefNums;
         }
 
         public async Task<SourceFile> PreviousFiles(string ukPrn, string conRefNumber, CancellationToken cancellationToken)
         {
-            SourceFile sourceFile = null;
-            try
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return null;
-                }
+            SourceFile sourceFile;
+            cancellationToken.ThrowIfCancellationRequested();
 
-                using (var context = _contextFactory())
-                {
-                    sourceFile = await context.SourceFiles
-                        .Join(
-                            context.SupplementaryDatas,
-                            sf => sf.SourceFileId,
-                            sd => sd.SourceFileId,
-                            (sf, sd) => sf) // not all files will have data
-                        .Where(s => s.Ukprn == ukPrn && s.ConRefNumber.CaseInsensitiveEquals(conRefNumber))
-                        .FirstOrDefaultAsync(cancellationToken);
-                }
-            }
-            catch (Exception ex)
+            using (var context = _contextFactory())
             {
-                _logger.LogError("Failed to get ESF SuppData source file data", ex);
+                sourceFile = await context.SourceFiles
+                    .Join(
+                        context.SupplementaryDatas,
+                        sf => sf.SourceFileId,
+                        sd => sd.SourceFileId,
+                        (sf, sd) => sf) // not all files will have data
+                    .Where(s => s.Ukprn == ukPrn && s.ConRefNumber.CaseInsensitiveEquals(conRefNumber))
+                    .FirstOrDefaultAsync(cancellationToken);
             }
 
             return sourceFile;
@@ -95,24 +72,15 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             string conRefNum,
             CancellationToken cancellationToken)
         {
-            List<SourceFile> sourceFiles = null;
-            try
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return null;
-                }
+            List<SourceFile> sourceFiles;
 
-                using (var context = _contextFactory())
-                {
-                    sourceFiles = await context.SourceFiles
-                        .Where(sf => sf.Ukprn == ukPrn && sf.ConRefNumber.CaseInsensitiveEquals(conRefNum))
-                        .ToListAsync(cancellationToken);
-                }
-            }
-            catch (Exception ex)
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using (var context = _contextFactory())
             {
-                _logger.LogError("Failed to get previous ESF SuppData source file data", ex);
+                sourceFiles = await context.SourceFiles
+                    .Where(sf => sf.Ukprn == ukPrn && sf.ConRefNumber.CaseInsensitiveEquals(conRefNum))
+                    .ToListAsync(cancellationToken);
             }
 
             return sourceFiles;
@@ -122,24 +90,13 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             int sourceFileId,
             CancellationToken cancellationToken)
         {
-            List<SupplementaryData> data = null;
-            try
-            {
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return null;
-                }
+            List<SupplementaryData> data;
 
-                using (var context = _contextFactory())
-                {
-                    data = await context.SupplementaryDatas
-                        .Where(s => s.SourceFileId == sourceFileId)
-                        .ToListAsync(cancellationToken);
-                }
-            }
-            catch (Exception ex)
+            using (var context = _contextFactory())
             {
-                _logger.LogError("Failed to get ESF SuppData source file data", ex);
+                data = await context.SupplementaryDatas
+                    .Where(s => s.SourceFileId == sourceFileId)
+                    .ToListAsync(cancellationToken);
             }
 
             return data;

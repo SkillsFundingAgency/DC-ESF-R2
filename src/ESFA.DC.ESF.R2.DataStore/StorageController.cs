@@ -47,10 +47,7 @@ namespace ESFA.DC.ESF.R2.DataStore
                 {
                     await connection.OpenAsync(cancellationToken);
 
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        return false;
-                    }
+                    cancellationToken.ThrowIfCancellationRequested();
 
                     transaction = connection.BeginTransaction();
 
@@ -105,10 +102,7 @@ namespace ESFA.DC.ESF.R2.DataStore
                 {
                     await connection.OpenAsync(cancellationToken);
 
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        return false;
-                    }
+                    cancellationToken.ThrowIfCancellationRequested();
 
                     transaction = connection.BeginTransaction();
 
