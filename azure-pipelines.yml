@@ -49,9 +49,9 @@ steps:
     createLogFile: true
 
 - task: MSBuild@1
-  displayName: 'Build solution  $(build.sourcesdirectory)\src\$(ServiceFabricProjectFolderName)\*.sfproj'
+  displayName: 'Build solution  - Service Fabric as (x64)'
   inputs:
-    solution: '$(build.sourcesdirectory)\src\$(ServiceFabricProjectFolderName)\*.sfproj'
+    solution: '$(build.sourcesdirectory)\**\*.sfproj'
     msbuildArchitecture: x64
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
