@@ -31,6 +31,7 @@ steps:
   inputs:
     restoreSolution: '**\*.sln'
     vstsFeed: '1d5deb2d-cf8b-4bb1-b147-d13bc246e3f4'
+    configuration: '$(BuildConfiguration)' # Optional
 
 - task: MSBuild@1
   displayName: 'Build solution'
