@@ -11,6 +11,7 @@ variables:
   BuildConfiguration: 'Release'
   BuildPlatform: 'x64'
   BuildPlatformAnyCPU: 'Any CPU'
+  ServiceFabricProjectFolderName: 'ESFA.DC.ESF.R2'
 
 pool:
   name: DCT
