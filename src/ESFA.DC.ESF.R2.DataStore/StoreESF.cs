@@ -32,7 +32,6 @@ namespace ESFA.DC.ESF.R2.DataStore
                     CalendarYear = model.CalendarYear ?? 0,
                     CalendarMonth = model.CalendarMonth ?? 0,
                     CostType = model.CostType,
-                    StaffName = model.StaffName,
                     ReferenceType = model.ReferenceType,
                     Reference = model.Reference,
                     Uln = model.ULN,

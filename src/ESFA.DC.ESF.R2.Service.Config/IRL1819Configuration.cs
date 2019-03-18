@@ -1,6 +1,6 @@
 ﻿namespace ESFA.DC.ESF.R2.Service.Config
 {
-    public class IRL1819Configuration
+    public class IRLConfiguration
     {
         public string ILR1516ConnectionString { get; set; }
 

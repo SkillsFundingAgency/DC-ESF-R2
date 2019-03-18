@@ -12,17 +12,16 @@
     <Parameter Name="AzureBlobContainerName" DefaultValue="" />
     <Parameter Name="JobStatusQueueName" DefaultValue="" />
     <Parameter Name="AuditQueueName" DefaultValue="" />
+    <Parameter Name="ILR1516ConnectionString" DefaultValue="" />
+    <Parameter Name="ILR1617ConnectionString" DefaultValue="" />
+    <Parameter Name="ILR1718ConnectionString" DefaultValue="" />
     <Parameter Name="ILR1819ConnectionString" DefaultValue="" />
-    <Parameter Name="ILR1819ValidConnectionString" DefaultValue="" />
-    <Parameter Name="ESFConnectionString" DefaultValue="" />
-    <Parameter Name="ESFNonEFConnectionString" DefaultValue="" />
+    <Parameter Name="ESFR2ConnectionString" DefaultValue="" />
     <Parameter Name="FCSConnectionString" DefaultValue="" />
     <Parameter Name="LARSConnectionString" DefaultValue="" />
     <Parameter Name="OrganisationConnectionString" DefaultValue="" />
     <Parameter Name="PostcodesConnectionString" DefaultValue="" />
     <Parameter Name="ULNConnectionString" DefaultValue="" />
-    <Parameter Name="ILR1617ConnectionString" DefaultValue="" />
-    <Parameter Name="ILR1718ConnectionString" DefaultValue="" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
@@ -49,13 +48,14 @@
             <Parameter Name="AzureBlobConnectionString" Value="[AzureBlobConnectionString]" />
             <Parameter Name="AzureBlobContainerName" Value="[AzureBlobContainerName]" />
           </Section>
-          <Section Name="ILR1819Section">
+          <Section Name="ILRSection">
+            <Parameter Name="ILR1516ConnectionString" Value="[ILR1516ConnectionString]" />
+            <Parameter Name="ILR1617ConnectionString" Value="[ILR1617ConnectionString]" />
+            <Parameter Name="ILR1718ConnectionString" Value="[ILR1718ConnectionString]" />
             <Parameter Name="ILR1819ConnectionString" Value="[ILR1819ConnectionString]" />
-            <Parameter Name="ILR1819ValidConnectionString" Value="[ILR1819ValidConnectionString]" />
           </Section>
           <Section Name="ESFSection">
-            <Parameter Name="ESFConnectionString" Value="[ESFConnectionString]" />
-            <Parameter Name="ESFNonEFConnectionString" Value="[ESFNonEFConnectionString]" />
+            <Parameter Name="ESFR2ConnectionString" Value="[ESFR2ConnectionString]" />
           </Section>
           <Section Name="FCSSection">
             <Parameter Name="FCSConnectionString" Value="[FCSConnectionString]" />

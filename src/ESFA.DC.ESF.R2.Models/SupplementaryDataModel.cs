@@ -14,8 +14,6 @@ namespace ESFA.DC.ESF.R2.Models
 
         public string CostType { get; set; }
 
-        public string StaffName { get; set; }
-
         public string ReferenceType { get; set; }
 
         public string Reference { get; set; }

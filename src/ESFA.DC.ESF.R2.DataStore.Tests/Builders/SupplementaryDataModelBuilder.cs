@@ -17,7 +17,6 @@ namespace ESFA.DC.ESF.R2.DataStore.Tests.Builders
                 Reference = "asasdadad asdadadada asdadsasdad",
                 ReferenceType = "thingie",
                 ProviderSpecifiedReference = "123131312ae qq12123",
-                StaffName = "Wibble",
                 ULN = 3456789012,
                 LearnAimRef = "12345678",
                 SupplementaryDataPanelDate = new DateTime(2019, 2, 19),

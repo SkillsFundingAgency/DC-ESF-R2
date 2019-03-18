@@ -40,7 +40,7 @@ namespace ESFA.DC.ESF.R2.DataStore
             bool successfullyCommitted = false;
 
             using (SqlConnection connection =
-                new SqlConnection(_dbConfiguration.ESFNonEFConnectionString))
+                new SqlConnection(_dbConfiguration.ESFR2ConnectionString))
             {
                 SqlTransaction transaction = null;
                 try
@@ -98,7 +98,7 @@ namespace ESFA.DC.ESF.R2.DataStore
             bool successfullyCommitted = false;
 
             using (SqlConnection connection =
-                new SqlConnection(_dbConfiguration.ESFNonEFConnectionString))
+                new SqlConnection(_dbConfiguration.ESFR2ConnectionString))
             {
                 SqlTransaction transaction = null;
                 try

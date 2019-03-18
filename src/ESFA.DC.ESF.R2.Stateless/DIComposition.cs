@@ -95,9 +95,11 @@ namespace ESFA.DC.ESF.R2.Stateless
             var versionInfo = configHelper.GetSectionValues<Service.Config.VersionInfo>("VersionSection");
             container.RegisterInstance(versionInfo).As<IVersionInfo>().SingleInstance();
 
-            var ilrConfig = configHelper.GetSectionValues<IRL1819Configuration>("ILR1819Section");
+            var ilrConfig = configHelper.GetSectionValues<IRLConfiguration>("ILRSection");
+            _ilrLegacyConfiguration.ILR1516ConnectionString = ilrConfig.ILR1516ConnectionString;
             _ilrLegacyConfiguration.ILR1617ConnectionString = ilrConfig.ILR1617ConnectionString;
             _ilrLegacyConfiguration.ILR1718ConnectionString = ilrConfig.ILR1718ConnectionString;
+            _ilrLegacyConfiguration.ILR1819ConnectionString = ilrConfig.ILR1819ConnectionString;
             container.RegisterModule(new DependencyInjectionModule
             {
                 Configuration = _ilrLegacyConfiguration
@@ -157,34 +159,11 @@ namespace ESFA.DC.ESF.R2.Stateless
                 .As<IStreamableKeyValuePersistenceService>()
                 .InstancePerLifetimeScope();
 
-            var ilrConfig = configHelper.GetSectionValues<IRL1819Configuration>("ILR1819Section");
-            containerBuilder.Register(c =>
-                {
-                    var optionsBuilder = new DbContextOptionsBuilder<ILR1819_DataStoreEntities>();
-                    optionsBuilder.UseSqlServer(
-                        ilrConfig.ILR1718ConnectionString,
-                        providerOptions => providerOptions.CommandTimeout(60));
-                    return new ILR1819_DataStoreEntities(optionsBuilder.Options);
-                })
-                .As<IILR1819_DataStoreEntities>()
-                .InstancePerLifetimeScope();
-
-            containerBuilder.Register(c =>
-                {
-                    var optionsBuilder = new DbContextOptionsBuilder<ILR1819_DataStoreEntitiesValid>();
-                    optionsBuilder.UseSqlServer(
-                        ilrConfig.ILR1819ValidConnectionString,
-                        providerOptions => providerOptions.CommandTimeout(60));
-                    return new ILR1819_DataStoreEntitiesValid(optionsBuilder.Options);
-                })
-                .As<IILR1819_DataStoreEntitiesValid>()
-                .InstancePerLifetimeScope();
-
             var esfConfig = configHelper.GetSectionValues<ESFConfiguration>("ESFSection");
             containerBuilder.Register(c =>
             {
                 var options = new DbContextOptionsBuilder<ESFR2Context>()
-                    .UseSqlServer(esfConfig.ESFConnectionString)
+                    .UseSqlServer(esfConfig.ESFR2ConnectionString)
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                     .Options;
                 return new ESFR2Context(options);
