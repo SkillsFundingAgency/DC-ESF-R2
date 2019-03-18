@@ -115,7 +115,7 @@ steps:
   displayName: 'VsTest - testAssemblies'
   inputs:
     testAssemblyVer2: |
-     **\*test*.dll
+     $(System.DefaultWorkingDirectory)\src\**\*test*.dll
      !**\*TestAdapter.dll
      !**\*SmokeTests.dll
      !**\*AcceptanceTests.dll
