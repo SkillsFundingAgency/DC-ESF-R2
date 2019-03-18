@@ -23,6 +23,16 @@ pool:
   - IsBuildServer
 
 steps:
+- task: DotNetCoreInstaller@0
+  displayName: 'Use .NET Core sdk 2.2.104'
+  inputs:
+    version: 2.2.104
+
+- task: VisualStudioTestPlatformInstaller@1
+  displayName: 'Visual Studio Test Platform Installer'
+  inputs:
+    versionSelector: latestStable
+
 - task: NuGetToolInstaller@0
   displayName: 'Use NuGet 4.9.0'
   inputs:
@@ -100,11 +110,6 @@ steps:
     applicationPackagePath: '$(build.artifactstagingdirectory)\ApplicationPackage'
     versionBehavior: Replace
   enabled: false
-
-- task: VisualStudioTestPlatformInstaller@1
-  displayName: 'Visual Studio Test Platform Installer'
-  inputs:
-    versionSelector: latestStable
 
 - task: VSTest@2
   displayName: 'VsTest - testAssemblies'
