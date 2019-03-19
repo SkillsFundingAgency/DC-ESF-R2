@@ -109,7 +109,7 @@ steps:
   inputs:
     applicationPackagePath: '$(build.artifactstagingdirectory)\ApplicationPackage'
     versionBehavior: Replace
-  enabled: false
+  enabled: true
 
 - task: TotalALM.totalalm-tokenization.tokenization-build-task.Tokenization@2
   displayName: 'Tokenization: Transform file *Tests.dll.config'
@@ -117,6 +117,7 @@ steps:
     SourcePath: '$(build.sourcesdirectory)\src'
     TargetFileNames: '*Tests.dll.config'
     RequireVariable: true
+  enabled: false
 
 - task: VSTest@2
   displayName: 'VsTest - testAssemblies'
