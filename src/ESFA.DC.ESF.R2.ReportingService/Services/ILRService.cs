@@ -10,8 +10,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
 {
     public class ILRService : IILRService
     {
-        private const int StartYear = 2015;
-        private const int EndYear = 2019;
+        private const int StartYear = 2019;
+        private const int EndYear = 2022;
 
         private readonly IFm70DataService _fm70DataService;
         private readonly IFileDetailsDataService _fileDetailsDataService;
