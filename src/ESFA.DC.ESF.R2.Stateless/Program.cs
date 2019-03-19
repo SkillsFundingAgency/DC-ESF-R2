@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Text;
 using System.Threading;
+using Autofac;
 using Autofac.Integration.ServiceFabric;
+using ESFA.DC.ESF.R2.Service.Config;
 using ESFA.DC.ServiceFabric.Helpers;
+using ESFA.DC.ServiceFabric.Helpers.Interfaces;
 
 namespace ESFA.DC.ESF.R2.Stateless
 {
@@ -15,12 +20,20 @@ namespace ESFA.DC.ESF.R2.Stateless
         {
             try
             {
-                // The ServiceManifest.XML file defines one or more service type names.
-                // Registering a service maps a service type name to a .NET type.
-                // When Service Fabric creates an instance of this service type,
-                // an instance of the class is created in this host process.
+                IConfigurationHelper configHelper = new ConfigurationHelper();
 
-                var builder = DIComposition.BuildContainer(new ConfigurationHelper());
+                // Licence Aspose.Cells
+                SoftwareLicenceSection softwareLicenceSection = configHelper.GetSectionValues<SoftwareLicenceSection>(nameof(SoftwareLicenceSection));
+                if (!string.IsNullOrEmpty(softwareLicenceSection.AsposeLicence))
+                {
+                    using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(softwareLicenceSection.AsposeLicence)))
+                    {
+                        new Aspose.Cells.License().SetLicense(ms);
+                    }
+                }
+
+                // Setup Autofac
+                ContainerBuilder builder = DIComposition.BuildContainer(configHelper);
 
                 builder.RegisterServiceFabricSupport();
 
