@@ -172,7 +172,6 @@
     <Compile Include="AzureStorageOptions.cs" />
     <Compile Include="ESFConfiguration.cs" />
     <Compile Include="FCSConfiguration.cs" />
-    <Compile Include="IRL1819Configuration.cs" />
     <Compile Include="LoggerOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferenceDataConfig.cs" />

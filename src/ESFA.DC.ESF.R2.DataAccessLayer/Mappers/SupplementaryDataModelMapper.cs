@@ -20,7 +20,6 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer.Mappers
                 ReferenceType = entity.ReferenceType,
                 Reference = entity.Reference,
                 ProviderSpecifiedReference = entity.ProviderSpecifiedReference,
-                StaffName = entity.StaffName,
                 LearnAimRef = entity.LearnAimRef,
                 SupplementaryDataPanelDate = entity.SupplementaryDataPanelDate,
                 Value = entity.Value
@@ -40,7 +39,6 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer.Mappers
                 ProviderSpecifiedReference = looseModel.ProviderSpecifiedReference,
                 CalendarMonth = ConvertToNullableInt(looseModel.CalendarMonth),
                 CalendarYear = ConvertToNullableInt(looseModel.CalendarYear),
-                StaffName = looseModel.StaffName,
                 LearnAimRef = looseModel.LearnAimRef,
                 SupplementaryDataPanelDate = ConvertToNullableDateTime(looseModel.SupplementaryDataPanelDate),
                 Value = ConvertToNullableDecimal(looseModel.Value)

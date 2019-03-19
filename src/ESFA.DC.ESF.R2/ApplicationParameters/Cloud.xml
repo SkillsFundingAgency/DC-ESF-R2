@@ -12,10 +12,11 @@
     <Parameter Name="LoggerConnectionstring" Value="__LoggerConnectionstring__" />
     <Parameter Name="AzureBlobConnectionString" Value="__AzureBlobConnectionString__" />
     <Parameter Name="AzureBlobContainerName" Value="__AzureBlobContainerName__" />
+    <Parameter Name="ILR1516ConnectionString" Value="__ILR1516ConnectionString__" />
+    <Parameter Name="ILR1617ConnectionString" Value="__ILR1617ConnectionString__" />
+    <Parameter Name="ILR1718ConnectionString" Value="__ILR1718ConnectionString__" />
     <Parameter Name="ILR1819ConnectionString" Value="__ILR1819ConnectionString__" />
-    <Parameter Name="ILR1819ValidConnectionString" Value="__ILR1819ValidConnectionString__" />
-    <Parameter Name="ESFConnectionString" Value="__ESFConnectionString__" />
-    <Parameter Name="ESFNonEFConnectionString" Value="__ESFNonEFConnectionString__" />
+    <Parameter Name="ESFR2ConnectionString" Value="__ESFR2ConnectionString__" />
     <Parameter Name="LARSConnectionString" Value="__LARSConnectionString__" />
     <Parameter Name="OrganisationConnectionString" Value="__OrganisationsDbConnectionStringReadOnly__" />
     <Parameter Name="PostcodesConnectionString" Value="__PostcodesConnectionString__" />

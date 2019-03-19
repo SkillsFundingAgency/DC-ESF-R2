@@ -17,13 +17,14 @@
     <Parameter Name="AzureBlobConnectionString" Value="" />
     <Parameter Name="AzureBlobContainerName" Value="" />
   </Section>
-  <Section Name="ILR1819Section">
+  <Section Name="ILRSection">
+    <Parameter Name="ILR1516ConnectionString" Value="" />
+    <Parameter Name="ILR1617ConnectionString" Value="" />
+    <Parameter Name="ILR1718ConnectionString" Value="" />
     <Parameter Name="ILR1819ConnectionString" Value="" />
-    <Parameter Name="ILR1819ValidConnectionString" Value="" />
   </Section>
   <Section Name="ESFSection">
-    <Parameter Name="ESFConnectionString" Value="" />
-    <Parameter Name="ESFNonEFConnectionString" Value="" />
+    <Parameter Name="ESFR2ConnectionString" Value="" />
   </Section>
   <Section Name="FCSSection">
     <Parameter Name="FCSConnectionString" Value="" />

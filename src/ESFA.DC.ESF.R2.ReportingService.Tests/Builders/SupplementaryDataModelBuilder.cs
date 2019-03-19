@@ -21,7 +21,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.Builders
                     CalendarYear = 2018,
                     CalendarMonth = 10,
                     ProviderSpecifiedReference = "test",
-                    StaffName = "test",
                     LearnAimRef = "12345678",
                     SupplementaryDataPanelDate = new DateTime(2019, 4, 1),
                     Value = 35.00M

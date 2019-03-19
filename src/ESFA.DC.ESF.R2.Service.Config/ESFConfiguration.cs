@@ -2,8 +2,6 @@
 {
     public class ESFConfiguration
     {
-        public string ESFConnectionString { get; set; }
-
-        public string ESFNonEFConnectionString { get; set; }
+        public string ESFR2ConnectionString { get; set; }
     }
 }

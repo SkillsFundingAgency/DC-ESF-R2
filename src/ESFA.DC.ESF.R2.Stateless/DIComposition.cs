@@ -47,10 +47,6 @@ using ESFA.DC.ESF.R2.ValidationService.Helpers;
 using ESFA.DC.ESF.R2.ValidationService.Services;
 using ESFA.DC.ILR.DataService.Models;
 using ESFA.DC.ILR.DataService.Services;
-using ESFA.DC.ILR1819.DataStore.EF;
-using ESFA.DC.ILR1819.DataStore.EF.Interface;
-using ESFA.DC.ILR1819.DataStore.EF.Valid;
-using ESFA.DC.ILR1819.DataStore.EF.Valid.Interface;
 using ESFA.DC.IO.AzureStorage;
 using ESFA.DC.IO.AzureStorage.Config.Interfaces;
 using ESFA.DC.IO.Interfaces;
@@ -84,8 +80,6 @@ namespace ESFA.DC.ESF.R2.Stateless
 {
     public class DIComposition
     {
-        private static ILRConfiguration _ilrLegacyConfiguration = new ILRConfiguration();
-
         public static ContainerBuilder BuildContainer(IConfigurationHelper configHelper)
         {
             var container = new ContainerBuilder();
@@ -94,14 +88,6 @@ namespace ESFA.DC.ESF.R2.Stateless
 
             var versionInfo = configHelper.GetSectionValues<Service.Config.VersionInfo>("VersionSection");
             container.RegisterInstance(versionInfo).As<IVersionInfo>().SingleInstance();
-
-            var ilrConfig = configHelper.GetSectionValues<IRL1819Configuration>("ILR1819Section");
-            _ilrLegacyConfiguration.ILR1617ConnectionString = ilrConfig.ILR1617ConnectionString;
-            _ilrLegacyConfiguration.ILR1718ConnectionString = ilrConfig.ILR1718ConnectionString;
-            container.RegisterModule(new DependencyInjectionModule
-            {
-                Configuration = _ilrLegacyConfiguration
-            });
 
             RegisterPersistence(container, configHelper);
             RegisterServiceBusConfig(container, configHelper);
@@ -157,34 +143,17 @@ namespace ESFA.DC.ESF.R2.Stateless
                 .As<IStreamableKeyValuePersistenceService>()
                 .InstancePerLifetimeScope();
 
-            var ilrConfig = configHelper.GetSectionValues<IRL1819Configuration>("ILR1819Section");
-            containerBuilder.Register(c =>
-                {
-                    var optionsBuilder = new DbContextOptionsBuilder<ILR1819_DataStoreEntities>();
-                    optionsBuilder.UseSqlServer(
-                        ilrConfig.ILR1718ConnectionString,
-                        providerOptions => providerOptions.CommandTimeout(60));
-                    return new ILR1819_DataStoreEntities(optionsBuilder.Options);
-                })
-                .As<IILR1819_DataStoreEntities>()
-                .InstancePerLifetimeScope();
-
-            containerBuilder.Register(c =>
-                {
-                    var optionsBuilder = new DbContextOptionsBuilder<ILR1819_DataStoreEntitiesValid>();
-                    optionsBuilder.UseSqlServer(
-                        ilrConfig.ILR1819ValidConnectionString,
-                        providerOptions => providerOptions.CommandTimeout(60));
-                    return new ILR1819_DataStoreEntitiesValid(optionsBuilder.Options);
-                })
-                .As<IILR1819_DataStoreEntitiesValid>()
-                .InstancePerLifetimeScope();
+            var ilrConfig = configHelper.GetSectionValues<ILRConfiguration>("ILRSection");
+            containerBuilder.RegisterModule(new DependencyInjectionModule
+            {
+                Configuration = ilrConfig
+            });
 
             var esfConfig = configHelper.GetSectionValues<ESFConfiguration>("ESFSection");
             containerBuilder.Register(c =>
             {
                 var options = new DbContextOptionsBuilder<ESFR2Context>()
-                    .UseSqlServer(esfConfig.ESFConnectionString)
+                    .UseSqlServer(esfConfig.ESFR2ConnectionString)
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                     .Options;
                 return new ESFR2Context(options);
