@@ -123,6 +123,7 @@ steps:
   inputs:
     testAssemblyVer2: |
      $(System.DefaultWorkingDirectory)\src\**\*test*.dll
+     !**\*Database.Tests*.dll
      !**\*TestAdapter.dll
      !**\*SmokeTests.dll
      !**\*AcceptanceTests.dll
