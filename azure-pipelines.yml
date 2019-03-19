@@ -111,6 +111,13 @@ steps:
     versionBehavior: Replace
   enabled: false
 
+- task: TotalALM.totalalm-tokenization.tokenization-build-task.Tokenization@2
+  displayName: 'Tokenization: Transform file *Tests.dll.config'
+  inputs:
+    SourcePath: '$(build.sourcesdirectory)\src'
+    TargetFileNames: '*Tests.dll.config'
+    RequireVariable: true
+
 - task: VSTest@2
   displayName: 'VsTest - testAssemblies'
   inputs:
