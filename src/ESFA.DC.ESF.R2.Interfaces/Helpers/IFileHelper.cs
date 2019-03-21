@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Models;
-using ESFA.DC.JobContextManager.Model.Interface;
 
 namespace ESFA.DC.ESF.R2.Interfaces.Helpers
 {
@@ -10,6 +9,6 @@ namespace ESFA.DC.ESF.R2.Interfaces.Helpers
     {
         Task<IList<SupplementaryDataLooseModel>> GetESFRecords(SourceFileModel sourceFileModel, CancellationToken cancellationToken);
 
-        SourceFileModel GetSourceFileData(IJobContextMessage jobContextMessage);
+        SourceFileModel GetSourceFileData(JobContextModel jobContextModel);
     }
 }

@@ -98,7 +98,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
             if (!unknownUlns.Any())
             {
-                return Ulns.Where(u => unknownUlns.Contains(u));
+                return Ulns.Where(u => uniqueUlns.Contains(u));
             }
 
            PopulateUlnLookup(unknownUlns, cancellationToken);

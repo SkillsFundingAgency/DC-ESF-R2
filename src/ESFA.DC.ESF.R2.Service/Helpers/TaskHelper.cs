@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.Helpers;
 using ESFA.DC.ESF.R2.Interfaces.Strategies;
 using ESFA.DC.ESF.R2.Models;
-using ESFA.DC.JobContextManager.Model.Interface;
 
 namespace ESFA.DC.ESF.R2.Service.Helpers
 {
@@ -19,30 +18,17 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
         }
 
         public async Task ExecuteTasks(
-            IReadOnlyList<ITaskItem> tasks,
+            JobContextModel jobContextModel,
             SourceFileModel sourceFileModel,
             SupplementaryDataWrapper supplementaryDataWrapper,
             CancellationToken cancellationToken)
         {
-            foreach (ITaskItem taskItem in tasks)
-            {
-                if (taskItem.SupportsParallelExecution)
-                {
-                    Parallel.ForEach(
-                       taskItem.Tasks,
-                       new ParallelOptions { CancellationToken = cancellationToken },
-                       async task => { await HandleTask(supplementaryDataWrapper, task, sourceFileModel, cancellationToken); });
-                }
-                else
-                {
-                    var subTasks = taskItem.Tasks;
-                    foreach (var task in subTasks)
-                    {
-                        cancellationToken.ThrowIfCancellationRequested();
+            var tasks = jobContextModel.Tasks;
 
-                        await HandleTask(supplementaryDataWrapper, task, sourceFileModel, cancellationToken);
-                    }
-                }
+            foreach (var task in tasks)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                await HandleTask(supplementaryDataWrapper, task, sourceFileModel, cancellationToken);
             }
         }
 

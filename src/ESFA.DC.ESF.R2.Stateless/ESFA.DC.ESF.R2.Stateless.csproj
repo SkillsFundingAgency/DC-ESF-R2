@@ -414,6 +414,7 @@
   <ItemGroup>
     <Compile Include="DIComposition.cs" />
     <Compile Include="Handlers\JobContextMessageHandler.cs" />
+    <Compile Include="Mappers\JobContextMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Stateless.cs" />
     <Compile Include="Program.cs" />

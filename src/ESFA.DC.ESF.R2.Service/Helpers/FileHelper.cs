@@ -20,14 +20,14 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
             _providerService = providerService;
         }
 
-        public SourceFileModel GetSourceFileData(IJobContextMessage jobContextMessage)
+        public SourceFileModel GetSourceFileData(JobContextModel jobContextModel)
         {
-            if (!jobContextMessage.KeyValuePairs.ContainsKey(JobContextMessageKey.Filename))
+            if (string.IsNullOrWhiteSpace(jobContextModel.FileName))
             {
                 throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is required");
             }
 
-            var fileName = jobContextMessage.KeyValuePairs[JobContextMessageKey.Filename].ToString();
+            var fileName = jobContextModel.FileName;
 
             string[] fileNameParts = FileNameHelper.SplitFileName(fileName);
 
@@ -42,7 +42,7 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
                 throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is invalid");
             }
 
-            var jobId = jobContextMessage.JobId;
+            var jobId = jobContextModel.JobId;
 
             return new SourceFileModel
             {
@@ -50,7 +50,7 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
                 UKPRN = fileNameParts[1],
                 FileName = fileName,
                 PreparationDate = preparationDateTime,
-                SuppliedDate = jobContextMessage.SubmissionDateTimeUtc,
+                SuppliedDate = jobContextModel.SubmissionDateTimeUtc,
                 JobId = jobId
             };
         }

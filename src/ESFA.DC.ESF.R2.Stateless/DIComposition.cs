@@ -322,7 +322,6 @@ namespace ESFA.DC.ESF.R2.Stateless
         private static void RegisterServices(ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterType<ESFProviderService>().As<IESFProviderService>()
-                .WithAttributeFiltering()
                 .InstancePerLifetimeScope();
 
             containerBuilder.RegisterType<SupplementaryDataService>().As<ISupplementaryDataService>();
@@ -333,7 +332,7 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.RegisterType<ExcelStyleProvider>().As<IExcelStyleProvider>();
 
             containerBuilder.RegisterType<ValueProvider>().As<IValueProvider>().SingleInstance();
-            containerBuilder.RegisterType<ReferenceDataService>().As<IReferenceDataService>();
+            containerBuilder.RegisterType<ReferenceDataService>().As<IReferenceDataService>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PopulationService>().As<IPopulationService>();
 
             containerBuilder.RegisterType<AimAndDeliverableService>().As<IAimAndDeliverableService>();
