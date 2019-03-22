@@ -17,6 +17,9 @@
     <Parameter Name="AzureBlobConnectionString" Value="" />
     <Parameter Name="AzureBlobContainerName" Value="" />
   </Section>
+  <Section Name="SoftwareLicenceSection">
+    <Parameter Name="AsposeLicence" Value="[AsposeLicence]" />
+  </Section>
   <Section Name="ILRSection">
     <Parameter Name="ILR1516ConnectionString" Value="" />
     <Parameter Name="ILR1617ConnectionString" Value="" />

@@ -10,6 +10,7 @@
     <Parameter Name="SubscriptionName" DefaultValue="" />
     <Parameter Name="AzureBlobConnectionString" DefaultValue="" />
     <Parameter Name="AzureBlobContainerName" DefaultValue="" />
+    <Parameter Name="AsposeLicence" DefaultValue="" />
     <Parameter Name="JobStatusQueueName" DefaultValue="" />
     <Parameter Name="AuditQueueName" DefaultValue="" />
     <Parameter Name="ILR1516ConnectionString" DefaultValue="" />
@@ -47,6 +48,9 @@
           <Section Name="AzureStorageSection">
             <Parameter Name="AzureBlobConnectionString" Value="[AzureBlobConnectionString]" />
             <Parameter Name="AzureBlobContainerName" Value="[AzureBlobContainerName]" />
+          </Section>
+          <Section Name="SoftwareLicenceSection">
+            <Parameter Name="AsposeLicence" Value="[AsposeLicence]" />
           </Section>
           <Section Name="ILRSection">
             <Parameter Name="ILR1516ConnectionString" Value="[ILR1516ConnectionString]" />
