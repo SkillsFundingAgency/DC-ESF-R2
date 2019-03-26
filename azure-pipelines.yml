@@ -124,6 +124,7 @@ steps:
   inputs:
     testAssemblyVer2: |
      $(System.DefaultWorkingDirectory)\src\**\*test*.dll
+     !**\packages\*
      !**\*Database.Tests*.dll
      !**\*DataStore.Test*.dll
      !**\*TestAdapter.dll
