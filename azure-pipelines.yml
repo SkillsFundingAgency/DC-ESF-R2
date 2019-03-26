@@ -75,10 +75,10 @@ steps:
   displayName: 'VsTest - testAssemblies'
   inputs:
     testAssemblyVer2: |
-     $(System.DefaultWorkingDirectory)\src\**\*test*.dll
-     !**\packages\**
+     $(System.DefaultWorkingDirectory)\src\**\*Tests.dll
      !**\*Database.Tests*.dll
      !**\*DataStore.Test*.dll
+     !**\packages\**
      !**\*TestAdapter.dll
      !**\*SmokeTests.dll
      !**\*AcceptanceTests.dll
