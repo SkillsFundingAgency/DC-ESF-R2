@@ -70,6 +70,24 @@ steps:
     maximumCpuCount: true
     logProjectEvents: true
     createLogFile: true
+
+- task: VSTest@2
+  displayName: 'VsTest - testAssemblies'
+  inputs:
+    testAssemblyVer2: |
+     $(System.DefaultWorkingDirectory)\src\**\*Tests.dll
+     !**\*Database.Tests*.dll
+     !**\*DataStore.Test*.dll
+     !**\packages\**
+     !**\*TestAdapter.dll
+     !**\*SmokeTests.dll
+     !**\*AcceptanceTests.dll
+     !**\obj\**
+    runInParallel: true
+    codeCoverageEnabled: true
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+
     
 - task: DeleteFiles@1
   displayName: 'Delete Symbols files from $(build.artifactstagingdirectory)\applicationpackage'
@@ -118,22 +136,6 @@ steps:
     TargetFileNames: '*Tests.dll.config'
     RequireVariable: true
   enabled: false
-
-- task: VSTest@2
-  displayName: 'VsTest - testAssemblies'
-  inputs:
-    testAssemblyVer2: |
-     $(System.DefaultWorkingDirectory)\src\**\*test*.dll
-     !**\*Database.Tests*.dll
-     !**\*DataStore.Test*.dll
-     !**\*TestAdapter.dll
-     !**\*SmokeTests.dll
-     !**\*AcceptanceTests.dll
-     !**\obj\**
-    runInParallel: true
-    codeCoverageEnabled: true
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
 
 
 #- task: PublishSymbols@2
