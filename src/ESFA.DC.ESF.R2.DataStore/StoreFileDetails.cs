@@ -29,10 +29,7 @@ namespace ESFA.DC.ESF.R2.DataStore
                     $"{sourceFile.ConRefNumber}', '{sourceFile.UKPRN}', '{sourceFile.FileName}', " +
                     $"'{sourceFile.SuppliedDate?.ToString("yyyy-MM-dd HH:mm:ss")}', '{sourceFile.PreparationDate:yyyy-MM-dd HH:mm:ss}')";
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return 0;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             using (var sqlCommand =
                 new SqlCommand(insertFileDetails, _sqlConnection, _sqlTransaction))

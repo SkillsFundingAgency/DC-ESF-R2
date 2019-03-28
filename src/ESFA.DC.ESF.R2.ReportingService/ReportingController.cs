@@ -36,10 +36,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
             SourceFileModel sourceFile,
             CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             using (var memoryStream = new MemoryStream())
             {
@@ -66,10 +63,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
             {
                 using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
                 {
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        return;
-                    }
+                    cancellationToken.ThrowIfCancellationRequested();
 
                     foreach (var validationReport in _validationReports)
                     {
@@ -81,10 +75,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
                         await report.GenerateReport(wrapper, sourceFile, archive, cancellationToken);
                     }
 
-                    if (cancellationToken.IsCancellationRequested)
-                    {
-                        return;
-                    }
+                    cancellationToken.ThrowIfCancellationRequested();
                 }
 
                 await _streamableKeyValuePersistenceService.SaveAsync($"{sourceFile.UKPRN}_{sourceFile.JobId}_Reports.zip", memoryStream, cancellationToken);

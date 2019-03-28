@@ -16,8 +16,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
 
         private readonly ISupplementaryDataModelMapper _supplementaryDataMapper;
 
-        private int _startYear = 2015;
-        private int _endYear = 2019;
+        private int _startYear = 2019;
+        private int _endYear = 2022;
         private int _startMonth = 8;
 
         public SupplementaryDataService(

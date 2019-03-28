@@ -45,41 +45,29 @@
     <Reference Include="ESFA.DC.Data.Postcodes.Model, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.Data.Postcodes.Model.0.2.0-unstable0002\lib\net461\ESFA.DC.Data.Postcodes.Model.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR1819.Database.EF, Version=0.1.333.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR1819.Database.EF.0.1.333\lib\netstandard2.0\ESFA.DC.ILR1819.Database.EF.dll</HintPath>
-    </Reference>
-    <Reference Include="ESFA.DC.ILR1819.DataStore.EF, Version=0.1.333.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR1819.Database.EF.0.1.333\lib\netstandard2.0\ESFA.DC.ILR1819.DataStore.EF.dll</HintPath>
-    </Reference>
-    <Reference Include="ESFA.DC.ILR1819.DataStore.EF.Invalid, Version=0.1.333.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR1819.Database.EF.0.1.333\lib\netstandard2.0\ESFA.DC.ILR1819.DataStore.EF.Invalid.dll</HintPath>
-    </Reference>
-    <Reference Include="ESFA.DC.ILR1819.DataStore.EF.Valid, Version=0.1.333.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR1819.Database.EF.0.1.333\lib\netstandard2.0\ESFA.DC.ILR1819.DataStore.EF.Valid.dll</HintPath>
-    </Reference>
     <Reference Include="ESFA.DC.Logging, Version=0.1.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.Logging.0.1.3-beta0001\lib\netstandard2.0\ESFA.DC.Logging.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ReferenceData.FCS.Model, Version=0.1.176.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ReferenceData.FCS.Model.0.1.176\lib\netstandard2.0\ESFA.DC.ReferenceData.FCS.Model.dll</HintPath>
+    <Reference Include="ESFA.DC.ReferenceData.FCS.Model, Version=0.1.218.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ReferenceData.FCS.Model.0.1.218\lib\netstandard2.0\ESFA.DC.ReferenceData.FCS.Model.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ReferenceData.LARS.Model, Version=0.1.176.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ReferenceData.LARS.Model.0.1.176\lib\netstandard2.0\ESFA.DC.ReferenceData.LARS.Model.dll</HintPath>
+    <Reference Include="ESFA.DC.ReferenceData.LARS.Model, Version=0.1.218.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ReferenceData.LARS.Model.0.1.218\lib\netstandard2.0\ESFA.DC.ReferenceData.LARS.Model.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ReferenceData.ULN.Model, Version=0.1.176.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ReferenceData.ULN.Model.0.1.176\lib\netstandard2.0\ESFA.DC.ReferenceData.ULN.Model.dll</HintPath>
+    <Reference Include="ESFA.DC.ReferenceData.ULN.Model, Version=0.1.218.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ReferenceData.ULN.Model.0.1.218\lib\netstandard2.0\ESFA.DC.ReferenceData.ULN.Model.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore, Version=2.2.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.2.2.2\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore, Version=2.2.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.EntityFrameworkCore.2.2.3\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Abstractions, Version=2.2.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Abstractions.2.2.2\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore.Abstractions, Version=2.2.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Abstractions.2.2.3\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Relational, Version=2.2.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Relational.2.2.2\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore.Relational, Version=2.2.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Relational.2.2.3\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.SqlServer, Version=2.2.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.SqlServer.2.2.2\lib\netstandard2.0\Microsoft.EntityFrameworkCore.SqlServer.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore.SqlServer, Version=2.2.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.EntityFrameworkCore.SqlServer.2.2.3\lib\netstandard2.0\Microsoft.EntityFrameworkCore.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Caching.Abstractions.2.2.0\lib\netstandard2.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>

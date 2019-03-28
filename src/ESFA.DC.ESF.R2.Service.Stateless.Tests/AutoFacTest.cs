@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
+using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Stateless;
 using ESFA.DC.JobContextManager.Interface;
 using ESFA.DC.JobContextManager.Model;
@@ -35,6 +36,10 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
                 using (var lifeTime = c.BeginLifetimeScope())
                 {
                     var messageHandler = lifeTime.Resolve<IJobContextManager<JobContextMessage>>();
+                    var serviceController = lifeTime.Resolve<IServiceController>();
+                    var storageController = lifeTime.Resolve<IStorageController>();
+                    var validationController = lifeTime.Resolve<IValidationController>();
+                    var reportingController = lifeTime.Resolve<IReportingController>();
                     //bool ret = await messageHandler. .HandleAsync(jobContextMessage, cts.Token);
                 }
             }

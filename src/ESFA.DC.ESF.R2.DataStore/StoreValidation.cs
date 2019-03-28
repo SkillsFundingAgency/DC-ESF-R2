@@ -58,10 +58,7 @@ namespace ESFA.DC.ESF.R2.DataStore
 
         private async Task SaveData(SqlConnection connection, SqlTransaction transaction, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             using (var bulkInsert = new BulkInsert(connection, transaction, cancellationToken))
             {

@@ -245,6 +245,10 @@
     <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.Interfaces\ESFA.DC.ESF.R2.Interfaces.csproj">
+      <Project>{3EB1948D-7F0F-446F-A8B3-C3AB19531FE6}</Project>
+      <Name>ESFA.DC.ESF.R2.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Service.Config\ESFA.DC.ESF.R2.Service.Config.csproj">
       <Project>{5cdfb079-a857-42cf-95f8-f6af0fe0c179}</Project>
       <Name>ESFA.DC.ESF.R2.Service.Config</Name>

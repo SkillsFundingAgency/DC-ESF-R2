@@ -1,8 +1,6 @@
-﻿using System;
-using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Helpers;
-using ESFA.DC.JobContext.Interface;
-using ESFA.DC.JobContextManager.Model.Interface;
+using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.Service.Helpers
 {
@@ -15,9 +13,9 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
             _service = service;
         }
 
-        public void CacheCurrentPeriod(IJobContextMessage jobContextMessage)
+        public void CacheCurrentPeriod(JobContextModel jobContextMessage)
         {
-            _service.CurrentPeriod = Convert.ToInt32(jobContextMessage.KeyValuePairs[JobContextMessageKey.ReturnPeriod]);
+            _service.CurrentPeriod = jobContextMessage.CurrentPeriod;
         }
     }
 }

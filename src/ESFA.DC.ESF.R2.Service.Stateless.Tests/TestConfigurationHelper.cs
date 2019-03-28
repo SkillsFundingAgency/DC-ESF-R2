@@ -15,6 +15,8 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
                     {
                         ServiceReleaseVersion = "1.2.3.4"
                     };
+                //case "TopicAndTaskSection":
+                //    return (T)GetTopicsAndTasks();
                 case "AzureStorageSection":
                     return (T)(object)new AzureStorageOptions
                     {
@@ -25,7 +27,7 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
                     return (T)(object)new ServiceBusOptions
                     {
                         AuditQueueName = "AuditQueueName",
-                        ServiceBusConnectionString = "ServiceBusConnectionString",
+                        ServiceBusConnectionString = "Endpoint=sb://xxxx.servicebus.windows.net/;SharedAccessKeyName=xxxx;SharedAccessKey=xxxx",
                         JobStatusQueueName = "JobStatusQueueName",
                         TopicName = "TopicName",
                         SubscriptionName = "DataStore"
@@ -48,10 +50,16 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
                     {
                         ESFR2ConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;"
                     };
+                case "FCSSection":
+                    return (T)(object)new FCSConfiguration
+                    {
+                        FCSConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;"
+                    };
                 case "ReferenceDataSection":
                     return (T)(object)new ReferenceDataConfig
                     {
                         LARSConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;",
+                        ULNConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;",
                         OrganisationConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;",
                         PostcodesConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;"
                     };

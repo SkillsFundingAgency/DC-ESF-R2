@@ -43,10 +43,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             var externalFileName = GetExternalFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
             var fileName = GetFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             var ukPrn = Convert.ToInt32(sourceFile.UKPRN);
             string csv = await GetCsv(ukPrn, cancellationToken);
@@ -59,10 +56,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
 
         private async Task<string> GetCsv(int ukPrn, CancellationToken cancellationToken)
         {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return null;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             var reportData = await _aimAndDeliverableService.GetAimAndDeliverableModel(ukPrn, cancellationToken);
 

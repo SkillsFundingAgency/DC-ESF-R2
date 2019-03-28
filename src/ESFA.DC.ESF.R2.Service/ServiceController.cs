@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.Helpers;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
-using ESFA.DC.JobContextManager.Model.Interface;
 
 namespace ESFA.DC.ESF.R2.Service
 {
@@ -36,18 +34,17 @@ namespace ESFA.DC.ESF.R2.Service
         }
 
         public async Task RunTasks(
-            IJobContextMessage jobContextMessage,
-            IReadOnlyList<ITaskItem> tasks,
+            JobContextModel jobContextModel,
             CancellationToken cancellationToken)
         {
             var wrapper = new SupplementaryDataWrapper();
             var sourceFileModel = new SourceFileModel();
 
-            _periodHelper.CacheCurrentPeriod(jobContextMessage);
+            _periodHelper.CacheCurrentPeriod(jobContextModel);
 
-            if (tasks.SelectMany(t => t.Tasks).Contains(Constants.ValidationTask))
+            if (jobContextModel.Tasks.Contains(Constants.ValidationTask))
             {
-                sourceFileModel = _fileHelper.GetSourceFileData(jobContextMessage);
+                sourceFileModel = _fileHelper.GetSourceFileData(jobContextModel);
 
                 wrapper = await _fileValidationService.GetFile(sourceFileModel, cancellationToken);
                 if (!wrapper.ValidErrorModels.Any())
@@ -63,7 +60,7 @@ namespace ESFA.DC.ESF.R2.Service
                 }
             }
 
-            await _taskHelper.ExecuteTasks(tasks, sourceFileModel, wrapper, cancellationToken);
+            await _taskHelper.ExecuteTasks(jobContextModel, sourceFileModel, wrapper, cancellationToken);
         }
     }
 }

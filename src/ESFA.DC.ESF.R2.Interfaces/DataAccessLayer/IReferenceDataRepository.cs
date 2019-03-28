@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using ESFA.DC.ESF.R2.Models;
-using ESFA.DC.ReferenceData.LARS.Model;
-using ESFA.DC.ReferenceData.ULN.Model;
 
 namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
 {

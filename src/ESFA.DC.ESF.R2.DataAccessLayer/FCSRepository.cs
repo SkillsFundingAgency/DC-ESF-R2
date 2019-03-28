@@ -29,10 +29,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         {
             List<FcsDeliverableCodeMapping> codeMapping;
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return null;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             lock (_fcsContextLock)
             {
@@ -56,12 +53,9 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
         public ContractAllocationCacheModel GetContractAllocation(string conRefNum, int deliverableCode, CancellationToken cancellationToken, int? ukPrn = null)
         {
-            ContractAllocationCacheModel contractAllocationModel = null;
+            ContractAllocationCacheModel contractAllocationModel;
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return null;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             lock (_fcsContextLock)
             {
@@ -95,32 +89,29 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
             List<DeliverableUnitCost> deliverableUnitCosts;
 
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    return null;
-                }
+            cancellationToken.ThrowIfCancellationRequested();
 
-                lock (_fcsContextLock)
+            lock (_fcsContextLock)
+            {
+                using (var fcsContext = _fcsContextFactory())
                 {
-                    using (var fcsContext = _fcsContextFactory())
-                    {
-                        deliverableUnitCosts = fcsContext.ContractDeliverables
-                            .Where(cd => cd.ContractAllocation.ContractAllocationNumber.CaseInsensitiveEquals(conRefNum)
-                                         && cd.ContractAllocation.DeliveryUkprn == ukPrn)
-                            .Join(
-                                mappings,
-                                cd => (cd.DeliverableCode ?? 0).ToString(),
-                                m => m.FcsDeliverableCode,
-                                (cd, m) => new DeliverableUnitCost
-                                {
-                                    UkPrn = ukPrn,
-                                    ConRefNum = conRefNum,
-                                    DeliverableCode = m.ExternalDeliverableCode,
-                                    UnitCost = cd.UnitCost ?? 0
-                                })
-                            .ToList();
-                    }
+                    deliverableUnitCosts = fcsContext.ContractDeliverables
+                        .Where(cd => cd.ContractAllocation.ContractAllocationNumber.CaseInsensitiveEquals(conRefNum)
+                                     && cd.ContractAllocation.DeliveryUkprn == ukPrn)
+                        .Join(
+                            mappings,
+                            cd => (cd.DeliverableCode ?? 0).ToString(),
+                            m => m.FcsDeliverableCode,
+                            (cd, m) => new DeliverableUnitCost
+                            {
+                                UkPrn = ukPrn,
+                                ConRefNum = conRefNum,
+                                DeliverableCode = m.ExternalDeliverableCode,
+                                UnitCost = cd.UnitCost ?? 0
+                            })
+                        .ToList();
                 }
+            }
 
             return deliverableUnitCosts;
         }

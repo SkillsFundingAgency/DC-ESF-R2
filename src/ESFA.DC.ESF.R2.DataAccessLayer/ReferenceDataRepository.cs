@@ -37,10 +37,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         {
             string version;
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return null;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             using (var context = _postcodes())
             {
@@ -57,10 +54,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         {
             string version;
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return null;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             lock (_larsDeliveryLock)
             {
@@ -80,10 +74,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         {
             var learningDeliveries = new Dictionary<string, LarsLearningDeliveryModel>();
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return null;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             lock (_larsDeliveryLock)
             {
@@ -119,10 +110,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         {
             string version;
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return null;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             using (var context = _organisations())
             {
@@ -139,10 +127,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         {
             string providerName;
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return null;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             using (var context = _organisations())
             {
@@ -158,10 +143,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         {
             var ulns = new HashSet<long>();
 
-            if (cancellationToken.IsCancellationRequested)
-            {
-                return null;
-            }
+            cancellationToken.ThrowIfCancellationRequested();
 
             lock (_ulnLock)
             {
