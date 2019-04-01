@@ -8,6 +8,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <CodeAnalysisRuleSet></CodeAnalysisRuleSet>
+    <OutputPath>bin\Release\</OutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
