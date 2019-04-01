@@ -66,7 +66,7 @@ steps:
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
     msbuildArguments: '-t:restore /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /t:Package /p:PackageLocation="$(build.artifactstagingdirectory)\$(ArtifactFolderName)\ApplicationPackage" /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
-    clean: false
+    clean: true
     maximumCpuCount: true
     logProjectEvents: true
     createLogFile: true
