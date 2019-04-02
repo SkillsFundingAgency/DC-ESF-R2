@@ -28,11 +28,12 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
             foreach (var task in tasks)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await HandleTask(supplementaryDataWrapper, task, sourceFileModel, cancellationToken);
+                await HandleTask(jobContextModel, supplementaryDataWrapper, task, sourceFileModel, cancellationToken);
             }
         }
 
         private async Task HandleTask(
+            JobContextModel jobContextModel,
             SupplementaryDataWrapper wrapper,
             string task,
             SourceFileModel sourceFile,
@@ -46,7 +47,7 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
                     continue;
                 }
 
-                await handler.Execute(sourceFile, wrapper, cancellationToken);
+                await handler.Execute(jobContextModel, sourceFile, wrapper, cancellationToken);
                 break;
             }
         }

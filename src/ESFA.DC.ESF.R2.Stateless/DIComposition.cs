@@ -45,6 +45,10 @@ using ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition;
 using ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel;
 using ESFA.DC.ESF.R2.ValidationService.Helpers;
 using ESFA.DC.ESF.R2.ValidationService.Services;
+using ESFA.DC.FileService;
+using ESFA.DC.FileService.Config;
+using ESFA.DC.FileService.Config.Interface;
+using ESFA.DC.FileService.Interface;
 using ESFA.DC.ILR.DataService.Models;
 using ESFA.DC.ILR.DataService.Services;
 using ESFA.DC.IO.AzureStorage;
@@ -132,16 +136,13 @@ namespace ESFA.DC.ESF.R2.Stateless
         private static void RegisterPersistence(ContainerBuilder containerBuilder, IConfigurationHelper configHelper)
         {
             // register azure blob storage service
-            var azureBlobStorageOptions = configHelper.GetSectionValues<AzureStorageOptions>("AzureStorageSection");
-            containerBuilder.Register(c =>
-                    new AzureStorageKeyValuePersistenceConfig(
-                        azureBlobStorageOptions.AzureBlobConnectionString,
-                        azureBlobStorageOptions.AzureBlobContainerName))
-                .As<IAzureStorageKeyValuePersistenceServiceConfig>().SingleInstance();
+            var ioConfiguration = configHelper.GetSectionValues<AzureStorageFileServiceConfiguration>("AzureStorageSection");
 
-            containerBuilder.RegisterType<AzureStorageKeyValuePersistenceService>()
-                .As<IStreamableKeyValuePersistenceService>()
-                .InstancePerLifetimeScope();
+            containerBuilder.Register(c =>
+                    ioConfiguration)
+                .As<IAzureStorageFileServiceConfiguration>().SingleInstance();
+
+            containerBuilder.RegisterType<AzureStorageFileService>().As<IFileService>();
 
             var ilrConfig = configHelper.GetSectionValues<ILRConfiguration>("ILRSection");
             containerBuilder.RegisterModule(new DependencyInjectionModule

@@ -12,18 +12,18 @@ using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports;
 using ESFA.DC.ESF.R2.ReportingService.Mappers;
-using ESFA.DC.IO.Interfaces;
+using ESFA.DC.FileService.Interface;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Reports
 {
     public class AimAndDeliverableReport : AbstractReportBuilder, IModelReport
     {
-        private readonly IKeyValuePersistenceService _storage;
+        private readonly IFileService _storage;
         private readonly IAimAndDeliverableService _aimAndDeliverableService;
 
         public AimAndDeliverableReport(
             IDateTimeProvider dateTimeProvider,
-            IStreamableKeyValuePersistenceService storage,
+            IFileService storage,
             IValueProvider valueProvider,
             IAimAndDeliverableService aimAndDeliverableService)
             : base(dateTimeProvider, valueProvider)
@@ -35,21 +35,31 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
         }
 
         public async Task GenerateReport(
-            SupplementaryDataWrapper wrapper,
+            JobContextModel jobContextModel,
             SourceFileModel sourceFile,
             ZipArchive archive,
             CancellationToken cancellationToken)
         {
-            var externalFileName = GetExternalFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
-            var fileName = GetFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
+            var externalFileName = GetExternalFilename(jobContextModel.UkPrn.ToString(), jobContextModel.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
+            var fileName = GetFilename(jobContextModel.UkPrn.ToString(), jobContextModel.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            var ukPrn = Convert.ToInt32(sourceFile.UKPRN);
+            var ukPrn = jobContextModel.UkPrn;
             string csv = await GetCsv(ukPrn, cancellationToken);
             if (csv != null)
             {
-                await _storage.SaveAsync($"{externalFileName}.csv", csv, cancellationToken);
+                using (var stream = await _storage.OpenWriteStreamAsync(
+                    $"{externalFileName}.csv",
+                    jobContextModel.BlobContainerName,
+                    cancellationToken))
+                {
+                    using (var writer = new StreamWriter(stream, new UTF8Encoding(false, true)))
+                    {
+                        writer.Write(csv);
+                    }
+                }
+
                 await WriteZipEntry(archive, $"{fileName}.csv", csv);
             }
         }

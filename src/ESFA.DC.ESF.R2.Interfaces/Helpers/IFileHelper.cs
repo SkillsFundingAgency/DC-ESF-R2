@@ -7,7 +7,10 @@ namespace ESFA.DC.ESF.R2.Interfaces.Helpers
 {
     public interface IFileHelper
     {
-        Task<IList<SupplementaryDataLooseModel>> GetESFRecords(SourceFileModel sourceFileModel, CancellationToken cancellationToken);
+        Task<IList<SupplementaryDataLooseModel>> GetESFRecords(
+            JobContextModel jobContextModel,
+            SourceFileModel sourceFileModel,
+            CancellationToken cancellationToken);
 
         SourceFileModel GetSourceFileData(JobContextModel jobContextModel);
     }

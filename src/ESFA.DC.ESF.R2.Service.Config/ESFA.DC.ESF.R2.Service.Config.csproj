@@ -79,6 +79,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ESFA.DC.FileService.Interface">
+      <Version>0.1.15-beta0001</Version>
+    </PackageReference>
     <PackageReference Include="ESFA.DC.IO.AzureStorage">
       <Version>0.1.15-beta0001</Version>
     </PackageReference>

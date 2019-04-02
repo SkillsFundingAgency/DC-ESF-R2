@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -9,7 +8,7 @@ using CsvHelper.Configuration;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Service.Mappers;
-using ESFA.DC.IO.Interfaces;
+using ESFA.DC.FileService.Interface;
 using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.Service.Services
@@ -18,20 +17,23 @@ namespace ESFA.DC.ESF.R2.Service.Services
     {
         private readonly ILogger _logger;
 
-        private readonly IStreamableKeyValuePersistenceService _storage;
+        private readonly IFileService _storage;
 
         private readonly SemaphoreSlim _getESFLock;
 
         public ESFProviderService(
             ILogger logger,
-            IStreamableKeyValuePersistenceService storage)
+            IFileService storage)
         {
             _logger = logger;
             _storage = storage;
             _getESFLock = new SemaphoreSlim(1, 1);
         }
 
-        public async Task<IList<SupplementaryDataLooseModel>> GetESFRecordsFromFile(SourceFileModel sourceFile, CancellationToken cancellationToken)
+        public async Task<IList<SupplementaryDataLooseModel>> GetESFRecordsFromFile(
+            JobContextModel jobContextMessage,
+            SourceFileModel sourceFile,
+            CancellationToken cancellationToken)
         {
             List<SupplementaryDataLooseModel> model = null;
 
@@ -41,11 +43,9 @@ namespace ESFA.DC.ESF.R2.Service.Services
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var ms = new MemoryStream())
+            using (var stream = await _storage.OpenReadStreamAsync(sourceFile.FileName, jobContextMessage.BlobContainerName, cancellationToken))
             {
-                await _storage.GetAsync(sourceFile.FileName, ms, cancellationToken);
-                ms.Seek(0, SeekOrigin.Begin);
-                using (var reader = new StreamReader(ms))
+                using (var reader = new StreamReader(stream))
                 {
                     using (var csvReader = new CsvReader(reader))
                     {

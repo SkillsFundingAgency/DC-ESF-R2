@@ -7,9 +7,13 @@ namespace ESFA.DC.ESF.R2.Models
     {
         public long JobId { get; set; }
 
+        public int UkPrn { get; set; }
+
         public DateTime SubmissionDateTimeUtc { get; set; }
 
         public IReadOnlyList<string> Tasks { get; set; }
+
+        public string BlobContainerName { get; set; }
 
         public string FileName { get; set; }
 

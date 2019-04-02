@@ -16,9 +16,8 @@ using ESFA.DC.ESF.R2.ReportingService.Services;
 using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRowHelpers;
 using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.Ilr;
 using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppData;
-using ESFA.DC.ESF.R2.ReportingService.Tests.Builders;
+using ESFA.DC.FileService.Interface;
 using ESFA.DC.ILR.DataService.Models;
-using ESFA.DC.IO.Interfaces;
 using Moq;
 using Xunit;
 
@@ -30,25 +29,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
         public async Task TestFundingSummaryReportGeneration()
         {
             var dateTime = DateTime.UtcNow;
-            var filename = $"10005752_1_ESF Funding Summary Report {dateTime:yyyyMMdd-HHmmss}";
-            byte[] xlsx = null;
+            var filename = $"10005752/1/ESF R2 Funding Summary Report {dateTime:yyyyMMdd-HHmmss}";
 
             Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(dateTime);
             dateTimeProviderMock.Setup(x => x.ConvertUtcToUk(It.IsAny<DateTime>())).Returns(dateTime);
 
-            Mock<IStreamableKeyValuePersistenceService> storage = new Mock<IStreamableKeyValuePersistenceService>();
-            storage.Setup(x => x.SaveAsync($"{filename}.xlsx", It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Callback<string, Stream, CancellationToken>(
-                    (key, value, ct) =>
-                    {
-                        value.Seek(0, SeekOrigin.Begin);
-                        using (MemoryStream ms = new MemoryStream())
-                        {
-                            value.CopyTo(ms);
-                            xlsx = ms.ToArray();
-                        }
-                    })
-                .Returns(Task.CompletedTask);
+            var testStream = new MemoryStream();
+
+            Mock<IFileService> storage = new Mock<IFileService>();
+            storage.Setup(x => x.OpenWriteStreamAsync($"{filename}.xlsx", It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(testStream);
 
             var supplementaryDataService = new Mock<ISupplementaryDataService>();
             supplementaryDataService
@@ -94,14 +85,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
 
             SourceFileModel sourceFile = GetEsfSourceFileModel();
 
-            SupplementaryDataWrapper wrapper = new SupplementaryDataWrapper();
-            wrapper.SupplementaryDataModels = SupplementaryDataModelBuilder.GetModels();
+            JobContextModel wrapper = new JobContextModel
+            {
+                UkPrn = 10005752,
+                JobId = 1,
+                BlobContainerName = string.Empty
+            };
 
             await fundingSummaryReport.GenerateReport(wrapper, sourceFile, null, CancellationToken.None);
 
-            storage.Verify(s => s.SaveAsync($"{filename}.xlsx", It.IsAny<Stream>(), It.IsAny<CancellationToken>()));
-
-           Assert.NotEmpty(xlsx);
+            storage.Verify(s =>
+                s.OpenWriteStreamAsync($"{filename}.xlsx", It.IsAny<string>(), It.IsAny<CancellationToken>()));
 
 #if DEBUG
             File.WriteAllBytes($"{filename}.xlsx", xlsx);

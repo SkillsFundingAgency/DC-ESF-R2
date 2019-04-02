@@ -11,6 +11,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.Strategies
         bool IsMatch(string taskName);
 
         Task Execute(
+            JobContextModel jobContextModel,
             SourceFileModel sourceFile,
             SupplementaryDataWrapper supplementaryDataWrapper,
             CancellationToken cancellationToken);

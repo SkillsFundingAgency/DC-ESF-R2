@@ -46,7 +46,7 @@ namespace ESFA.DC.ESF.R2.Service
             {
                 sourceFileModel = _fileHelper.GetSourceFileData(jobContextModel);
 
-                wrapper = await _fileValidationService.GetFile(sourceFileModel, cancellationToken);
+                wrapper = await _fileValidationService.GetFile(jobContextModel, sourceFileModel, cancellationToken);
                 if (!wrapper.ValidErrorModels.Any())
                 {
                     wrapper = _fileValidationService.RunFileValidators(sourceFileModel, wrapper);
@@ -55,7 +55,7 @@ namespace ESFA.DC.ESF.R2.Service
                 if (wrapper.ValidErrorModels.Any())
                 {
                     await _storageController.StoreValidationOnly(sourceFileModel, wrapper, cancellationToken);
-                    await _reportingController.FileLevelErrorReport(wrapper, sourceFileModel, cancellationToken);
+                    await _reportingController.FileLevelErrorReport(jobContextModel, wrapper, sourceFileModel, cancellationToken);
                     return;
                 }
             }

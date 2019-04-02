@@ -28,6 +28,7 @@ namespace ESFA.DC.ESF.R2.Service.Strategies
         }
 
         public async Task Execute(
+            JobContextModel jobContextModel,
             SourceFileModel sourceFile,
             SupplementaryDataWrapper supplementaryDataWrapper,
             CancellationToken cancellationToken)
