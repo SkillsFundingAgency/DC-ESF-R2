@@ -8,7 +8,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.Reports
     public interface IModelReport
     {
         Task GenerateReport(
-            SupplementaryDataWrapper supplementaryDataWrapper,
+            JobContextModel jobContextModel,
             SourceFileModel sourceFile,
             ZipArchive archive,
             CancellationToken cancellationToken);

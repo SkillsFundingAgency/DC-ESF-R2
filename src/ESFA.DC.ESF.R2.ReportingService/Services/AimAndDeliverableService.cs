@@ -16,8 +16,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
     {
         private const string FundingStreamPeriodCode = "ESF1420";
 
-        private const string EsfR2ConRefNum = "ESF-5000";
-
         private readonly string[] _reportMonths =
         {
             "Aug-18",
@@ -58,7 +56,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
         {
             List<AimAndDeliverableModel> reportData = null;
 
-            var validLearners = (await _validLearnerDataService.GetValidLearnerData(ukPrn, EsfR2ConRefNum, cancellationToken)).ToList();
+            var providerConRefNumbers = (await _validLearnerDataService.GetLearnerConRefNumbers(ukPrn, cancellationToken)).ToList();
+
+            var conRefNumbers = providerConRefNumbers.Where(IsConRefNumberRound2).ToList();
+
+            var validLearners = (await _validLearnerDataService.GetValidLearnerData(ukPrn, conRefNumbers, cancellationToken)).ToList();
             var fm70LearningDeliveries = (await _fm70DataService.GetLearningDeliveries(ukPrn, cancellationToken)).ToList();
 
             var fm70Outcomes = (await _fm70DataService.GetOutcomes(ukPrn, cancellationToken)).ToList();
@@ -181,6 +183,18 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             reportData.Sort(_comparer);
 
             return reportData;
+        }
+
+        public bool IsConRefNumberRound2(string conRefNumber)
+        {
+            var numericString = conRefNumber.Replace(ESFConstants.ConRefNumberPrefix, string.Empty);
+
+            if (!int.TryParse(numericString, out var contractNumber))
+            {
+                return false;
+            }
+
+            return contractNumber >= ESFConstants.ESFRound2StartConRefNumber;
         }
     }
 }

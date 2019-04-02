@@ -43,7 +43,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
         public string GetExternalFilename(string ukPrn, long jobId, DateTime submissionDateTime)
         {
             DateTime dateTime = _dateTimeProvider.ConvertUtcToUk(submissionDateTime);
-            return $"{ukPrn}_{jobId.ToString()}_{ReportFileName} {dateTime:yyyyMMdd-HHmmss}";
+            return $"{ukPrn}/{jobId.ToString()}/{ReportFileName} {dateTime:yyyyMMdd-HHmmss}";
         }
 
         public string GetFilename(string ukPrn, long jobId, DateTime submissionDateTime)

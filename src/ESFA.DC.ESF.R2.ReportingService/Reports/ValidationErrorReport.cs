@@ -11,18 +11,18 @@ using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.ReportingService.Mappers;
-using ESFA.DC.IO.Interfaces;
+using ESFA.DC.FileService.Interface;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Reports
 {
     public class ValidationErrorReport : AbstractReportBuilder, IValidationReport
     {
-        private readonly IKeyValuePersistenceService _storage;
+        private readonly IFileService _storage;
 
         public ValidationErrorReport(
             IDateTimeProvider dateTimeProvider,
             IValueProvider valueProvider,
-            IStreamableKeyValuePersistenceService storage)
+            IFileService storage)
             : base(dateTimeProvider, valueProvider)
         {
             ReportFileName = "ESF Supplementary Data Rule Violation Report";
@@ -31,6 +31,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
         }
 
         public async Task GenerateReport(
+            JobContextModel jobContextModel,
             SourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             ZipArchive archive,
@@ -41,7 +42,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             string externalFileName = GetExternalFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
             string fileName = GetFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
 
-            await _storage.SaveAsync($"{externalFileName}.csv", csv, cancellationToken);
+            using (var stream = await _storage.OpenWriteStreamAsync(
+                $"{externalFileName}.csv",
+                jobContextModel.BlobContainerName,
+                cancellationToken))
+            {
+                using (var writer = new StreamWriter(stream, new UTF8Encoding(false, true)))
+                {
+                    writer.Write(csv);
+                }
+            }
+
             await WriteZipEntry(archive, $"{fileName}.csv", csv);
         }
 

@@ -7,7 +7,6 @@ using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.JobContext.Interface;
-using ESFA.DC.JobContextManager.Model.Interface;
 
 namespace ESFA.DC.ESF.R2.Service.Helpers
 {
@@ -55,9 +54,12 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
             };
         }
 
-        public async Task<IList<SupplementaryDataLooseModel>> GetESFRecords(SourceFileModel sourceFileModel, CancellationToken cancellationToken)
+        public async Task<IList<SupplementaryDataLooseModel>> GetESFRecords(
+            JobContextModel jobContextModel,
+            SourceFileModel sourceFileModel,
+            CancellationToken cancellationToken)
         {
-            return await _providerService.GetESFRecordsFromFile(sourceFileModel, cancellationToken);
+            return await _providerService.GetESFRecordsFromFile(jobContextModel, sourceFileModel, cancellationToken);
         }
     }
 }
