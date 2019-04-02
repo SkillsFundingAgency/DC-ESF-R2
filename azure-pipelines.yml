@@ -11,7 +11,7 @@ variables:
   BuildConfiguration: 'Release'
   BuildPlatform: 'Any CPU'
   BuildPlatformAnyCPU: 'Any CPU'
-  BuildPlatformX64: 'X64'
+  BuildPlatformX64: 'x64'
   ServiceFabricProjectFolderName: 'ESFA.DC.ESF.R2'
 
 pool:
@@ -50,7 +50,7 @@ steps:
   inputs:
     solution: '**/*.sln'
     msbuildArchitecture: x64
-    platform: '$(BuildPlatform)'
+    platform: '$(BuildPlatformX64)'
     configuration: '$(BuildConfiguration)'
     msbuildArguments: '-t:restore /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
     clean: true
@@ -63,7 +63,7 @@ steps:
   inputs:
     solution: '$(build.sourcesdirectory)\**\*.sfproj'
     msbuildArchitecture: x64
-    platform: '$(BuildPlatform)'
+    platform: '$(BuildPlatformX64)'
     configuration: '$(BuildConfiguration)'
     msbuildArguments: '-t:restore /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /t:Package /p:PackageLocation="$(build.artifactstagingdirectory)\$(ArtifactFolderName)\ApplicationPackage" /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
     clean: false
