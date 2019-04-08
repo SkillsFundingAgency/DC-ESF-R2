@@ -42,50 +42,77 @@ steps:
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
   inputs:
-    vstsFeed: '1d5deb2d-cf8b-4bb1-b147-d13bc246e3f4'
-
-- task: VSBuild@1
-  displayName: 'vsBuild solution **\*.sln'
-  enabled: true
-  inputs:
-    solution: '**\*.sln'
-    platform: '$(BuildPlatformAnyCPU)'
-    configuration: '$(BuildConfiguration)'
-    msbuildArgs: '/p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
-    clean: true
-    maximumCpuCount: true
-    msbuildArchitecture: x64
-
+    restoreSolution: 'src/*.sln'
+    vstsFeed: 'dct-pkg'
 
 - task: MSBuild@1
-  displayName: 'Build and Package - Service Fabric Config'
+  enabled: true
+  displayName: 'Build solution **/*.sln'
   inputs:
-    solution: '**\*.sfproj'
+    msbuildVersion: 16.0
     msbuildArchitecture: x64
-    platform: '$(BuildPlatformX64)'
+    platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
-    msbuildArguments: '/t:Package /p:PackageLocation=$(build.artifactstagingdirectory)\applicationpackage /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
-    clean: false
+    msbuildArguments: '-p:version=$(Build.BuildNumber) -p:FileVersion=$(Build.BuildNumber)'
+    clean: true
     maximumCpuCount: true
+    restoreNugetPackages: true
     logProjectEvents: true
     createLogFile: true
 
-- task: VSTest@2
-  displayName: 'VsTest - testAssemblies'
+- task: DotNetCoreCLI@2
+  enabled: true
+  displayName: 'Run xUnit Test - Core Framework'
   inputs:
-    testAssemblyVer2: |
-     $(System.DefaultWorkingDirectory)\src\**\*Tests.dll
-     !**\*Database.Tests*.dll
-     !**\*DataStore.Test*.dll
-     !**\packages\**
-     !**\*TestAdapter.dll
-     !**\*SmokeTests.dll
-     !**\*AcceptanceTests.dll
-     !**\obj\**
-    runInParallel: true
-    codeCoverageEnabled: true
-    platform: '$(BuildPlatform)'
-    configuration: '$(BuildConfiguration)'
+    command: test
+    projects: '**/*Tests/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+
+
+#- task: VSBuild@1
+#  displayName: 'vsBuild solution **\*.sln'
+#  enabled: false
+#  inputs:
+#    solution: '**\*.sln'
+#    platform: '$(BuildPlatformAnyCPU)'
+#    configuration: '$(BuildConfiguration)'
+#    msbuildArgs: '/p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
+#    clean: true
+#    maximumCpuCount: true
+#    msbuildArchitecture: x64
+
+
+#- task: MSBuild@1
+#  enabled: true
+#  displayName: 'Build and Package - Service Fabric Config'
+#  inputs:
+#    solution: '**\*.sfproj'
+#    msbuildArchitecture: x64
+#    platform: '$(BuildPlatformX64)'
+#    configuration: '$(BuildConfiguration)'
+#    msbuildArguments: '/t:Package /p:PackageLocation=$(build.artifactstagingdirectory)\applicationpackage /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
+#    clean: false
+#    maximumCpuCount: true
+#    logProjectEvents: true
+#    createLogFile: true
+
+#- task: VSTest@2
+#  enabled: true
+#  displayName: 'VsTest - testAssemblies'
+#  inputs:
+#    testAssemblyVer2: |
+#     $(System.DefaultWorkingDirectory)\src\**\*Tests.dll
+#     !**\*Database.Tests*.dll
+#     !**\*DataStore.Test*.dll
+#     !**\packages\**
+#     !**\*TestAdapter.dll
+#     !**\*SmokeTests.dll
+#     !**\*AcceptanceTests.dll
+#     !**\obj\**
+#    runInParallel: true
+#    codeCoverageEnabled: true
+#    platform: '$(BuildPlatform)'
+#    configuration: '$(BuildConfiguration)'
 
     
 - task: DeleteFiles@1
