@@ -39,14 +39,14 @@ steps:
     versionSpec: '>=4.9.0'
     checkLatest: true
 
-- task: DotNetCoreCLI@2
-  displayName: 'dotnet restore'
-  inputs:
-    command: restore
-    projects: '**\*.sln'
-    vstsFeed: 'dct-pkg'
-    includeNuGetOrg: false
-    noCache: true
+#- task: DotNetCoreCLI@2
+#  displayName: 'dotnet restore'
+#  inputs:
+#    command: restore
+#    projects: '**\*.sln'
+#    vstsFeed: 'dct-pkg'
+#    includeNuGetOrg: false
+#    noCache: true
 
 #- task: NuGetCommand@2
 #  displayName: 'NuGet restore'
@@ -63,7 +63,7 @@ steps:
     msbuildArchitecture: x64
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
-    msbuildArguments: '-p:version=$(Build.BuildNumber) -p:FileVersion=$(Build.BuildNumber)'
+    msbuildArguments: '-p:version=$(Build.BuildNumber) -p:FileVersion=$(Build.BuildNumber) -p:SkipInvalidConfigurations=true'
     clean: true
     maximumCpuCount: true
     restoreNugetPackages: true
