@@ -50,8 +50,8 @@ steps:
   displayName: 'dotnet restore'
   inputs:
     command: restore
-#    projects: '**\*.sln'
-#    vstsFeed: 'dct-pkg'
+    projects: '**\*.sln'
+    vstsFeed: 'dct-pkg'
 #    includeNuGetOrg: false
 #    noCache: true
 
