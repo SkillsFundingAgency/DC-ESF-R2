@@ -34,7 +34,7 @@ steps:
     versionSelector: latestStable
 
 - task: NuGetToolInstaller@0
-  displayName: 'Use NuGet >=4.8.0'
+  displayName: 'Use NuGet >=4.9.0'
   inputs:
     versionSpec: '>=4.9.0'
     checkLatest: true
@@ -46,12 +46,14 @@ steps:
     projects: '**\*.sln'
     vstsFeed: 'dct-pkg'
     includeNuGetOrg: false
+    noCache: true
 
-- task: NuGetCommand@2
-  displayName: 'NuGet restore'
-  inputs:
-    restoreSolution: 'src/*.sln'
-    vstsFeed: 'dct-pkg'
+#- task: NuGetCommand@2
+#  displayName: 'NuGet restore'
+#  inputs:
+#    restoreSolution: '**/*.sln'
+#    vstsFeed: 'dct-pkg'
+#    noCache: true
 
 - task: MSBuild@1
   enabled: true
