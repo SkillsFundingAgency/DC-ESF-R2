@@ -12,6 +12,7 @@
     <RootNamespace>ESFA.DC.ESF.R2.DataStore.Tests</RootNamespace>
     <AssemblyName>ESFA.DC.ESF.R2.DataStore.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+	<RuntimeIdentifiers>win</RuntimeIdentifiers>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
