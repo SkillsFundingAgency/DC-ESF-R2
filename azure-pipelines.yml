@@ -34,16 +34,15 @@ steps:
     versionSelector: latestStable
 
 - task: NuGetToolInstaller@0
-  displayName: 'Use NuGet 4.8.0'
+  displayName: 'Use NuGet <=4.8.0'
   inputs:
     versionSpec: '<=4.8.0'
+    checkLatest: true
 
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
   inputs:
-    restoreSolution: '**\*.sln'
     vstsFeed: '1d5deb2d-cf8b-4bb1-b147-d13bc246e3f4'
-    configuration: '$(BuildConfiguration)' # Optional
 
 - task: VSBuild@1
   displayName: 'vsBuild solution **\*.sln'
