@@ -49,7 +49,7 @@ steps:
   displayName: 'vsBuild solution **\*.sln'
   enabled: true
   inputs:
-    solution: src/ESFA.DC.ESF.R2.sln
+    solution: '**\*.sln'
     platform: '$(BuildPlatformAnyCPU)'
     configuration: '$(BuildConfiguration)'
     msbuildArgs: '/p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
@@ -61,26 +61,11 @@ steps:
 - task: MSBuild@1
   displayName: 'Build and Package - Service Fabric Config'
   inputs:
-    solution: '**\*.sln'
-    msbuildArchitecture: x64
-    platform: '$(BuildPlatformX64)'
-    configuration: '$(BuildConfiguration)'
-    msbuildArguments: '/t:Package /p:PackageLocation=$(build.artifactstagingdirectory)\applicationpackage /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
-    clean: true
-    maximumCpuCount: true
-    logProjectEvents: true
-    createLogFile: true
-
-
-- task: MSBuild@1
-  enabled: false
-  displayName: 'Build solution  - Service Fabric as (x64)'
-  inputs:
     solution: '**\*.sfproj'
     msbuildArchitecture: x64
     platform: '$(BuildPlatformX64)'
     configuration: '$(BuildConfiguration)'
-    msbuildArguments: '-t:restore /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /t:Package /p:PackageLocation="$(build.artifactstagingdirectory)\$(ArtifactFolderName)\ApplicationPackage" /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
+    msbuildArguments: '/t:Package /p:PackageLocation=$(build.artifactstagingdirectory)\applicationpackage /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
     clean: false
     maximumCpuCount: true
     logProjectEvents: true
