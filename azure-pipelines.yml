@@ -48,7 +48,7 @@ steps:
 - task: MSBuild@1
   displayName: 'Build solution'
   inputs:
-    solution: '**/*.sln'
+    solution: '**\*.sln'
     msbuildArchitecture: x64
     platform: '$(BuildPlatformX64)'
     configuration: '$(BuildConfiguration)'
@@ -61,7 +61,7 @@ steps:
 - task: MSBuild@1
   displayName: 'Build solution  - Service Fabric as (x64)'
   inputs:
-    solution: '$(build.sourcesdirectory)\**\*.sfproj'
+    solution: '**\*.sfproj'
     msbuildArchitecture: x64
     platform: '$(BuildPlatformX64)'
     configuration: '$(BuildConfiguration)'

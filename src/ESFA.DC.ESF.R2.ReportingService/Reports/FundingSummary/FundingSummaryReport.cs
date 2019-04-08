@@ -189,13 +189,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
         private void AddImageToReport(Worksheet worksheet)
         {
-            var esfImage = Image.FromFile("ESF.png");
-
-            using (var ms = new MemoryStream())
+            var assembly = Assembly.GetExecutingAssembly();
+            string euFlag = assembly.GetManifestResourceNames().Single(str => str.EndsWith("ESF.png"));
+            using (Stream stream = assembly.GetManifestResourceStream(euFlag))
             {
-                esfImage.Save(ms, ImageFormat.Png);
-                ms.Close();
-                worksheet.Pictures.Add(3, 7, ms);
+                worksheet.Pictures.Add(3, _reportWidth - 2, stream);
             }
         }
 
