@@ -34,10 +34,18 @@ steps:
     versionSelector: latestStable
 
 - task: NuGetToolInstaller@0
-  displayName: 'Use NuGet <=4.8.0'
+  displayName: 'Use NuGet >=4.8.0'
   inputs:
-    versionSpec: '<=4.8.0'
+    versionSpec: '>=4.9.0'
     checkLatest: true
+
+- task: DotNetCoreCLI@2
+  displayName: 'dotnet restore'
+  inputs:
+    command: restore
+    projects: '**\*.sln'
+    vstsFeed: 'dct-pkg'
+    includeNuGetOrg: false
 
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
