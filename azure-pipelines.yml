@@ -70,6 +70,20 @@ steps:
     logProjectEvents: true
     createLogFile: true
 
+- task: MSBuild@1
+  enabled: true
+  displayName: 'Build and Package - Service Fabric Config'
+  inputs:
+    solution: '**\*.sfproj'
+    msbuildArchitecture: x64
+    platform: '$(BuildPlatform)'
+    configuration: '$(BuildConfiguration)'
+    msbuildArguments: '/t:Package /p:PackageLocation=$(build.artifactstagingdirectory)\applicationpackage /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
+    clean: false
+    maximumCpuCount: true
+    logProjectEvents: true
+    createLogFile: true
+
 - task: DotNetCoreCLI@2
   enabled: true
   displayName: 'Run xUnit Test - Core Framework'
@@ -90,21 +104,6 @@ steps:
 #    clean: true
 #    maximumCpuCount: true
 #    msbuildArchitecture: x64
-
-
-#- task: MSBuild@1
-#  enabled: true
-#  displayName: 'Build and Package - Service Fabric Config'
-#  inputs:
-#    solution: '**\*.sfproj'
-#    msbuildArchitecture: x64
-#    platform: '$(BuildPlatformX64)'
-#    configuration: '$(BuildConfiguration)'
-#    msbuildArguments: '/t:Package /p:PackageLocation=$(build.artifactstagingdirectory)\applicationpackage /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
-#    clean: false
-#    maximumCpuCount: true
-#    logProjectEvents: true
-#    createLogFile: true
 
 #- task: VSTest@2
 #  enabled: true
