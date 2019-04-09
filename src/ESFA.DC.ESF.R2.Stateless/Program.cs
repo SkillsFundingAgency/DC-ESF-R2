@@ -3,11 +3,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading;
-using Autofac;
-using Autofac.Integration.ServiceFabric;
-//using ESFA.DC.ESF.R2.Service.Config;
-using ESFA.DC.ServiceFabric.Helpers;
-using ESFA.DC.ServiceFabric.Helpers.Interfaces;
+//using Autofac;
+//using Autofac.Integration.ServiceFabric;
+////using ESFA.DC.ESF.R2.Service.Config;
+//using ESFA.DC.ServiceFabric.Helpers;
+//using ESFA.DC.ServiceFabric.Helpers.Interfaces;
 
 namespace ESFA.DC.ESF.R2.Stateless
 {
@@ -20,7 +20,7 @@ namespace ESFA.DC.ESF.R2.Stateless
         {
             try
             {
-                IConfigurationHelper configHelper = new ConfigurationHelper();
+                //IConfigurationHelper configHelper = new ConfigurationHelper();
 
                 // Licence Aspose.Cells
                 //SoftwareLicenceSection softwareLicenceSection = configHelper.GetSectionValues<SoftwareLicenceSection>(nameof(SoftwareLicenceSection));
