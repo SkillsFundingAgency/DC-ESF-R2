@@ -34,9 +34,9 @@ steps:
     versionSelector: latestStable
 
 - task: NuGetToolInstaller@0
-  displayName: 'Use NuGet >=4.9.0'
+  displayName: 'Use NuGet < 4.8.0'
   inputs:
-    versionSpec: '>=4.9.0'
+    versionSpec: '< 4.8.0'
     checkLatest: true
 
 - task: DotNetCoreCLI@2
