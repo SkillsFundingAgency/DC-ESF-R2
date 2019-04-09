@@ -77,7 +77,7 @@ steps:
   inputs:
     solution: '**\*.sfproj'
     msbuildArchitecture: x64
-    platform: '$(BuildPlatform)'
+    platform: '$(BuildPlatformX64)'
     configuration: '$(BuildConfiguration)'
     msbuildArguments: '/t:Package /p:PackageLocation=$(build.artifactstagingdirectory)\applicationpackage /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
     clean: false
