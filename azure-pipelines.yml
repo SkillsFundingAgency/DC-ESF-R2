@@ -89,57 +89,14 @@ steps:
   displayName: 'VsTest - testAssemblies'
   inputs:
     testAssemblyVer2: |
-     **\*test*.dll
-     !**\*Database.Tests*.dll
-     !**\*DataStore.Test*.dll
-     !**\*TestAdapter.dll
-     !**\*SmokeTests.dll
-     !**\*AcceptanceTests.dll
+     **\ESFA.DC.ESF.R2.*tests.dll
+     !**\*Database.Tests*\**
+     !**\packages\**
      !**\obj\**
     configuration: '$(BuildConfiguration)'
-
-#- task: DotNetCoreCLI@2
-#  enabled: false
-#  displayName: 'Run xUnit Test - Core Framework'
-#  inputs:
-#    command: test
-#    projects: '**/*Tests/*.csproj'
-#    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
-
-
-#- task: VSBuild@1
-#  displayName: 'vsBuild solution **\*.sln'
-#  enabled: false
-#  inputs:
-#    solution: '**\*.sln'
-#    platform: '$(BuildPlatformAnyCPU)'
-#    configuration: '$(BuildConfiguration)'
-#    msbuildArgs: '/p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
-#    clean: true
-#    maximumCpuCount: true
-#    msbuildArchitecture: x64
-
-#- task: VSTest@2
-#  enabled: true
-#  displayName: 'VsTest - testAssemblies'
-#  inputs:
-#    testAssemblyVer2: |
-#     $(System.DefaultWorkingDirectory)\src\**\*Tests.dll
-#     !**\*Database.Tests*.dll
-#     !**\*DataStore.Test*.dll
-#     !**\packages\**
-#     !**\*TestAdapter.dll
-#     !**\*SmokeTests.dll
-#     !**\*AcceptanceTests.dll
-#     !**\obj\**
-#    runInParallel: true
-#    codeCoverageEnabled: true
-#    platform: '$(BuildPlatform)'
-#    configuration: '$(BuildConfiguration)'
-
-    
+        
 - task: DeleteFiles@1
-  displayName: 'Delete Symbols files from $(build.artifactstagingdirectory)\applicationpackage'
+  displayName: 'Delete Symbols files from $(build.artifactstagingdirectory)\ApplicationPackage'
   inputs:
     SourceFolder: '$(build.artifactstagingdirectory)\ApplicationPackage'
     Contents: '**\*.pdb'
