@@ -10,7 +10,7 @@
     <RootNamespace>ESFA.DC.ESF.R2.ReportingService</RootNamespace>
     <AssemblyName>ESFA.DC.ESF.R2.ReportingService</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-	<RuntimeIdentifier>win</RuntimeIdentifier>
+    <RuntimeIdentifier>win</RuntimeIdentifier>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -109,24 +109,6 @@
     <None Include="ESFA.DC.ESF.R2.ReportingService.ruleset">
       <SubType>Designer</SubType>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ESFA.DC.ESF.R2.Database.EF\ESFA.DC.ESF.R2.Database.EF.csproj">
-      <Project>{FA5D4376-7328-4828-AD72-5A7891600137}</Project>
-      <Name>ESFA.DC.ESF.R2.Database.EF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ESFA.DC.ESF.R2.Interfaces\ESFA.DC.ESF.R2.Interfaces.csproj">
-      <Project>{3EB1948D-7F0F-446F-A8B3-C3AB19531FE6}</Project>
-      <Name>ESFA.DC.ESF.R2.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ESFA.DC.ESF.R2.Models\ESFA.DC.ESF.R2.Models.csproj">
-      <Project>{5E5AAC56-E3D6-4A45-9028-D8A992E422B0}</Project>
-      <Name>ESFA.DC.ESF.R2.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ESFA.DC.ESF.R2.Utils\ESFA.DC.ESF.R2.Utils.csproj">
-      <Project>{C5001A71-FFDD-4868-9EE4-412E3205F284}</Project>
-      <Name>ESFA.DC.ESF.R2.Utils</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Aspose.Cells">

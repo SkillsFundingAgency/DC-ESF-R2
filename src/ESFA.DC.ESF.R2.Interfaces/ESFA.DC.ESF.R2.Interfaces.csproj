@@ -10,7 +10,7 @@
     <RootNamespace>ESFA.DC.ESF.R2.Interfaces</RootNamespace>
     <AssemblyName>ESFA.DC.ESF.R2.Interfaces</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-	<RuntimeIdentifiers>win</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win</RuntimeIdentifiers>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
@@ -105,10 +105,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ESFA.DC.ESF.R2.Database.EF\ESFA.DC.ESF.R2.Database.EF.csproj">
-      <Project>{fa5d4376-7328-4828-ad72-5a7891600137}</Project>
-      <Name>ESFA.DC.ESF.R2.Database.EF</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Models\ESFA.DC.ESF.R2.Models.csproj">
       <Project>{5e5aac56-e3d6-4a45-9028-d8a992e422b0}</Project>
       <Name>ESFA.DC.ESF.R2.Models</Name>

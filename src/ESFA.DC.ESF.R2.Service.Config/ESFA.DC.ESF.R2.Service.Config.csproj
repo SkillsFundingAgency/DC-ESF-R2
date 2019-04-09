@@ -10,7 +10,7 @@
     <RootNamespace>ESFA.DC.ESF.R2.Service.Config</RootNamespace>
     <AssemblyName>ESFA.DC.ESF.R2.Service.Config</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
-	<RuntimeIdentifiers>win</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win</RuntimeIdentifiers>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
@@ -66,12 +66,6 @@
     <Compile Include="ServiceBusTopicConfig.cs" />
     <Compile Include="SoftwareLicenceSection.cs" />
     <Compile Include="VersionInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ESFA.DC.ESF.R2.Interfaces\ESFA.DC.ESF.R2.Interfaces.csproj">
-      <Project>{3eb1948d-7f0f-446f-a8b3-c3ab19531fe6}</Project>
-      <Name>ESFA.DC.ESF.R2.Interfaces</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
