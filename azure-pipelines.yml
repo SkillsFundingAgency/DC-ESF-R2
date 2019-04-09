@@ -44,7 +44,7 @@ steps:
   displayName: 'dotnet restore'
   inputs:
     command: restore
-    projects: '**\*.sln'
+    projects: '**\*.csproj'
     vstsFeed: 'dct-pkg'
 #    includeNuGetOrg: false
 #    noCache: true
