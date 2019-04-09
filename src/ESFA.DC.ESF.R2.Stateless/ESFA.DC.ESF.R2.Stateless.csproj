@@ -109,32 +109,32 @@
     <Reference Include="ESFA.DC.FileService.Interface, Version=0.1.15.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.FileService.Interface.0.1.15-beta0001\lib\netstandard2.0\ESFA.DC.FileService.Interface.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.DataAccessLayer, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.26-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.DataAccessLayer.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.DataAccessLayer, Version=0.1.31.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.31-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.DataAccessLayer.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.ILR1516EF, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.26-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1516EF.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.ILR1516EF, Version=0.1.31.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.31-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1516EF.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.ILR1617EF, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.26-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1617EF.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.ILR1617EF, Version=0.1.31.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.31-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1617EF.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.ILR1718EF, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.26-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1718EF.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.ILR1718EF, Version=0.1.31.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.31-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1718EF.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.ILR1819EF, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.26-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1819EF.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.ILR1819EF, Version=0.1.31.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.31-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1819EF.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.Interfaces, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.26-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.Interfaces.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.Interfaces, Version=0.1.31.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.31-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.Models, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.26-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.Models.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.Models, Version=0.1.31.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.31-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.Models.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.Services, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.26-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.Services.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.Services, Version=0.1.31.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.31-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.Services.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.Utils, Version=0.1.26.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.26-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.Utils.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.Utils, Version=0.1.31.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.31-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.Utils.dll</HintPath>
     </Reference>
     <Reference Include="ESFA.DC.IO.AzureStorage, Version=0.1.15.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.IO.AzureStorage.0.1.15-beta0001\lib\netstandard2.0\ESFA.DC.IO.AzureStorage.dll</HintPath>
@@ -166,14 +166,14 @@
     <Reference Include="ESFA.DC.Queueing.Interface, Version=0.1.14.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.Queueing.Interface.0.1.14-beta0001\lib\netstandard2.0\ESFA.DC.Queueing.Interface.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ReferenceData.FCS.Model, Version=0.1.218.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ReferenceData.FCS.Model.0.1.218\lib\netstandard2.0\ESFA.DC.ReferenceData.FCS.Model.dll</HintPath>
+    <Reference Include="ESFA.DC.ReferenceData.FCS.Model, Version=0.2.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ReferenceData.FCS.Model.0.2.42\lib\netstandard2.0\ESFA.DC.ReferenceData.FCS.Model.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ReferenceData.LARS.Model, Version=0.1.218.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ReferenceData.LARS.Model.0.1.218\lib\netstandard2.0\ESFA.DC.ReferenceData.LARS.Model.dll</HintPath>
+    <Reference Include="ESFA.DC.ReferenceData.LARS.Model, Version=0.2.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ReferenceData.LARS.Model.0.2.42\lib\netstandard2.0\ESFA.DC.ReferenceData.LARS.Model.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ReferenceData.ULN.Model, Version=0.1.218.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ReferenceData.ULN.Model.0.1.218\lib\netstandard2.0\ESFA.DC.ReferenceData.ULN.Model.dll</HintPath>
+    <Reference Include="ESFA.DC.ReferenceData.ULN.Model, Version=0.2.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ReferenceData.ULN.Model.0.2.42\lib\netstandard2.0\ESFA.DC.ReferenceData.ULN.Model.dll</HintPath>
     </Reference>
     <Reference Include="ESFA.DC.Serialization.Interfaces, Version=0.1.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.Serialization.Interfaces.0.1.6-beta0001\lib\netstandard2.0\ESFA.DC.Serialization.Interfaces.dll</HintPath>
@@ -299,8 +299,8 @@
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=9.3.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WindowsAzure.Storage.9.3.2\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Remotion.Linq, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\packages\Remotion.Linq.2.2.0\lib\net45\Remotion.Linq.dll</HintPath>
@@ -439,10 +439,6 @@
     <Folder Include="Modules\" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Database.EF\ESFA.DC.ESF.R2.Database.EF.csproj">
       <Project>{6fc96653-7a88-44a0-a137-6549d2c672dd}</Project>
       <Name>ESFA.DC.ESF.R2.Database.EF</Name>
@@ -451,6 +447,10 @@
       <Project>{3eb1948d-7f0f-446f-a8b3-c3ab19531fe6}</Project>
       <Name>ESFA.DC.ESF.R2.Interfaces</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Azure.Services.AppAuthentication.1.0.1\build\Microsoft.Azure.Services.AppAuthentication.targets" Condition="Exists('..\packages\Microsoft.Azure.Services.AppAuthentication.1.0.1\build\Microsoft.Azure.Services.AppAuthentication.targets')" />
