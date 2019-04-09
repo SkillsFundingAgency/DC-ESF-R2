@@ -50,16 +50,6 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisRuleSet>ESFA.DC.ESF.R2.Stateless.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>ESFA.DC.ESF.R2.Stateless.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <PropertyGroup>
     <AdditionalFileItemNames>$(AdditionalFileItemNames);None</AdditionalFileItemNames>
   </PropertyGroup>
