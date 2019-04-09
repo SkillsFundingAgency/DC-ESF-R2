@@ -39,14 +39,8 @@ steps:
     versionSpec: '>=4.9.0'
     checkLatest: true
 
-- task: NuGetCommand@2
-  displayName: 'NuGet restore'
-  inputs:
-    restoreSolution: '**/*.sln'
-    vstsFeed: 'dct-pkg'
-    noCache: true
-
 - task: DotNetCoreCLI@2
+  enabled: true
   displayName: 'dotnet restore'
   inputs:
     command: restore
@@ -54,6 +48,13 @@ steps:
     vstsFeed: 'dct-pkg'
 #    includeNuGetOrg: false
 #    noCache: true
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore'
+  inputs:
+    restoreSolution: '**/*.sln'
+    vstsFeed: 'dct-pkg'
+    noCache: true
 
 - task: MSBuild@1
   enabled: true
