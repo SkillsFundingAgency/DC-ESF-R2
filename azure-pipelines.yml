@@ -84,14 +84,27 @@ steps:
     maximumCpuCount: true
     logProjectEvents: true
     createLogFile: true
-
-- task: DotNetCoreCLI@2
-  enabled: true
-  displayName: 'Run xUnit Test - Core Framework'
+    
+- task: VSTest@2
+  displayName: 'VsTest - testAssemblies'
   inputs:
-    command: test
-    projects: '**/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    testAssemblyVer2: |
+     **\*test*.dll
+     !**\*Database.Tests*.dll
+     !**\*DataStore.Test*.dll
+     !**\*TestAdapter.dll
+     !**\*SmokeTests.dll
+     !**\*AcceptanceTests.dll
+     !**\obj\**
+    configuration: '$(BuildConfiguration)'
+
+#- task: DotNetCoreCLI@2
+#  enabled: false
+#  displayName: 'Run xUnit Test - Core Framework'
+#  inputs:
+#    command: test
+#    projects: '**/*Tests/*.csproj'
+#    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 
 
 #- task: VSBuild@1
