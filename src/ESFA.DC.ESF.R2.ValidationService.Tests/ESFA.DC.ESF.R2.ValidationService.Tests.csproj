@@ -254,6 +254,10 @@
     <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.DataAccessLayer\ESFA.DC.ESF.R2.DataAccessLayer.csproj">
+      <Project>{e113d0a4-8cf5-46bf-a181-8c3bb92f785c}</Project>
+      <Name>ESFA.DC.ESF.R2.DataAccessLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Interfaces\ESFA.DC.ESF.R2.Interfaces.csproj">
       <Project>{3eb1948d-7f0f-446f-a8b3-c3ab19531fe6}</Project>
       <Name>ESFA.DC.ESF.R2.Interfaces</Name>

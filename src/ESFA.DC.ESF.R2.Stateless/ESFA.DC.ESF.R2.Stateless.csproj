@@ -453,6 +453,10 @@
       <Project>{2e92351a-663d-4b9b-9e3c-c51e5102a9b6}</Project>
       <Name>ESFA.DC.ESF.R2.Service</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.ValidationService\ESFA.DC.ESF.R2.ValidationService.csproj">
+      <Project>{13ca2bd2-b880-4e95-baae-7fa46ef31c7c}</Project>
+      <Name>ESFA.DC.ESF.R2.ValidationService</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
