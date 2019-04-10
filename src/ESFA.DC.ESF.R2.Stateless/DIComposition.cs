@@ -6,12 +6,12 @@ using ESFA.DC.Auditing.Interface;
 using ESFA.DC.Data.Postcodes.Model;
 using ESFA.DC.Data.Postcodes.Model.Interfaces;
 using ESFA.DC.DateTimeProvider.Interface;
-//using ESFA.DC.ESF.R2.DataAccessLayer;
-//using ESFA.DC.ESF.R2.DataAccessLayer.Mappers;
-//using ESFA.DC.ESF.R2.DataAccessLayer.Services;
+using ESFA.DC.ESF.R2.DataAccessLayer;
+using ESFA.DC.ESF.R2.DataAccessLayer.Mappers;
+using ESFA.DC.ESF.R2.DataAccessLayer.Services;
 using ESFA.DC.ESF.R2.Database.EF;
 using ESFA.DC.ESF.R2.Database.EF.Interfaces;
-//using ESFA.DC.ESF.R2.DataStore;
+using ESFA.DC.ESF.R2.DataStore;
 using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
@@ -31,12 +31,12 @@ using ESFA.DC.ESF.R2.Interfaces.Validation;
 //using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRowHelpers;
 //using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.Ilr;
 //using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppData;
-//using ESFA.DC.ESF.R2.Service;
-//using ESFA.DC.ESF.R2.Service.Config;
-//using ESFA.DC.ESF.R2.Service.Helpers;
-//using ESFA.DC.ESF.R2.Service.Services;
-//using ESFA.DC.ESF.R2.Service.Strategies;
-//using ESFA.DC.ESF.R2.Stateless.Handlers;
+using ESFA.DC.ESF.R2.Service;
+using ESFA.DC.ESF.R2.Service.Config;
+using ESFA.DC.ESF.R2.Service.Helpers;
+using ESFA.DC.ESF.R2.Service.Services;
+using ESFA.DC.ESF.R2.Service.Strategies;
+using ESFA.DC.ESF.R2.Stateless.Handlers;
 //using ESFA.DC.ESF.R2.ValidationService;
 //using ESFA.DC.ESF.R2.ValidationService.Commands;
 //using ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules;
@@ -84,291 +84,291 @@ namespace ESFA.DC.ESF.R2.Stateless
 {
     public class DIComposition
     {
-        //        public static ContainerBuilder BuildContainer(IConfigurationHelper configHelper)
-        //        {
-        //            var container = new ContainerBuilder();
+        public static ContainerBuilder BuildContainer(IConfigurationHelper configHelper)
+        {
+            var container = new ContainerBuilder();
 
-        //            RegisterLogger(container, configHelper);
+            RegisterLogger(container, configHelper);
 
-        //            var versionInfo = configHelper.GetSectionValues<Service.Config.VersionInfo>("VersionSection");
-        //            container.RegisterInstance(versionInfo).As<IVersionInfo>().SingleInstance();
+            var versionInfo = configHelper.GetSectionValues<Service.Config.VersionInfo>("VersionSection");
+            container.RegisterInstance(versionInfo).As<IVersionInfo>().SingleInstance();
 
-        //            RegisterPersistence(container, configHelper);
-        //            RegisterServiceBusConfig(container, configHelper);
-        //            RegisterJobContextManagementServices(container);
+            RegisterPersistence(container, configHelper);
+            RegisterServiceBusConfig(container, configHelper);
+            RegisterJobContextManagementServices(container);
 
-        //            RegisterSerializers(container);
-        //            RegisterMessageHandler(container);
+            RegisterSerializers(container);
+            RegisterMessageHandler(container);
 
-        //            RegisterControllers(container);
+            RegisterControllers(container);
 
-        //            RegisterCommands(container);
+            //            RegisterCommands(container);
 
-        //            RegisterStrategies(container);
+            //            RegisterStrategies(container);
 
-        //            RegisterStorage(container);
+            RegisterStorage(container);
 
-        //            RegisterHelpers(container);
+            RegisterHelpers(container);
 
-        //            RegisterFileLevelValidators(container);
-        //            RegisterCrossRecordValidators(container);
-        //            RegisterBusinessRuleValidators(container);
-        //            RegisterFieldDefinitionValidators(container);
+            //            RegisterFileLevelValidators(container);
+            //            RegisterCrossRecordValidators(container);
+            //            RegisterBusinessRuleValidators(container);
+            //            RegisterFieldDefinitionValidators(container);
 
-        //            RegisterReports(container);
+            //            RegisterReports(container);
 
-        //            RegisterServices(container);
+            RegisterServices(container);
 
-        //            RegisterRepositories(container);
+            RegisterRepositories(container);
 
-        //            RegisterMappers(container);
+            RegisterMappers(container);
 
-        //            return container;
-        //        }
+            return container;
+        }
 
-        //        private static void RegisterJobContextManagementServices(ContainerBuilder containerBuilder)
-        //        {
-        //            containerBuilder.RegisterType<JobContextManager<JobContextMessage>>().As<IJobContextManager<JobContextMessage>>().InstancePerLifetimeScope();
-        //            containerBuilder.RegisterType<DefaultJobContextMessageMapper<JobContextMessage>>().As<IMapper<JobContextMessage, JobContextMessage>>();
-        //            containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
-        //        }
+        private static void RegisterJobContextManagementServices(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterType<JobContextManager<JobContextMessage>>().As<IJobContextManager<JobContextMessage>>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<DefaultJobContextMessageMapper<JobContextMessage>>().As<IMapper<JobContextMessage, JobContextMessage>>();
+            containerBuilder.RegisterType<DateTimeProvider.DateTimeProvider>().As<IDateTimeProvider>();
+        }
 
-        //        private static void RegisterPersistence(ContainerBuilder containerBuilder, IConfigurationHelper configHelper)
-        //        {
-        //            // register azure blob storage service
-        //            var ioConfiguration = configHelper.GetSectionValues<AzureStorageFileServiceConfiguration>("AzureStorageSection");
+        private static void RegisterPersistence(ContainerBuilder containerBuilder, IConfigurationHelper configHelper)
+        {
+            // register azure blob storage service
+            var ioConfiguration = configHelper.GetSectionValues<AzureStorageFileServiceConfiguration>("AzureStorageSection");
 
-        //            containerBuilder.Register(c =>
-        //                    ioConfiguration)
-        //                .As<IAzureStorageFileServiceConfiguration>().SingleInstance();
+            containerBuilder.Register(c =>
+                    ioConfiguration)
+                .As<IAzureStorageFileServiceConfiguration>().SingleInstance();
 
-        //            containerBuilder.RegisterType<AzureStorageFileService>().As<IFileService>();
+            containerBuilder.RegisterType<AzureStorageFileService>().As<IFileService>();
 
-        //            var ilrConfig = configHelper.GetSectionValues<ILRConfiguration>("ILRSection");
-        //            containerBuilder.RegisterModule(new DependencyInjectionModule
-        //            {
-        //                Configuration = ilrConfig
-        //            });
+            var ilrConfig = configHelper.GetSectionValues<ILRConfiguration>("ILRSection");
+            containerBuilder.RegisterModule(new DependencyInjectionModule
+            {
+                Configuration = ilrConfig
+            });
 
-        //            var esfConfig = configHelper.GetSectionValues<ESFConfiguration>("ESFSection");
-        //            containerBuilder.Register(c =>
-        //            {
-        //                var options = new DbContextOptionsBuilder<ESFR2Context>()
-        //                    .UseSqlServer(esfConfig.ESFR2ConnectionString)
-        //                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-        //                    .Options;
-        //                return new ESFR2Context(options);
-        //            }).As<IESFR2Context>().InstancePerDependency();
-        //            containerBuilder.RegisterInstance(esfConfig).As<ESFConfiguration>().SingleInstance();
+            var esfConfig = configHelper.GetSectionValues<ESFConfiguration>("ESFSection");
+            containerBuilder.Register(c =>
+            {
+                var options = new DbContextOptionsBuilder<ESFR2Context>()
+                    .UseSqlServer(esfConfig.ESFR2ConnectionString)
+                    .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+                    .Options;
+                return new ESFR2Context(options);
+            }).As<IESFR2Context>().InstancePerDependency();
+            containerBuilder.RegisterInstance(esfConfig).As<ESFConfiguration>().SingleInstance();
 
-        //            var fcsConfig = configHelper.GetSectionValues<FCSConfiguration>("FCSSection");
+            var fcsConfig = configHelper.GetSectionValues<FCSConfiguration>("FCSSection");
 
-        //            containerBuilder.Register(c =>
-        //                {
-        //                    var optionsBuilder = new DbContextOptionsBuilder<FcsContext>();
-        //                    optionsBuilder.UseSqlServer(
-        //                        fcsConfig.FCSConnectionString,
-        //                        providerOptions => providerOptions.CommandTimeout(60));
-        //                    return new FcsContext(optionsBuilder.Options);
-        //                })
-        //                .As<IFcsContext>()
-        //                .InstancePerLifetimeScope();
+            containerBuilder.Register(c =>
+                {
+                    var optionsBuilder = new DbContextOptionsBuilder<FcsContext>();
+                    optionsBuilder.UseSqlServer(
+                        fcsConfig.FCSConnectionString,
+                        providerOptions => providerOptions.CommandTimeout(60));
+                    return new FcsContext(optionsBuilder.Options);
+                })
+                .As<IFcsContext>()
+                .InstancePerLifetimeScope();
 
-        //            var referenceData = configHelper.GetSectionValues<ReferenceDataConfig>("ReferenceDataSection");
-        //            containerBuilder.RegisterInstance(referenceData).As<IReferenceDataConfig>().SingleInstance();
+            var referenceData = configHelper.GetSectionValues<ReferenceDataConfig>("ReferenceDataSection");
+            containerBuilder.RegisterInstance(referenceData).As<IReferenceDataConfig>().SingleInstance();
 
-        //            containerBuilder.Register(c =>
-        //            {
-        //                var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
-        //                var optionsBuilder = new DbContextOptionsBuilder<LarsContext>();
-        //                optionsBuilder.UseSqlServer(
-        //                    referenceDataConfig.LARSConnectionString,
-        //                    providerOptions => providerOptions.CommandTimeout(60));
-        //                return new LarsContext(optionsBuilder.Options);
-        //            }).As<ILARSContext>().InstancePerLifetimeScope();
+            containerBuilder.Register(c =>
+            {
+                var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
+                var optionsBuilder = new DbContextOptionsBuilder<LarsContext>();
+                optionsBuilder.UseSqlServer(
+                    referenceDataConfig.LARSConnectionString,
+                    providerOptions => providerOptions.CommandTimeout(60));
+                return new LarsContext(optionsBuilder.Options);
+            }).As<ILARSContext>().InstancePerLifetimeScope();
 
-        //            containerBuilder.Register(c =>
-        //            {
-        //                var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
-        //                return new Postcodes(referenceDataConfig.PostcodesConnectionString);
-        //            }).As<IPostcodes>().InstancePerLifetimeScope();
+            containerBuilder.Register(c =>
+            {
+                var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
+                return new Postcodes(referenceDataConfig.PostcodesConnectionString);
+            }).As<IPostcodes>().InstancePerLifetimeScope();
 
-        //            containerBuilder.Register(c =>
-        //            {
-        //                var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
-        //                var orgOptionsBuilder = new DbContextOptionsBuilder<OrganisationsContext>();
-        //                orgOptionsBuilder.UseSqlServer(
-        //                    referenceDataConfig.OrganisationConnectionString,
-        //                    providerOptions => providerOptions.CommandTimeout(60));
-        //                return new OrganisationsContext(orgOptionsBuilder.Options);
-        //            }).As<IOrganisationsContext>().InstancePerLifetimeScope();
+            containerBuilder.Register(c =>
+            {
+                var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
+                var orgOptionsBuilder = new DbContextOptionsBuilder<OrganisationsContext>();
+                orgOptionsBuilder.UseSqlServer(
+                    referenceDataConfig.OrganisationConnectionString,
+                    providerOptions => providerOptions.CommandTimeout(60));
+                return new OrganisationsContext(orgOptionsBuilder.Options);
+            }).As<IOrganisationsContext>().InstancePerLifetimeScope();
 
-        //            containerBuilder.Register(c =>
-        //            {
-        //                var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
-        //                var optionsBuilder = new DbContextOptionsBuilder<UlnContext>();
-        //                optionsBuilder.UseSqlServer(
-        //                    referenceDataConfig.ULNConnectionString,
-        //                    providerOptions => providerOptions.CommandTimeout(60));
-        //                return new UlnContext(optionsBuilder.Options);
-        //            }).As<IUlnContext>().InstancePerLifetimeScope();
-        //        }
+            containerBuilder.Register(c =>
+            {
+                var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
+                var optionsBuilder = new DbContextOptionsBuilder<UlnContext>();
+                optionsBuilder.UseSqlServer(
+                    referenceDataConfig.ULNConnectionString,
+                    providerOptions => providerOptions.CommandTimeout(60));
+                return new UlnContext(optionsBuilder.Options);
+            }).As<IUlnContext>().InstancePerLifetimeScope();
+        }
 
-        //        private static void RegisterServiceBusConfig(
-        //            ContainerBuilder containerBuilder,
-        //            IConfigurationHelper configHelper)
-        //        {
-        //            var serviceBusOptions =
-        //                configHelper.GetSectionValues<ServiceBusOptions>("ServiceBusSettings");
-        //            containerBuilder.RegisterInstance(serviceBusOptions).As<ServiceBusOptions>().SingleInstance();
+        private static void RegisterServiceBusConfig(
+            ContainerBuilder containerBuilder,
+            IConfigurationHelper configHelper)
+        {
+            var serviceBusOptions =
+                configHelper.GetSectionValues<ServiceBusOptions>("ServiceBusSettings");
+            containerBuilder.RegisterInstance(serviceBusOptions).As<ServiceBusOptions>().SingleInstance();
 
-        //            var topicConfig = new ServiceBusTopicConfig(
-        //                serviceBusOptions.ServiceBusConnectionString,
-        //                serviceBusOptions.TopicName,
-        //                serviceBusOptions.SubscriptionName,
-        //                Environment.ProcessorCount,
-        //                TimeSpan.FromMinutes(30));
+            var topicConfig = new ServiceBusTopicConfig(
+                serviceBusOptions.ServiceBusConnectionString,
+                serviceBusOptions.TopicName,
+                serviceBusOptions.SubscriptionName,
+                Environment.ProcessorCount,
+                TimeSpan.FromMinutes(30));
 
-        //            containerBuilder.Register(c =>
-        //            {
-        //                var topicSubscriptionService =
-        //                    new TopicSubscriptionSevice<JobContextDto>(
-        //                        topicConfig,
-        //                        c.Resolve<IJsonSerializationService>(),
-        //                        c.Resolve<ILogger>());
-        //                return topicSubscriptionService;
-        //            }).As<ITopicSubscriptionService<JobContextDto>>();
+            containerBuilder.Register(c =>
+            {
+                var topicSubscriptionService =
+                    new TopicSubscriptionSevice<JobContextDto>(
+                        topicConfig,
+                        c.Resolve<IJsonSerializationService>(),
+                        c.Resolve<ILogger>());
+                return topicSubscriptionService;
+            }).As<ITopicSubscriptionService<JobContextDto>>();
 
-        //            containerBuilder.Register(c =>
-        //            {
-        //                var topicPublishService =
-        //                    new TopicPublishService<JobContextDto>(
-        //                        topicConfig,
-        //                        c.Resolve<IJsonSerializationService>());
-        //                return topicPublishService;
-        //            }).As<ITopicPublishService<JobContextDto>>();
+            containerBuilder.Register(c =>
+            {
+                var topicPublishService =
+                    new TopicPublishService<JobContextDto>(
+                        topicConfig,
+                        c.Resolve<IJsonSerializationService>());
+                return topicPublishService;
+            }).As<ITopicPublishService<JobContextDto>>();
 
-        //            containerBuilder.Register(c =>
-        //            {
-        //                var config = new QueueConfiguration(
-        //                    serviceBusOptions.ServiceBusConnectionString,
-        //                    serviceBusOptions.AuditQueueName,
-        //                    1);
+            containerBuilder.Register(c =>
+            {
+                var config = new QueueConfiguration(
+                    serviceBusOptions.ServiceBusConnectionString,
+                    serviceBusOptions.AuditQueueName,
+                    1);
 
-        //                return new QueuePublishService<AuditingDto>(
-        //                    config,
-        //                    c.Resolve<IJsonSerializationService>());
-        //            }).As<IQueuePublishService<AuditingDto>>();
+                return new QueuePublishService<AuditingDto>(
+                    config,
+                    c.Resolve<IJsonSerializationService>());
+            }).As<IQueuePublishService<AuditingDto>>();
 
-        //            containerBuilder.Register(c =>
-        //            {
-        //                var config = new QueueConfiguration(
-        //                    serviceBusOptions.ServiceBusConnectionString,
-        //                    serviceBusOptions.JobStatusQueueName,
-        //                    1);
+            containerBuilder.Register(c =>
+            {
+                var config = new QueueConfiguration(
+                    serviceBusOptions.ServiceBusConnectionString,
+                    serviceBusOptions.JobStatusQueueName,
+                    1);
 
-        //                return new QueuePublishService<JobStatusDto>(
-        //                    config,
-        //                    c.Resolve<IJsonSerializationService>());
-        //            }).As<IQueuePublishService<JobStatusDto>>();
-        //        }
+                return new QueuePublishService<JobStatusDto>(
+                    config,
+                    c.Resolve<IJsonSerializationService>());
+            }).As<IQueuePublishService<JobStatusDto>>();
+        }
 
-        //        private static void RegisterMessageHandler(ContainerBuilder containerBuilder)
-        //        {
-        //            // register MessageHandler
-        //            containerBuilder.RegisterType<JobContextMessageHandler>().As<IMessageHandler<JobContextMessage>>();
-        //            containerBuilder.RegisterType<DefaultJobContextMessageMapper<JobContextMessage>>().As<IMapper<JobContextMessage, JobContextMessage>>();
-        //        }
+        private static void RegisterMessageHandler(ContainerBuilder containerBuilder)
+        {
+            // register MessageHandler
+            containerBuilder.RegisterType<JobContextMessageHandler>().As<IMessageHandler<JobContextMessage>>();
+            containerBuilder.RegisterType<DefaultJobContextMessageMapper<JobContextMessage>>().As<IMapper<JobContextMessage, JobContextMessage>>();
+        }
 
-        //        private static void RegisterSerializers(ContainerBuilder containerBuilder)
-        //        {
-        //            containerBuilder.RegisterType<JsonSerializationService>().As<IJsonSerializationService>();
-        //        }
+        private static void RegisterSerializers(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterType<JsonSerializationService>().As<IJsonSerializationService>();
+        }
 
-        //        private static void RegisterLogger(ContainerBuilder containerBuilder, IConfigurationHelper configHelper)
-        //        {
-        //            var loggerConfig = configHelper.GetSectionValues<LoggerOptions>("LoggerSection");
+        private static void RegisterLogger(ContainerBuilder containerBuilder, IConfigurationHelper configHelper)
+        {
+            var loggerConfig = configHelper.GetSectionValues<LoggerOptions>("LoggerSection");
 
-        //            containerBuilder.RegisterInstance(new LoggerOptions
-        //            {
-        //                LoggerConnectionstring = loggerConfig.LoggerConnectionstring
-        //            }).As<ILoggerOptions>().SingleInstance();
+            containerBuilder.RegisterInstance(new LoggerOptions
+            {
+                LoggerConnectionstring = loggerConfig.LoggerConnectionstring
+            }).As<ILoggerOptions>().SingleInstance();
 
-        //            containerBuilder.Register(c =>
-        //            {
-        //                var loggerOptions = c.Resolve<ILoggerOptions>();
-        //                return new ApplicationLoggerSettings
-        //                {
-        //                    ApplicationLoggerOutputSettingsCollection = new List<IApplicationLoggerOutputSettings>
-        //                    {
-        //                        new MsSqlServerApplicationLoggerOutputSettings
-        //                        {
-        //                            MinimumLogLevel = LogLevel.Verbose,
-        //                            ConnectionString = loggerOptions.LoggerConnectionstring,
-        //                            LogsTableName = "Logs"
-        //                        },
-        //                        new ConsoleApplicationLoggerOutputSettings
-        //                        {
-        //                            MinimumLogLevel = LogLevel.Verbose
-        //                        }
-        //                    }
-        //                };
-        //            }).As<IApplicationLoggerSettings>().SingleInstance();
+            containerBuilder.Register(c =>
+            {
+                var loggerOptions = c.Resolve<ILoggerOptions>();
+                return new ApplicationLoggerSettings
+                {
+                    ApplicationLoggerOutputSettingsCollection = new List<IApplicationLoggerOutputSettings>
+                    {
+                                new MsSqlServerApplicationLoggerOutputSettings
+                                {
+                                    MinimumLogLevel = LogLevel.Verbose,
+                                    ConnectionString = loggerOptions.LoggerConnectionstring,
+                                    LogsTableName = "Logs"
+                                },
+                                new ConsoleApplicationLoggerOutputSettings
+                                {
+                                    MinimumLogLevel = LogLevel.Verbose
+                                }
+                    }
+                };
+            }).As<IApplicationLoggerSettings>().SingleInstance();
 
-        //            containerBuilder.RegisterType<ExecutionContext>().As<IExecutionContext>().InstancePerLifetimeScope();
-        //            containerBuilder.RegisterType<SerilogLoggerFactory>().As<ISerilogLoggerFactory>().InstancePerLifetimeScope();
-        //            containerBuilder.RegisterType<SeriLogger>().As<ILogger>().InstancePerLifetimeScope();
-        //        }
+            containerBuilder.RegisterType<ExecutionContext>().As<IExecutionContext>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<SerilogLoggerFactory>().As<ISerilogLoggerFactory>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<SeriLogger>().As<ILogger>().InstancePerLifetimeScope();
+        }
 
-        //        private static void RegisterServices(ContainerBuilder containerBuilder)
-        //        {
-        //            containerBuilder.RegisterType<ESFProviderService>().As<IESFProviderService>()
-        //                .InstancePerLifetimeScope();
+        private static void RegisterServices(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterType<ESFProviderService>().As<IESFProviderService>()
+                .InstancePerLifetimeScope();
 
-        //            containerBuilder.RegisterType<SupplementaryDataService>().As<ISupplementaryDataService>();
-        //            containerBuilder.RegisterType<ILRService>().As<IILRService>();
+            //containerBuilder.RegisterType<SupplementaryDataService>().As<ISupplementaryDataService>();
+            //containerBuilder.RegisterType<ILRService>().As<IILRService>();
 
-        //            containerBuilder.RegisterType<FileValidationService>().As<IFileValidationService>();
+            containerBuilder.RegisterType<FileValidationService>().As<IFileValidationService>();
 
-        //            containerBuilder.RegisterType<ExcelStyleProvider>().As<IExcelStyleProvider>();
+            //containerBuilder.RegisterType<ExcelStyleProvider>().As<IExcelStyleProvider>();
 
-        //            containerBuilder.RegisterType<ValueProvider>().As<IValueProvider>().SingleInstance();
-        //            containerBuilder.RegisterType<ReferenceDataService>().As<IReferenceDataService>().InstancePerLifetimeScope();
-        //            containerBuilder.RegisterType<PopulationService>().As<IPopulationService>();
+            //containerBuilder.RegisterType<ValueProvider>().As<IValueProvider>().SingleInstance();
+            containerBuilder.RegisterType<ReferenceDataService>().As<IReferenceDataService>().InstancePerLifetimeScope();
+            //containerBuilder.RegisterType<PopulationService>().As<IPopulationService>();
 
-        //            containerBuilder.RegisterType<AimAndDeliverableService>().As<IAimAndDeliverableService>();
-        //        }
+            //containerBuilder.RegisterType<AimAndDeliverableService>().As<IAimAndDeliverableService>();
+        }
 
-        //        private static void RegisterControllers(ContainerBuilder containerBuilder)
-        //        {
-        //            containerBuilder.RegisterType<ServiceController>().As<IServiceController>();
-        //            containerBuilder.RegisterType<ReportingController>().As<IReportingController>();
-        //            containerBuilder.RegisterType<ValidationController>().As<IValidationController>();
-        //            containerBuilder.RegisterType<StorageController>().As<IStorageController>();
-        //        }
+        private static void RegisterControllers(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterType<ServiceController>().As<IServiceController>();
+            //containerBuilder.RegisterType<ReportingController>().As<IReportingController>();
+            //containerBuilder.RegisterType<ValidationController>().As<IValidationController>();
+            containerBuilder.RegisterType<StorageController>().As<IStorageController>();
+        }
 
-        //        private static void RegisterRepositories(ContainerBuilder containerBuilder)
-        //        {
-        //            containerBuilder.RegisterType<EsfRepository>().As<IEsfRepository>();
-        //            containerBuilder.RegisterType<ReferenceDataRepository>().As<IReferenceDataRepository>();
-        //            containerBuilder.RegisterType<FCSRepository>().As<IFCSRepository>();
-        //            containerBuilder.RegisterType<ReferenceDataCache>().As<IReferenceDataCache>()
-        //                .InstancePerLifetimeScope();
-        //        }
+        private static void RegisterRepositories(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterType<EsfRepository>().As<IEsfRepository>();
+            containerBuilder.RegisterType<ReferenceDataRepository>().As<IReferenceDataRepository>();
+            containerBuilder.RegisterType<FCSRepository>().As<IFCSRepository>();
+            containerBuilder.RegisterType<ReferenceDataCache>().As<IReferenceDataCache>()
+                .InstancePerLifetimeScope();
+        }
 
-        //        private static void RegisterHelpers(ContainerBuilder containerBuilder)
-        //        {
-        //            containerBuilder.RegisterType<FileHelper>().As<IFileHelper>();
-        //            containerBuilder.RegisterType<TaskHelper>().As<ITaskHelper>();
-        //            containerBuilder.RegisterType<PeriodHelper>().As<IPeriodHelper>();
-        //            containerBuilder.RegisterType<FcsCodeMappingHelper>().As<IFcsCodeMappingHelper>();
-        //        }
+        private static void RegisterHelpers(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterType<FileHelper>().As<IFileHelper>();
+            containerBuilder.RegisterType<TaskHelper>().As<ITaskHelper>();
+            containerBuilder.RegisterType<PeriodHelper>().As<IPeriodHelper>();
+            //containerBuilder.RegisterType<FcsCodeMappingHelper>().As<IFcsCodeMappingHelper>();
+        }
 
-        //        private static void RegisterMappers(ContainerBuilder containerBuilder)
-        //        {
-        //            containerBuilder.RegisterType<SourceFileModelMapper>().As<ISourceFileModelMapper>();
-        //            containerBuilder.RegisterType<SupplementaryDataModelMapper>().As<ISupplementaryDataModelMapper>();
-        //        }
+        private static void RegisterMappers(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterType<SourceFileModelMapper>().As<ISourceFileModelMapper>();
+            containerBuilder.RegisterType<SupplementaryDataModelMapper>().As<ISupplementaryDataModelMapper>();
+        }
 
         //        private static void RegisterCommands(ContainerBuilder containerBuilder)
         //        {
@@ -525,11 +525,11 @@ namespace ESFA.DC.ESF.R2.Stateless
         //                .InstancePerLifetimeScope();
         //        }
 
-        //        private static void RegisterStorage(ContainerBuilder containerBuilder)
-        //        {
-        //            containerBuilder.RegisterType<StoreFileDetails>().As<IStoreFileDetails>();
-        //            containerBuilder.RegisterType<StoreESF>().As<IStoreESF>();
-        //            containerBuilder.RegisterType<StoreValidation>().As<IStoreValidation>();
-        //        }
+        private static void RegisterStorage(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterType<StoreFileDetails>().As<IStoreFileDetails>();
+            containerBuilder.RegisterType<StoreESF>().As<IStoreESF>();
+            containerBuilder.RegisterType<StoreValidation>().As<IStoreValidation>();
+        }
     }
 }

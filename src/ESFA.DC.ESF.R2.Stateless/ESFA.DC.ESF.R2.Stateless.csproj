@@ -429,13 +429,29 @@
     <Folder Include="Modules\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.DataAccessLayer\ESFA.DC.ESF.R2.DataAccessLayer.csproj">
+      <Project>{e113d0a4-8cf5-46bf-a181-8c3bb92f785c}</Project>
+      <Name>ESFA.DC.ESF.R2.DataAccessLayer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Database.EF\ESFA.DC.ESF.R2.Database.EF.csproj">
       <Project>{6fc96653-7a88-44a0-a137-6549d2c672dd}</Project>
       <Name>ESFA.DC.ESF.R2.Database.EF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.DataStore\ESFA.DC.ESF.R2.DataStore.csproj">
+      <Project>{d32c4bfc-7222-4c67-9301-45268ff5ce45}</Project>
+      <Name>ESFA.DC.ESF.R2.DataStore</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Interfaces\ESFA.DC.ESF.R2.Interfaces.csproj">
       <Project>{3eb1948d-7f0f-446f-a8b3-c3ab19531fe6}</Project>
       <Name>ESFA.DC.ESF.R2.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.Service.Config\ESFA.DC.ESF.R2.Service.Config.csproj">
+      <Project>{5cdfb079-a857-42cf-95f8-f6af0fe0c179}</Project>
+      <Name>ESFA.DC.ESF.R2.Service.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.Service\ESFA.DC.ESF.R2.Service.csproj">
+      <Project>{2e92351a-663d-4b9b-9e3c-c51e5102a9b6}</Project>
+      <Name>ESFA.DC.ESF.R2.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
