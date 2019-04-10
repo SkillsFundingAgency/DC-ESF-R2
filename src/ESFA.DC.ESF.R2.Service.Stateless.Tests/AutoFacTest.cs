@@ -35,11 +35,11 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
 
                 using (var lifeTime = c.BeginLifetimeScope())
                 {
-                    //var messageHandler = lifeTime.Resolve<IJobContextManager<JobContextMessage>>();
-                    //var serviceController = lifeTime.Resolve<IServiceController>();
-                    //var storageController = lifeTime.Resolve<IStorageController>();
-                    //var validationController = lifeTime.Resolve<IValidationController>();
-                    //var reportingController = lifeTime.Resolve<IReportingController>();
+                    var messageHandler = lifeTime.Resolve<IJobContextManager<JobContextMessage>>();
+                    var serviceController = lifeTime.Resolve<IServiceController>();
+                    var storageController = lifeTime.Resolve<IStorageController>();
+                    var validationController = lifeTime.Resolve<IValidationController>();
+                    var reportingController = lifeTime.Resolve<IReportingController>();
                     //bool ret = await messageHandler. .HandleAsync(jobContextMessage, cts.Token);
                 }
             }

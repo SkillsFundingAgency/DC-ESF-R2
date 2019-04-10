@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Autofac;
-using Autofac.Features.AttributeFilters;
 using ESFA.DC.Auditing.Interface;
 using ESFA.DC.Data.Postcodes.Model;
 using ESFA.DC.Data.Postcodes.Model.Interfaces;
@@ -23,14 +22,14 @@ using ESFA.DC.ESF.R2.Interfaces.Reports.Strategies;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Interfaces.Strategies;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
-//using ESFA.DC.ESF.R2.ReportingService;
-//using ESFA.DC.ESF.R2.ReportingService.Comparers;
-//using ESFA.DC.ESF.R2.ReportingService.Reports;
-//using ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary;
-//using ESFA.DC.ESF.R2.ReportingService.Services;
-//using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRowHelpers;
-//using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.Ilr;
-//using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppData;
+using ESFA.DC.ESF.R2.ReportingService;
+using ESFA.DC.ESF.R2.ReportingService.Comparers;
+using ESFA.DC.ESF.R2.ReportingService.Reports;
+using ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary;
+using ESFA.DC.ESF.R2.ReportingService.Services;
+using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRowHelpers;
+using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.Ilr;
+using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppData;
 using ESFA.DC.ESF.R2.Service;
 using ESFA.DC.ESF.R2.Service.Config;
 using ESFA.DC.ESF.R2.Service.Helpers;
@@ -51,9 +50,6 @@ using ESFA.DC.FileService.Config.Interface;
 using ESFA.DC.FileService.Interface;
 using ESFA.DC.ILR.DataService.Models;
 using ESFA.DC.ILR.DataService.Services;
-using ESFA.DC.IO.AzureStorage;
-using ESFA.DC.IO.AzureStorage.Config.Interfaces;
-using ESFA.DC.IO.Interfaces;
 using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager;
 using ESFA.DC.JobContextManager.Interface;
@@ -325,24 +321,24 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.RegisterType<ESFProviderService>().As<IESFProviderService>()
                 .InstancePerLifetimeScope();
 
-            //containerBuilder.RegisterType<SupplementaryDataService>().As<ISupplementaryDataService>();
-            //containerBuilder.RegisterType<ILRService>().As<IILRService>();
+            containerBuilder.RegisterType<SupplementaryDataService>().As<ISupplementaryDataService>();
+            containerBuilder.RegisterType<ILRService>().As<IILRService>();
 
             containerBuilder.RegisterType<FileValidationService>().As<IFileValidationService>();
 
-            //containerBuilder.RegisterType<ExcelStyleProvider>().As<IExcelStyleProvider>();
+            containerBuilder.RegisterType<ExcelStyleProvider>().As<IExcelStyleProvider>();
 
-            //containerBuilder.RegisterType<ValueProvider>().As<IValueProvider>().SingleInstance();
+            containerBuilder.RegisterType<ValueProvider>().As<IValueProvider>().SingleInstance();
             containerBuilder.RegisterType<ReferenceDataService>().As<IReferenceDataService>().InstancePerLifetimeScope();
-            //containerBuilder.RegisterType<PopulationService>().As<IPopulationService>();
+            containerBuilder.RegisterType<PopulationService>().As<IPopulationService>();
 
-            //containerBuilder.RegisterType<AimAndDeliverableService>().As<IAimAndDeliverableService>();
+            containerBuilder.RegisterType<AimAndDeliverableService>().As<IAimAndDeliverableService>();
         }
 
         private static void RegisterControllers(ContainerBuilder containerBuilder)
         {
             containerBuilder.RegisterType<ServiceController>().As<IServiceController>();
-            //containerBuilder.RegisterType<ReportingController>().As<IReportingController>();
+            containerBuilder.RegisterType<ReportingController>().As<IReportingController>();
             containerBuilder.RegisterType<ValidationController>().As<IValidationController>();
             containerBuilder.RegisterType<StorageController>().As<IStorageController>();
         }
@@ -361,7 +357,7 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.RegisterType<FileHelper>().As<IFileHelper>();
             containerBuilder.RegisterType<TaskHelper>().As<ITaskHelper>();
             containerBuilder.RegisterType<PeriodHelper>().As<IPeriodHelper>();
-            //containerBuilder.RegisterType<FcsCodeMappingHelper>().As<IFcsCodeMappingHelper>();
+            containerBuilder.RegisterType<FcsCodeMappingHelper>().As<IFcsCodeMappingHelper>();
         }
 
         private static void RegisterMappers(ContainerBuilder containerBuilder)
@@ -389,40 +385,40 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.Register(c => new List<ITaskStrategy>(c.Resolve<IEnumerable<ITaskStrategy>>()))
                 .As<IList<ITaskStrategy>>();
 
-            //containerBuilder.RegisterType<DataRowHelper>().As<IRowHelper>();
-            //containerBuilder.RegisterType<TitleRowHelper>().As<IRowHelper>();
-            //containerBuilder.RegisterType<SpacerRowHelper>().As<IRowHelper>();
-            //containerBuilder.RegisterType<TotalRowHelper>().As<IRowHelper>();
-            //containerBuilder.RegisterType<CumulativeRowHelper>().As<IRowHelper>();
-            //containerBuilder.RegisterType<MainTitleRowHelper>().As<IRowHelper>();
-            //containerBuilder.Register(c => new List<IRowHelper>(c.Resolve<IEnumerable<IRowHelper>>()))
-            //    .As<IList<IRowHelper>>();
+            containerBuilder.RegisterType<DataRowHelper>().As<IRowHelper>();
+            containerBuilder.RegisterType<TitleRowHelper>().As<IRowHelper>();
+            containerBuilder.RegisterType<SpacerRowHelper>().As<IRowHelper>();
+            containerBuilder.RegisterType<TotalRowHelper>().As<IRowHelper>();
+            containerBuilder.RegisterType<CumulativeRowHelper>().As<IRowHelper>();
+            containerBuilder.RegisterType<MainTitleRowHelper>().As<IRowHelper>();
+            containerBuilder.Register(c => new List<IRowHelper>(c.Resolve<IEnumerable<IRowHelper>>()))
+                .As<IList<IRowHelper>>();
 
-            //containerBuilder.RegisterType<CG01CommunityGrantPayment>().As<ISupplementaryDataStrategy>();
-            //containerBuilder.RegisterType<CG02CommunityGrantManagementCost>().As<ISupplementaryDataStrategy>();
-            //containerBuilder.RegisterType<NR01NonRegulatedActivityAuthorisedClaims>().As<ISupplementaryDataStrategy>();
-            //containerBuilder.RegisterType<PG01ProgressionPaidEmploymentAdjustments>().As<ISupplementaryDataStrategy>();
-            //containerBuilder.RegisterType<PG03ProgressionEducationAdjustments>().As<ISupplementaryDataStrategy>();
-            //containerBuilder.RegisterType<PG04ProgressionApprenticeshipAdjustments>().As<ISupplementaryDataStrategy>();
-            //containerBuilder.RegisterType<PG05ProgressionTraineeshipAdjustments>().As<ISupplementaryDataStrategy>();
-            //containerBuilder.RegisterType<RQ01RegulatedLearningAuthorisedClaims>().As<ISupplementaryDataStrategy>();
-            //containerBuilder.RegisterType<SD01FCSDeliverableDescription>().As<ISupplementaryDataStrategy>();
-            //containerBuilder.RegisterType<SD02FCSDeliverableDescription>().As<ISupplementaryDataStrategy>();
-            //containerBuilder.RegisterType<ST01LearnerAssessmentAndPlanAdjustments>().As<ISupplementaryDataStrategy>();
-            //containerBuilder.Register(c => new List<ISupplementaryDataStrategy>(c.Resolve<IEnumerable<ISupplementaryDataStrategy>>()))
-            //    .As<IList<ISupplementaryDataStrategy>>();
+            containerBuilder.RegisterType<CG01CommunityGrantPayment>().As<ISupplementaryDataStrategy>();
+            containerBuilder.RegisterType<CG02CommunityGrantManagementCost>().As<ISupplementaryDataStrategy>();
+            containerBuilder.RegisterType<NR01NonRegulatedActivityAuthorisedClaims>().As<ISupplementaryDataStrategy>();
+            containerBuilder.RegisterType<PG01ProgressionPaidEmploymentAdjustments>().As<ISupplementaryDataStrategy>();
+            containerBuilder.RegisterType<PG03ProgressionEducationAdjustments>().As<ISupplementaryDataStrategy>();
+            containerBuilder.RegisterType<PG04ProgressionApprenticeshipAdjustments>().As<ISupplementaryDataStrategy>();
+            containerBuilder.RegisterType<PG05ProgressionTraineeshipAdjustments>().As<ISupplementaryDataStrategy>();
+            containerBuilder.RegisterType<RQ01RegulatedLearningAuthorisedClaims>().As<ISupplementaryDataStrategy>();
+            containerBuilder.RegisterType<SD01FCSDeliverableDescription>().As<ISupplementaryDataStrategy>();
+            containerBuilder.RegisterType<SD02FCSDeliverableDescription>().As<ISupplementaryDataStrategy>();
+            containerBuilder.RegisterType<ST01LearnerAssessmentAndPlanAdjustments>().As<ISupplementaryDataStrategy>();
+            containerBuilder.Register(c => new List<ISupplementaryDataStrategy>(c.Resolve<IEnumerable<ISupplementaryDataStrategy>>()))
+                .As<IList<ISupplementaryDataStrategy>>();
 
-            //containerBuilder.RegisterType<NR01NonRegulatedActivityAchievementEarnings>().As<IILRDataStrategy>();
-            //containerBuilder.RegisterType<NR01NonRegulatedActivityStartFunding>().As<IILRDataStrategy>();
-            //containerBuilder.RegisterType<PG01ProgressionPaidEmployment>().As<IILRDataStrategy>();
-            //containerBuilder.RegisterType<PG03ProgressionEducation>().As<IILRDataStrategy>();
-            //containerBuilder.RegisterType<PG04ProgressionApprenticeship>().As<IILRDataStrategy>();
-            //containerBuilder.RegisterType<PG05ProgressionTraineeship>().As<IILRDataStrategy>();
-            //containerBuilder.RegisterType<RQ01RegulatedLearningAchievementEarnings>().As<IILRDataStrategy>();
-            //containerBuilder.RegisterType<RQ01RegulatedLearningStartFunding>().As<IILRDataStrategy>();
-            //containerBuilder.RegisterType<ST01LearnerAssessmentAndPlan>().As<IILRDataStrategy>();
-            //containerBuilder.Register(c => new List<IILRDataStrategy>(c.Resolve<IEnumerable<IILRDataStrategy>>()))
-            //    .As<IList<IILRDataStrategy>>();
+            containerBuilder.RegisterType<NR01NonRegulatedActivityAchievementEarnings>().As<IILRDataStrategy>();
+            containerBuilder.RegisterType<NR01NonRegulatedActivityStartFunding>().As<IILRDataStrategy>();
+            containerBuilder.RegisterType<PG01ProgressionPaidEmployment>().As<IILRDataStrategy>();
+            containerBuilder.RegisterType<PG03ProgressionEducation>().As<IILRDataStrategy>();
+            containerBuilder.RegisterType<PG04ProgressionApprenticeship>().As<IILRDataStrategy>();
+            containerBuilder.RegisterType<PG05ProgressionTraineeship>().As<IILRDataStrategy>();
+            containerBuilder.RegisterType<RQ01RegulatedLearningAchievementEarnings>().As<IILRDataStrategy>();
+            containerBuilder.RegisterType<RQ01RegulatedLearningStartFunding>().As<IILRDataStrategy>();
+            containerBuilder.RegisterType<ST01LearnerAssessmentAndPlan>().As<IILRDataStrategy>();
+            containerBuilder.Register(c => new List<IILRDataStrategy>(c.Resolve<IEnumerable<IILRDataStrategy>>()))
+                .As<IList<IILRDataStrategy>>();
         }
 
         private static void RegisterFileLevelValidators(ContainerBuilder containerBuilder)
@@ -508,21 +504,21 @@ namespace ESFA.DC.ESF.R2.Stateless
 
         private static void RegisterReports(ContainerBuilder containerBuilder)
         {
-            //containerBuilder.RegisterType<ValidationResultReport>().As<IValidationResultReport>();
-            //containerBuilder.RegisterType<ValidationErrorReport>().As<IValidationReport>()
-            //    .InstancePerLifetimeScope();
-            //containerBuilder.Register(c => new List<IValidationReport>(c.Resolve<IEnumerable<IValidationReport>>()))
-            //    .As<IList<IValidationReport>>();
+            containerBuilder.RegisterType<ValidationResultReport>().As<IValidationResultReport>();
+            containerBuilder.RegisterType<ValidationErrorReport>().As<IValidationReport>()
+                .InstancePerLifetimeScope();
+            containerBuilder.Register(c => new List<IValidationReport>(c.Resolve<IEnumerable<IValidationReport>>()))
+                .As<IList<IValidationReport>>();
 
-            //containerBuilder.RegisterType<FundingSummaryReport>().As<IModelReport>()
-            //    .InstancePerLifetimeScope();
-            //containerBuilder.RegisterType<AimAndDeliverableReport>().As<IModelReport>()
-            //    .InstancePerLifetimeScope();
-            //containerBuilder.Register(c => new List<IModelReport>(c.Resolve<IEnumerable<IModelReport>>()))
-            //    .As<IList<IModelReport>>();
+            containerBuilder.RegisterType<FundingSummaryReport>().As<IModelReport>()
+                .InstancePerLifetimeScope();
+            containerBuilder.RegisterType<AimAndDeliverableReport>().As<IModelReport>()
+                .InstancePerLifetimeScope();
+            containerBuilder.Register(c => new List<IModelReport>(c.Resolve<IEnumerable<IModelReport>>()))
+                .As<IList<IModelReport>>();
 
-            //containerBuilder.RegisterType<AimAndDeliverableComparer>().As<IAimAndDeliverableComparer>()
-            //    .InstancePerLifetimeScope();
+            containerBuilder.RegisterType<AimAndDeliverableComparer>().As<IAimAndDeliverableComparer>()
+                .InstancePerLifetimeScope();
         }
 
         private static void RegisterStorage(ContainerBuilder containerBuilder)
