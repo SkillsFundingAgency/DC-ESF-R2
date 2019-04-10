@@ -9,12 +9,6 @@ using ESFA.DC.ESF.R2.Service.Config;
 using ESFA.DC.ServiceFabric.Helpers;
 using ESFA.DC.ServiceFabric.Helpers.Interfaces;
 
-//using Autofac;
-//using Autofac.Integration.ServiceFabric;
-////using ESFA.DC.ESF.R2.Service.Config;
-//using ESFA.DC.ServiceFabric.Helpers;
-//using ESFA.DC.ServiceFabric.Helpers.Interfaces;
-
 namespace ESFA.DC.ESF.R2.Stateless
 {
     internal static class Program
