@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Autofac;
-using Autofac.Features.AttributeFilters;
 using ESFA.DC.Auditing.Interface;
 using ESFA.DC.Data.Postcodes.Model;
 using ESFA.DC.Data.Postcodes.Model.Interfaces;
@@ -45,11 +44,12 @@ using ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition;
 using ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel;
 using ESFA.DC.ESF.R2.ValidationService.Helpers;
 using ESFA.DC.ESF.R2.ValidationService.Services;
+using ESFA.DC.FileService;
+using ESFA.DC.FileService.Config;
+using ESFA.DC.FileService.Config.Interface;
+using ESFA.DC.FileService.Interface;
 using ESFA.DC.ILR.DataService.Models;
 using ESFA.DC.ILR.DataService.Services;
-using ESFA.DC.IO.AzureStorage;
-using ESFA.DC.IO.AzureStorage.Config.Interfaces;
-using ESFA.DC.IO.Interfaces;
 using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager;
 using ESFA.DC.JobContextManager.Interface;
@@ -132,16 +132,13 @@ namespace ESFA.DC.ESF.R2.Stateless
         private static void RegisterPersistence(ContainerBuilder containerBuilder, IConfigurationHelper configHelper)
         {
             // register azure blob storage service
-            var azureBlobStorageOptions = configHelper.GetSectionValues<AzureStorageOptions>("AzureStorageSection");
-            containerBuilder.Register(c =>
-                    new AzureStorageKeyValuePersistenceConfig(
-                        azureBlobStorageOptions.AzureBlobConnectionString,
-                        azureBlobStorageOptions.AzureBlobContainerName))
-                .As<IAzureStorageKeyValuePersistenceServiceConfig>().SingleInstance();
+            var ioConfiguration = configHelper.GetSectionValues<AzureStorageFileServiceConfiguration>("AzureStorageSection");
 
-            containerBuilder.RegisterType<AzureStorageKeyValuePersistenceService>()
-                .As<IStreamableKeyValuePersistenceService>()
-                .InstancePerLifetimeScope();
+            containerBuilder.Register(c =>
+                    ioConfiguration)
+                .As<IAzureStorageFileServiceConfiguration>().SingleInstance();
+
+            containerBuilder.RegisterType<AzureStorageFileService>().As<IFileService>();
 
             var ilrConfig = configHelper.GetSectionValues<ILRConfiguration>("ILRSection");
             containerBuilder.RegisterModule(new DependencyInjectionModule
@@ -300,16 +297,16 @@ namespace ESFA.DC.ESF.R2.Stateless
                 {
                     ApplicationLoggerOutputSettingsCollection = new List<IApplicationLoggerOutputSettings>
                     {
-                        new MsSqlServerApplicationLoggerOutputSettings
-                        {
-                            MinimumLogLevel = LogLevel.Verbose,
-                            ConnectionString = loggerOptions.LoggerConnectionstring,
-                            LogsTableName = "Logs"
-                        },
-                        new ConsoleApplicationLoggerOutputSettings
-                        {
-                            MinimumLogLevel = LogLevel.Verbose
-                        }
+                                new MsSqlServerApplicationLoggerOutputSettings
+                                {
+                                    MinimumLogLevel = LogLevel.Verbose,
+                                    ConnectionString = loggerOptions.LoggerConnectionstring,
+                                    LogsTableName = "Logs"
+                                },
+                                new ConsoleApplicationLoggerOutputSettings
+                                {
+                                    MinimumLogLevel = LogLevel.Verbose
+                                }
                     }
                 };
             }).As<IApplicationLoggerSettings>().SingleInstance();

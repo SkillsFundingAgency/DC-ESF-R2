@@ -16,8 +16,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
     {
         private const string FundingStreamPeriodCode = "ESF1420";
 
-        private const string EsfR2ConRefNum = "ESF-5000";
-
         private readonly string[] _reportMonths =
         {
             "Aug-18",
@@ -58,13 +56,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
         {
             List<AimAndDeliverableModel> reportData = null;
 
-            var validLearners = (await _validLearnerDataService.GetValidLearnerData(ukPrn, EsfR2ConRefNum, cancellationToken)).ToList();
+            var providerConRefNumbers = (await _validLearnerDataService.GetLearnerConRefNumbers(ukPrn, cancellationToken)).ToList();
+
+            var conRefNumbers = providerConRefNumbers.Where(IsConRefNumberRound2).ToList();
+
+            var validLearners = (await _validLearnerDataService.GetLearnerDetails(ukPrn, conRefNumbers, cancellationToken)).ToList();
             var fm70LearningDeliveries = (await _fm70DataService.GetLearningDeliveries(ukPrn, cancellationToken)).ToList();
 
             var fm70Outcomes = (await _fm70DataService.GetOutcomes(ukPrn, cancellationToken)).ToList();
             var outcomes = (await _validLearnerDataService.GetDPOutcomes(ukPrn, cancellationToken)).ToList();
 
-            var learnAimRefs = validLearners.SelectMany(l => l.LearningDeliveries).Select(ld => ld.LearnAimRef).ToList();
+            var learnAimRefs = validLearners.Select(ld => ld.LearnAimRef).ToList();
             var deliverableCodes = fm70LearningDeliveries.SelectMany(d => d.Fm70LearningDeliveryDeliverables).Select(ldd => ldd.DeliverableCode).ToList();
 
             var fcsCodeMappings =
@@ -73,30 +75,77 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
 
             foreach (var learner in validLearners)
             {
-                foreach (var delivery in learner.LearningDeliveries)
+                var fm70Delivery = fm70LearningDeliveries
+                    .FirstOrDefault(d => d.LearnRefNumber.CaseInsensitiveEquals(learner.LearnRefNumber) &&
+                                d.AimSeqNumber == learner.AimSeqNumber);
+
+                var outcomeType = fm70Delivery?.EligibleProgressionOutcomeType;
+                var outcomeCode = fm70Delivery?.EligibleProgressionOutcomeCode;
+                var outcomeStartDate = fm70Delivery?.EligibleProgressionOutomeStartDate;
+                var outcome = outcomes?.SingleOrDefault(o => o.OutType.CaseInsensitiveEquals(outcomeType)
+                                                             && o.OutCode == outcomeCode
+                                                             && o.OutStartDate == outcomeStartDate);
+
+                var fm70Outcome = fm70Outcomes?.SingleOrDefault(o => o.OutType.CaseInsensitiveEquals(outcomeType)
+                                                                     && o.OutCode == outcomeCode
+                                                                     && o.OutStartDate == outcomeStartDate);
+
+                var larsDelivery = larsDeliveries?.SingleOrDefault(l => l.LearnAimRef == learner.LearnAimRef);
+
+                if (fm70Delivery?.Fm70LearningDeliveryDeliverables == null ||
+                    !fm70Delivery.Fm70LearningDeliveryDeliverables.Any())
                 {
-                    var fm70Delivery = fm70LearningDeliveries
-                        .FirstOrDefault(d => d.LearnRefNumber.CaseInsensitiveEquals(delivery.LearnRefNumber) &&
-                                    d.AimSeqNumber == delivery.AimSequenceNumber);
-
-                    var outcomeType = fm70Delivery?.EligibleProgressionOutcomeType;
-                    var outcomeCode = fm70Delivery?.EligibleProgressionOutcomeCode;
-                    var outcomeStartDate = fm70Delivery?.EligibleProgressionOutomeStartDate;
-                    var outcome = outcomes?.SingleOrDefault(o => o.OutType.CaseInsensitiveEquals(outcomeType)
-                                                                 && o.OutCode == outcomeCode
-                                                                 && o.OutStartDate == outcomeStartDate);
-
-                    var fm70Outcome = fm70Outcomes?.SingleOrDefault(o => o.OutType.CaseInsensitiveEquals(outcomeType)
-                                                                         && o.OutCode == outcomeCode
-                                                                         && o.OutStartDate == outcomeStartDate);
-
-                    var larsDelivery = larsDeliveries?.SingleOrDefault(l => l.LearnAimRef == delivery.LearnAimRef);
-
-                    if (fm70Delivery?.Fm70LearningDeliveryDeliverables == null ||
-                        !fm70Delivery.Fm70LearningDeliveryDeliverables.Any())
+                    var model = new AimAndDeliverableModel
                     {
-                        var model = new AimAndDeliverableModel
+                        ApplicWeightFundRate = fm70Delivery?.ApplicWeightFundRate,
+                        AimValue = fm70Delivery?.AimValue,
+                        LearnAimRefTitle = larsDelivery?.LearnAimRefTitle,
+                        NotionalNVQLevelv2 = larsDelivery?.NotionalNVQLevelv2,
+                        SectorSubjectAreaTier2 = larsDelivery?.SectorSubjectAreaTier2,
+                        AdjustedAreaCostFactor = fm70Delivery?.AdjustedAreaCostFactor,
+                        AdjustedPremiumFactor = fm70Delivery?.AdjustedPremiumFactor,
+                        LDESFEngagementStartDate = fm70Delivery?.LdEsfEngagementStartDate,
+                        LatestPossibleStartDate = fm70Delivery?.LatestPossibleStartDate,
+                        EligibleProgressionOutomeStartDate = fm70Delivery?.EligibleProgressionOutomeStartDate,
+                        EligibleOutcomeEndDate = outcome?.OutEndDate,
+                        EligibleOutcomeCollectionDate = outcome?.OutCollDate,
+                        EligibleOutcomeDateProgressionLength = fm70Outcome?.OutcomeDateForProgression,
+                        EligibleProgressionOutcomeType = fm70Delivery?.EligibleProgressionOutcomeType,
+                        EligibleProgressionOutcomeCode = fm70Delivery?.EligibleProgressionOutcomeCode
+                    };
+
+                    reportData.Add(model);
+                    continue;
+                }
+
+                foreach (var deliverable in fm70Delivery.Fm70LearningDeliveryDeliverables)
+                {
+                    var deliverableCode = deliverable?.DeliverableCode;
+                    var fcsMapping = fcsCodeMappings?.SingleOrDefault(f =>
+                        f.ExternalDeliverableCode == deliverableCode
+                        && f.FundingStreamPeriodCode == FundingStreamPeriodCode);
+
+                    var fm70Periods = fm70LearningDeliveries
+                        .SelectMany(ld => ld.Fm70LearningDeliveryDeliverablePeriods)
+                        ?.Where(p =>
+                        p.LearnRefNumber == learner.LearnRefNumber
+                        && p.AimSeqNumber == learner.AimSeqNumber
+                        && p.DeliverableCode == deliverableCode);
+
+                    foreach (var period in fm70Periods)
+                    {
+                        var total = (period?.StartEarnings ?? 0) + (period?.AchievementEarnings ?? 0)
+                                + (period?.AdditionalProgCostEarnings ?? 0) + (period?.ProgressionEarnings ?? 0);
+                        if (period.ReportingVolume == 0 && period.DeliverableVolume == 0 && total == 0)
                         {
+                            continue;
+                        }
+
+                        var reportModel = new AimAndDeliverableModel
+                        {
+                            DeliverableCode = deliverableCode,
+                            DeliverableName = fcsMapping?.DeliverableName,
+                            DeliverableUnitCost = deliverable?.DeliverableUnitCost,
                             ApplicWeightFundRate = fm70Delivery?.ApplicWeightFundRate,
                             AimValue = fm70Delivery?.AimValue,
                             LearnAimRefTitle = larsDelivery?.LearnAimRefTitle,
@@ -105,75 +154,25 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                             AdjustedAreaCostFactor = fm70Delivery?.AdjustedAreaCostFactor,
                             AdjustedPremiumFactor = fm70Delivery?.AdjustedPremiumFactor,
                             LDESFEngagementStartDate = fm70Delivery?.LdEsfEngagementStartDate,
+                            Outcome = learner.Outcome,
+                            AddHours = learner.AddHours,
                             LatestPossibleStartDate = fm70Delivery?.LatestPossibleStartDate,
                             EligibleProgressionOutomeStartDate = fm70Delivery?.EligibleProgressionOutomeStartDate,
                             EligibleOutcomeEndDate = outcome?.OutEndDate,
                             EligibleOutcomeCollectionDate = outcome?.OutCollDate,
                             EligibleOutcomeDateProgressionLength = fm70Outcome?.OutcomeDateForProgression,
                             EligibleProgressionOutcomeType = fm70Delivery?.EligibleProgressionOutcomeType,
-                            EligibleProgressionOutcomeCode = fm70Delivery?.EligibleProgressionOutcomeCode
+                            EligibleProgressionOutcomeCode = fm70Delivery?.EligibleProgressionOutcomeCode,
+                            Period = _reportMonths[period?.Period - 1 ?? 0],
+                            DeliverableVolume = period?.DeliverableVolume,
+                            StartEarnings = period?.StartEarnings,
+                            AchievementEarnings = period?.AchievementEarnings,
+                            AdditionalProgCostEarnings = period?.AdditionalProgCostEarnings,
+                            ProgressionEarnings = period?.ProgressionEarnings,
+                            TotalEarnings = total
                         };
 
-                        reportData.Add(model);
-                        continue;
-                    }
-
-                    foreach (var deliverable in fm70Delivery.Fm70LearningDeliveryDeliverables)
-                    {
-                        var deliverableCode = deliverable?.DeliverableCode;
-                        var fcsMapping = fcsCodeMappings?.SingleOrDefault(f =>
-                            f.ExternalDeliverableCode == deliverableCode
-                            && f.FundingStreamPeriodCode == FundingStreamPeriodCode);
-
-                        var fm70Periods = fm70LearningDeliveries
-                            .SelectMany(ld => ld.Fm70LearningDeliveryDeliverablePeriods)
-                            ?.Where(p =>
-                            p.LearnRefNumber == delivery.LearnRefNumber
-                            && p.AimSeqNumber == delivery.AimSequenceNumber
-                            && p.DeliverableCode == deliverableCode);
-
-                        foreach (var period in fm70Periods)
-                        {
-                            var total = (period?.StartEarnings ?? 0) + (period?.AchievementEarnings ?? 0)
-                                    + (period?.AdditionalProgCostEarnings ?? 0) + (period?.ProgressionEarnings ?? 0);
-                            if (period.ReportingVolume == 0 && period.DeliverableVolume == 0 && total == 0)
-                            {
-                                continue;
-                            }
-
-                            var reportModel = new AimAndDeliverableModel
-                            {
-                                DeliverableCode = deliverableCode,
-                                DeliverableName = fcsMapping?.DeliverableName,
-                                DeliverableUnitCost = deliverable?.DeliverableUnitCost,
-                                ApplicWeightFundRate = fm70Delivery?.ApplicWeightFundRate,
-                                AimValue = fm70Delivery?.AimValue,
-                                LearnAimRefTitle = larsDelivery?.LearnAimRefTitle,
-                                NotionalNVQLevelv2 = larsDelivery?.NotionalNVQLevelv2,
-                                SectorSubjectAreaTier2 = larsDelivery?.SectorSubjectAreaTier2,
-                                AdjustedAreaCostFactor = fm70Delivery?.AdjustedAreaCostFactor,
-                                AdjustedPremiumFactor = fm70Delivery?.AdjustedPremiumFactor,
-                                LDESFEngagementStartDate = fm70Delivery?.LdEsfEngagementStartDate,
-                                Outcome = delivery.Outcome,
-                                AddHours = delivery.AddHours,
-                                LatestPossibleStartDate = fm70Delivery?.LatestPossibleStartDate,
-                                EligibleProgressionOutomeStartDate = fm70Delivery?.EligibleProgressionOutomeStartDate,
-                                EligibleOutcomeEndDate = outcome?.OutEndDate,
-                                EligibleOutcomeCollectionDate = outcome?.OutCollDate,
-                                EligibleOutcomeDateProgressionLength = fm70Outcome?.OutcomeDateForProgression,
-                                EligibleProgressionOutcomeType = fm70Delivery?.EligibleProgressionOutcomeType,
-                                EligibleProgressionOutcomeCode = fm70Delivery?.EligibleProgressionOutcomeCode,
-                                Period = _reportMonths[period?.Period - 1 ?? 0],
-                                DeliverableVolume = period?.DeliverableVolume,
-                                StartEarnings = period?.StartEarnings,
-                                AchievementEarnings = period?.AchievementEarnings,
-                                AdditionalProgCostEarnings = period?.AdditionalProgCostEarnings,
-                                ProgressionEarnings = period?.ProgressionEarnings,
-                                TotalEarnings = total
-                            };
-
-                            reportData.Add(reportModel);
-                        }
+                        reportData.Add(reportModel);
                     }
                 }
             }
@@ -181,6 +180,18 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             reportData.Sort(_comparer);
 
             return reportData;
+        }
+
+        public bool IsConRefNumberRound2(string conRefNumber)
+        {
+            var numericString = conRefNumber.Replace(ESFConstants.ConRefNumberPrefix, string.Empty);
+
+            if (!int.TryParse(numericString, out var contractNumber))
+            {
+                return false;
+            }
+
+            return contractNumber >= ESFConstants.ESFRound2StartConRefNumber;
         }
     }
 }

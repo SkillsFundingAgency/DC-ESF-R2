@@ -4,6 +4,10 @@ namespace ESFA.DC.ESF.R2.Utils
 {
     public class ESFConstants
     {
+        public const int ESFRound2StartConRefNumber = 5000;
+
+        public const string ConRefNumberPrefix = "ESF-";
+
         public const string UnitCostDeductionCostType = "Unit Cost Deduction";
 
         public static readonly List<string> UnitCostDeliverableCodes = new List<string>

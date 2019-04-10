@@ -24,14 +24,14 @@ using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 using ESFA.DC.ESF.R2.Models.Styling;
 using ESFA.DC.ESF.R2.ReportingService.Mappers;
 using ESFA.DC.ESF.R2.Utils;
+using ESFA.DC.FileService.Interface;
 using ESFA.DC.ILR.DataService.Models;
-using ESFA.DC.IO.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 {
     public class FundingSummaryReport : AbstractReportBuilder, IModelReport
     {
-        private readonly IStreamableKeyValuePersistenceService _storage;
+        private readonly IFileService _storage;
         private readonly IList<IRowHelper> _rowHelpers;
         private readonly IILRService _ilrService;
         private readonly IReferenceDataService _referenceDataService;
@@ -50,7 +50,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         public FundingSummaryReport(
             IDateTimeProvider dateTimeProvider,
             IValueProvider valueProvider,
-            IStreamableKeyValuePersistenceService storage,
+            IFileService storage,
             IILRService ilrService,
             ISupplementaryDataService supplementaryDataService,
             IList<IRowHelper> rowHelpers,
@@ -68,7 +68,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             _supplementaryDataService = supplementaryDataService;
             _ilrService = ilrService;
 
-            ReportFileName = "ESF Funding Summary Report";
+            ReportFileName = "ESF R2 Funding Summary Report";
             _fundingSummaryMapper = new FundingSummaryMapper();
             _cachedModelProperties = _fundingSummaryMapper
                 .MemberMaps
@@ -78,14 +78,14 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         }
 
         public async Task GenerateReport(
-            SupplementaryDataWrapper supplementaryDataWrapper,
+            JobContextModel jobContextModel,
             SourceFileModel sourceFile,
             ZipArchive archive,
             CancellationToken cancellationToken)
         {
-            var ukPrn = Convert.ToInt32(sourceFile.UKPRN);
+            var ukPrn = Convert.ToInt32(jobContextModel.UkPrn);
 
-            var sourceFiles = await _supplementaryDataService.GetImportFiles(sourceFile.UKPRN, cancellationToken);
+            var sourceFiles = await _supplementaryDataService.GetImportFiles(jobContextModel.UkPrn.ToString(), cancellationToken);
             var supplementaryData =
                 await _supplementaryDataService.GetSupplementaryData(sourceFiles, cancellationToken);
 
@@ -138,13 +138,23 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
             ApplyAdditionalHeaderFormatting(workbook, ilrYearlyFileData.Count);
 
-            string externalFileName = GetExternalFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
-            string fileName = GetFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
+            string externalFileName = GetExternalFilename(ukPrn.ToString(), jobContextModel.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
+            string fileName = GetFilename(ukPrn.ToString(), jobContextModel.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
 
             using (var ms = new MemoryStream())
             {
                 workbook.Save(ms, SaveFormat.Xlsx);
-                await _storage.SaveAsync($"{externalFileName}.xlsx", ms, cancellationToken);
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var stream = await _storage.OpenWriteStreamAsync(
+                    $"{externalFileName}.xlsx",
+                    jobContextModel.BlobContainerName,
+                    cancellationToken))
+                {
+                    await ms.CopyToAsync(stream, 81920, cancellationToken);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
                 await WriteZipEntry(archive, $"{fileName}.xlsx", ms, cancellationToken);
             }
         }
@@ -179,13 +189,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
         private void AddImageToReport(Worksheet worksheet)
         {
-            var esfImage = Image.FromFile("ESF.png");
-
-            using (var ms = new MemoryStream())
+            var assembly = Assembly.GetExecutingAssembly();
+            string euFlag = assembly.GetManifestResourceNames().Single(str => str.EndsWith("ESF.png"));
+            using (Stream stream = assembly.GetManifestResourceStream(euFlag))
             {
-                esfImage.Save(ms, ImageFormat.Png);
-                ms.Close();
-                worksheet.Pictures.Add(3, 7, ms);
+                worksheet.Pictures.Add(3, _reportWidth - 2, stream);
             }
         }
 
@@ -198,11 +206,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             var ukPrnRow =
                 new List<string> { ukPrn.ToString(), null, null };
             var contractReferenceNumberRow =
-                new List<string> { sourceFile.ConRefNumber, null, null, "ILR File :" };
+                new List<string> { sourceFile?.ConRefNumber, null, null, "ILR File :" };
             var supplementaryDataFileRow =
-                new List<string> { sourceFile.FileName.Contains("/") ? sourceFile.FileName.Substring(sourceFile.FileName.IndexOf("/", StringComparison.Ordinal) + 1) : sourceFile.FileName, null, null, "Last ILR File Update :" };
+                new List<string> { sourceFile?.FileName?.Contains("/") ?? false ? sourceFile.FileName.Substring(sourceFile.FileName.IndexOf("/", StringComparison.Ordinal) + 1) : sourceFile?.FileName, null, null, "Last ILR File Update :" };
             var lastSupplementaryDataFileUpdateRow =
-                new List<string> { sourceFile.SuppliedDate?.ToString("dd/MM/yyyy hh:mm:ss"), null, null, "File Preparation Date :" };
+                new List<string> { sourceFile?.SuppliedDate?.ToString("dd/MM/yyyy hh:mm:ss"), null, null, "File Preparation Date :" };
 
             foreach (var model in fileData)
             {

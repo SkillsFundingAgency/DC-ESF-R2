@@ -8,6 +8,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.Reports
     public interface IValidationReport
     {
         Task GenerateReport(
+            JobContextModel jobContextModel,
             SourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             ZipArchive archive,

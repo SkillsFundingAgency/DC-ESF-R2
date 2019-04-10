@@ -11,7 +11,7 @@ variables:
   BuildConfiguration: 'Release'
   BuildPlatform: 'Any CPU'
   BuildPlatformAnyCPU: 'Any CPU'
-  BuildPlatformX64: 'X64'
+  BuildPlatformX64: 'x64'
   ServiceFabricProjectFolderName: 'ESFA.DC.ESF.R2'
 
 pool:
@@ -24,9 +24,9 @@ pool:
 
 steps:
 - task: DotNetCoreInstaller@0
-  displayName: 'Use .NET Core sdk 2.2.104'
+  displayName: 'Use .NET Core sdk 2.2.202'
   inputs:
-    version: 2.2.104
+    version: 2.2.202
 
 - task: VisualStudioTestPlatformInstaller@1
   displayName: 'Visual Studio Test Platform Installer'
@@ -34,65 +34,71 @@ steps:
     versionSelector: latestStable
 
 - task: NuGetToolInstaller@0
-  displayName: 'Use NuGet 4.9.0'
+  displayName: 'Use NuGet < 4.8.0'
   inputs:
-    versionSpec: '>=4.9.0'
+    versionSpec: '< 4.8.0'
+    checkLatest: true
+
+- task: DotNetCoreCLI@2
+  enabled: true
+  displayName: 'dotnet restore'
+  inputs:
+    command: restore
+    projects: '**\*.csproj'
+    vstsFeed: 'dct-pkg'
+#    includeNuGetOrg: false
+#    noCache: true
 
 - task: NuGetCommand@2
   displayName: 'NuGet restore'
   inputs:
-    restoreSolution: '**\*.sln'
-    vstsFeed: '1d5deb2d-cf8b-4bb1-b147-d13bc246e3f4'
-    configuration: '$(BuildConfiguration)' # Optional
+    restoreSolution: '**/*.sln'
+    vstsFeed: 'dct-pkg'
+    noCache: true
 
 - task: MSBuild@1
-  displayName: 'Build solution'
+  enabled: true
+  displayName: 'Build solution **/*.sln'
   inputs:
-    solution: '**/*.sln'
+    msbuildVersion: 16.0
     msbuildArchitecture: x64
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
-    msbuildArguments: '-t:restore /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
+    msbuildArguments: '-p:version=$(Build.BuildNumber) -p:FileVersion=$(Build.BuildNumber) -p:SkipInvalidConfigurations=true'
     clean: true
     maximumCpuCount: true
+    restoreNugetPackages: true
     logProjectEvents: true
     createLogFile: true
 
 - task: MSBuild@1
-  displayName: 'Build solution  - Service Fabric as (x64)'
+  enabled: true
+  displayName: 'Build and Package - Service Fabric Config'
   inputs:
-    solution: '$(build.sourcesdirectory)\**\*.sfproj'
+    solution: '**\*.sfproj'
     msbuildArchitecture: x64
-    platform: '$(BuildPlatform)'
+    platform: '$(BuildPlatformX64)'
     configuration: '$(BuildConfiguration)'
-    msbuildArguments: '-t:restore /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /t:Package /p:PackageLocation="$(build.artifactstagingdirectory)\$(ArtifactFolderName)\ApplicationPackage" /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
-    clean: true
+    msbuildArguments: '/t:Package /p:PackageLocation=$(build.artifactstagingdirectory)\applicationpackage /p:version=$(Build.BuildNumber) /p:FileVersion=$(Build.BuildNumber)'
+    clean: false
     maximumCpuCount: true
     logProjectEvents: true
     createLogFile: true
-
+    
 - task: VSTest@2
   displayName: 'VsTest - testAssemblies'
   inputs:
     testAssemblyVer2: |
-     $(System.DefaultWorkingDirectory)\src\**\*Tests.dll
-     !**\*Database.Tests*.dll
-     !**\*DataStore.Test*.dll
+     **\ESFA.DC.ESF.R2.*tests.dll
+     !**\*Database.Tests*\**
      !**\packages\**
-     !**\*TestAdapter.dll
-     !**\*SmokeTests.dll
-     !**\*AcceptanceTests.dll
      !**\obj\**
-    runInParallel: true
-    codeCoverageEnabled: true
-    platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
-
-    
+        
 - task: DeleteFiles@1
-  displayName: 'Delete Symbols files from $(build.artifactstagingdirectory)\applicationpackage'
+  displayName: 'Delete Symbols files from $(build.artifactstagingdirectory)\ApplicationPackage'
   inputs:
-    SourceFolder: '$(build.artifactstagingdirectory)\$(ArtifactFolderName)\ApplicationPackage'
+    SourceFolder: '$(build.artifactstagingdirectory)\ApplicationPackage'
     Contents: '**\*.pdb'
 
 - task: CopyFiles@2
@@ -125,7 +131,7 @@ steps:
 - task: ServiceFabricUpdateManifests@2
   displayName: 'Update Service Fabric Manifests (Manifest versions)'
   inputs:
-    applicationPackagePath: '$(build.artifactstagingdirectory)\$(ArtifactFolderName)\ApplicationPackage'
+    applicationPackagePath: '$(build.artifactstagingdirectory)\ApplicationPackage'
     versionBehavior: Replace
   enabled: true
 

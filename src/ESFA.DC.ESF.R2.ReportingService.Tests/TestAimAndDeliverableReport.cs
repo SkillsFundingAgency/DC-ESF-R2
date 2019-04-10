@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
@@ -8,6 +9,7 @@ using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.ReportingService.Reports;
 using ESFA.DC.ESF.R2.ReportingService.Services;
 using ESFA.DC.ESF.R2.ReportingService.Tests.Builders;
+using ESFA.DC.FileService.Interface;
 using ESFA.DC.IO.Interfaces;
 using Moq;
 using Xunit;
@@ -21,16 +23,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
         {
             var csv = string.Empty;
             var dateTime = DateTime.UtcNow;
-            var filename = $"10005752_2_ESF Round 2 Aim and Deliverable Report {dateTime:yyyyMMdd-HHmmss}";
+            var filename = $"10005752/2/ESF Round 2 Aim and Deliverable Report {dateTime:yyyyMMdd-HHmmss}";
 
             var dateTimeProviderMock = new Mock<IDateTimeProvider>();
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(dateTime);
             dateTimeProviderMock.Setup(x => x.ConvertUtcToUk(It.IsAny<DateTime>())).Returns(dateTime);
 
-            var storage = new Mock<IStreamableKeyValuePersistenceService>();
-            storage.Setup(x => x.SaveAsync($"{filename}.csv", It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .Callback<string, string, CancellationToken>((key, value, ct) => csv = value)
-                .Returns(Task.CompletedTask);
+            var testStream = new MemoryStream();
+
+            var storage = new Mock<IFileService>();
+            storage.Setup(x => x.OpenWriteStreamAsync($"{filename}.csv", It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(testStream);
 
             var aimAndDeliverableServiceMock = new Mock<IAimAndDeliverableService>();
             aimAndDeliverableServiceMock
@@ -45,15 +48,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
                 valueProvider,
                 aimAndDeliverableServiceMock.Object);
 
-            var wrapper = new SupplementaryDataWrapper
+            var wrapper = new JobContextModel
             {
-                SupplementaryDataModels = new List<SupplementaryDataModel>()
+                UkPrn = 10005752,
+                JobId = 2,
+                BlobContainerName = "TestBlob"
             };
             SourceFileModel sourceFile = GetEsfSourceFileModel();
 
             await aimAndDeliverableReport.GenerateReport(wrapper, sourceFile, null, CancellationToken.None);
 
-            Assert.True(!string.IsNullOrEmpty(csv));
+            storage.Verify(s => s.OpenWriteStreamAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
         }
 
         private SourceFileModel GetEsfSourceFileModel()

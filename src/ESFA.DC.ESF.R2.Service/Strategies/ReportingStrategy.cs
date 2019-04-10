@@ -23,11 +23,12 @@ namespace ESFA.DC.ESF.R2.Service.Strategies
         }
 
         public async Task Execute(
+            JobContextModel jobContextModel,
             SourceFileModel sourceFile,
             SupplementaryDataWrapper supplementaryDataWrapper,
             CancellationToken cancellationToken)
         {
-            await _reportingController.ProduceReports(supplementaryDataWrapper, sourceFile, cancellationToken);
+            await _reportingController.ProduceReports(jobContextModel, supplementaryDataWrapper, sourceFile, cancellationToken);
         }
     }
 }

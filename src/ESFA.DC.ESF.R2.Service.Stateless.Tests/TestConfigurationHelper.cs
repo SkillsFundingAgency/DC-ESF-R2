@@ -1,4 +1,5 @@
 ﻿using ESFA.DC.ESF.R2.Service.Config;
+using ESFA.DC.FileService.Config;
 using ESFA.DC.ILR.DataService.Models;
 using ESFA.DC.ServiceFabric.Helpers.Interfaces;
 
@@ -18,10 +19,9 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
                 //case "TopicAndTaskSection":
                 //    return (T)GetTopicsAndTasks();
                 case "AzureStorageSection":
-                    return (T)(object)new AzureStorageOptions
+                    return (T)(object)new AzureStorageFileServiceConfiguration
                     {
-                        AzureBlobConnectionString = "AzureBlobConnectionString",
-                        AzureBlobContainerName = "AzureBlobContainerName"
+                        ConnectionString = "AzureBlobConnectionString"
                     };
                 case "ServiceBusSettings":
                     return (T)(object)new ServiceBusOptions

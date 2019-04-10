@@ -23,10 +23,12 @@ namespace ESFA.DC.ESF.R2.Stateless
                 IConfigurationHelper configHelper = new ConfigurationHelper();
 
                 // Licence Aspose.Cells
-                SoftwareLicenceSection softwareLicenceSection = configHelper.GetSectionValues<SoftwareLicenceSection>(nameof(SoftwareLicenceSection));
+                SoftwareLicenceSection softwareLicenceSection =
+                    configHelper.GetSectionValues<SoftwareLicenceSection>(nameof(SoftwareLicenceSection));
                 if (!string.IsNullOrEmpty(softwareLicenceSection.AsposeLicence))
                 {
-                    using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(softwareLicenceSection.AsposeLicence.Replace("&lt;", "<").Replace("&gt;", ">"))))
+                    using (MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(softwareLicenceSection
+                        .AsposeLicence.Replace("&lt;", "<").Replace("&gt;", ">"))))
                     {
                         new Aspose.Cells.License().SetLicense(ms);
                     }

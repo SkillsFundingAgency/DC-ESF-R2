@@ -1,10 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Platforms>AnyCPU</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <OutputPath>bin\Release\</OutputPath>
     <CodeAnalysisRuleSet>ESFA.DC.ESF.R2.Service.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
@@ -14,6 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="CsvHelper" Version="12.1.2" />
+    <PackageReference Include="ESFA.DC.FileService.Interface" Version="0.1.15-beta0001" />
     <PackageReference Include="ESFA.DC.IO.Interfaces" Version="0.1.15-beta0001" />
     <PackageReference Include="ESFA.DC.JobContext.Interface" Version="0.2.6-beta0001" />
     <PackageReference Include="ESFA.DC.JobContextManager" Version="0.2.6-beta0001" />

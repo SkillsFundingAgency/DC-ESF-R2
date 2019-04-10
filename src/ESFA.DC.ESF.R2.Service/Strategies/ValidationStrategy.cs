@@ -23,6 +23,7 @@ namespace ESFA.DC.ESF.R2.Service.Strategies
         }
 
         public Task Execute(
+            JobContextModel jobContextModel,
             SourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             CancellationToken cancellationToken)
