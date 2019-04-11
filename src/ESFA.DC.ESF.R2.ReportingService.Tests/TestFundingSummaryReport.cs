@@ -96,10 +96,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
 
             storage.Verify(s =>
                 s.OpenWriteStreamAsync($"{filename}.xlsx", It.IsAny<string>(), It.IsAny<CancellationToken>()));
-
-#if DEBUG
-            File.WriteAllBytes($"{filename}.xlsx", xlsx);
-#endif
         }
 
         private IEnumerable<ILRFileDetails> GetTestFileDetail()

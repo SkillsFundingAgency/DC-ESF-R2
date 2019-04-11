@@ -94,6 +94,10 @@
       <Project>{3eb1948d-7f0f-446f-a8b3-c3ab19531fe6}</Project>
       <Name>ESFA.DC.ESF.R2.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.Models\ESFA.DC.ESF.R2.Models.csproj">
+      <Project>{d442aa8d-e165-4af4-b8b8-9c25bce17258}</Project>
+      <Name>ESFA.DC.ESF.R2.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.ReportingService\ESFA.DC.ESF.R2.ReportingService.csproj">
       <Project>{de38a36b-c220-4227-b10c-35e24c44edce}</Project>
       <Name>ESFA.DC.ESF.R2.ReportingService</Name>
