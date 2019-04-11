@@ -27,7 +27,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
         {
             var previousFiles = _esfRepository.AllPreviousFilesForValidation(sourceFileModel.UKPRN, sourceFileModel.ConRefNumber, CancellationToken.None).Result;
 
-            return previousFiles.All(f => f.FilePreparationDate <= sourceFileModel.PreparationDate);
+            return previousFiles?.All(f => f.FilePreparationDate <= sourceFileModel.PreparationDate) ?? true;
         }
     }
 }

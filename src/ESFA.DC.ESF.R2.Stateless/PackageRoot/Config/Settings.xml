@@ -14,8 +14,7 @@
     <Parameter Name="LoggerConnectionstring" Value="" />
   </Section>
   <Section Name="AzureStorageSection">
-    <Parameter Name="AzureBlobConnectionString" Value="" />
-    <Parameter Name="AzureBlobContainerName" Value="" />
+    <Parameter Name="ConnectionString" Value="" />
   </Section>
   <Section Name="SoftwareLicenceSection">
     <Parameter Name="AsposeLicence" Value="[AsposeLicence]" />

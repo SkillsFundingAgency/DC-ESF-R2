@@ -13,6 +13,8 @@ namespace ESFA.DC.ESF.R2.Stateless.Mappers
             return new JobContextModel
             {
                 JobId = message.JobId,
+                UkPrn = Convert.ToInt32(message.KeyValuePairs[JobContextMessageKey.UkPrn]),
+                BlobContainerName = message.KeyValuePairs[JobContextMessageKey.Container].ToString(),
                 SubmissionDateTimeUtc = message.SubmissionDateTimeUtc,
                 FileName = message.KeyValuePairs[JobContextMessageKey.Filename].ToString(),
                 CurrentPeriod = Convert.ToInt32(message.KeyValuePairs[JobContextMessageKey.ReturnPeriod]),
