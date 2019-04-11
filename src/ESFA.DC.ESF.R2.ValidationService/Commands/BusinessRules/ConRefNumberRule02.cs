@@ -1,9 +1,10 @@
-﻿using ESFA.DC.ESF.R2.Models;
+﻿using ESFA.DC.ESF.R2.Interfaces.Validation;
+using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class ConRefNumberRule02
+    public class ConRefNumberRule02 : IBusinessRuleValidator
     {
         public string ErrorMessage => "The ConRefNumber is not a valid ConRefNumber for ESF Round 2.";
 
