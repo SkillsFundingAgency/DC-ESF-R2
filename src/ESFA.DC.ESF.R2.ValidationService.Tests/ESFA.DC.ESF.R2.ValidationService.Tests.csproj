@@ -216,6 +216,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BusinessRuleTests\CalendarRuleTests.cs" />
+    <Compile Include="BusinessRuleTests\ConRefNumberRuleTests.cs" />
     <Compile Include="BusinessRuleTests\CostTypeRuleTests.cs" />
     <Compile Include="BusinessRuleTests\DeliverableCodeTests.cs" />
     <Compile Include="BusinessRuleTests\LearnAimRefTests.cs" />
