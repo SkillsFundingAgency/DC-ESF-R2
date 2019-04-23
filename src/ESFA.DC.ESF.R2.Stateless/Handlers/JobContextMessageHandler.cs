@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-//using ESFA.DC.ESF.R2.Interfaces.Controllers;
+using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Stateless.Mappers;
 using ESFA.DC.JobContextManager.Interface;
 using ESFA.DC.JobContextManager.Model;
@@ -13,13 +13,13 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
     {
         private readonly ILogger _logger;
 
-        //private readonly IServiceController _controller;
+        private readonly IServiceController _controller;
 
         public JobContextMessageHandler(
-            //IServiceController controller,
+            IServiceController controller,
             ILogger logger)
         {
-            //_controller = controller;
+            _controller = controller;
             _logger = logger;
         }
 
@@ -27,16 +27,16 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
         {
             _logger.LogInfo("ESF callback invoked");
 
-            //var jobContextModel = JobContextMapper.MapJobContextToModel(jobContextMessage);
-            //if (!jobContextModel.Tasks.Any())
-            //{
-            //    _logger.LogInfo("ESF. No tasks to run.");
-            //    return true;
-            //}
+            var jobContextModel = JobContextMapper.MapJobContextToModel(jobContextMessage);
+            if (!jobContextModel.Tasks.Any())
+            {
+                _logger.LogInfo("ESF. No tasks to run.");
+                return true;
+            }
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            //await _controller.RunTasks(jobContextModel, cancellationToken);
+            await _controller.RunTasks(jobContextModel, cancellationToken);
 
             return true;
         }

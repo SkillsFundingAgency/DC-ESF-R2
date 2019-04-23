@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace ESFA.DC.ESF.R2.Utils
 {
@@ -87,8 +88,9 @@ namespace ESFA.DC.ESF.R2.Utils
         public static string[] SplitFileName(string fileName)
         {
             const int lengthOfDateTimePart = 15;
+            const int ukPrnLength = 8;
 
-            fileName = fileName.Replace(".csv", string.Empty);
+            fileName = Regex.Replace(fileName, @"\.csv", string.Empty, RegexOptions.IgnoreCase);
 
             if (fileName.Contains("/"))
             {
@@ -97,7 +99,7 @@ namespace ESFA.DC.ESF.R2.Utils
 
             var parts = new string[5];
             parts[0] = fileName.Substring(0, fileName.IndexOf('-'));
-            parts[1] = fileName.Substring(parts[0].Length + 1, fileName.IndexOf('-', parts[0].Length));
+            parts[1] = fileName.Substring(parts[0].Length + 1, ukPrnLength);
 
             var startOfConRefNumIndex = parts[0].Length + parts[1].Length + 2;
             var lengthOfConRefNum = (fileName.Length - lengthOfDateTimePart - 1) - startOfConRefNumIndex;

@@ -46,8 +46,7 @@
             <Parameter Name="LoggerConnectionstring" Value="[LoggerConnectionstring]" />
           </Section>
           <Section Name="AzureStorageSection">
-            <Parameter Name="AzureBlobConnectionString" Value="[AzureBlobConnectionString]" />
-            <Parameter Name="AzureBlobContainerName" Value="[AzureBlobContainerName]" />
+            <Parameter Name="ConnectionString" Value="[AzureBlobConnectionString]" />
           </Section>
           <Section Name="SoftwareLicenceSection">
             <Parameter Name="AsposeLicence" Value="[AsposeLicence]" />
@@ -83,6 +82,7 @@
     <Service Name="ESFA.DC.ESF.R2.Stateless" ServicePackageActivationMode="ExclusiveProcess">
       <StatelessService ServiceTypeName="ESFA.DC.ESF.R2.StatelessType" InstanceCount="[ESFA.DC.ESF.R2.Stateless_InstanceCount]">
         <SingletonPartition />
+        <PlacementConstraints>[ProcessingServicePlacementConstraints]</PlacementConstraints>
       </StatelessService>
     </Service>
   </DefaultServices>
