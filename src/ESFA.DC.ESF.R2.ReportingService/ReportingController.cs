@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,22 +37,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
             SourceFileModel sourceFile,
             CancellationToken cancellationToken)
         {
-            cancellationToken.ThrowIfCancellationRequested();
-
-            using (var stream = await
-                _persistenceService.OpenWriteStreamAsync(
-                    $"{jobContextModel.UkPrn}/{jobContextModel.JobId}/Reports.zip",
-                    jobContextModel.BlobContainerName,
-                    cancellationToken))
-            {
-                using (var archive = new ZipArchive(stream, ZipArchiveMode.Create, true))
-                {
-                    foreach (var validationReport in _validationReports)
-                    {
-                        await validationReport.GenerateReport(jobContextModel, sourceFile, wrapper, archive, cancellationToken);
-                    }
-                }
-            }
+            await ProduceReports(jobContextModel, wrapper, sourceFile, cancellationToken, false);
         }
 
         public async Task ProduceReports(
@@ -60,29 +46,61 @@ namespace ESFA.DC.ESF.R2.ReportingService
             SourceFileModel sourceFile,
             CancellationToken cancellationToken)
         {
+            await ProduceReports(jobContextModel, wrapper, sourceFile, cancellationToken, true);
+        }
+
+        private async Task ProduceReports(
+            JobContextModel jobContextModel,
+            SupplementaryDataWrapper wrapper,
+            SourceFileModel sourceFile,
+            CancellationToken cancellationToken,
+            bool passedFileValidation)
+        {
             _logger.LogInfo("ESF Reporting service called");
 
-            using (var stream = await
-                _persistenceService.OpenWriteStreamAsync(
-                    $"{jobContextModel.UkPrn}/{jobContextModel.JobId}/Reports.zip",
-                    jobContextModel.BlobContainerName,
-                    cancellationToken))
+            var fileName = $"{jobContextModel.UkPrn}/{jobContextModel.JobId}/Reports.zip";
+            using (Stream memoryStream = new MemoryStream())
             {
-                using (var archive = new ZipArchive(stream, ZipArchiveMode.Create, true))
+                using (var readStream = await
+                    _persistenceService.OpenReadStreamAsync(
+                        fileName,
+                        jobContextModel.BlobContainerName,
+                        cancellationToken))
+                {
+                    await readStream.CopyToAsync(memoryStream);
+                }
+
+                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Update, true))
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    foreach (var validationReport in _validationReports)
+                    if (!string.IsNullOrWhiteSpace(sourceFile?.FileName))
                     {
-                        await validationReport.GenerateReport(jobContextModel, sourceFile, wrapper, archive, cancellationToken);
+                        foreach (var validationReport in _validationReports)
+                        {
+                            await validationReport.GenerateReport(jobContextModel, sourceFile, wrapper, archive, cancellationToken);
+                        }
                     }
 
-                    foreach (var report in _esfReports)
+                    if (passedFileValidation)
                     {
-                        await report.GenerateReport(jobContextModel, sourceFile, archive, cancellationToken);
+                        foreach (var report in _esfReports)
+                        {
+                            await report.GenerateReport(jobContextModel, sourceFile, archive, cancellationToken);
+                        }
                     }
 
                     cancellationToken.ThrowIfCancellationRequested();
+                }
+
+                using (var writeStream = await _persistenceService.OpenWriteStreamAsync(
+                    fileName,
+                    jobContextModel.BlobContainerName,
+                    cancellationToken))
+                {
+                    memoryStream.Position = 0;
+
+                    await memoryStream.CopyToAsync(writeStream);
                 }
             }
         }
