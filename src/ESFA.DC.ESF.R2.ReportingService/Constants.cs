@@ -2,6 +2,8 @@
 {
     public class Constants
     {
+        public const string LearningDeliveryFamTypeRES = "RES";
+
         // public const string FundingSummaryReportNumberFormat = "#,##0.00;(#,##0.00)";
         public const string FundingSummaryReportFont = "Arial";
 
