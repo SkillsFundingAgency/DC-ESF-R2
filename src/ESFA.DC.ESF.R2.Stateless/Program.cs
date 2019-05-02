@@ -60,6 +60,8 @@ namespace ESFA.DC.ESF.R2.Stateless
 
                 builder.RegisterServiceFabricSupport();
 
+                throw new Exception("testing");
+
                 // Register the stateless service.
                 builder.RegisterStatelessService<Stateless>("ESFA.DC.ESF.R2.StatelessType");
 
