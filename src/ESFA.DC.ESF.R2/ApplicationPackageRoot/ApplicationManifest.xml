@@ -9,7 +9,6 @@
     <Parameter Name="TopicName" DefaultValue="" />
     <Parameter Name="SubscriptionName" DefaultValue="" />
     <Parameter Name="AzureBlobConnectionString" DefaultValue="" />
-    <Parameter Name="AzureBlobContainerName" DefaultValue="" />
     <Parameter Name="AsposeLicence" DefaultValue="" />
     <Parameter Name="JobStatusQueueName" DefaultValue="" />
     <Parameter Name="AuditQueueName" DefaultValue="" />
