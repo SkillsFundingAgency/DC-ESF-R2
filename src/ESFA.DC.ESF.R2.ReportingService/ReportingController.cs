@@ -61,13 +61,16 @@ namespace ESFA.DC.ESF.R2.ReportingService
             var fileName = $"{jobContextModel.UkPrn}/{jobContextModel.JobId}/Reports.zip";
             using (Stream memoryStream = new MemoryStream())
             {
-                using (var readStream = await
-                    _persistenceService.OpenReadStreamAsync(
-                        fileName,
-                        jobContextModel.BlobContainerName,
-                        cancellationToken))
+                if (await _persistenceService.ExistsAsync(fileName, jobContextModel.BlobContainerName, cancellationToken))
                 {
-                    await readStream.CopyToAsync(memoryStream);
+                    using (var readStream = await
+                        _persistenceService.OpenReadStreamAsync(
+                            fileName,
+                            jobContextModel.BlobContainerName,
+                            cancellationToken))
+                    {
+                        await readStream.CopyToAsync(memoryStream);
+                    }
                 }
 
                 using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Update, true))
