@@ -9,7 +9,6 @@
     <Parameter Name="TopicName" DefaultValue="" />
     <Parameter Name="SubscriptionName" DefaultValue="" />
     <Parameter Name="AzureBlobConnectionString" DefaultValue="" />
-    <Parameter Name="AzureBlobContainerName" DefaultValue="" />
     <Parameter Name="AsposeLicence" DefaultValue="" />
     <Parameter Name="JobStatusQueueName" DefaultValue="" />
     <Parameter Name="AuditQueueName" DefaultValue="" />
@@ -82,7 +81,7 @@
     <Service Name="ESFA.DC.ESF.R2.Stateless" ServicePackageActivationMode="ExclusiveProcess">
       <StatelessService ServiceTypeName="ESFA.DC.ESF.R2.StatelessType" InstanceCount="[ESFA.DC.ESF.R2.Stateless_InstanceCount]">
         <SingletonPartition />
-        <PlacementConstraints>[ProcessingServicePlacementConstraints]</PlacementConstraints>
+        <!--<PlacementConstraints>[ProcessingServicePlacementConstraints]</PlacementConstraints>-->
       </StatelessService>
     </Service>
   </DefaultServices>
