@@ -49,6 +49,7 @@
     <ErrorReport>prompt</ErrorReport>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisRuleSet>ESFA.DC.ESF.R2.Stateless.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <AdditionalFileItemNames>$(AdditionalFileItemNames);None</AdditionalFileItemNames>
@@ -72,7 +73,9 @@
     <None Include="PackageRoot\Config\Settings.xml" />
     <None Include="PackageRoot\ServiceManifest.xml" />
     <None Include="App.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Modules\" />
