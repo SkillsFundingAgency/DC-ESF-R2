@@ -37,6 +37,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
         public async Task GenerateReport(
             JobContextModel jobContextModel,
             SourceFileModel sourceFile,
+            SupplementaryDataWrapper wrapper,
             ZipArchive archive,
             CancellationToken cancellationToken)
         {

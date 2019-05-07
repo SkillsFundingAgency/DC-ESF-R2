@@ -89,7 +89,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
                     {
                         foreach (var report in _esfReports)
                         {
-                            await report.GenerateReport(jobContextModel, sourceFile, archive, cancellationToken);
+                            await report.GenerateReport(jobContextModel, sourceFile, wrapper, archive, cancellationToken);
                         }
                     }
 

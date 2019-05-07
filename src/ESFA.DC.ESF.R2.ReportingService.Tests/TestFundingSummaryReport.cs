@@ -92,7 +92,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
                 BlobContainerName = string.Empty
             };
 
-            await fundingSummaryReport.GenerateReport(wrapper, sourceFile, null, CancellationToken.None);
+            await fundingSummaryReport.GenerateReport(wrapper, sourceFile, null, null, CancellationToken.None);
 
             storage.Verify(s =>
                 s.OpenWriteStreamAsync($"{filename}.xlsx", It.IsAny<string>(), It.IsAny<CancellationToken>()));

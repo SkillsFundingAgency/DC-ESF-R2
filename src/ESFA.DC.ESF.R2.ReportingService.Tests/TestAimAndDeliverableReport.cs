@@ -56,7 +56,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             };
             SourceFileModel sourceFile = GetEsfSourceFileModel();
 
-            await aimAndDeliverableReport.GenerateReport(wrapper, sourceFile, null, CancellationToken.None);
+            await aimAndDeliverableReport.GenerateReport(wrapper, sourceFile, null, null, CancellationToken.None);
 
             storage.Verify(s => s.OpenWriteStreamAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
         }

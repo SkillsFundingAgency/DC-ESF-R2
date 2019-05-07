@@ -152,12 +152,12 @@ namespace ESFA.DC.ESF.R2.Database.EF
 
             modelBuilder.Entity<ValidationError>(entity =>
             {
-                entity.HasKey(e => new { e.SourceFileId, e.ValidationErrorId })
+                entity.HasKey(e => new { e.SourceFileId, e.ValidationError_Id })
                     .HasName("PK__Validati__97356EBC17BFEB82");
 
                 entity.ToTable("ValidationError");
 
-                entity.Property(e => e.ValidationErrorId)
+                entity.Property(e => e.ValidationError_Id)
                     .HasColumnName("ValidationError_Id")
                     .ValueGeneratedOnAdd();
 
@@ -195,7 +195,7 @@ namespace ESFA.DC.ESF.R2.Database.EF
 
                 entity.Property(e => e.SupplementaryDataPanelDate).IsUnicode(false);
 
-                entity.Property(e => e.Uln)
+                entity.Property(e => e.ULN)
                     .HasColumnName("ULN")
                     .IsUnicode(false);
 

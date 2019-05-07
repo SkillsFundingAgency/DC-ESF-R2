@@ -154,7 +154,7 @@ namespace ESFA.DC.ESF.R2.Stateless
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
                     .Options;
                 return new ESFR2Context(options);
-            }).As<IESFR2Context>().InstancePerDependency();
+            }).As<IESFR2Context>();
             containerBuilder.RegisterInstance(esfConfig).As<ESFConfiguration>().SingleInstance();
 
             var fcsConfig = configHelper.GetSectionValues<FCSConfiguration>("FCSSection");
@@ -167,8 +167,7 @@ namespace ESFA.DC.ESF.R2.Stateless
                         providerOptions => providerOptions.CommandTimeout(60));
                     return new FcsContext(optionsBuilder.Options);
                 })
-                .As<IFcsContext>()
-                .InstancePerLifetimeScope();
+                .As<IFcsContext>();
 
             var referenceData = configHelper.GetSectionValues<ReferenceDataConfig>("ReferenceDataSection");
             containerBuilder.RegisterInstance(referenceData).As<IReferenceDataConfig>().SingleInstance();
@@ -181,13 +180,13 @@ namespace ESFA.DC.ESF.R2.Stateless
                     referenceDataConfig.LARSConnectionString,
                     providerOptions => providerOptions.CommandTimeout(60));
                 return new LarsContext(optionsBuilder.Options);
-            }).As<ILARSContext>().InstancePerLifetimeScope();
+            }).As<ILARSContext>();
 
             containerBuilder.Register(c =>
             {
                 var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
                 return new Postcodes(referenceDataConfig.PostcodesConnectionString);
-            }).As<IPostcodes>().InstancePerLifetimeScope();
+            }).As<IPostcodes>();
 
             containerBuilder.Register(c =>
             {
@@ -197,7 +196,7 @@ namespace ESFA.DC.ESF.R2.Stateless
                     referenceDataConfig.OrganisationConnectionString,
                     providerOptions => providerOptions.CommandTimeout(60));
                 return new OrganisationsContext(orgOptionsBuilder.Options);
-            }).As<IOrganisationsContext>().InstancePerLifetimeScope();
+            }).As<IOrganisationsContext>();
 
             containerBuilder.Register(c =>
             {
@@ -207,7 +206,7 @@ namespace ESFA.DC.ESF.R2.Stateless
                     referenceDataConfig.ULNConnectionString,
                     providerOptions => providerOptions.CommandTimeout(60));
                 return new UlnContext(optionsBuilder.Options);
-            }).As<IUlnContext>().InstancePerLifetimeScope();
+            }).As<IUlnContext>();
         }
 
         private static void RegisterServiceBusConfig(
@@ -511,6 +510,8 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.Register(c => new List<IValidationReport>(c.Resolve<IEnumerable<IValidationReport>>()))
                 .As<IList<IValidationReport>>();
 
+            containerBuilder.RegisterType<FundingReport>().As<IModelReport>()
+                .InstancePerLifetimeScope();
             containerBuilder.RegisterType<FundingSummaryReport>().As<IModelReport>()
                 .InstancePerLifetimeScope();
             containerBuilder.RegisterType<AimAndDeliverableReport>().As<IModelReport>()
