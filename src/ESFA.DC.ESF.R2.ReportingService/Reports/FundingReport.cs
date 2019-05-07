@@ -44,7 +44,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             ZipArchive archive,
             CancellationToken cancellationToken)
         {
-            string csv = await GetCsv(wrapper, cancellationToken);
+            string csv = GetCsv(wrapper);
 
             ReportFileName = $"{sourceFile.ConRefNumber} " + ReportFileName;
             string externalFileName = GetExternalFilename(jobContextModel.UkPrn.ToString(), jobContextModel.JobId, sourceFile.SuppliedDate ?? DateTime.MinValue);
@@ -64,7 +64,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             await WriteZipEntry(archive, $"{fileName}.csv", csv);
         }
 
-        private async Task<string> GetCsv(SupplementaryDataWrapper wrapper, CancellationToken cancellationToken)
+        private string GetCsv(SupplementaryDataWrapper wrapper)
         {
             var fundingModels = new List<FundingReportModel>();
 
@@ -101,7 +101,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
                 if (ESFConstants.UnitCostDeliverableCodes.Contains(model.DeliverableCode))
                 {
                     var unitCost = _referenceDataService.GetDeliverableUnitCosts(model.ConRefNumber, new List<string> { model.DeliverableCode })
-                                        .FirstOrDefault(uc => uc.DeliverableCode == model.DeliverableCode && uc.ConRefNum == model.ConRefNumber)
+                                        .FirstOrDefault(uc => uc.DeliverableCode.CaseInsensitiveEquals(model.DeliverableCode)
+                                                              && uc.ConRefNum.CaseInsensitiveEquals(model.ConRefNumber))
                                         ?.UnitCost ?? 0M;
                     unitCost = model.CostType?.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType)
                                ?? false ? unitCost * -1 : unitCost;
