@@ -6,7 +6,7 @@ namespace ESFA.DC.ESF.R2.Database.EF
     public partial class ValidationError
     {
         public int SourceFileId { get; set; }
-        public int ValidationErrorId { get; set; }
+        public int ValidationError_Id { get; set; }
         public Guid? RowId { get; set; }
         public string RuleId { get; set; }
         public string ConRefNumber { get; set; }
@@ -17,7 +17,7 @@ namespace ESFA.DC.ESF.R2.Database.EF
         public string ReferenceType { get; set; }
         public string Reference { get; set; }
         public string StaffName { get; set; }
-        public string Uln { get; set; }
+        public string ULN { get; set; }
         public string Severity { get; set; }
         public string ErrorMessage { get; set; }
         public string ProviderSpecifiedReference { get; set; }

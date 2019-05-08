@@ -80,6 +80,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         public async Task GenerateReport(
             JobContextModel jobContextModel,
             SourceFileModel sourceFile,
+            SupplementaryDataWrapper wrapper,
             ZipArchive archive,
             CancellationToken cancellationToken)
         {
