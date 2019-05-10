@@ -183,7 +183,7 @@ steps:
   displayName: 'VsTest - testAssemblies'
   inputs:
     testAssemblyVer2: |
-     **\ESFA.DC.ESF.R2.*tests.dll
+     **\ESFA.*tests.dll
      !**\*Database.Tests*\**
      !**\packages\**
      !**\obj\**
@@ -199,19 +199,21 @@ steps:
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: ServiceFabric'
+  enabled: true
   inputs:
     ArtifactName: ServiceFabric
     PathtoPublish: '$(build.artifactstagingdirectory)\ServiceFabric'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: NugetPackages'
+  enabled: true
   inputs:
     ArtifactName: NugetPackages
     PathtoPublish: '$(build.artifactstagingdirectory)\Nuget'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish Artifact: Databases'
-  enabled: false
+  enabled: true
   inputs:
     ArtifactName: Databases
     PathtoPublish: '$(build.artifactstagingdirectory)\Databases'
