@@ -8,6 +8,7 @@ using Xunit.Abstractions;
 
 namespace ESFA.DC.ESF.R2.DataStore.Tests
 {
+    [Trait("Category", "SupplementaryDataTests")]
     public class SupplementaryDataTests
     {
         private readonly ITestOutputHelper _output;

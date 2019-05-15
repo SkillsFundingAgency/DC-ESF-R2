@@ -4,6 +4,8 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.Database.Tests
 {
+    [Trait("Category", "SchemaDboTests")]
+
     public sealed class SchemaDboTests : IClassFixture<DatabaseConnectionFixture>
     {
         private readonly DatabaseConnectionFixture _fixture;
