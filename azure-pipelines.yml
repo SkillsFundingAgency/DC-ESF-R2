@@ -175,7 +175,7 @@ steps:
   displayName: 'Run xUnit Test - Core Framework'
   inputs:
     command: test
-    projects: 'src/*Tests/*.csproj'
+    projects: 'src/*Tests/*.csproj;!**\*Database.Tests*\**;'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
     
 - task: VSTest@2
