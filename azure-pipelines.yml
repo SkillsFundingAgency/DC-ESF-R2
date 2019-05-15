@@ -176,7 +176,7 @@ steps:
   inputs:
     command: test
     projects: 'src/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --filter "Category!=DbSchemaTest&Category!=SupplementaryDataTests"'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --filter "TestCategory!=DbSchemaTest&TestCategory!=SupplementaryDataTests"'
     
 - task: VSTest@2
   enabled: true
