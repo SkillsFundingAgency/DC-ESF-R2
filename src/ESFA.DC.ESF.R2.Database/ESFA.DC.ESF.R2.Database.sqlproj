@@ -61,6 +61,7 @@
     <Folder Include="dbo\Stored Procedures" />
     <Folder Include="dbo\Tables" />
     <Folder Include="Security" />
+    <Folder Include="dbo\SeedData" />
   </ItemGroup>
   <ItemGroup>
     <SqlCmdVariable Include="BUILD_BRANCHNAME">
@@ -103,8 +104,12 @@
     <Build Include="Security\User_DsciUser.sql" />
     <Build Include="Security\User_RO.sql" />
     <Build Include="Security\User_RW.sql" />
+    <Build Include="dbo\Tables\ValidationErrorMessage.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="zzz.Script.PostDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbo\SeedData\ValidationErrorMessageData.sql" />
   </ItemGroup>
 </Project>
