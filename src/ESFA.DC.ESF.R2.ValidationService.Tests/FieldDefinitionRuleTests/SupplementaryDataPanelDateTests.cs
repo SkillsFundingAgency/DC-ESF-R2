@@ -6,6 +6,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
 {
     public class SupplementaryDataPanelDateTests
     {
+        [Trait("Category", "ValidationService")]
         [Theory]
         [InlineData("123456789")]
         [InlineData(null)]
@@ -20,6 +21,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             Assert.False(rule.IsValid(model));
         }
 
+        [Trait("Category", "ValidationService")]
         [Fact]
         public void FDSupplementaryDataPanelDateDTPassesValidDate()
         {

@@ -7,6 +7,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
     public class ValueRuleTests
     {
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ValueRule01CatchesEmptyValueForCostTypeRequiringOne()
         {
             var model = new SupplementaryDataModel
@@ -21,6 +22,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ValueRule01PassesNonEmptyValueForCostTypeRequiringOne()
         {
             var model = new SupplementaryDataModel
@@ -35,6 +37,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ValueRule02CatchesValueForCostTypeNotRequiringOne()
         {
             var model = new SupplementaryDataModel
@@ -49,6 +52,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ValueRule02PassesEmptyValueForCostTypeNotRequiringOne()
         {
             var model = new SupplementaryDataModel

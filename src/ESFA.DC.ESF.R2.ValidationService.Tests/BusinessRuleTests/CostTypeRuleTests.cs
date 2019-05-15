@@ -7,6 +7,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
     public class CostTypeRuleTests
     {
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void CostTypeRule01CatchesCostTypesNotInValidList()
         {
             var model = new SupplementaryDataModel
@@ -19,6 +20,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void CostTypeRule01PassesValidCostTypes()
         {
             var model = new SupplementaryDataModel
@@ -31,6 +33,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void CostTypeRule02CatchesInvalidCostTypeDeliverableCodeCombinations()
         {
             var model = new SupplementaryDataModel
@@ -44,6 +47,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void CostTypeRule02PassesValidCostTypeDeliverableCodeCombinations()
         {
             var model = new SupplementaryDataModel

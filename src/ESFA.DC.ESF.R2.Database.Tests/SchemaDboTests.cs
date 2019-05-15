@@ -16,6 +16,7 @@ namespace ESFA.DC.ESF.R2.Database.Tests
         }
 
         [Fact]
+        [Trait("Category", "SchemaDboTests")]
         public void CheckColumnSourceFile()
         {
             var expectedColumns = new List<ExpectedColumn>
@@ -31,6 +32,7 @@ namespace ESFA.DC.ESF.R2.Database.Tests
         }
 
         [Fact]
+        [Trait("Category", "SchemaDboTests")]
         public void CheckColumnSupplementaryDataModel()
         {
             var expectedColumns = new List<ExpectedColumn>
@@ -55,6 +57,7 @@ namespace ESFA.DC.ESF.R2.Database.Tests
         }
 
         [Fact]
+        [Trait("Category", "SchemaDboTests")]
         public void CheckColumnSupplementaryDataModelUnitCost()
         {
             var expectedColumns = new List<ExpectedColumn>
@@ -73,6 +76,7 @@ namespace ESFA.DC.ESF.R2.Database.Tests
         }
 
         [Fact]
+        [Trait("Category", "SchemaDboTests")]
         public void CheckColumnValidationError()
         {
             var expectedColumns = new List<ExpectedColumn>
@@ -102,6 +106,7 @@ namespace ESFA.DC.ESF.R2.Database.Tests
         }
 
         [Fact]
+        [Trait("Category", "SchemaDboTests")]
         public void CheckValidationErrorMessage()
         {
             var expectedColumns = new List<ExpectedColumn>
@@ -114,6 +119,7 @@ namespace ESFA.DC.ESF.R2.Database.Tests
         }
 
         [Fact]
+        [Trait("Category", "SchemaDboTests")]
         public void CheckColumnVersionInfo()
         {
             var expectedColumns = new List<ExpectedColumn>

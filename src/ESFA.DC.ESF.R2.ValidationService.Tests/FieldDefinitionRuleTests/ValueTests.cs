@@ -6,6 +6,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
 {
     public class ValueTests
     {
+        [Trait("Category", "ValidationService")]
         [Fact]
         public void FDValueALCatchesTooLongValues()
         {
@@ -18,6 +19,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             Assert.False(rule.IsValid(model));
         }
 
+        [Trait("Category", "ValidationService")]
         [Fact]
         public void FDValueALPassesValidValues()
         {

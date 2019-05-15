@@ -19,6 +19,7 @@ namespace ESFA.DC.ESF.R2.DataStore.Tests
         }
 
         [Fact]
+        [Trait("Category", "SupplementaryDataTests")]
         public async Task TestSupplementaryDataSave()
         {
             var store = new StoreESF();

@@ -9,6 +9,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
     public class AimAndDeliverableComparerTests
     {
         [Fact]
+        [Trait("Category", "UnitTest")]
         public void CheckComparerCorrectlySortsByLearnerReference()
         {
             var comparer = new AimAndDeliverableComparer();
@@ -48,6 +49,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void CheckComparerCorrectlySortsByContractReference()
         {
             var comparer = new AimAndDeliverableComparer();
@@ -92,6 +94,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void CheckComparerCorrectlySortsByAimSequenceNumber()
         {
             var comparer = new AimAndDeliverableComparer();

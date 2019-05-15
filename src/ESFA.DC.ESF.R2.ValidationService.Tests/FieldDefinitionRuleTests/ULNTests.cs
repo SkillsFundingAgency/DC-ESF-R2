@@ -7,6 +7,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
     public class ULNTests
     {
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDULNALCatchesTooLongULNs()
         {
             var model = new SupplementaryDataLooseModel
@@ -18,6 +19,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             Assert.False(rule.IsValid(model));
         }
 
+        [Trait("Category", "ValidationService")]
         [Fact]
         public void FDULNALPassesValidULNs()
         {
@@ -30,6 +32,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             Assert.True(rule.IsValid(model));
         }
 
+        [Trait("Category", "ValidationService")]
         [Fact]
         public void FDULNDTCatchesInvalidULNs()
         {
@@ -42,6 +45,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             Assert.False(rule.IsValid(model));
         }
 
+        [Trait("Category", "ValidationService")]
         [Fact]
         public void FDULNDTPassesValidULNs()
         {

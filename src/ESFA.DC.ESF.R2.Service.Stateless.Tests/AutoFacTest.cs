@@ -15,6 +15,7 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
     public sealed class AutoFacTest
     {
         [Fact]
+        [Trait("Category", "Stateless")]
         public async Task TestRegistrations()
         {
             JobContextMessage jobContextMessage =

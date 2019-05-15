@@ -7,6 +7,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
     public class CalendarRuleTests
     {
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDCalendarMonthALCatchesInvalidMonths()
         {
             var model = new SupplementaryDataLooseModel
@@ -19,6 +20,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDCalendarMonthALPassesValidMonths()
         {
             var model = new SupplementaryDataLooseModel
@@ -31,6 +33,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDCalendarMonthDTCatchesInvalidMonths()
         {
             var model = new SupplementaryDataLooseModel
@@ -43,6 +46,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDCalendarMonthDTPassesValidMonths()
         {
             var model = new SupplementaryDataLooseModel
@@ -55,6 +59,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDCalendarMonthMACatchesNullMonths()
         {
             var model = new SupplementaryDataLooseModel
@@ -67,6 +72,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDCalendarMonthMAPassesValidMonths()
         {
             var model = new SupplementaryDataLooseModel
@@ -79,6 +85,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDCalendarYearALCatchesInvalidYears()
         {
             var model = new SupplementaryDataLooseModel
@@ -91,6 +98,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDCalendarYearALPassesValidYears()
         {
             var model = new SupplementaryDataLooseModel
@@ -103,6 +111,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDCalendarYearDTCatchesInvalidYears()
         {
             var model = new SupplementaryDataLooseModel
@@ -115,6 +124,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDCalendarYearDTPassesValidYears()
         {
             var model = new SupplementaryDataLooseModel
@@ -127,6 +137,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDCalendarYearMACatchesInvalidYears()
         {
             var model = new SupplementaryDataLooseModel
@@ -139,6 +150,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDCalendarYearMAPassesValidYears()
         {
             var model = new SupplementaryDataLooseModel
