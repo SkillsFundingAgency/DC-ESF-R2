@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 {
-    public class ReferenceRuleTests
+    public class ReferenceRuleTests : BaseTest
     {
         [Fact]
         public void ProviderSpecifiedReferenceRule01CatchesRegexViolations()
@@ -16,7 +16,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 ProviderSpecifiedReference = invalidCharacters
             };
 
-            var rule = new ProviderSpecifiedReferenceRule01();
+            var rule = new ProviderSpecifiedReferenceRule01(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -29,7 +29,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 ProviderSpecifiedReference = @"Aa0 .,;:~!”@#$&’()/+-<=>[]{}^£€"
             };
 
-            var rule = new ProviderSpecifiedReferenceRule01();
+            var rule = new ProviderSpecifiedReferenceRule01(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -44,7 +44,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 Reference = invalidCharacters
             };
 
-            var rule = new ReferenceRule01();
+            var rule = new ReferenceRule01(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -57,7 +57,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 Reference = @"Aa0 .,;:~!”@#$&’()/+-<=>[]{}^£€"
             };
 
-            var rule = new ReferenceRule01();
+            var rule = new ReferenceRule01(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -70,7 +70,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 ReferenceType = "Not A Valid Type"
             };
 
-            var rule = new ReferenceTypeRule01();
+            var rule = new ReferenceTypeRule01(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -83,7 +83,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 ReferenceType = "LearnRefNumber"
             };
 
-            var rule = new ReferenceTypeRule01();
+            var rule = new ReferenceTypeRule01(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -97,7 +97,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 CostType = "Employee ID"
             };
 
-            var rule = new ReferenceTypeRule02();
+            var rule = new ReferenceTypeRule02(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -111,7 +111,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 CostType = "Employee ID"
             };
 
-            var rule = new ReferenceTypeRule02();
+            var rule = new ReferenceTypeRule02(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }

@@ -7,7 +7,7 @@ using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class LearnAimRef05 : IBusinessRuleValidator
+    public class LearnAimRef05 : BaseValidationRule, IBusinessRuleValidator
     {
         private readonly IReferenceDataService _referenceDataService;
 
@@ -19,16 +19,17 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             Constants.LarsLearningDeliveryGenre_IHE
         };
 
-        public LearnAimRef05(IReferenceDataService referenceDataService)
+        public LearnAimRef05(
+            IValidationErrorMessageService errorMessageService,
+            IReferenceDataService referenceDataService)
+            : base(errorMessageService)
         {
             _referenceDataService = referenceDataService;
         }
 
-        public string ErrorName => "LearnAimRef_05";
+        public override string ErrorName => "LearnAimRef_05";
 
         public bool IsWarning => false;
-
-        public string ErrorMessage => "LearnAimRef must be a regulated aim on LARS for the selected DeliverableCode.";
 
         public bool IsValid(SupplementaryDataModel model)
         {

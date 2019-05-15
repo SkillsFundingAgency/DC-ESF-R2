@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class SupplementaryDataPanelDate03 : IBusinessRuleValidator
+    public class SupplementaryDataPanelDate03 : BaseValidationRule, IBusinessRuleValidator
     {
         private readonly List<string> _deliverableCodes = new List<string>
         {
@@ -19,11 +20,14 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             Constants.DeliverableCode_PG05
         };
 
-        public string ErrorName => "SupplementaryDataPanelDate_03";
+        public SupplementaryDataPanelDate03(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
+
+        public override string ErrorName => "SupplementaryDataPanelDate_03";
 
         public bool IsWarning => false;
-
-        public string ErrorMessage => "SupplementaryDataPanelDate must be returned for the selected DeliverableCode.";
 
         public bool IsValid(SupplementaryDataModel model)
         {

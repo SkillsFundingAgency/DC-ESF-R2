@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
 {
-    public class DeliverableCodeTests
+    public class DeliverableCodeTests : BaseTest
     {
         [Fact]
         public void FDDeliverableCodeALCatchesTooLongDeliverableCodes()
@@ -13,7 +13,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 DeliverableCode = "12345678901"
             };
-            var rule = new FDDeliverableCodeAL();
+            var rule = new FDDeliverableCodeAL(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -25,7 +25,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 DeliverableCode = "1234567890"
             };
-            var rule = new FDDeliverableCodeAL();
+            var rule = new FDDeliverableCodeAL(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -37,7 +37,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 DeliverableCode = null
             };
-            var rule = new FDDeliverableCodeMA();
+            var rule = new FDDeliverableCodeMA(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -49,7 +49,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 DeliverableCode = "1234567890"
             };
-            var rule = new FDDeliverableCodeMA();
+            var rule = new FDDeliverableCodeMA(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }

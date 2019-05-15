@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class DeliverableCodeRule01 : IBusinessRuleValidator
+    public class DeliverableCodeRule01 : BaseValidationRule, IBusinessRuleValidator
     {
         private readonly List<string> _validValues = new List<string>
         {
@@ -29,9 +30,12 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             Constants.DeliverableCode_SU24
         };
 
-        public string ErrorMessage => "The DeliverableCode is not valid.";
+        public DeliverableCodeRule01(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
 
-        public string ErrorName => "DeliverableCode_01";
+        public override string ErrorName => "DeliverableCode_01";
 
         public bool IsWarning => false;
 

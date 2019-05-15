@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 {
-    public class ValueRuleTests
+    public class ValueRuleTests : BaseTest
     {
         [Fact]
         public void ValueRule01CatchesEmptyValueForCostTypeRequiringOne()
@@ -15,7 +15,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 Value = null
             };
 
-            var rule = new ValueRule01();
+            var rule = new ValueRule01(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -29,7 +29,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 Value = 19.99M
             };
 
-            var rule = new ValueRule01();
+            var rule = new ValueRule01(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -43,7 +43,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 Value = 19.99M
             };
 
-            var rule = new ValueRule02();
+            var rule = new ValueRule02(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -57,7 +57,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 Value = null
             };
 
-            var rule = new ValueRule02();
+            var rule = new ValueRule02(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }

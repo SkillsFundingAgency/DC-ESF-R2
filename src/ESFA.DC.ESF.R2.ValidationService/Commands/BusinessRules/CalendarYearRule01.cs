@@ -1,13 +1,17 @@
-﻿using ESFA.DC.ESF.R2.Interfaces.Validation;
+﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class CalendarYearRule01 : IBusinessRuleValidator
+    public class CalendarYearRule01 : BaseValidationRule, IBusinessRuleValidator
     {
-        public string ErrorMessage => "The CalendarYear is not valid";
+        public CalendarYearRule01(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
 
-        public string ErrorName => "CalendarYear_01";
+        public override string ErrorName => "CalendarYear_01";
 
         public bool IsWarning => false;
 

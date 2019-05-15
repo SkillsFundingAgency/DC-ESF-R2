@@ -44,6 +44,8 @@
     <Compile Include="ReferenceDataCache.cs" />
     <Compile Include="ReferenceDataRepository.cs" />
     <Compile Include="Services\ReferenceDataService.cs" />
+    <Compile Include="Services\ValidationErrorMessageService.cs" />
+    <Compile Include="ValidationErrorMessageCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Database.EF\ESFA.DC.ESF.R2.Database.EF.csproj">

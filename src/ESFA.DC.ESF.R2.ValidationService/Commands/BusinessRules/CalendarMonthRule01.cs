@@ -1,13 +1,17 @@
-﻿using ESFA.DC.ESF.R2.Interfaces.Validation;
+﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class CalendarMonthRule01 : IBusinessRuleValidator
+    public class CalendarMonthRule01 : BaseValidationRule, IBusinessRuleValidator
     {
-        public string ErrorMessage => "The CalendarMonth is not valid.";
+        public CalendarMonthRule01(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
 
-        public string ErrorName => "CalendarMonth_01";
+        public override string ErrorName => "CalendarMonth_01";
 
         public bool IsWarning => false;
 

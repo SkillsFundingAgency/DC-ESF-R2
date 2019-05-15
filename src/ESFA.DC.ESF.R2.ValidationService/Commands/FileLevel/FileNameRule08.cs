@@ -6,20 +6,21 @@ using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
 {
-    public class FileNameRule08 : IFileLevelValidator
+    public class FileNameRule08 : BaseValidationRule, IFileLevelValidator
     {
         private readonly IEsfRepository _esfRepository;
 
-        public FileNameRule08(IEsfRepository esfRepository)
+        public FileNameRule08(
+            IValidationErrorMessageService errorMessageService,
+            IEsfRepository esfRepository)
+            : base(errorMessageService)
         {
             _esfRepository = esfRepository;
         }
 
-        public string ErrorMessage => "The date/time of the file is not greater than a previous transmission with the same ConRefNumber and UKPRN.";
-
         public bool RejectFile => true;
 
-        public string ErrorName => "Filename_08";
+        public override string ErrorName => "Filename_08";
 
         public bool IsWarning => false;
 

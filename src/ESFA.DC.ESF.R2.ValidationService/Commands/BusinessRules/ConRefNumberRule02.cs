@@ -1,14 +1,18 @@
-﻿using ESFA.DC.ESF.R2.Interfaces.Validation;
+﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class ConRefNumberRule02 : IBusinessRuleValidator
+    public class ConRefNumberRule02 : BaseValidationRule, IBusinessRuleValidator
     {
-        public string ErrorMessage => "The ConRefNumber is not a valid ConRefNumber for ESF Round 2.";
+        public ConRefNumberRule02(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
 
-        public string ErrorName => "ConRefNumber_02";
+        public override string ErrorName => "ConRefNumber_02";
 
         public bool IsWarning => false;
 

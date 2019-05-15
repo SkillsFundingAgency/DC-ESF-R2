@@ -5,22 +5,22 @@ using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class DeliverableCodeRule02 : IBusinessRuleValidator
+    public class DeliverableCodeRule02 : BaseValidationRule, IBusinessRuleValidator
     {
         private readonly IReferenceDataService _referenceDataService;
         private readonly IFcsCodeMappingHelper _mappingHelper;
 
         public DeliverableCodeRule02(
+            IValidationErrorMessageService errorMessageService,
             IReferenceDataService referenceDataService,
             IFcsCodeMappingHelper mappingHelper)
+            : base(errorMessageService)
         {
             _referenceDataService = referenceDataService;
             _mappingHelper = mappingHelper;
         }
 
-        public string ErrorMessage => "The DeliverableCode is not valid for the approved contract allocation.";
-
-        public string ErrorName => "DeliverableCode_02";
+        public override string ErrorName => "DeliverableCode_02";
 
         public bool IsWarning => false;
 

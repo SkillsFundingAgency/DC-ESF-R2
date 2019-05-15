@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
 {
-    public class SupplementaryDataPanelDateTests
+    public class SupplementaryDataPanelDateTests : BaseTest
     {
         [Theory]
         [InlineData("123456789")]
@@ -15,7 +15,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 SupplementaryDataPanelDate = panelDate
             };
-            var rule = new FDSupplementaryDataPanelDateDT();
+            var rule = new FDSupplementaryDataPanelDateDT(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -27,7 +27,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 SupplementaryDataPanelDate = "31/12/2018"
             };
-            var rule = new FDSupplementaryDataPanelDateDT();
+            var rule = new FDSupplementaryDataPanelDateDT(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }

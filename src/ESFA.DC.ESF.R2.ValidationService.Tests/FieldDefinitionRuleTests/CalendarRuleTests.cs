@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
 {
-    public class CalendarRuleTests
+    public class CalendarRuleTests : BaseTest
     {
         [Fact]
         public void FDCalendarMonthALCatchesInvalidMonths()
@@ -13,7 +13,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 CalendarMonth = "1612"
             };
-            var rule = new FDCalendarMonthAL();
+            var rule = new FDCalendarMonthAL(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -25,7 +25,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 CalendarMonth = "10"
             };
-            var rule = new FDCalendarMonthAL();
+            var rule = new FDCalendarMonthAL(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -37,7 +37,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 CalendarMonth = null
             };
-            var rule = new FDCalendarMonthDT();
+            var rule = new FDCalendarMonthDT(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -49,7 +49,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 CalendarMonth = "10"
             };
-            var rule = new FDCalendarMonthDT();
+            var rule = new FDCalendarMonthDT(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -61,7 +61,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 CalendarMonth = null
             };
-            var rule = new FDCalendarMonthMA();
+            var rule = new FDCalendarMonthMA(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -73,7 +73,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 CalendarMonth = "10"
             };
-            var rule = new FDCalendarMonthMA();
+            var rule = new FDCalendarMonthMA(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -85,7 +85,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 CalendarYear = "12345"
             };
-            var rule = new FDCalendarYearAL();
+            var rule = new FDCalendarYearAL(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -97,7 +97,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 CalendarYear = "2010"
             };
-            var rule = new FDCalendarYearAL();
+            var rule = new FDCalendarYearAL(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -109,7 +109,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 CalendarYear = null
             };
-            var rule = new FDCalendarYearDT();
+            var rule = new FDCalendarYearDT(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -121,7 +121,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 CalendarYear = "2010"
             };
-            var rule = new FDCalendarYearDT();
+            var rule = new FDCalendarYearDT(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -133,7 +133,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 CalendarYear = null
             };
-            var rule = new FDCalendarYearMA();
+            var rule = new FDCalendarYearMA(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -145,7 +145,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 CalendarYear = "2010"
             };
-            var rule = new FDCalendarYearMA();
+            var rule = new FDCalendarYearMA(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }

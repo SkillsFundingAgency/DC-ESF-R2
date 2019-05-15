@@ -7,18 +7,19 @@ using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class ULNRule02 : IBusinessRuleValidator
+    public class ULNRule02 : BaseValidationRule, IBusinessRuleValidator
     {
         private readonly IReferenceDataService _referenceDataService;
 
-        public ULNRule02(IReferenceDataService referenceDataService)
+        public ULNRule02(
+            IValidationErrorMessageService errorMessageService,
+            IReferenceDataService referenceDataService)
+            : base(errorMessageService)
         {
             _referenceDataService = referenceDataService;
         }
 
-        public string ErrorMessage => "The ULN is not a valid ULN.";
-
-        public string ErrorName => "ULN_02";
+        public override string ErrorName => "ULN_02";
 
         public bool IsWarning => false;
 

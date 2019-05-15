@@ -50,6 +50,8 @@
     <Compile Include="DataAccessLayer\IReferenceDataService.cs" />
     <Compile Include="DataAccessLayer\ISourceFileModelMapper.cs" />
     <Compile Include="DataAccessLayer\ISupplementaryDataModelMapper.cs" />
+    <Compile Include="DataAccessLayer\IValidationErrorMessageCache.cs" />
+    <Compile Include="DataAccessLayer\IValidationErrorMessageService.cs" />
     <Compile Include="DataStore\IStoreClear.cs" />
     <Compile Include="DataStore\IStoreESF.cs" />
     <Compile Include="DataStore\IStoreFileDetails.cs" />

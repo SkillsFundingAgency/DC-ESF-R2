@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.CrossRecordRuleTests
 {
-    public class DuplicateTests
+    public class DuplicateTests : BaseTest
     {
         [Fact]
         public void Duplicate01CatchesDuplicates()
@@ -27,7 +27,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.CrossRecordRuleTests
                 record
             };
 
-            var rule = new Duplicate01();
+            var rule = new Duplicate01(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(records, record));
         }
@@ -61,7 +61,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.CrossRecordRuleTests
                 }
             };
 
-            var rule = new Duplicate01();
+            var rule = new Duplicate01(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(records, record));
         }

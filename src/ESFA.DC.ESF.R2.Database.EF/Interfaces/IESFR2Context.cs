@@ -12,5 +12,7 @@ namespace ESFA.DC.ESF.R2.Database.EF.Interfaces
         DbSet<SupplementaryDataUnitCost> SupplementaryDataUnitCosts { get; }
 
         DbSet<ValidationError> ValidationErrors { get; }
+
+        DbSet<ValidationErrorMessage> ValidationErrorMessages { get; }
     }
 }

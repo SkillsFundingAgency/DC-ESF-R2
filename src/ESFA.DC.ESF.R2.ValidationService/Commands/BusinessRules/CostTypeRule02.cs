@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class CostTypeRule02 : IBusinessRuleValidator
+    public class CostTypeRule02 : BaseValidationRule, IBusinessRuleValidator
     {
         private readonly List<string> _SDCodes = new List<string>
         {
@@ -14,9 +15,12 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             Constants.DeliverableCode_SD02
         };
 
-        public string ErrorMessage => "The CostType is not valid for the DeliverableCode. Please refer to the ESF Supplementary Data supporting documentation for further information.";
+        public CostTypeRule02(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
 
-        public string ErrorName => "CostType_02";
+        public override string ErrorName => "CostType_02";
 
         public bool IsWarning => false;
 

@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 {
-    public class DeliverableCodeTests
+    public class DeliverableCodeTests : BaseTest
     {
         [Fact]
         public void DeliverableCodeRule01CatchesInvalidDeliverableCodes()
@@ -15,7 +15,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 DeliverableCode = "Invalid Code"
             };
 
-            var rule = new DeliverableCodeRule01();
+            var rule = new DeliverableCodeRule01(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -36,7 +36,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                     DeliverableCode = code
                 };
 
-                var rule = new DeliverableCodeRule01();
+                var rule = new DeliverableCodeRule01(_messageServiceMock.Object);
 
                 Assert.True(rule.IsValid(model));
             }

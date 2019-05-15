@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 {
-    public class CostTypeRuleTests
+    public class CostTypeRuleTests : BaseTest
     {
         [Fact]
         public void CostTypeRule01CatchesCostTypesNotInValidList()
@@ -13,7 +13,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             {
                 CostType = "I am not valid"
             };
-            var rule = new CostTypeRule01();
+            var rule = new CostTypeRule01(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -25,7 +25,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             {
                 CostType = "Grant"
             };
-            var rule = new CostTypeRule01();
+            var rule = new CostTypeRule01(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -38,7 +38,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 DeliverableCode = "CG01",
                 CostType = "I am not valid"
             };
-            var rule = new CostTypeRule02();
+            var rule = new CostTypeRule02(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -51,7 +51,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 DeliverableCode = "CG01",
                 CostType = "Grant"
             };
-            var rule = new CostTypeRule02();
+            var rule = new CostTypeRule02(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }

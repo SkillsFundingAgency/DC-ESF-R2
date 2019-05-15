@@ -6,22 +6,22 @@ using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class CalendarYearCalendarMonthRule03 : IBusinessRuleValidator
+    public class CalendarYearCalendarMonthRule03 : BaseValidationRule, IBusinessRuleValidator
     {
         private readonly IReferenceDataService _referenceDataService;
         private readonly IFcsCodeMappingHelper _mappingHelper;
 
         public CalendarYearCalendarMonthRule03(
+            IValidationErrorMessageService errorMessageService,
             IReferenceDataService referenceDataService,
             IFcsCodeMappingHelper mappingHelper)
+            : base(errorMessageService)
         {
             _referenceDataService = referenceDataService;
             _mappingHelper = mappingHelper;
         }
 
-        public string ErrorMessage => "The CalendarMonth and CalendarYear is after the contract allocation end date.";
-
-        public string ErrorName => "CalendarYearCalendarMonth_03";
+        public override string ErrorName => "CalendarYearCalendarMonth_03";
 
         public bool IsWarning => false;
 

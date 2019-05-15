@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
 {
-    public class ULNTests
+    public class ULNTests : BaseTest
     {
         [Fact]
         public void FDULNALCatchesTooLongULNs()
@@ -13,7 +13,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 ULN = "12345678901"
             };
-            var rule = new FDULNAL();
+            var rule = new FDULNAL(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -25,7 +25,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 ULN = "1234567890"
             };
-            var rule = new FDULNAL();
+            var rule = new FDULNAL(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -37,7 +37,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 ULN = "0"
             };
-            var rule = new FDULNDT();
+            var rule = new FDULNDT(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -49,7 +49,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 ULN = "1234567890"
             };
-            var rule = new FDULNDT();
+            var rule = new FDULNDT(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }

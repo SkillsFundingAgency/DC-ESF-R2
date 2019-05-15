@@ -6,22 +6,22 @@ using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class CalendarYearCalendarMonthRule02 : IBusinessRuleValidator
+    public class CalendarYearCalendarMonthRule02 : BaseValidationRule, IBusinessRuleValidator
     {
         private readonly IReferenceDataService _referenceDataService;
         private readonly IFcsCodeMappingHelper _mappingHelper;
 
         public CalendarYearCalendarMonthRule02(
+            IValidationErrorMessageService errorMessageService,
             IReferenceDataService referenceDataService,
             IFcsCodeMappingHelper mappingHelper)
+            : base(errorMessageService)
         {
             _referenceDataService = referenceDataService;
             _mappingHelper = mappingHelper;
         }
 
-        public string ErrorMessage => "The CalendarMonth and CalendarYear is prior to the contract allocation start date.";
-
-        public string ErrorName => "CalendarYearCalendarMonth_02";
+        public override string ErrorName => "CalendarYearCalendarMonth_02";
 
         public bool IsWarning => false;
 
