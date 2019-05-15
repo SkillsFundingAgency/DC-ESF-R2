@@ -176,18 +176,22 @@ steps:
   inputs:
     command: test
     projects: 'src/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage" --filter "TestCategory!=DbSchemaTest&TestCategory!=SupplementaryDataTests"'
+    arguments: '--configuration $(buildConfiguration) --logger:trx --collect "Code coverage" --filter (Category!=DbSchemaTest)'
+    publishTestResults: true
     
 - task: VSTest@2
-  enabled: true
+  enabled: false
   displayName: 'VsTest - testAssemblies'
   inputs:
     testAssemblyVer2: |
      **\ESFA.*tests.dll
      !**\*Database.Tests*\**
+     !**\*DatStore.Tests*\**
      !**\packages\**
      !**\obj\**
     configuration: '$(BuildConfiguration)'
+    testFiltercriteria: 'Category!=RegressionTest|Category=ValidationRule'
+
 
 - task: PublishSymbols@2
   enabled: false
