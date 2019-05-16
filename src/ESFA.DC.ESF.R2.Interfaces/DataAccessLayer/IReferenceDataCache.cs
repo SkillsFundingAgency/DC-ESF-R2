@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 using ESFA.DC.ESF.R2.Models.Validation;
@@ -13,6 +14,8 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
             CancellationToken cancellationToken);
 
         void PopulateContractDeliverableCodeMappings(IEnumerable<string> uncached, CancellationToken cancellationToken);
+
+        void PopulateContractDeliverableCodeMappings(IEnumerable<FcsDeliverableCodeMapping> mappings);
 
         IEnumerable<FcsDeliverableCodeMapping> GetContractDeliverableCodeMapping(
             IEnumerable<string> deliverableCodes,
@@ -36,7 +39,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
             CancellationToken cancellationToken,
             int? ukPrn = null);
 
-        void PopulateDeliverableUnitCosts(
+        Task PopulateDeliverableUnitCosts(
             List<string> newItemsNotInCache,
             int ukPrn,
             CancellationToken cancellationToken);

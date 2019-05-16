@@ -16,6 +16,7 @@ namespace ESFA.DC.ESF.R2.Service
         private readonly IFileValidationService _fileValidationService;
         private readonly IReportingController _reportingController;
         private readonly IStorageController _storageController;
+        private readonly IIlrReferenceDataCacheService _referenceDataCacheService;
 
         public ServiceController(
             IFileHelper fileHelper,
@@ -23,7 +24,8 @@ namespace ESFA.DC.ESF.R2.Service
             IPeriodHelper periodHelper,
             IFileValidationService fileValidationService,
             IStorageController storageController,
-            IReportingController reportingController)
+            IReportingController reportingController,
+            IIlrReferenceDataCacheService referenceDataCacheService)
         {
             _fileHelper = fileHelper;
             _taskHelper = taskHelper;
@@ -31,6 +33,7 @@ namespace ESFA.DC.ESF.R2.Service
             _fileValidationService = fileValidationService;
             _reportingController = reportingController;
             _storageController = storageController;
+            _referenceDataCacheService = referenceDataCacheService;
         }
 
         public async Task RunTasks(
@@ -58,6 +61,10 @@ namespace ESFA.DC.ESF.R2.Service
                     await _reportingController.FileLevelErrorReport(jobContextModel, wrapper, sourceFileModel, cancellationToken);
                     return;
                 }
+            }
+            else
+            {
+                await _referenceDataCacheService.PopulateCacheFromJson(jobContextModel, cancellationToken);
             }
 
             await _taskHelper.ExecuteTasks(jobContextModel, sourceFileModel, wrapper, cancellationToken);

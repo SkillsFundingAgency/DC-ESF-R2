@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
@@ -85,6 +86,11 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         public void PopulateContractDeliverableCodeMappings(IEnumerable<string> uncached, CancellationToken cancellationToken)
         {
             var mappings = _fcsRepository.GetContractDeliverableCodeMapping(uncached, cancellationToken);
+            PopulateContractDeliverableCodeMappings(mappings);
+        }
+
+        public void PopulateContractDeliverableCodeMappings(IEnumerable<FcsDeliverableCodeMapping> mappings)
+        {
             foreach (var mapping in mappings)
             {
                 CodeMappings.Add(mapping);
@@ -101,7 +107,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                 return Ulns.Where(u => uniqueUlns.Contains(u));
             }
 
-           PopulateUlnLookup(unknownUlns, cancellationToken);
+            PopulateUlnLookup(unknownUlns, cancellationToken);
 
            return Ulns.Where(u => unknownUlns.Contains(u));
         }
@@ -159,12 +165,12 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                                                   dc.CaseInsensitiveEquals(duc.DeliverableCode))).ToList();
         }
 
-        public void PopulateDeliverableUnitCosts(
+        public async Task PopulateDeliverableUnitCosts(
             List<string> newItemsNotInCache,
             int ukPrn,
             CancellationToken cancellationToken)
         {
-            var contractRefNumsForProvider = _esfRepository.GetContractsForProvider(ukPrn.ToString(), cancellationToken).Result;
+            var contractRefNumsForProvider = await _esfRepository.GetContractsForProvider(ukPrn.ToString(), cancellationToken);
 
             foreach (var conRefNum in contractRefNumsForProvider)
             {

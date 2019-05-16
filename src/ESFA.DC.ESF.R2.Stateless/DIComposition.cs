@@ -320,6 +320,8 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.RegisterType<ESFProviderService>().As<IESFProviderService>()
                 .InstancePerLifetimeScope();
 
+            containerBuilder.RegisterType<IlrReferenceDataCacheService>().As<IIlrReferenceDataCacheService>();
+
             containerBuilder.RegisterType<ValidationErrorMessageService>().As<IValidationErrorMessageService>()
                 .InstancePerLifetimeScope();
 
