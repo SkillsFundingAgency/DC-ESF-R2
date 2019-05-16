@@ -84,7 +84,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+        <None Include="app.config">
+    </None>
+    <None Include="app.Debug.config">
+      <DependentUpon>app.config</DependentUpon>
+    </None>
+    <None Include="app.Release.config">
+      <DependentUpon>app.config</DependentUpon>
+    </None>
     <None Include="ESFA.DC.ESF.R2.DataStore.Tests.ruleset">
       <SubType>Designer</SubType>
     </None>
