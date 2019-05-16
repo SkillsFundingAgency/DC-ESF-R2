@@ -11,13 +11,16 @@ namespace ESFA.DC.ESF.R2.ValidationService.Services
     {
         private readonly IReferenceDataCache _cache;
         private readonly IFcsCodeMappingHelper _mappingHelper;
+        private readonly IValidationErrorMessageCache _validationCache;
 
         public PopulationService(
+            IValidationErrorMessageCache validationCache,
             IReferenceDataCache cache,
             IFcsCodeMappingHelper mappingHelper)
         {
             _cache = cache;
             _mappingHelper = mappingHelper;
+            _validationCache = validationCache;
         }
 
         public void PrePopulateUlnCache(IList<long?> ulns, CancellationToken cancellationToken)
@@ -47,6 +50,11 @@ namespace ESFA.DC.ESF.R2.ValidationService.Services
         public void PrePopulateLarsLearningDeliveries(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken)
         {
             _cache.PopulateLarsLearningDeliveries(learnAimRefs, cancellationToken);
+        }
+
+        public void PrePopulateValidationErrorMessages(CancellationToken cancellationToken)
+        {
+            _validationCache.PopulateErrorMessages(cancellationToken);
         }
     }
 }

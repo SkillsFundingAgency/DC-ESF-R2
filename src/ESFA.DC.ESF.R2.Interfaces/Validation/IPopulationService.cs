@@ -17,5 +17,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.Validation
             CancellationToken cancellationToken);
 
         void PrePopulateLarsLearningDeliveries(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken);
+
+        void PrePopulateValidationErrorMessages(CancellationToken cancellationToken);
     }
 }

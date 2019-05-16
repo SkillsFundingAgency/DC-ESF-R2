@@ -2,7 +2,7 @@
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands
 {
-    public class BaseValidationRule
+    public abstract class BaseValidationRule
     {
         protected readonly IValidationErrorMessageService _errorMessageService;
 
@@ -11,7 +11,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands
             _errorMessageService = errorMessageService;
         }
 
-        public virtual string ErrorName { get; set; }
+        public abstract string ErrorName { get; }
 
         public string ErrorMessage => _errorMessageService.GetErrorMessage(ErrorName);
     }
