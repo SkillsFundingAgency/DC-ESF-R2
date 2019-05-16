@@ -183,12 +183,12 @@ steps:
 
 - task: CopyFiles@2
   enabled: true
-  displayName: 'Copy DatStore Intergration Test Assemblies - Artifact Test Directory'
+  displayName: 'Copy DataStore Intergration Test Assemblies - Artifact Test Directory'
   inputs:
     SourceFolder: '$(build.sourcesdirectory)\src'
     Contents: |
-     **\*DatStore.Tests*\bin\$(buildConfiguration)\**
-    TargetFolder: '$(build.artifactstagingdirectory)\Tests\DatStore'
+     **\*DataStore.Tests*\bin\$(buildConfiguration)\**
+    TargetFolder: '$(build.artifactstagingdirectory)\Tests\DataStore'
     CleanTargetFolder: true
     flattenFolders: true
 
