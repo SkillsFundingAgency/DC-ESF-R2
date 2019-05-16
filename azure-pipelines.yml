@@ -214,6 +214,11 @@ steps:
     configuration: '$(BuildConfiguration)'
     testFiltercriteria: 'Category!=RegressionTest|Category=ValidationRule'
 
+- task: PublishTestResults@2
+  inputs:
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
+    failTaskOnFailedTests: true
 
 - task: PublishSymbols@2
   enabled: false
