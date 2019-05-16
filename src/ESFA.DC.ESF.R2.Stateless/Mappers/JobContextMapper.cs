@@ -18,7 +18,10 @@ namespace ESFA.DC.ESF.R2.Stateless.Mappers
                 SubmissionDateTimeUtc = message.SubmissionDateTimeUtc,
                 FileName = message.KeyValuePairs[JobContextMessageKey.Filename].ToString(),
                 CurrentPeriod = Convert.ToInt32(message.KeyValuePairs[JobContextMessageKey.ReturnPeriod]),
-                Tasks = message.Topics[message.TopicPointer].Tasks?.SelectMany(t => t.Tasks).ToList()
+                Tasks = message.Topics[message.TopicPointer].Tasks?.SelectMany(t => t.Tasks).ToList(),
+                IlrReferenceDataKey = message.KeyValuePairs.ContainsKey(JobContextMessageKey.IlrReferenceData)
+                    ? message.KeyValuePairs[JobContextMessageKey.IlrReferenceData].ToString()
+                    : null
             };
         }
     }

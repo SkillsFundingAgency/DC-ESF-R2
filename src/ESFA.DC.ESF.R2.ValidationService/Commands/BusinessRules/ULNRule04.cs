@@ -1,13 +1,17 @@
-﻿using ESFA.DC.ESF.R2.Interfaces.Validation;
+﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class ULNRule04 : IBusinessRuleValidator
+    public class ULNRule04 : BaseValidationRule, IBusinessRuleValidator
     {
-        public string ErrorMessage => "The ULN is not required for the selected ReferenceType.";
+        public ULNRule04(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
 
-        public string ErrorName => "ULN_04";
+        public override string ErrorName => "ULN_04";
 
         public bool IsWarning => true;
 

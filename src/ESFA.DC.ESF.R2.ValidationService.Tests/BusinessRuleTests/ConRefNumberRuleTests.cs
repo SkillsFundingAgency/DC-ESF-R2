@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 {
-    public class ConRefNumberRuleTests
+    public class ConRefNumberRuleTests : BaseTest
     {
         [Theory]
         [InlineData("")]
@@ -16,7 +16,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 ConRefNumber = conRefNumber
             };
 
-            var rule = new ConRefNumberRule02();
+            var rule = new ConRefNumberRule02(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -29,7 +29,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 ConRefNumber = "ESF-4999"
             };
 
-            var rule = new ConRefNumberRule02();
+            var rule = new ConRefNumberRule02(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }

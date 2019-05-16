@@ -6,22 +6,22 @@ using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class CalendarYearCalendarMonthRule01 : IBusinessRuleValidator
+    public class CalendarYearCalendarMonthRule01 : BaseValidationRule, IBusinessRuleValidator
     {
         private readonly IReferenceDataService _referenceDataService;
         private readonly IDateTimeProvider _dateTimeProvider;
 
         public CalendarYearCalendarMonthRule01(
+            IValidationErrorMessageService errorMessageService,
             IDateTimeProvider dateTimeProvider,
             IReferenceDataService referenceDataService)
+            : base(errorMessageService)
         {
             _referenceDataService = referenceDataService;
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public string ErrorMessage => "The CalendarMonth you have submitted data for cannot be in the future for the current collection period.";
-
-        public string ErrorName => "CalendarYearCalendarMonth_01";
+        public override string ErrorName => "CalendarYearCalendarMonth_01";
 
         public bool IsWarning => false;
 

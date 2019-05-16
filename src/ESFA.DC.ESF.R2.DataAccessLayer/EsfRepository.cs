@@ -101,5 +101,20 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
             return data;
         }
+
+        public async Task<IDictionary<string, string>> GetValidationErrorMessages(CancellationToken cancellationToken)
+        {
+            Dictionary<string, string> data;
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using (var context = _contextFactory())
+            {
+                data = await context.ValidationErrorMessages
+                    .ToDictionaryAsync(m => m.RuleName, m => m.ErrorMessage, cancellationToken);
+            }
+
+            return data;
+        }
     }
 }

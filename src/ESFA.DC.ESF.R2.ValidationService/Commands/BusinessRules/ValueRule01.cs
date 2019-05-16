@@ -1,24 +1,28 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class ValueRule01 : IBusinessRuleValidator
+    public class ValueRule01 : BaseValidationRule, IBusinessRuleValidator
     {
         private readonly List<string> _costTypesRequiringValue = new List<string>
         {
-            "Other Costs",
-            "Grant",
-            "Grant Management",
-            "Authorised Claims"
+            Constants.CostType_OtherCosts,
+            Constants.CostType_Grant,
+            Constants.CostType_GrantManagement,
+            Constants.CostType_AuthorisedClaims
         };
 
-        public string ErrorMessage => "The Value must be returned for the selected CostType.";
+        public ValueRule01(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
 
-        public string ErrorName => "Value_01";
+        public override string ErrorName => "Value_01";
 
         public bool IsWarning => false;
 

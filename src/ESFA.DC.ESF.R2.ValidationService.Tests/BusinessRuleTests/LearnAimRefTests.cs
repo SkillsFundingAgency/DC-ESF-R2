@@ -8,7 +8,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 {
-    public class LearnAimRefTests
+    public class LearnAimRefTests : BaseTest
     {
         [Theory]
         [InlineData("NR01")]
@@ -21,7 +21,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 DeliverableCode = deliverableCode
             };
 
-            var rule = new LearnAimRef01();
+            var rule = new LearnAimRef01(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(suppData));
         }
@@ -37,7 +37,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 DeliverableCode = deliverableCode
             };
 
-            var rule = new LearnAimRef01();
+            var rule = new LearnAimRef01(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -51,7 +51,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 DeliverableCode = "Foo"
             };
 
-            var rule = new LearnAimRef01();
+            var rule = new LearnAimRef01(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -69,7 +69,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 DeliverableCode = deliverableCode
             };
 
-            var rule = new LearnAimRef02();
+            var rule = new LearnAimRef02(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(suppData));
         }
@@ -87,7 +87,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 DeliverableCode = deliverableCode
             };
 
-            var rule = new LearnAimRef02();
+            var rule = new LearnAimRef02(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -101,7 +101,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 DeliverableCode = "Foo"
             };
 
-            var rule = new LearnAimRef02();
+            var rule = new LearnAimRef02(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -117,7 +117,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var refDataServiceMock = new Mock<IReferenceDataService>();
 
-            var rule = new LearnAimRef03(refDataServiceMock.Object);
+            var rule = new LearnAimRef03(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -136,7 +136,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 .Setup(m => m.GetLarsLearningDelivery(suppData.LearnAimRef))
                 .Returns((LarsLearningDeliveryModel)null);
 
-            var rule = new LearnAimRef03(refDataServiceMock.Object);
+            var rule = new LearnAimRef03(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.False(rule.IsValid(suppData));
         }
@@ -155,7 +155,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 .Setup(m => m.GetLarsLearningDelivery(suppData.LearnAimRef))
                 .Returns(new LarsLearningDeliveryModel());
 
-            var rule = new LearnAimRef03(refDataServiceMock.Object);
+            var rule = new LearnAimRef03(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -191,7 +191,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                     }
                 });
 
-            var rule = new LearnAimRef04(refDataServiceMock.Object);
+            var rule = new LearnAimRef04(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.False(rule.IsValid(suppData));
         }
@@ -208,7 +208,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var refDataServiceMock = new Mock<IReferenceDataService>();
 
-            var rule = new LearnAimRef04(refDataServiceMock.Object);
+            var rule = new LearnAimRef04(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -228,7 +228,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 .Setup(m => m.GetLarsLearningDelivery(suppData.LearnAimRef))
                 .Returns((LarsLearningDeliveryModel)null);
 
-            var rule = new LearnAimRef04(refDataServiceMock.Object);
+            var rule = new LearnAimRef04(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -259,7 +259,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                     }
                 });
 
-            var rule = new LearnAimRef04(refDataServiceMock.Object);
+            var rule = new LearnAimRef04(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -282,7 +282,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                     LearningDeliveryGenre = "Foo"
                 });
 
-            var rule = new LearnAimRef05(refDataServiceMock.Object);
+            var rule = new LearnAimRef05(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.False(rule.IsValid(suppData));
         }
@@ -298,7 +298,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var refDataServiceMock = new Mock<IReferenceDataService>();
 
-            var rule = new LearnAimRef05(refDataServiceMock.Object);
+            var rule = new LearnAimRef05(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -314,7 +314,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var refDataServiceMock = new Mock<IReferenceDataService>();
 
-            var rule = new LearnAimRef05(refDataServiceMock.Object);
+            var rule = new LearnAimRef05(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -333,7 +333,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 .Setup(m => m.GetLarsLearningDelivery(suppData.LearnAimRef))
                 .Returns((LarsLearningDeliveryModel)null);
 
-            var rule = new LearnAimRef05(refDataServiceMock.Object);
+            var rule = new LearnAimRef05(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -360,7 +360,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                     LearningDeliveryGenre = genre
                 });
 
-            var rule = new LearnAimRef05(refDataServiceMock.Object);
+            var rule = new LearnAimRef05(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -387,7 +387,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                     LearningDeliveryGenre = genre
                 });
 
-            var rule = new LearnAimRef06(refDataServiceMock.Object);
+            var rule = new LearnAimRef06(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.False(rule.IsValid(suppData));
         }
@@ -403,7 +403,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var refDataServiceMock = new Mock<IReferenceDataService>();
 
-            var rule = new LearnAimRef06(refDataServiceMock.Object);
+            var rule = new LearnAimRef06(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -419,7 +419,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var refDataServiceMock = new Mock<IReferenceDataService>();
 
-            var rule = new LearnAimRef06(refDataServiceMock.Object);
+            var rule = new LearnAimRef06(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -438,7 +438,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 .Setup(m => m.GetLarsLearningDelivery(suppData.LearnAimRef))
                 .Returns((LarsLearningDeliveryModel)null);
 
-            var rule = new LearnAimRef06(refDataServiceMock.Object);
+            var rule = new LearnAimRef06(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -461,7 +461,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                     LearningDeliveryGenre = "Foo"
                 });
 
-            var rule = new LearnAimRef06(refDataServiceMock.Object);
+            var rule = new LearnAimRef06(_messageServiceMock.Object, refDataServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }

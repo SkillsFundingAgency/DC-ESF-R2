@@ -1,15 +1,19 @@
-﻿using ESFA.DC.ESF.R2.Interfaces.Validation;
+﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition
 {
-    public class FDCalendarMonthAL : IFieldDefinitionValidator
+    public class FDCalendarMonthAL : BaseValidationRule, IFieldDefinitionValidator
     {
         private const int FieldLength = 2;
 
-        public string ErrorMessage => $"The CalendarMonth must not exceed {FieldLength} characters in length. Please adjust the value and resubmit the file.";
+        public FDCalendarMonthAL(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
 
-        public string ErrorName => "FD_CalendarMonth_AL";
+        public override string ErrorName => "FD_CalendarMonth_AL";
 
         public bool IsWarning => false;
 

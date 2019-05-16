@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
 {
-    public class ValueTests
+    public class ValueTests : BaseTest
     {
         [Fact]
         public void FDValueALCatchesTooLongValues()
@@ -13,7 +13,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 Value = "1234567.123"
             };
-            var rule = new FDValueAL();
+            var rule = new FDValueAL(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -25,7 +25,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 Value = "123456.12"
             };
-            var rule = new FDValueAL();
+            var rule = new FDValueAL(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }

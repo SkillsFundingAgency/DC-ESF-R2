@@ -15,7 +15,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests
 {
-    public class ControllerTest
+    public class ControllerTest : BaseTest
     {
         [Fact]
         public void TestController()
@@ -89,26 +89,26 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests
             return new FieldDefinitionCommand(
                 new List<IFieldDefinitionValidator>
                 {
-                    new FDCalendarMonthAL(),
-                    new FDCalendarMonthDT(),
-                    new FDCalendarMonthMA(),
-                    new FDCalendarYearAL(),
-                    new FDCalendarYearDT(),
-                    new FDCalendarYearMA(),
-                    new FDConRefNumberAL(),
-                    new FDConRefNumberMA(),
-                    new FDCostTypeAL(),
-                    new FDCostTypeMA(),
-                    new FDDeliverableCodeAL(),
-                    new FDDeliverableCodeMA(),
-                    new FDProviderSpecifiedReferenceAL(),
-                    new FDReferenceAL(),
-                    new FDReferenceMA(),
-                    new FDReferenceTypeAL(),
-                    new FDReferenceTypeMA(),
-                    new FDULNAL(),
-                    new FDULNDT(),
-                    new FDValueAL()
+                    new FDCalendarMonthAL(_messageServiceMock.Object),
+                    new FDCalendarMonthDT(_messageServiceMock.Object),
+                    new FDCalendarMonthMA(_messageServiceMock.Object),
+                    new FDCalendarYearAL(_messageServiceMock.Object),
+                    new FDCalendarYearDT(_messageServiceMock.Object),
+                    new FDCalendarYearMA(_messageServiceMock.Object),
+                    new FDConRefNumberAL(_messageServiceMock.Object),
+                    new FDConRefNumberMA(_messageServiceMock.Object),
+                    new FDCostTypeAL(_messageServiceMock.Object),
+                    new FDCostTypeMA(_messageServiceMock.Object),
+                    new FDDeliverableCodeAL(_messageServiceMock.Object),
+                    new FDDeliverableCodeMA(_messageServiceMock.Object),
+                    new FDProviderSpecifiedReferenceAL(_messageServiceMock.Object),
+                    new FDReferenceAL(_messageServiceMock.Object),
+                    new FDReferenceMA(_messageServiceMock.Object),
+                    new FDReferenceTypeAL(_messageServiceMock.Object),
+                    new FDReferenceTypeMA(_messageServiceMock.Object),
+                    new FDULNAL(_messageServiceMock.Object),
+                    new FDULNDT(_messageServiceMock.Object),
+                    new FDValueAL(_messageServiceMock.Object)
                 });
         }
 
@@ -122,30 +122,30 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests
                 new BusinessRuleCommands(
                     new List<IBusinessRuleValidator>
                     {
-                        new CalendarMonthRule01(),
-                        new CalendarYearCalendarMonthRule01(dateTimeProvider.Object, serviceMock.Object),
-                        new CalendarYearCalendarMonthRule02(serviceMock.Object, mapperMock.Object),
-                        new CalendarYearCalendarMonthRule03(serviceMock.Object, mapperMock.Object),
-                        new CalendarYearRule01(),
-                        new CostTypeRule01(),
-                        new CostTypeRule02(),
-                        new DeliverableCodeRule01(),
-                        new DeliverableCodeRule02(serviceMock.Object, mapperMock.Object),
-                        new ProviderSpecifiedReferenceRule01(),
-                        new ReferenceRule01(),
-                        new ReferenceTypeRule02(),
-                        new ReferenceTypeRule01(),
-                        new ULNRule01(),
-                        new ULNRule02(serviceMock.Object),
-                        new ULNRule03(dateTimeProvider.Object),
-                        new ULNRule04(),
-                        new ValueRule01(),
-                        new ValueRule02()
+                        new CalendarMonthRule01(_messageServiceMock.Object),
+                        new CalendarYearCalendarMonthRule01(_messageServiceMock.Object, dateTimeProvider.Object, serviceMock.Object),
+                        new CalendarYearCalendarMonthRule02(_messageServiceMock.Object, serviceMock.Object, mapperMock.Object),
+                        new CalendarYearCalendarMonthRule03(_messageServiceMock.Object, serviceMock.Object, mapperMock.Object),
+                        new CalendarYearRule01(_messageServiceMock.Object),
+                        new CostTypeRule01(_messageServiceMock.Object),
+                        new CostTypeRule02(_messageServiceMock.Object),
+                        new DeliverableCodeRule01(_messageServiceMock.Object),
+                        new DeliverableCodeRule02(_messageServiceMock.Object, serviceMock.Object, mapperMock.Object),
+                        new ProviderSpecifiedReferenceRule01(_messageServiceMock.Object),
+                        new ReferenceRule01(_messageServiceMock.Object),
+                        new ReferenceTypeRule02(_messageServiceMock.Object),
+                        new ReferenceTypeRule01(_messageServiceMock.Object),
+                        new ULNRule01(_messageServiceMock.Object),
+                        new ULNRule02(_messageServiceMock.Object, serviceMock.Object),
+                        new ULNRule03(_messageServiceMock.Object, dateTimeProvider.Object),
+                        new ULNRule04(_messageServiceMock.Object),
+                        new ValueRule01(_messageServiceMock.Object),
+                        new ValueRule02(_messageServiceMock.Object)
                     }),
                 new CrossRecordCommands(
                     new List<ICrossRecordValidator>
                     {
-                        new Duplicate01()
+                        new Duplicate01(_messageServiceMock.Object)
                     })
             };
         }

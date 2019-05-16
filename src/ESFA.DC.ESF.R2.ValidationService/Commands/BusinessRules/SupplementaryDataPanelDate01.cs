@@ -1,23 +1,25 @@
 ﻿using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class SupplementaryDataPanelDate01 : IBusinessRuleValidator
+    public class SupplementaryDataPanelDate01 : BaseValidationRule, IBusinessRuleValidator
     {
         private readonly IDateTimeProvider _dateTimeProvider;
 
-        public SupplementaryDataPanelDate01(IDateTimeProvider dateTimeProvider)
+        public SupplementaryDataPanelDate01(
+            IValidationErrorMessageService errorMessageService,
+            IDateTimeProvider dateTimeProvider)
+            : base(errorMessageService)
         {
             _dateTimeProvider = dateTimeProvider;
         }
 
-        public string ErrorName => "SupplementaryDataPanelDate_01";
+        public override string ErrorName => "SupplementaryDataPanelDate_01";
 
         public bool IsWarning => false;
-
-        public string ErrorMessage => "The SupplementaryDataPanelDate cannot be in the future.";
 
         public bool IsValid(SupplementaryDataModel model)
         {

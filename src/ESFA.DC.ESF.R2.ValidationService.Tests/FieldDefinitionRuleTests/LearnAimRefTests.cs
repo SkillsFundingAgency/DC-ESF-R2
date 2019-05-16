@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
 {
-    public class LearnAimRefTests
+    public class LearnAimRefTests : BaseTest
     {
         [Theory]
         [InlineData("123456789")]
@@ -15,7 +15,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 LearnAimRef = learnAimRef
             };
-            var rule = new FDLearnAimRefAL();
+            var rule = new FDLearnAimRefAL(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -27,7 +27,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 LearnAimRef = "12345678"
             };
-            var rule = new FDLearnAimRefAL();
+            var rule = new FDLearnAimRefAL(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }

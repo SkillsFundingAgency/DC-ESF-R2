@@ -7,20 +7,21 @@ using ESFA.DC.ESF.R2.ValidationService.Helpers;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class LearnAimRef04 : IBusinessRuleValidator
+    public class LearnAimRef04 : BaseValidationRule, IBusinessRuleValidator
     {
         private readonly IReferenceDataService _referenceDataService;
 
-        public LearnAimRef04(IReferenceDataService referenceDataService)
+        public LearnAimRef04(
+            IValidationErrorMessageService errorMessageService,
+            IReferenceDataService referenceDataService)
+            : base(errorMessageService)
         {
             _referenceDataService = referenceDataService;
         }
 
-        public string ErrorName => "LearnAimRef_04";
+        public override string ErrorName => "LearnAimRef_04";
 
         public bool IsWarning => false;
-
-        public string ErrorMessage => "The CalendarMonth/CalendarYear is not within the LARS funding validity dates for the LearnAimRef.";
 
         public bool IsValid(SupplementaryDataModel model)
         {

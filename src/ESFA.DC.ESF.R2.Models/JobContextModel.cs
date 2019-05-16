@@ -18,5 +18,7 @@ namespace ESFA.DC.ESF.R2.Models
         public string FileName { get; set; }
 
         public int CurrentPeriod { get; set; }
+
+        public string IlrReferenceDataKey { get; set; }
     }
 }

@@ -1,16 +1,19 @@
-﻿using ESFA.DC.ESF.R2.Interfaces.Validation;
+﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition
 {
-    public class FDCalendarYearMA : IFieldDefinitionValidator
+    public class FDCalendarYearMA : BaseValidationRule, IFieldDefinitionValidator
     {
-        public string ErrorName => "FD_CalendarYear_MA";
+        public FDCalendarYearMA(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
+
+        public override string ErrorName => "FD_CalendarYear_MA";
 
         public bool IsWarning => false;
-
-        public string ErrorMessage =>
-            "The DeliverableCode is mandatory. Please resubmit the file including the appropriate value.";
 
         public bool IsValid(SupplementaryDataLooseModel model)
         {

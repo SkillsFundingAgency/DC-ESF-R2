@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class CostTypeRule01 : IBusinessRuleValidator
+    public class CostTypeRule01 : BaseValidationRule, IBusinessRuleValidator
     {
         private readonly IList<string> _validCostTypes = new List<string>
         {
@@ -18,9 +19,12 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             Constants.CostType_AuthorisedClaims
         };
 
-        public string ErrorMessage => "The CostType is not valid";
+        public CostTypeRule01(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
 
-        public string ErrorName => "CostType_01";
+        public override string ErrorName => "CostType_01";
 
         public bool IsWarning => false;
 

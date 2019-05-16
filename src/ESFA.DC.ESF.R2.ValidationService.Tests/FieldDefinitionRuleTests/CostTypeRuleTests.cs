@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
 {
-    public class CostTypeRuleTests
+    public class CostTypeRuleTests : BaseTest
     {
         [Fact]
         public void FDCostTypeALCatchesTooLongCostTypes()
@@ -13,7 +13,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 CostType = "123456789012345678901"
             };
-            var rule = new FDCostTypeAL();
+            var rule = new FDCostTypeAL(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -25,7 +25,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 CostType = "12345678901234567890"
             };
-            var rule = new FDCostTypeAL();
+            var rule = new FDCostTypeAL(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -37,7 +37,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 CostType = null
             };
-            var rule = new FDCostTypeMA();
+            var rule = new FDCostTypeMA(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -49,7 +49,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 CostType = "12345678901234567890"
             };
-            var rule = new FDCostTypeMA();
+            var rule = new FDCostTypeMA(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }

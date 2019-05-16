@@ -7,7 +7,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 {
-    public class SupplementaryDataPanelDateTests
+    public class SupplementaryDataPanelDateTests : BaseTest
     {
         [Fact]
         public void SupplementaryDataPanelDate01FailsDateInFuture()
@@ -26,7 +26,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 .Setup(m => m.ConvertUtcToUk(It.IsAny<DateTime>()))
                 .Returns(date);
 
-            var rule = new SupplementaryDataPanelDate01(mock.Object);
+            var rule = new SupplementaryDataPanelDate01(_messageServiceMock.Object, mock.Object);
 
             Assert.False(rule.IsValid(suppData));
         }
@@ -41,7 +41,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var mock = new Mock<IDateTimeProvider>();
 
-            var rule = new SupplementaryDataPanelDate01(mock.Object);
+            var rule = new SupplementaryDataPanelDate01(_messageServiceMock.Object, mock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -63,7 +63,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 .Setup(m => m.ConvertUtcToUk(It.IsAny<DateTime>()))
                 .Returns(date);
 
-            var rule = new SupplementaryDataPanelDate01(mock.Object);
+            var rule = new SupplementaryDataPanelDate01(_messageServiceMock.Object, mock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -76,7 +76,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 SupplementaryDataPanelDate = new DateTime(2019, 3, 31)
             };
 
-            var rule = new SupplementaryDataPanelDate02();
+            var rule = new SupplementaryDataPanelDate02(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(suppData));
         }
@@ -89,7 +89,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 SupplementaryDataPanelDate = null
             };
 
-            var rule = new SupplementaryDataPanelDate02();
+            var rule = new SupplementaryDataPanelDate02(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -102,7 +102,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 SupplementaryDataPanelDate = new DateTime(2019, 4, 1)
             };
 
-            var rule = new SupplementaryDataPanelDate02();
+            var rule = new SupplementaryDataPanelDate02(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -123,7 +123,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 DeliverableCode = deliverableCode
             };
 
-            var rule = new SupplementaryDataPanelDate03();
+            var rule = new SupplementaryDataPanelDate03(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(suppData));
         }
@@ -137,7 +137,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 SupplementaryDataPanelDate = null
             };
 
-            var rule = new SupplementaryDataPanelDate03();
+            var rule = new SupplementaryDataPanelDate03(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -151,7 +151,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 SupplementaryDataPanelDate = new DateTime(2019, 5, 1)
             };
 
-            var rule = new SupplementaryDataPanelDate03();
+            var rule = new SupplementaryDataPanelDate03(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }

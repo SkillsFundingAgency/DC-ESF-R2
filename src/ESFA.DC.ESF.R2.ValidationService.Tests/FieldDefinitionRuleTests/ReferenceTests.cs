@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
 {
-    public class ReferenceTests
+    public class ReferenceTests : BaseTest
     {
         [Fact]
         public void FDProviderSpecifiedReferenceALCatchesTooLongProviderSpecifiedReferences()
@@ -13,7 +13,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 ProviderSpecifiedReference = new string('1', 201)
             };
-            var rule = new FDProviderSpecifiedReferenceAL();
+            var rule = new FDProviderSpecifiedReferenceAL(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -25,7 +25,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 ProviderSpecifiedReference = new string('1', 200)
             };
-            var rule = new FDProviderSpecifiedReferenceAL();
+            var rule = new FDProviderSpecifiedReferenceAL(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -37,7 +37,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 Reference = new string('1', 101)
             };
-            var rule = new FDReferenceAL();
+            var rule = new FDReferenceAL(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -49,7 +49,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 Reference = new string('1', 100)
             };
-            var rule = new FDReferenceAL();
+            var rule = new FDReferenceAL(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -61,7 +61,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 Reference = null
             };
-            var rule = new FDReferenceMA();
+            var rule = new FDReferenceMA(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -73,7 +73,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 Reference = new string('1', 100)
             };
-            var rule = new FDReferenceMA();
+            var rule = new FDReferenceMA(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -85,7 +85,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 ReferenceType = new string('1', 21)
             };
-            var rule = new FDReferenceTypeAL();
+            var rule = new FDReferenceTypeAL(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -97,7 +97,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 ReferenceType = new string('1', 20)
             };
-            var rule = new FDReferenceTypeAL();
+            var rule = new FDReferenceTypeAL(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -109,7 +109,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 ReferenceType = null
             };
-            var rule = new FDReferenceTypeMA();
+            var rule = new FDReferenceTypeMA(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -121,7 +121,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 ReferenceType = new string('1', 20)
             };
-            var rule = new FDReferenceTypeMA();
+            var rule = new FDReferenceTypeMA(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }

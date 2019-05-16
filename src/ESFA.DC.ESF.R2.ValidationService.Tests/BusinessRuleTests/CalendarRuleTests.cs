@@ -11,7 +11,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 {
-    public class CalendarRuleTests
+    public class CalendarRuleTests : BaseTest
     {
         [Fact]
         public void TestThatCalendarMonthRule01CatchesInvalidMonths()
@@ -20,7 +20,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             {
                 CalendarMonth = 16
             };
-            var rule = new CalendarMonthRule01();
+            var rule = new CalendarMonthRule01(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -32,7 +32,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             {
                 CalendarMonth = 10
             };
-            var rule = new CalendarMonthRule01();
+            var rule = new CalendarMonthRule01(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -52,7 +52,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             var dateProvider = new Mock<IDateTimeProvider>();
             dateProvider.Setup(m => m.GetNowUtc()).Returns(DateTime.Now);
 
-            var rule = new CalendarYearCalendarMonthRule01(dateProvider.Object, service.Object);
+            var rule = new CalendarYearCalendarMonthRule01(_messageServiceMock.Object, dateProvider.Object, service.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -72,7 +72,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             var dateProvider = new Mock<IDateTimeProvider>();
             dateProvider.Setup(m => m.GetNowUtc()).Returns(DateTime.Now);
 
-            var rule = new CalendarYearCalendarMonthRule01(dateProvider.Object, service.Object);
+            var rule = new CalendarYearCalendarMonthRule01(_messageServiceMock.Object, dateProvider.Object, service.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -101,7 +101,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 CalendarMonth = 10,
                 CalendarYear = 2017
             };
-            var rule = new CalendarYearCalendarMonthRule02(referenceRepo.Object, mapper.Object);
+            var rule = new CalendarYearCalendarMonthRule02(_messageServiceMock.Object, referenceRepo.Object, mapper.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -130,7 +130,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 CalendarMonth = 11,
                 CalendarYear = 2017
             };
-            var rule = new CalendarYearCalendarMonthRule02(referenceRepo.Object, mapper.Object);
+            var rule = new CalendarYearCalendarMonthRule02(_messageServiceMock.Object, referenceRepo.Object, mapper.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -159,7 +159,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 CalendarMonth = 12,
                 CalendarYear = 2017
             };
-            var rule = new CalendarYearCalendarMonthRule03(referenceRepo.Object, mapper.Object);
+            var rule = new CalendarYearCalendarMonthRule03(_messageServiceMock.Object, referenceRepo.Object, mapper.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -188,7 +188,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 CalendarMonth = 10,
                 CalendarYear = 2017
             };
-            var rule = new CalendarYearCalendarMonthRule03(referenceRepo.Object, mapper.Object);
+            var rule = new CalendarYearCalendarMonthRule03(_messageServiceMock.Object, referenceRepo.Object, mapper.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -200,7 +200,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             {
                 CalendarYear = 1998
             };
-            var rule = new CalendarYearRule01();
+            var rule = new CalendarYearRule01(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -212,7 +212,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             {
                 CalendarYear = 2020
             };
-            var rule = new CalendarYearRule01();
+            var rule = new CalendarYearRule01(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }

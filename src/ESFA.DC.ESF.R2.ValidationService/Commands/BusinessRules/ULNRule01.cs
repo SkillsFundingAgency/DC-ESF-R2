@@ -1,13 +1,17 @@
-﻿using ESFA.DC.ESF.R2.Interfaces.Validation;
+﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class ULNRule01 : IBusinessRuleValidator
+    public class ULNRule01 : BaseValidationRule, IBusinessRuleValidator
     {
-        public string ErrorMessage => "The ULN must be returned.";
+        public ULNRule01(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
 
-        public string ErrorName => "ULN_01";
+        public override string ErrorName => "ULN_01";
 
         public bool IsWarning => false;
 

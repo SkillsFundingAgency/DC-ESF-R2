@@ -19,6 +19,7 @@ namespace ESFA.DC.ESF.R2.Database.EF
         public virtual DbSet<SupplementaryData> SupplementaryDatas { get; set; }
         public virtual DbSet<SupplementaryDataUnitCost> SupplementaryDataUnitCosts { get; set; }
         public virtual DbSet<ValidationError> ValidationErrors { get; set; }
+        public virtual DbSet<ValidationErrorMessage> ValidationErrorMessages { get; set; }
 
         // Unable to generate entity type for table 'dbo.VersionInfo'. Please see the warning messages.
 
@@ -26,13 +27,14 @@ namespace ESFA.DC.ESF.R2.Database.EF
         {
             if (!optionsBuilder.IsConfigured)
             {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Server=.;Database=ESF_R2;Trusted_Connection=True;");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("ProductVersion", "3.0.0-preview.19074.3");
+            modelBuilder.HasAnnotation("ProductVersion", "2.2.3-servicing-35854");
 
             modelBuilder.Entity<SourceFile>(entity =>
             {
@@ -200,6 +202,17 @@ namespace ESFA.DC.ESF.R2.Database.EF
                     .IsUnicode(false);
 
                 entity.Property(e => e.Value).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ValidationErrorMessage>(entity =>
+            {
+                entity.ToTable("ValidationErrorMessage");
+
+                entity.Property(e => e.ErrorMessage).IsUnicode(false);
+
+                entity.Property(e => e.RuleName)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
             });
         }
     }

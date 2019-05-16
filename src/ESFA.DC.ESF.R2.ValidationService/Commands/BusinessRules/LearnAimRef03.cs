@@ -4,20 +4,21 @@ using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class LearnAimRef03 : IBusinessRuleValidator
+    public class LearnAimRef03 : BaseValidationRule, IBusinessRuleValidator
     {
         private readonly IReferenceDataService _referenceDataService;
 
-        public LearnAimRef03(IReferenceDataService referenceDataService)
+        public LearnAimRef03(
+            IValidationErrorMessageService errorMessageService,
+            IReferenceDataService referenceDataService)
+            : base(errorMessageService)
         {
             _referenceDataService = referenceDataService;
         }
 
-        public string ErrorName => "LearnAimRef_03";
+        public override string ErrorName => "LearnAimRef_03";
 
         public bool IsWarning => false;
-
-        public string ErrorMessage => "LearnAimRef does not exist on LARS.";
 
         public bool IsValid(SupplementaryDataModel model)
         {

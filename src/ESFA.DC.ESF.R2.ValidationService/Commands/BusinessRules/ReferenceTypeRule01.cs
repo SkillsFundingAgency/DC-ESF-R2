@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class ReferenceTypeRule01 : IBusinessRuleValidator
+    public class ReferenceTypeRule01 : BaseValidationRule, IBusinessRuleValidator
     {
         private List<string> _validReferenceTypes = new List<string>
         {
@@ -16,9 +17,12 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             Constants.ReferenceType_Other
         };
 
-        public string ErrorMessage => "The ReferenceType is not valid.";
+        public ReferenceTypeRule01(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
 
-        public string ErrorName => "ReferenceType_01";
+        public override string ErrorName => "ReferenceType_01";
 
         public bool IsWarning => false;
 

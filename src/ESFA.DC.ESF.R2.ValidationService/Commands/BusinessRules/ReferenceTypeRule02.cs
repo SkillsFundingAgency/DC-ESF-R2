@@ -1,16 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class ReferenceTypeRule02 : IBusinessRuleValidator
+    public class ReferenceTypeRule02 : BaseValidationRule, IBusinessRuleValidator
     {
-        public string ErrorMessage => "The ReferenceType is not valid for the selected CostType. Please refer to the ESF Supplementary Data supporting documentation for further information.";
+        public ReferenceTypeRule02(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
 
-        public string ErrorName => "ReferenceType_02";
+        public override string ErrorName => "ReferenceType_02";
 
         public bool IsWarning => false;
 
@@ -30,7 +34,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
                 ||
                 (referenceType.CaseInsensitiveEquals(Constants.ReferenceType_LearnRefNumber) && !unitCostTypes.Any(uct => uct.CaseInsensitiveEquals(costType)) && !costType.CaseInsensitiveEquals(Constants.CostType_AuthorisedClaims))
                 ||
-                referenceType.CaseInsensitiveEquals(Constants.ReferenceType_Other) && !unitCostTypes.Any(uct => uct.CaseInsensitiveEquals(costType));
+                (referenceType.CaseInsensitiveEquals(Constants.ReferenceType_Other) && !unitCostTypes.Any(uct => uct.CaseInsensitiveEquals(costType)));
 
             return !errorCondition;
         }

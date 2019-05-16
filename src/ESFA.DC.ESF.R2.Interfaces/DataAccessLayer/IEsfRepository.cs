@@ -21,5 +21,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
         Task<IList<SupplementaryData>> GetSupplementaryDataPerSourceFile(
             int sourceFileId,
             CancellationToken cancellationToken);
+
+        Task<IDictionary<string, string>> GetValidationErrorMessages(CancellationToken cancellationToken);
     }
 }

@@ -1,14 +1,18 @@
-﻿using ESFA.DC.ESF.R2.Interfaces.Validation;
+﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class ValueRule02 : IBusinessRuleValidator
+    public class ValueRule02 : BaseValidationRule, IBusinessRuleValidator
     {
-        public string ErrorMessage => "The Value is not required for the selected CostType";
+        public ValueRule02(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
 
-        public string ErrorName => "Value_02";
+        public override string ErrorName => "Value_02";
 
         public bool IsWarning => false;
 

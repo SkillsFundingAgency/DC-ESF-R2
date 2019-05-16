@@ -111,6 +111,8 @@ namespace ESFA.DC.ESF.R2.ValidationService
 
             var learnAimRefs = wrapper.SupplementaryDataModels.Select(m => m.LearnAimRef).ToList();
             _populationService.PrePopulateLarsLearningDeliveries(learnAimRefs, cancellationToken);
+
+            _populationService.PrePopulateValidationErrorMessages(cancellationToken);
         }
 
         private IList<SupplementaryDataLooseModel> FilterOutInvalidLooseRows(

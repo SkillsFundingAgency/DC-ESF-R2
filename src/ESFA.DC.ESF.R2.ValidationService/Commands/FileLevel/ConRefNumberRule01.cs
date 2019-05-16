@@ -1,16 +1,20 @@
-﻿using ESFA.DC.ESF.R2.Interfaces.Validation;
+﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
 {
-    public class ConRefNumberRule01 : IFileLevelValidator
+    public class ConRefNumberRule01 : BaseValidationRule, IFileLevelValidator
     {
-        public string ErrorName => "ConRefNumber_01";
+        public ConRefNumberRule01(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
+
+        public override string ErrorName => "ConRefNumber_01";
 
         public bool IsWarning => false;
-
-        public string ErrorMessage => "There is a discrepency between the filename ConRefNumber and ConRefNumbers within the file.";
 
         public bool RejectFile => true;
 

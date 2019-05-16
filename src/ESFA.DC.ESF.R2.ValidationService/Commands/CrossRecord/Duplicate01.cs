@@ -1,17 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.CrossRecord
 {
-    public class Duplicate01 : ICrossRecordValidator
+    public class Duplicate01 : BaseValidationRule, ICrossRecordValidator
     {
-        public string ErrorName => "Duplicate_01";
+        public Duplicate01(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
+
+        public override string ErrorName => "Duplicate_01";
 
         public bool IsWarning => false;
-
-        public string ErrorMessage => "This record is a duplicate.";
 
         public bool IsValid(IList<SupplementaryDataModel> allRecords, SupplementaryDataModel model)
         {

@@ -1,16 +1,20 @@
-﻿using ESFA.DC.ESF.R2.Interfaces.Validation;
+﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
-    public class LearnAimRef01 : IBusinessRuleValidator
+    public class LearnAimRef01 : BaseValidationRule, IBusinessRuleValidator
     {
-        public string ErrorName => "LearnAimRef_01";
+        public LearnAimRef01(IValidationErrorMessageService errorMessageService)
+            : base(errorMessageService)
+        {
+        }
+
+        public override string ErrorName => "LearnAimRef_01";
 
         public bool IsWarning => false;
-
-        public string ErrorMessage => "LearnAimRef must be returned for the selected DeliverableCode.";
 
         public bool IsValid(SupplementaryDataModel model)
         {

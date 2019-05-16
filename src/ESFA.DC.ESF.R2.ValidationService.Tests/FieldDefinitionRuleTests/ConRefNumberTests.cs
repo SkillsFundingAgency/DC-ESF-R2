@@ -4,7 +4,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
 {
-    public class ConRefNumberTests
+    public class ConRefNumberTests : BaseTest
     {
         [Fact]
         public void FDConRefNumberALCatchesTooLongConRefNumbers()
@@ -13,7 +13,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 ConRefNumber = "123456789012345678901"
             };
-            var rule = new FDConRefNumberAL();
+            var rule = new FDConRefNumberAL(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -25,7 +25,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 ConRefNumber = "12345678901234567890"
             };
-            var rule = new FDConRefNumberAL();
+            var rule = new FDConRefNumberAL(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -37,7 +37,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 ConRefNumber = null
             };
-            var rule = new FDConRefNumberMA();
+            var rule = new FDConRefNumberMA(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -49,7 +49,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             {
                 ConRefNumber = "12345678901234567890"
             };
-            var rule = new FDConRefNumberMA();
+            var rule = new FDConRefNumberMA(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }

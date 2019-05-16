@@ -10,7 +10,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 {
-    public class UlnRuleTests
+    public class UlnRuleTests : BaseTest
     {
         [Fact]
         public void ULNRule01CatchesEmptyULNs()
@@ -21,7 +21,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 ULN = null
             };
 
-            var rule = new ULNRule01();
+            var rule = new ULNRule01(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -35,7 +35,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 ULN = 1990909009
             };
 
-            var rule = new ULNRule01();
+            var rule = new ULNRule01(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -54,7 +54,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 ULN = 1990909009
             };
 
-            var rule = new ULNRule02(referenceRepo.Object);
+            var rule = new ULNRule02(_messageServiceMock.Object, referenceRepo.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -75,7 +75,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             var dateTimeProvider = new Mock<IDateTimeProvider>();
             dateTimeProvider.Setup(m => m.GetNowUtc()).Returns(DateTime.Now);
 
-            var rule = new ULNRule03(dateTimeProvider.Object);
+            var rule = new ULNRule03(_messageServiceMock.Object, dateTimeProvider.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -94,7 +94,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             var dateTimeProvider = new Mock<IDateTimeProvider>();
             dateTimeProvider.Setup(m => m.GetNowUtc()).Returns(DateTime.Now);
 
-            var rule = new ULNRule03(dateTimeProvider.Object);
+            var rule = new ULNRule03(_messageServiceMock.Object, dateTimeProvider.Object);
 
             Assert.True(rule.IsValid(model));
         }
@@ -108,7 +108,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 ULN = 1990909009
             };
 
-            var rule = new ULNRule04();
+            var rule = new ULNRule04(_messageServiceMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -122,7 +122,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 ULN = null
             };
 
-            var rule = new ULNRule04();
+            var rule = new ULNRule04(_messageServiceMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
