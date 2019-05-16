@@ -198,7 +198,7 @@ steps:
   inputs:
     command: test
     projects: 'src/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --logger:trx --collect "Code coverage" --filter (Category=ValidationService)'
+    arguments: '--configuration $(buildConfiguration) --logger:trx --collect "Code coverage" --filter (FullyQualifiedName!~Database)&(FullyQualifiedName!~DatStore)'
     publishTestResults: true
     
 - task: VSTest@2
