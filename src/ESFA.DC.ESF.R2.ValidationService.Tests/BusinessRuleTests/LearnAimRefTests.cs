@@ -10,6 +10,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 {
     public class LearnAimRefTests : BaseTest
     {
+        [Trait("Category", "ValidationService")]
         [Theory]
         [InlineData("NR01")]
         [InlineData("RQ01")]
@@ -26,6 +27,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             Assert.False(rule.IsValid(suppData));
         }
 
+        [Trait("Category", "ValidationService")]
         [Theory]
         [InlineData("NR01")]
         [InlineData("RQ01")]
@@ -43,6 +45,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef01PassesIrrelevantDeliverableCode()
         {
             var suppData = new SupplementaryDataModel
@@ -56,6 +59,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             Assert.True(rule.IsValid(suppData));
         }
 
+        [Trait("Category", "ValidationService")]
         [Theory]
         [InlineData("CG01")]
         [InlineData("CG02")]
@@ -74,6 +78,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             Assert.False(rule.IsValid(suppData));
         }
 
+        [Trait("Category", "ValidationService")]
         [Theory]
         [InlineData("CG01")]
         [InlineData("CG02")]
@@ -93,6 +98,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef02PassesIrrelevantDeliverableCode()
         {
             var suppData = new SupplementaryDataModel
@@ -107,6 +113,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef03PassesNoLearnAimRef()
         {
             var suppData = new SupplementaryDataModel
@@ -123,6 +130,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef03FailsLearnAimRefNotFoundInLars()
         {
             var suppData = new SupplementaryDataModel
@@ -142,6 +150,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef03PassesLearnAimRefFoundInLars()
         {
             var suppData = new SupplementaryDataModel
@@ -161,6 +170,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef04FailsNoMatchingValidityDates()
         {
             var suppData = new SupplementaryDataModel
@@ -197,6 +207,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef04PassesNoLearnRefNum()
         {
             var suppData = new SupplementaryDataModel
@@ -214,6 +225,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef04PassesNoMatchingLarsLearningDelivery()
         {
             var suppData = new SupplementaryDataModel
@@ -234,6 +246,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef04PassesMatchingValidityDates()
         {
             var suppData = new SupplementaryDataModel
@@ -265,6 +278,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef05FailsGenreWrong()
         {
             var suppData = new SupplementaryDataModel
@@ -288,6 +302,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef05PassesNoLearnAimRef()
         {
             var suppData = new SupplementaryDataModel
@@ -304,6 +319,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef05PassesIrrelevantDeliveryCode()
         {
             var suppData = new SupplementaryDataModel
@@ -320,6 +336,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef05PassesNoLarsLearningDelivery()
         {
             var suppData = new SupplementaryDataModel
@@ -338,6 +355,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             Assert.True(rule.IsValid(suppData));
         }
 
+        [Trait("Category", "ValidationService")]
         [Theory]
         [InlineData("EOQ")]
         [InlineData("EQQ")]
@@ -365,6 +383,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             Assert.True(rule.IsValid(suppData));
         }
 
+        [Trait("Category", "ValidationService")]
         [Theory]
         [InlineData("EOQ")]
         [InlineData("EQQ")]
@@ -393,6 +412,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef06PassesNoLearnAimRef()
         {
             var suppData = new SupplementaryDataModel
@@ -409,6 +429,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef06PassesIrrelevantDeliveryCode()
         {
             var suppData = new SupplementaryDataModel
@@ -425,6 +446,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef06PassesNoLarsLearningDelivery()
         {
             var suppData = new SupplementaryDataModel
@@ -444,6 +466,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void LearnAimRef06PassesGenreIrrelevant()
         {
             var suppData = new SupplementaryDataModel

@@ -7,6 +7,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
     public class ReferenceTests : BaseTest
     {
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDProviderSpecifiedReferenceALCatchesTooLongProviderSpecifiedReferences()
         {
             var model = new SupplementaryDataLooseModel
@@ -19,6 +20,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDProviderSpecifiedReferenceALPassesValidProviderSpecifiedReferences()
         {
             var model = new SupplementaryDataLooseModel
@@ -31,6 +33,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDReferenceALCatchesTooLongReferences()
         {
             var model = new SupplementaryDataLooseModel
@@ -42,6 +45,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             Assert.False(rule.IsValid(model));
         }
 
+        [Trait("Category", "ValidationService")]
         [Fact]
         public void FDReferenceALPassesValidReferences()
         {
@@ -54,6 +58,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             Assert.True(rule.IsValid(model));
         }
 
+        [Trait("Category", "ValidationService")]
         [Fact]
         public void FDReferenceMACatchesEmptyReferences()
         {
@@ -66,6 +71,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             Assert.False(rule.IsValid(model));
         }
 
+        [Trait("Category", "ValidationService")]
         [Fact]
         public void FDReferenceMAPassesValidReferences()
         {
@@ -78,6 +84,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             Assert.True(rule.IsValid(model));
         }
 
+        [Trait("Category", "ValidationService")]
         [Fact]
         public void FDReferenceTypeALCatchesTooLongReferenceTypes()
         {
@@ -90,6 +97,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             Assert.False(rule.IsValid(model));
         }
 
+        [Trait("Category", "ValidationService")]
         [Fact]
         public void FDReferenceTypeALPassesValidReferenceTypes()
         {
@@ -102,6 +110,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             Assert.True(rule.IsValid(model));
         }
 
+        [Trait("Category", "ValidationService")]
         [Fact]
         public void FDReferenceTypeMACatchesEmptyReferenceTypes()
         {
@@ -114,6 +123,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             Assert.False(rule.IsValid(model));
         }
 
+        [Trait("Category", "ValidationService")]
         [Fact]
         public void FDReferenceTypeMAPassesValidReferenceTypes()
         {

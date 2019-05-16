@@ -6,6 +6,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
 {
     public class LearnAimRefTests : BaseTest
     {
+        [Trait("Category", "ValidationService")]
         [Theory]
         [InlineData("123456789")]
         [InlineData(null)]
@@ -21,6 +22,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDLearnAimRefALPassesLearnAimRefCorrect()
         {
             var model = new SupplementaryDataLooseModel

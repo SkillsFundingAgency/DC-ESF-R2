@@ -7,6 +7,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
     public class ConRefNumberTests : BaseTest
     {
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDConRefNumberALCatchesTooLongConRefNumbers()
         {
             var model = new SupplementaryDataLooseModel
@@ -19,6 +20,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDConRefNumberALPassesValidConRefNumbers()
         {
             var model = new SupplementaryDataLooseModel
@@ -31,6 +33,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDConRefNumberMACatchesEmptyConRefNumbers()
         {
             var model = new SupplementaryDataLooseModel
@@ -43,6 +46,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDConRefNumberMAPassesValidConRefNumbers()
         {
             var model = new SupplementaryDataLooseModel

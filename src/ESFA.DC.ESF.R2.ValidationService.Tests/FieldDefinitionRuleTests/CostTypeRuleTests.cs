@@ -7,6 +7,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
     public class CostTypeRuleTests : BaseTest
     {
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDCostTypeALCatchesTooLongCostTypes()
         {
             var model = new SupplementaryDataLooseModel
@@ -19,6 +20,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDCostTypeALPassesValidCostTypes()
         {
             var model = new SupplementaryDataLooseModel
@@ -31,6 +33,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDCostTypeMACatchesEmptyCostTypes()
         {
             var model = new SupplementaryDataLooseModel
@@ -43,6 +46,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void FDCostTypeMAPassesValidCostTypes()
         {
             var model = new SupplementaryDataLooseModel

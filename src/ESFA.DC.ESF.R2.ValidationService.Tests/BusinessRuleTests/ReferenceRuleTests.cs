@@ -7,6 +7,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
     public class ReferenceRuleTests : BaseTest
     {
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ProviderSpecifiedReferenceRule01CatchesRegexViolations()
         {
             var invalidCharacters = "|~?";
@@ -22,6 +23,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ProviderSpecifiedReferenceRule01PassesValidReferences()
         {
             var model = new SupplementaryDataModel
@@ -35,6 +37,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ReferenceRule01CatchesRegexViolations()
         {
             var invalidCharacters = "|~?";
@@ -50,6 +53,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ReferenceRule01PassesValidReferences()
         {
             var model = new SupplementaryDataModel
@@ -63,6 +67,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ReferenceTypeRule01CatchesInvalidTypes()
         {
             var model = new SupplementaryDataModel
@@ -76,6 +81,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ReferenceTypeRule01PassesValidTypes()
         {
             var model = new SupplementaryDataModel
@@ -89,6 +95,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ReferenceTypeRule02CatchesInvalidReferenceTypeCostTypeCombinations()
         {
             var model = new SupplementaryDataModel
@@ -103,6 +110,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ReferenceTypeRule02PassesValidReferenceTypeCostTypeCombinations()
         {
             var model = new SupplementaryDataModel

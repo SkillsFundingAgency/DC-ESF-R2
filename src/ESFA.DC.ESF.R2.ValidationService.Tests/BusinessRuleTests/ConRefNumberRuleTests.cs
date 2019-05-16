@@ -6,6 +6,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 {
     public class ConRefNumberRuleTests : BaseTest
     {
+        [Trait("Category", "ValidationService")]
         [Theory]
         [InlineData("")]
         [InlineData("ESF-5000")]
@@ -21,6 +22,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             Assert.True(rule.IsValid(model));
         }
 
+        [Trait("Category", "ValidationService")]
         [Fact]
         public void ConRefNumber02FailsWithInvalidConRefNumber()
         {

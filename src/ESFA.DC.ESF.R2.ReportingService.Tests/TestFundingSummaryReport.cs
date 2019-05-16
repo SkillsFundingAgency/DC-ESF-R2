@@ -26,6 +26,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
     public class TestFundingSummaryReport
     {
         [Fact]
+        [Trait("Category", "Reports")]
         public async Task TestFundingSummaryReportGeneration()
         {
             var dateTime = DateTime.UtcNow;

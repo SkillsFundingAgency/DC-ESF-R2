@@ -11,7 +11,7 @@ Post-Deployment Script Template
 */
 
 SET NOCOUNT ON ;
-
+:r .\SeedData\ValidationErrorMessageData.sql
 GO
 RAISERROR('		   Extended Property',10,1) WITH NOWAIT;
 GO

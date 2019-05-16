@@ -10,6 +10,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
     public class SupplementaryDataPanelDateTests : BaseTest
     {
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void SupplementaryDataPanelDate01FailsDateInFuture()
         {
             var suppData = new SupplementaryDataModel
@@ -32,6 +33,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void SupplementaryDataPanelDate01PassesNoSupplementaryDataPanelDate()
         {
             var suppData = new SupplementaryDataModel
@@ -47,6 +49,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void SupplementaryDataPanelDate01PassesSupplementaryDataPanelDateNotInFuture()
         {
             var suppData = new SupplementaryDataModel
@@ -69,6 +72,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void SupplementaryDataPanelDate02FailsDateBeforeStartDate()
         {
             var suppData = new SupplementaryDataModel
@@ -82,6 +86,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void SupplementaryDataPanelDate02PassesNoSupplementaryDataPanelDate()
         {
             var suppData = new SupplementaryDataModel
@@ -95,6 +100,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void SupplementaryDataPanelDate02PassesSupplementaryDataPanelDateAfterStartDate()
         {
             var suppData = new SupplementaryDataModel
@@ -107,6 +113,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             Assert.True(rule.IsValid(suppData));
         }
 
+        [Trait("Category", "ValidationService")]
         [Theory]
         [InlineData("ST01")]
         [InlineData("NR01")]
@@ -129,6 +136,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void SupplementaryDataPanelDate03PassesIrrelevantDeliverableCode()
         {
             var suppData = new SupplementaryDataModel
@@ -143,6 +151,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void SupplementaryDataPanelDate03PassesSupplementaryDataPanelDatePresent()
         {
             var suppData = new SupplementaryDataModel

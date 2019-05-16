@@ -14,6 +14,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
     public class CalendarRuleTests : BaseTest
     {
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void TestThatCalendarMonthRule01CatchesInvalidMonths()
         {
             var model = new SupplementaryDataModel
@@ -26,6 +27,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void TestThatCalendarMonthRule01PassesValidMonths()
         {
             var model = new SupplementaryDataModel
@@ -38,6 +40,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void CalendarYearCalendarMonthRule01CatchesFutureDates()
         {
             var model = new SupplementaryDataModel
@@ -58,6 +61,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void CalendarYearCalendarMonthRule01PassesDatesNotInTheFuture()
         {
             var model = new SupplementaryDataModel
@@ -78,6 +82,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void CalendarYearCalendarMonthRule02CatchesDatesPriorToContractDate()
         {
             var allocation = new ContractAllocationCacheModel
@@ -107,6 +112,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void CalendarYearCalendarMonthRule02PassesDatesInTheContractPeriod()
         {
             var allocation = new ContractAllocationCacheModel
@@ -136,6 +142,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void CalendarYearCalendarMonthRule03CatchesDatesAfterTheContractDate()
         {
             var allocation = new ContractAllocationCacheModel
@@ -165,6 +172,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void CalendarYearCalendarMonthRule03PassesDatesInTheContractPeriod()
         {
             var allocation = new ContractAllocationCacheModel
@@ -194,6 +202,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void CalendarYearRule01CatchesYearsOutsideOfTheAllowedRange()
         {
             var model = new SupplementaryDataModel
@@ -206,6 +215,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void CalendarYearRule01PassesYearsInsideOfTheAllowedRange()
         {
             var model = new SupplementaryDataModel

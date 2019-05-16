@@ -18,6 +18,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests
     public class ControllerTest : BaseTest
     {
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void TestController()
         {
             Mock<IReferenceDataService> cacheService = new Mock<IReferenceDataService>();

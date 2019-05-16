@@ -13,6 +13,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
     public class UlnRuleTests : BaseTest
     {
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ULNRule01CatchesEmptyULNs()
         {
             var model = new SupplementaryDataModel
@@ -27,6 +28,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ULNRule01PassesPopulatedULNs()
         {
             var model = new SupplementaryDataModel
@@ -41,6 +43,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ULNRule02PassesULNsFoundInLookup()
         {
             var referenceRepo = new Mock<IReferenceDataService>();
@@ -60,6 +63,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ULNRule03CatchesULNsForDatesOlderThan2MonthsAgo()
         {
             var date = DateTime.Now.AddMonths(-6);
@@ -81,6 +85,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ULNRule03PassesULNsForMonthsAfer2MonthsAgo()
         {
             var model = new SupplementaryDataModel
@@ -100,6 +105,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ULNRule04CatchesULNsWhenNotRequired()
         {
             var model = new SupplementaryDataModel
@@ -114,6 +120,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void ULNRule04PassesEmptyULNsWhenNotRequired()
         {
             var model = new SupplementaryDataModel

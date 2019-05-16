@@ -8,6 +8,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.CrossRecordRuleTests
     public class DuplicateTests : BaseTest
     {
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void Duplicate01CatchesDuplicates()
         {
             var record = new SupplementaryDataModel
@@ -33,6 +34,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.CrossRecordRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void Duplicate01PassesWhenNoDuplicates()
         {
             var record = new SupplementaryDataModel

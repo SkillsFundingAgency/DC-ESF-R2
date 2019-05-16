@@ -8,6 +8,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
     public class DeliverableCodeTests : BaseTest
     {
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void DeliverableCodeRule01CatchesInvalidDeliverableCodes()
         {
             var model = new SupplementaryDataModel
@@ -21,6 +22,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         }
 
         [Fact]
+        [Trait("Category", "ValidationService")]
         public void DeliverableCodeRule01PassesValidDeliverableCodes()
         {
             var validCodes = new List<string>

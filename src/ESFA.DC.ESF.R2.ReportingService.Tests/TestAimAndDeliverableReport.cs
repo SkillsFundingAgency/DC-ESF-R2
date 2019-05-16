@@ -19,6 +19,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
     public sealed class TestAimAndDeliverableReport
     {
         [Fact]
+        [Trait("Category", "Reports")]
         public async Task TestAimAndDeliverableReportGeneration()
         {
             var csv = string.Empty;
