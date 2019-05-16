@@ -113,7 +113,7 @@ steps:
     Contents: '**\*.pdb'
 
 - task: CopyFiles@2
-  displayName: 'Copy Nuget Interface Packages Files - Artifact NugetInterface Directory'
+  displayName: 'Copy Nuget Interface Packages Files - Artifact Nuget Interface Directory'
   inputs:
     SourceFolder: '$(build.sourcesdirectory)\src'
     Contents: |
@@ -125,7 +125,7 @@ steps:
     flattenFolders: true
 
 - task: CopyFiles@2
-  displayName: 'Copy NugetPackages Files - Artifact NugetPackages Directory'
+  displayName: 'Copy NugetPackages Files - Artifact Nuget Packages Directory'
   inputs:
     SourceFolder: '$(build.sourcesdirectory)\src'
     Contents: |
@@ -177,7 +177,7 @@ steps:
     SourceFolder: '$(build.sourcesdirectory)\src'
     Contents: |
      **\*Database.Tests*\bin\$(buildConfiguration)\**
-    TargetFolder: '$(build.artifactstagingdirectory)\Test\Database'
+    TargetFolder: '$(build.artifactstagingdirectory)\Tests\Database'
     CleanTargetFolder: true
     flattenFolders: true
 
@@ -188,7 +188,7 @@ steps:
     SourceFolder: '$(build.sourcesdirectory)\src'
     Contents: |
      **\*DatStore.Tests*\bin\$(buildConfiguration)\**
-    TargetFolder: '$(build.artifactstagingdirectory)\Test\DatStore'
+    TargetFolder: '$(build.artifactstagingdirectory)\Tests\DatStore'
     CleanTargetFolder: true
     flattenFolders: true
 
@@ -243,3 +243,10 @@ steps:
   inputs:
     ArtifactName: Databases
     PathtoPublish: '$(build.artifactstagingdirectory)\Databases'
+    
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: Intergration Test Assemblies'
+  enabled: true
+  inputs:
+    ArtifactName: IntergrationTests
+    PathtoPublish: '$(build.artifactstagingdirectory)\Tests'
