@@ -8,7 +8,7 @@ namespace ESFA.DC.ESF.R2.Database.Tests
     {
         public DatabaseConnectionFixture()
         {
-            string connectionString = ConfigurationManager.ConnectionStrings["Database"].ConnectionString;
+            string connectionString = ConfigurationManager.AppSettings["TestConnectionString"];
             IDbConnectorConfiguration dbConnectorConfiguration = new DbConnectorConfiguration(connectionString);
             IDbConnector dbConnector = new DbConnector(dbConnectorConfiguration);
             SchemaTests = new SchemaTests(dbConnector);
