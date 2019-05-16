@@ -170,13 +170,35 @@ steps:
     versionBehavior: Replace
   enabled: true
    
+- task: CopyFiles@2
+  enabled: true
+  displayName: 'Copy Database Intergration Test Assemblies - Artifact Test Directory'
+  inputs:
+    SourceFolder: '$(build.sourcesdirectory)\src'
+    Contents: |
+     **\*Database.Tests*\bin\$(buildConfiguration)\**
+    TargetFolder: '$(build.artifactstagingdirectory)\Test\Database'
+    CleanTargetFolder: true
+    flattenFolders: true
+
+- task: CopyFiles@2
+  enabled: true
+  displayName: 'Copy DatStore Intergration Test Assemblies - Artifact Test Directory'
+  inputs:
+    SourceFolder: '$(build.sourcesdirectory)\src'
+    Contents: |
+     **\*DatStore.Tests*\bin\$(buildConfiguration)\**
+    TargetFolder: '$(build.artifactstagingdirectory)\Test\DatStore'
+    CleanTargetFolder: true
+    flattenFolders: true
+
 - task: DotNetCoreCLI@2
   enabled: true
   displayName: 'Run xUnit Test - Core Framework'
   inputs:
     command: test
     projects: 'src/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --logger:trx --collect "Code coverage" --filter (Category!=DbSchemaTest)'
+    arguments: '--configuration $(buildConfiguration) --logger:trx --collect "Code coverage" --filter (Category=ValidationService)'
     publishTestResults: true
     
 - task: VSTest@2
