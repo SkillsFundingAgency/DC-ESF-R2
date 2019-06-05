@@ -166,6 +166,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                         && delivery.AimSeqNumber == fm70Delivery.AimSeqNumber
                         && delivery.DeliverableCode.CaseInsensitiveEquals(deliverableCode));
 
+                    var periodReportedForDeliverable = false;
                     foreach (var period in fm70Periods)
                     {
                         var total = (period.StartEarnings ?? 0) + (period.AchievementEarnings ?? 0)
@@ -189,6 +190,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                             fcsMapping,
                             total);
 
+                        periodReportedForDeliverable = true;
+                        reportData.Add(model);
+                    }
+
+                    if (!periodReportedForDeliverable)
+                    {
+                        var model = GetAimAndDeliverableModel(learningDelivery, fm70Delivery, larsDelivery, outcome, fm70Outcome, fam, learnerMonitorings, deliveryMonitorings);
                         reportData.Add(model);
                     }
                 }
