@@ -35,8 +35,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             ESFConstants.MonthToCollection.TryGetValue(model.CalendarMonth.Value, out var period);
 
             var year = _dateTimeProvider.GetNowUtc().Year;
-            return model.CalendarYear <= year &&
-                   (model.CalendarYear < year || (model.CalendarYear == year && period <= _referenceDataService.CurrentPeriod));
+            return model.CalendarYear < year || (model.CalendarYear == year && period <= _referenceDataService.CurrentPeriod);
         }
     }
 }
