@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ESFA.DC.ESF.R2.Database.EF
+﻿namespace ESFA.DC.ESF.R2.Database.EF
 {
     public partial class ValidationErrorMessage
     {

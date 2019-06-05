@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ESFA.DC.ESF.R2.Database.EF
+﻿namespace ESFA.DC.ESF.R2.Database.EF
 {
     public partial class SupplementaryDataUnitCost
     {
@@ -14,7 +11,5 @@ namespace ESFA.DC.ESF.R2.Database.EF
         public string ReferenceType { get; set; }
         public string Reference { get; set; }
         public decimal? Value { get; set; }
-
-        public virtual SupplementaryData SupplementaryData { get; set; }
     }
 }

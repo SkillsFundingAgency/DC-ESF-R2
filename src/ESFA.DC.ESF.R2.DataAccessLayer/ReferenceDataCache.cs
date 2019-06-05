@@ -197,6 +197,11 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
             foreach (var learnAimRef in learnAimRefs)
             {
+                if (larsLearningDeliveries.Exists(lld => lld.LearnAimRef == learnAimRef))
+                {
+                    continue;
+                }
+
                 LarsLearnAimRefs.TryGetValue(learnAimRef, out var learningDeliveryModel);
                 if (learningDeliveryModel != null)
                 {
