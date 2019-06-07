@@ -36,8 +36,13 @@ namespace ESFA.DC.ESF.R2.DataStore
 
                 _cancellationToken.ThrowIfCancellationRequested();
 
+                var columnNames = typeof(T).GetProperties()
+                    .Where(p => !p.GetMethod.IsVirtual)
+                    .Select(p => p.Name)
+                    .ToArray();
+
                 _sqlBulkCopy.ColumnMappings.Clear();
-                using (ObjectReader reader = ObjectReader.Create(source))
+                using (var reader = ObjectReader.Create(source, columnNames))
                 {
                     _sqlBulkCopy.DestinationTableName = table;
                     DataTable schema = reader.GetSchemaTable();

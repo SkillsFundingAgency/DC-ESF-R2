@@ -19,5 +19,8 @@ namespace ESFA.DC.ESF.R2.Database.EF
         public string LearnAimRef { get; set; }
         public DateTime? SupplementaryDataPanelDate { get; set; }
         public int SourceFileId { get; set; }
+
+        public virtual SourceFile SourceFile { get; set; }
+        public virtual SupplementaryDataUnitCost SupplementaryDataUnitCost { get; set; }
     }
 }
