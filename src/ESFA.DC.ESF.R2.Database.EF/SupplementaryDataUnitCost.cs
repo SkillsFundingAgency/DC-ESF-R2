@@ -11,5 +11,7 @@
         public string ReferenceType { get; set; }
         public string Reference { get; set; }
         public decimal? Value { get; set; }
+
+        public virtual SupplementaryData SupplementaryData { get; set; }
     }
 }

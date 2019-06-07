@@ -106,6 +106,12 @@ namespace ESFA.DC.ESF.R2.Database.EF
                 entity.Property(e => e.Uln).HasColumnName("ULN");
 
                 entity.Property(e => e.Value).HasColumnType("decimal(8, 2)");
+
+                entity.HasOne(d => d.SourceFile)
+                    .WithMany(p => p.SupplementaryDatas)
+                    .HasForeignKey(d => d.SourceFileId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_SourceFile");
             });
 
             modelBuilder.Entity<SupplementaryDataUnitCost>(entity =>
@@ -139,6 +145,11 @@ namespace ESFA.DC.ESF.R2.Database.EF
                     .IsUnicode(false);
 
                 entity.Property(e => e.Value).HasColumnType("decimal(8, 2)");
+
+                entity.HasOne(d => d.SupplementaryData)
+                    .WithOne(p => p.SupplementaryDataUnitCost)
+                    .HasForeignKey<SupplementaryDataUnitCost>(d => new { d.ConRefNumber, d.DeliverableCode, d.CalendarYear, d.CalendarMonth, d.CostType, d.ReferenceType, d.Reference })
+                    .HasConstraintName("FK_SupplementaryDataUnitCost_SupplementaryData");
             });
 
             modelBuilder.Entity<ValidationError>(entity =>
