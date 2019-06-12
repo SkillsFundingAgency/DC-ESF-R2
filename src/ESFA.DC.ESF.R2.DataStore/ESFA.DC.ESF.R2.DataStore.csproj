@@ -40,6 +40,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StorageController.cs" />
     <Compile Include="StoreClear.cs" />
+    <Compile Include="StoreESFUnitCost.cs" />
     <Compile Include="StoreESF.cs" />
     <Compile Include="StoreFileDetails.cs" />
     <Compile Include="StoreValidation.cs" />
@@ -60,6 +61,10 @@
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Service.Config\ESFA.DC.ESF.R2.Service.Config.csproj">
       <Project>{5CDFB079-A857-42CF-95F8-F6AF0FE0C179}</Project>
       <Name>ESFA.DC.ESF.R2.Service.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.Utils\ESFA.DC.ESF.R2.Utils.csproj">
+      <Project>{51402A23-1DDA-435E-BBB7-869458D02BCE}</Project>
+      <Name>ESFA.DC.ESF.R2.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

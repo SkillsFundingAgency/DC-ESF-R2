@@ -54,6 +54,7 @@
     <Compile Include="DataAccessLayer\IValidationErrorMessageService.cs" />
     <Compile Include="DataStore\IStoreClear.cs" />
     <Compile Include="DataStore\IStoreESF.cs" />
+    <Compile Include="DataStore\IStoreESFUnitCost.cs" />
     <Compile Include="DataStore\IStoreFileDetails.cs" />
     <Compile Include="DataStore\IStoreValidation.cs" />
     <Compile Include="Helpers\IFileHelper.cs" />

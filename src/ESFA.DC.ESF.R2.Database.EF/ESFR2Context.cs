@@ -140,10 +140,6 @@ namespace ESFA.DC.ESF.R2.Database.EF
                     .HasMaxLength(100)
                     .IsUnicode(false);
 
-                entity.Property(e => e.StaffName)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Value).HasColumnType("decimal(8, 2)");
 
                 entity.HasOne(d => d.SupplementaryData)

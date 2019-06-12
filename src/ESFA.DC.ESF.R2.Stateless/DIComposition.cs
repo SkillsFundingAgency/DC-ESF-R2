@@ -535,6 +535,7 @@ namespace ESFA.DC.ESF.R2.Stateless
         {
             containerBuilder.RegisterType<StoreFileDetails>().As<IStoreFileDetails>();
             containerBuilder.RegisterType<StoreESF>().As<IStoreESF>();
+            containerBuilder.RegisterType<StoreESFUnitCost>().As<IStoreESFUnitCost>();
             containerBuilder.RegisterType<StoreValidation>().As<IStoreValidation>();
         }
     }

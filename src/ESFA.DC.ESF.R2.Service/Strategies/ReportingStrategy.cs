@@ -15,7 +15,7 @@ namespace ESFA.DC.ESF.R2.Service.Strategies
             _reportingController = reportingController;
         }
 
-        public int Order => 2;
+        public int Order => 3;
 
         public bool IsMatch(string taskName)
         {

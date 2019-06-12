@@ -13,6 +13,7 @@ namespace ESFA.DC.ESF.R2.DataStore
     public class StorageController : IStorageController
     {
         private readonly IStoreESF _store;
+        private readonly IStoreESFUnitCost _storeEsfUnitCost;
         private readonly IStoreFileDetails _storeFileDetails;
         private readonly IStoreValidation _storeValidation;
         private readonly ESFConfiguration _dbConfiguration;
@@ -21,12 +22,14 @@ namespace ESFA.DC.ESF.R2.DataStore
         public StorageController(
             ESFConfiguration databaseConfiguration,
             IStoreESF store,
+            IStoreESFUnitCost storeEsfUnitCost,
             IStoreValidation storeValidation,
             IStoreFileDetails storeFileDetails,
             ILogger logger)
         {
             _dbConfiguration = databaseConfiguration;
             _store = store;
+            _storeEsfUnitCost = storeEsfUnitCost;
             _storeFileDetails = storeFileDetails;
             _storeValidation = storeValidation;
             _logger = logger;
@@ -60,6 +63,7 @@ namespace ESFA.DC.ESF.R2.DataStore
 
                     await _storeValidation.StoreAsync(connection, transaction, fileId, wrapper.ValidErrorModels, cancellationToken);
                     await _store.StoreAsync(connection, transaction, fileId, wrapper.SupplementaryDataModels, cancellationToken);
+                    await _storeEsfUnitCost.StoreAsync(connection, transaction, wrapper.SupplementaryDataModels, cancellationToken);
 
                     transaction.Commit();
                     successfullyCommitted = true;

@@ -1,29 +1,47 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Database.EF;
+using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.DataStore;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.DataStore
 {
-    public class StoreESF : IStoreESF
+    public class StoreESFUnitCost : IStoreESFUnitCost
     {
-        private List<SupplementaryData> _supplementaryData;
+        private readonly IReferenceDataService _referenceDataService;
+
+        private List<SupplementaryDataUnitCost> _supplementaryUnitCosts;
+
+        public StoreESFUnitCost(IReferenceDataService referenceDataService)
+        {
+            _referenceDataService = referenceDataService;
+        }
 
         public async Task StoreAsync(
             SqlConnection connection,
             SqlTransaction transaction,
-            int fileId,
             IEnumerable<SupplementaryDataModel> models,
             CancellationToken cancellationToken)
         {
-            _supplementaryData = new List<SupplementaryData>();
+            _supplementaryUnitCosts = new List<SupplementaryDataUnitCost>();
 
             foreach (var model in models)
             {
-                _supplementaryData.Add(new SupplementaryData
+                if (!ESFConstants.UnitCostDeliverableCodes
+                    .Any(ucdc => ucdc.CaseInsensitiveEquals(model.DeliverableCode)))
+                {
+                    continue;
+                }
+
+                var unitCost = _referenceDataService
+                    .GetDeliverableUnitCosts(model.ConRefNumber, new List<string> { model.DeliverableCode }).ToList();
+
+                _supplementaryUnitCosts.Add(new SupplementaryDataUnitCost
                 {
                     ConRefNumber = model.ConRefNumber,
                     DeliverableCode = model.DeliverableCode,
@@ -32,12 +50,7 @@ namespace ESFA.DC.ESF.R2.DataStore
                     CostType = model.CostType,
                     ReferenceType = model.ReferenceType,
                     Reference = model.Reference,
-                    Uln = model.ULN,
-                    ProviderSpecifiedReference = model.ProviderSpecifiedReference,
-                    Value = model.Value,
-                    LearnAimRef = model.LearnAimRef,
-                    SupplementaryDataPanelDate = model.SupplementaryDataPanelDate,
-                    SourceFileId = fileId
+                    Value = unitCost.FirstOrDefault()?.UnitCost ?? 0
                 });
             }
 
@@ -50,7 +63,7 @@ namespace ESFA.DC.ESF.R2.DataStore
 
             using (var bulkInsert = new BulkInsert(connection, transaction, cancellationToken))
             {
-                await bulkInsert.Insert("dbo.SupplementaryData", _supplementaryData);
+                await bulkInsert.Insert("dbo.SupplementaryDataUnitCost", _supplementaryUnitCosts);
             }
         }
     }
