@@ -20,7 +20,7 @@ namespace ESFA.DC.ESF.R2.Service.Strategies
             _logger = logger;
         }
 
-        public int Order => 3;
+        public int Order => 2;
 
         public bool IsMatch(string taskName)
         {
