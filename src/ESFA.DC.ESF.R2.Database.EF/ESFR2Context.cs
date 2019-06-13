@@ -95,10 +95,6 @@ namespace ESFA.DC.ESF.R2.Database.EF
                     .HasMaxLength(200)
                     .IsUnicode(false);
 
-                entity.Property(e => e.StaffName)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.SupplementaryDataId).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.SupplementaryDataPanelDate).HasColumnType("date");

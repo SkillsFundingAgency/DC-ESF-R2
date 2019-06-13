@@ -5,7 +5,6 @@
     [CalendarYear]               INT            NOT NULL,
     [CalendarMonth]              INT            NOT NULL,
     [CostType]                   VARCHAR (20)   NOT NULL,
-    [StaffName]                  VARCHAR (100)  NULL,
     [ReferenceType]              VARCHAR (20)   NOT NULL,
     [Reference]                  VARCHAR (100)  NOT NULL,
     [ULN]                        BIGINT         NULL,

@@ -35,23 +35,23 @@ namespace ESFA.DC.ESF.R2.Database.Tests
         [Trait("Category", "SchemaDboTests")]
         public void CheckColumnSupplementaryDataModel()
         {
+            var index = 0;
             var expectedColumns = new List<ExpectedColumn>
             {
-                ExpectedColumn.CreateInt("SupplementaryDataId", 1, false),
-                ExpectedColumn.CreateVarChar("ConRefNumber", 2, false, 20),
-                ExpectedColumn.CreateVarChar("DeliverableCode", 3, false, 10),
-                ExpectedColumn.CreateInt("CalendarYear", 4, false),
-                ExpectedColumn.CreateInt("CalendarMonth", 5, false),
-                ExpectedColumn.CreateVarChar("CostType", 6, false, 20),
-                ExpectedColumn.CreateVarChar("StaffName", 7, true, 100),
-                ExpectedColumn.CreateVarChar("ReferenceType", 8, false, 20),
-                ExpectedColumn.CreateVarChar("Reference", 9, false, 100),
-                ExpectedColumn.CreateBigInt("ULN", 10, true),
-                ExpectedColumn.CreateVarChar("ProviderSpecifiedReference", 11, true, 200),
-                ExpectedColumn.CreateDecimal("Value", 12, true, 8, 2),
-                ExpectedColumn.CreateVarChar("LearnAimRef", 13, true, 8),
-                ExpectedColumn.CreateDate("SupplementaryDataPanelDate", 14, true),
-                ExpectedColumn.CreateInt("SourceFileId", 15, false)
+                ExpectedColumn.CreateInt("SupplementaryDataId", ++index, false),
+                ExpectedColumn.CreateVarChar("ConRefNumber", ++index, false, 20),
+                ExpectedColumn.CreateVarChar("DeliverableCode", ++index, false, 10),
+                ExpectedColumn.CreateInt("CalendarYear", ++index, false),
+                ExpectedColumn.CreateInt("CalendarMonth", ++index, false),
+                ExpectedColumn.CreateVarChar("CostType", ++index, false, 20),
+                ExpectedColumn.CreateVarChar("ReferenceType", ++index, false, 20),
+                ExpectedColumn.CreateVarChar("Reference", ++index, false, 100),
+                ExpectedColumn.CreateBigInt("ULN", ++index, true),
+                ExpectedColumn.CreateVarChar("ProviderSpecifiedReference", ++index, true, 200),
+                ExpectedColumn.CreateDecimal("Value", ++index, true, 8, 2),
+                ExpectedColumn.CreateVarChar("LearnAimRef", ++index, true, 8),
+                ExpectedColumn.CreateDate("SupplementaryDataPanelDate", ++index, true),
+                ExpectedColumn.CreateInt("SourceFileId", ++index, false)
             };
             _fixture.SchemaTests.AssertTableColumnsExist("dbo", "SupplementaryData", expectedColumns, true);
         }
@@ -67,10 +67,9 @@ namespace ESFA.DC.ESF.R2.Database.Tests
                 ExpectedColumn.CreateInt("CalendarYear", 3, false),
                 ExpectedColumn.CreateInt("CalendarMonth", 4, false),
                 ExpectedColumn.CreateVarChar("CostType", 5, false, 20),
-                ExpectedColumn.CreateVarChar("StaffName", 6, true, 100),
-                ExpectedColumn.CreateVarChar("ReferenceType", 7, false, 20),
-                ExpectedColumn.CreateVarChar("Reference", 8, false, 100),
-                ExpectedColumn.CreateDecimal("Value", 9, true, 8, 2),
+                ExpectedColumn.CreateVarChar("ReferenceType", 6, false, 20),
+                ExpectedColumn.CreateVarChar("Reference", 7, false, 100),
+                ExpectedColumn.CreateDecimal("Value", 8, true, 8, 2),
             };
             _fixture.SchemaTests.AssertTableColumnsExist("dbo", "SupplementaryDataUnitCost", expectedColumns, true);
         }
