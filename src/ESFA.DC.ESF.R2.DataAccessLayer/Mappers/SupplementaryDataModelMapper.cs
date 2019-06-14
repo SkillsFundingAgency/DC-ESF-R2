@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using ESFA.DC.ESF.R2.Database.EF;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Models;
@@ -62,7 +63,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer.Mappers
 
         private DateTime? ConvertToNullableDateTime(string value)
         {
-            return string.IsNullOrEmpty(value?.Trim()) ? (DateTime?)null : DateTime.Parse(value);
+            return string.IsNullOrEmpty(value?.Trim()) ? (DateTime?)null : DateTime.ParseExact(value, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None);
         }
     }
 }
