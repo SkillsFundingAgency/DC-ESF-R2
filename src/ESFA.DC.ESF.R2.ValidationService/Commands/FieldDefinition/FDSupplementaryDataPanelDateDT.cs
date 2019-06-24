@@ -19,8 +19,8 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition
 
         public bool IsValid(SupplementaryDataLooseModel model)
         {
-            return !string.IsNullOrEmpty(model.SupplementaryDataPanelDate)
-                   && DateTime.TryParseExact(model.SupplementaryDataPanelDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
+            return string.IsNullOrEmpty(model.SupplementaryDataPanelDate)
+                   || DateTime.TryParseExact(model.SupplementaryDataPanelDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
         }
     }
 }

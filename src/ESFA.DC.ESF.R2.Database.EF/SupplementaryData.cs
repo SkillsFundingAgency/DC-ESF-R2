@@ -12,7 +12,7 @@ namespace ESFA.DC.ESF.R2.Database.EF
         public string CostType { get; set; }
         public string ReferenceType { get; set; }
         public string Reference { get; set; }
-        public long? Uln { get; set; }
+        public long? ULN { get; set; }
         public string ProviderSpecifiedReference { get; set; }
         public decimal? Value { get; set; }
         public string LearnAimRef { get; set; }
