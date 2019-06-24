@@ -9,8 +9,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         [Trait("Category", "ValidationService")]
         [Theory]
         [InlineData("123456789")]
-        [InlineData(null)]
-        public void FDLearnAimRefALFailsLearnAimRefTooLongOrNull(string learnAimRef)
+        public void FDLearnAimRefALFailsLearnAimRefTooLong(string learnAimRef)
         {
             var model = new SupplementaryDataLooseModel
             {
@@ -21,13 +20,15 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
             Assert.False(rule.IsValid(model));
         }
 
-        [Fact]
         [Trait("Category", "ValidationService")]
-        public void FDLearnAimRefALPassesLearnAimRefCorrect()
+        [Theory]
+        [InlineData("12345678")]
+        [InlineData(null)]
+        public void FDLearnAimRefALPassesLearnAimRefCorrect(string learnAimRef)
         {
             var model = new SupplementaryDataLooseModel
             {
-                LearnAimRef = "12345678"
+                LearnAimRef = learnAimRef
             };
             var rule = new FDLearnAimRefAL(_messageServiceMock.Object);
 

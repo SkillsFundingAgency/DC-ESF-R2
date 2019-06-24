@@ -99,7 +99,7 @@ namespace ESFA.DC.ESF.R2.Database.EF
 
                 entity.Property(e => e.SupplementaryDataPanelDate).HasColumnType("date");
 
-                entity.Property(e => e.Uln).HasColumnName("ULN");
+                entity.Property(e => e.ULN).HasColumnName("ULN");
 
                 entity.Property(e => e.Value).HasColumnType("decimal(8, 2)");
 

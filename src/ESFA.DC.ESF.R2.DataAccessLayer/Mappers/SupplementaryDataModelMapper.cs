@@ -14,7 +14,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer.Mappers
             {
                 DeliverableCode = entity.DeliverableCode,
                 ConRefNumber = entity.ConRefNumber,
-                ULN = entity.Uln,
+                ULN = entity.ULN,
                 CostType = entity.CostType,
                 CalendarYear = entity.CalendarYear,
                 CalendarMonth = entity.CalendarMonth,

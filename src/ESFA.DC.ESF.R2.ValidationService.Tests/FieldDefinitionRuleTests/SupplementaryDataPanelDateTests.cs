@@ -9,7 +9,6 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         [Trait("Category", "ValidationService")]
         [Theory]
         [InlineData("123456789")]
-        [InlineData(null)]
         public void FDSupplementaryDataPanelDateDTFailsNotValidDate(string panelDate)
         {
             var model = new SupplementaryDataLooseModel
@@ -22,12 +21,14 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.FieldDefinitionRuleTests
         }
 
         [Trait("Category", "ValidationService")]
-        [Fact]
-        public void FDSupplementaryDataPanelDateDTPassesValidDate()
+        [Theory]
+        [InlineData("31/12/2018")]
+        [InlineData(null)]
+        public void FDSupplementaryDataPanelDateDTPassesValidDate(string panelDate)
         {
             var model = new SupplementaryDataLooseModel
             {
-                SupplementaryDataPanelDate = "31/12/2018"
+                SupplementaryDataPanelDate = panelDate
             };
             var rule = new FDSupplementaryDataPanelDateDT(_messageServiceMock.Object);
 

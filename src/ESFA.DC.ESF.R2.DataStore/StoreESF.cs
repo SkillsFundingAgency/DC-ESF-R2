@@ -32,7 +32,7 @@ namespace ESFA.DC.ESF.R2.DataStore
                     CostType = model.CostType,
                     ReferenceType = model.ReferenceType,
                     Reference = model.Reference,
-                    Uln = model.ULN,
+                    ULN = model.ULN,
                     ProviderSpecifiedReference = model.ProviderSpecifiedReference,
                     Value = model.Value,
                     LearnAimRef = model.LearnAimRef,

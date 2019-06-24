@@ -19,7 +19,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition
 
         public bool IsValid(SupplementaryDataLooseModel model)
         {
-            return !string.IsNullOrWhiteSpace(model.LearnAimRef) && model.LearnAimRef.Length <= FieldLength;
+            return string.IsNullOrWhiteSpace(model.LearnAimRef) || model.LearnAimRef.Length <= FieldLength;
         }
     }
 }
