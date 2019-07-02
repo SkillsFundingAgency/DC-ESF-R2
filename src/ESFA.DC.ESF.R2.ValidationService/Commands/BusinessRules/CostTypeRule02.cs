@@ -32,7 +32,8 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             var errorCondition =
                 (deliverableCode.CaseInsensitiveEquals(Constants.DeliverableCode_CG01) && !costType.CaseInsensitiveEquals(Constants.CostType_Grant))
                 ||
-                (deliverableCode.CaseInsensitiveEquals(Constants.DeliverableCode_CG02) && !costType.CaseInsensitiveEquals(Constants.CostType_GrantManagement))
+                (deliverableCode.CaseInsensitiveEquals(Constants.DeliverableCode_CG02)
+                    && (!costType.CaseInsensitiveEquals(Constants.CostType_GrantManagement) && !costType.CaseInsensitiveEquals(Constants.CostType_OtherCosts)))
                 ||
                 (_SDCodes.Any(sd => sd.CaseInsensitiveEquals(deliverableCode)) && !costType.CaseInsensitiveEquals(Constants.CostType_UnitCost))
                 ||
