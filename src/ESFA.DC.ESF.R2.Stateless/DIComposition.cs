@@ -529,6 +529,8 @@ namespace ESFA.DC.ESF.R2.Stateless
 
             containerBuilder.RegisterType<AimAndDeliverableComparer>().As<IAimAndDeliverableComparer>()
                 .InstancePerLifetimeScope();
+            containerBuilder.RegisterType<ValidationComparer>().As<IValidationComparer>()
+                .InstancePerLifetimeScope();
         }
 
         private static void RegisterStorage(ContainerBuilder containerBuilder)

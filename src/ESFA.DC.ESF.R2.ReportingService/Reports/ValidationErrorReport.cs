@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.ReportingService.Comparers;
 using ESFA.DC.ESF.R2.ReportingService.Mappers;
 using ESFA.DC.FileService.Interface;
 
@@ -18,16 +20,19 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
     public class ValidationErrorReport : AbstractReportBuilder, IValidationReport
     {
         private readonly IFileService _storage;
+        private readonly ValidationComparer _comparer;
 
         public ValidationErrorReport(
             IDateTimeProvider dateTimeProvider,
             IValueProvider valueProvider,
-            IFileService storage)
+            IFileService storage,
+            IValidationComparer comparer)
             : base(dateTimeProvider, valueProvider)
         {
             ReportFileName = "ESF Supplementary Data Rule Violation Report";
 
             _storage = storage;
+            _comparer = comparer as ValidationComparer;
         }
 
         public async Task GenerateReport(
@@ -37,7 +42,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             ZipArchive archive,
             CancellationToken cancellationToken)
         {
-            string csv = GetCsv(wrapper.ValidErrorModels);
+            string csv = GetCsv(wrapper.ValidErrorModels.ToList());
 
             string externalFileName = GetExternalFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
             string fileName = GetFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
@@ -56,8 +61,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             await WriteZipEntry(archive, $"{fileName}.csv", csv);
         }
 
-        private string GetCsv(IList<ValidationErrorModel> validationErrorModels)
+        private string GetCsv(List<ValidationErrorModel> validationErrorModels)
         {
+            validationErrorModels.Sort(_comparer);
+
             using (MemoryStream ms = new MemoryStream())
             {
                 UTF8Encoding utF8Encoding = new UTF8Encoding(false, true);
