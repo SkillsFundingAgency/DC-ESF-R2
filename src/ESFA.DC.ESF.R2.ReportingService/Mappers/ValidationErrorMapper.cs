@@ -17,7 +17,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Mappers
             Map(m => m.CalendarYear).Index(i++).Name("CalendarYear");
             Map(m => m.CalendarMonth).Index(i++).Name("CalendarMonth");
             Map(m => m.CostType).Index(i++).Name("CostType");
-            Map(m => m.StaffName).Index(i++).Name("StaffName");
             Map(m => m.ReferenceType).Index(i++).Name("ReferenceType");
             Map(m => m.Reference).Index(i++).Name("Reference");
             Map(m => m.ULN).Index(i++).Name("ULN");
