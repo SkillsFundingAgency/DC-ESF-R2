@@ -25,7 +25,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             IFileService storage)
             : base(dateTimeProvider, valueProvider)
         {
-            ReportFileName = "ESF Supplementary Data Rule Violation Report";
+            ReportFileName = "ESF Round 2 Supplementary Data Rule Violation Report";
 
             _storage = storage;
         }
