@@ -37,6 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AbstractReportBuilder.cs" />
+    <Compile Include="Comparers\ValidationComparer.cs" />
     <Compile Include="Comparers\AimAndDeliverableComparer.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Mappers\AimAndDeliverableMapper.cs" />
