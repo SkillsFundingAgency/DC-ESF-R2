@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using Autofac;
 using ESFA.DC.Auditing.Interface;
-using ESFA.DC.Data.Postcodes.Model;
-using ESFA.DC.Data.Postcodes.Model.Interfaces;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.DataAccessLayer;
 using ESFA.DC.ESF.R2.DataAccessLayer.Mappers;
@@ -69,6 +67,8 @@ using ESFA.DC.ReferenceData.LARS.Model;
 using ESFA.DC.ReferenceData.LARS.Model.Interface;
 using ESFA.DC.ReferenceData.Organisations.Model;
 using ESFA.DC.ReferenceData.Organisations.Model.Interface;
+using ESFA.DC.ReferenceData.Postcodes.Model;
+using ESFA.DC.ReferenceData.Postcodes.Model.Interface;
 using ESFA.DC.ReferenceData.ULN.Model;
 using ESFA.DC.ReferenceData.ULN.Model.Interface;
 using ESFA.DC.Serialization.Interfaces;
@@ -185,8 +185,12 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.Register(c =>
             {
                 var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
-                return new Postcodes(referenceDataConfig.PostcodesConnectionString);
-            }).As<IPostcodes>();
+                var optionsBuilder = new DbContextOptionsBuilder<PostcodesContext>();
+                optionsBuilder.UseSqlServer(
+                    referenceDataConfig.PostcodesConnectionString,
+                    providerOptions => providerOptions.CommandTimeout(60));
+                return new PostcodesContext(optionsBuilder.Options);
+            }).As<IPostcodesContext>();
 
             containerBuilder.Register(c =>
             {
@@ -221,7 +225,7 @@ namespace ESFA.DC.ESF.R2.Stateless
                 serviceBusOptions.ServiceBusConnectionString,
                 serviceBusOptions.TopicName,
                 serviceBusOptions.SubscriptionName,
-                Environment.ProcessorCount,
+                1,
                 TimeSpan.FromMinutes(30));
 
             containerBuilder.Register(c =>
@@ -354,9 +358,9 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.RegisterType<FCSRepository>().As<IFCSRepository>().InstancePerLifetimeScope();
 
             containerBuilder.RegisterType<ValidationErrorMessageCache>().As<IValidationErrorMessageCache>()
-                .SingleInstance();
+                .InstancePerLifetimeScope();
             containerBuilder.RegisterType<ReferenceDataCache>().As<IReferenceDataCache>()
-                .SingleInstance();
+                .InstancePerLifetimeScope();
         }
 
         private static void RegisterHelpers(ContainerBuilder containerBuilder)
