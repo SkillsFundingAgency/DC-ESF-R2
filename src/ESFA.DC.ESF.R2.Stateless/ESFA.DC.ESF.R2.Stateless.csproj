@@ -147,9 +147,6 @@
     <Reference Include="ESFA.DC.Auditing.Interface, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.Auditing.Interface.0.2.0-beta0001\lib\netstandard2.0\ESFA.DC.Auditing.Interface.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.Data.Postcodes.Model, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.Data.Postcodes.Model.0.2.0-unstable0002\lib\net461\ESFA.DC.Data.Postcodes.Model.dll</HintPath>
-    </Reference>
     <Reference Include="ESFA.DC.DateTimeProvider, Version=0.1.6.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.DateTimeProvider.0.1.6-beta0001\lib\netstandard2.0\ESFA.DC.DateTimeProvider.dll</HintPath>
     </Reference>
@@ -221,6 +218,9 @@
     </Reference>
     <Reference Include="ESFA.DC.ReferenceData.Organisations.Model, Version=0.2.53.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.ReferenceData.Organisations.Model.0.2.53\lib\netstandard2.0\ESFA.DC.ReferenceData.Organisations.Model.dll</HintPath>
+    </Reference>
+    <Reference Include="ESFA.DC.ReferenceData.Postcodes.Model, Version=0.2.97.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ReferenceData.Postcodes.Model.0.2.97\lib\netstandard2.0\ESFA.DC.ReferenceData.Postcodes.Model.dll</HintPath>
     </Reference>
     <Reference Include="ESFA.DC.ReferenceData.ULN.Model, Version=0.2.53.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.ReferenceData.ULN.Model.0.2.53\lib\netstandard2.0\ESFA.DC.ReferenceData.ULN.Model.dll</HintPath>

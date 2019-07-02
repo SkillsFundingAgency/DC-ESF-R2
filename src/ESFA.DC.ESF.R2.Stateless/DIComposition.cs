@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using Autofac;
 using ESFA.DC.Auditing.Interface;
-using ESFA.DC.Data.Postcodes.Model;
-using ESFA.DC.Data.Postcodes.Model.Interfaces;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.DataAccessLayer;
 using ESFA.DC.ESF.R2.DataAccessLayer.Mappers;
@@ -69,6 +67,8 @@ using ESFA.DC.ReferenceData.LARS.Model;
 using ESFA.DC.ReferenceData.LARS.Model.Interface;
 using ESFA.DC.ReferenceData.Organisations.Model;
 using ESFA.DC.ReferenceData.Organisations.Model.Interface;
+using ESFA.DC.ReferenceData.Postcodes.Model;
+using ESFA.DC.ReferenceData.Postcodes.Model.Interface;
 using ESFA.DC.ReferenceData.ULN.Model;
 using ESFA.DC.ReferenceData.ULN.Model.Interface;
 using ESFA.DC.Serialization.Interfaces;
@@ -185,8 +185,12 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.Register(c =>
             {
                 var referenceDataConfig = c.Resolve<IReferenceDataConfig>();
-                return new Postcodes(referenceDataConfig.PostcodesConnectionString);
-            }).As<IPostcodes>();
+                var optionsBuilder = new DbContextOptionsBuilder<PostcodesContext>();
+                optionsBuilder.UseSqlServer(
+                    referenceDataConfig.PostcodesConnectionString,
+                    providerOptions => providerOptions.CommandTimeout(60));
+                return new PostcodesContext(optionsBuilder.Options);
+            }).As<IPostcodesContext>();
 
             containerBuilder.Register(c =>
             {
@@ -221,7 +225,7 @@ namespace ESFA.DC.ESF.R2.Stateless
                 serviceBusOptions.ServiceBusConnectionString,
                 serviceBusOptions.TopicName,
                 serviceBusOptions.SubscriptionName,
-                Environment.ProcessorCount,
+                1,
                 TimeSpan.FromMinutes(30));
 
             containerBuilder.Register(c =>
@@ -334,7 +338,7 @@ namespace ESFA.DC.ESF.R2.Stateless
 
             containerBuilder.RegisterType<ValueProvider>().As<IValueProvider>().SingleInstance();
             containerBuilder.RegisterType<ReferenceDataService>().As<IReferenceDataService>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<PopulationService>().As<IPopulationService>();
+            containerBuilder.RegisterType<PopulationService>().As<IPopulationService>().InstancePerLifetimeScope();
 
             containerBuilder.RegisterType<AimAndDeliverableService>().As<IAimAndDeliverableService>();
         }
@@ -349,9 +353,9 @@ namespace ESFA.DC.ESF.R2.Stateless
 
         private static void RegisterRepositories(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterType<EsfRepository>().As<IEsfRepository>();
-            containerBuilder.RegisterType<ReferenceDataRepository>().As<IReferenceDataRepository>();
-            containerBuilder.RegisterType<FCSRepository>().As<IFCSRepository>();
+            containerBuilder.RegisterType<EsfRepository>().As<IEsfRepository>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<ReferenceDataRepository>().As<IReferenceDataRepository>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<FCSRepository>().As<IFCSRepository>().InstancePerLifetimeScope();
 
             containerBuilder.RegisterType<ValidationErrorMessageCache>().As<IValidationErrorMessageCache>()
                 .InstancePerLifetimeScope();
@@ -533,10 +537,10 @@ namespace ESFA.DC.ESF.R2.Stateless
 
         private static void RegisterStorage(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterType<StoreFileDetails>().As<IStoreFileDetails>();
-            containerBuilder.RegisterType<StoreESF>().As<IStoreESF>();
-            containerBuilder.RegisterType<StoreESFUnitCost>().As<IStoreESFUnitCost>();
-            containerBuilder.RegisterType<StoreValidation>().As<IStoreValidation>();
+            containerBuilder.RegisterType<StoreFileDetails>().As<IStoreFileDetails>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<StoreESF>().As<IStoreESF>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<StoreESFUnitCost>().As<IStoreESFUnitCost>().InstancePerLifetimeScope();
+            containerBuilder.RegisterType<StoreValidation>().As<IStoreValidation>().InstancePerLifetimeScope();
         }
     }
 }

@@ -224,6 +224,11 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
             foreach (var larsLearningDelivery in larsLearningDeliveries)
             {
+                if (LarsLearnAimRefs.TryGetValue(larsLearningDelivery.Key, out _))
+                {
+                    continue;
+                }
+
                 LarsLearnAimRefs.Add(larsLearningDelivery.Key, larsLearningDelivery.Value);
             }
         }

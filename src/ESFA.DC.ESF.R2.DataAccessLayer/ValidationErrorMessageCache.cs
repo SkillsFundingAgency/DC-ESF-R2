@@ -17,7 +17,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             ValidationErrorMessages = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
-        private IDictionary<string, string> ValidationErrorMessages { get; }
+        private IDictionary<string, string> ValidationErrorMessages { get; set; }
 
         public string GetErrorMessage(string ruleName)
         {
@@ -28,12 +28,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
         public async Task PopulateErrorMessages(CancellationToken cancellationToken)
         {
-            var messages = await _esfRepository.GetValidationErrorMessages(cancellationToken);
-
-            foreach (var message in messages)
-            {
-                ValidationErrorMessages.Add(message.Key, message.Value);
-            }
+            ValidationErrorMessages = await _esfRepository.GetValidationErrorMessages(cancellationToken);
         }
     }
 }

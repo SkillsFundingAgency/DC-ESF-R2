@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using ESFA.DC.Data.Postcodes.Model.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ReferenceData.LARS.Model.Interface;
 using ESFA.DC.ReferenceData.Organisations.Model.Interface;
+using ESFA.DC.ReferenceData.Postcodes.Model.Interface;
 using ESFA.DC.ReferenceData.ULN.Model.Interface;
 
 namespace ESFA.DC.ESF.R2.DataAccessLayer
 {
     public class ReferenceDataRepository : IReferenceDataRepository
     {
-        private readonly Func<IPostcodes> _postcodes;
+        private readonly Func<IPostcodesContext> _postcodes;
         private readonly Func<ILARSContext> _larsContext;
         private readonly Func<IOrganisationsContext> _organisations;
         private readonly Func<IUlnContext> _ulnContext;
@@ -22,7 +22,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         private readonly object _larsDeliveryLock = new object();
 
         public ReferenceDataRepository(
-            Func<IPostcodes> postcodes,
+            Func<IPostcodesContext> postcodes,
             Func<ILARSContext> lars,
             Func<IOrganisationsContext> organisations,
             Func<IUlnContext> ulnContext)
