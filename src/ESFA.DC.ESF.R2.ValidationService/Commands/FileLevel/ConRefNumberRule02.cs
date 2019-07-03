@@ -3,9 +3,9 @@ using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
 
-namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
+namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
 {
-    public class ConRefNumberRule02 : BaseValidationRule, IBusinessRuleValidator
+    public class ConRefNumberRule02 : BaseValidationRule, IFileLevelValidator
     {
         public ConRefNumberRule02(IValidationErrorMessageService errorMessageService)
             : base(errorMessageService)
@@ -16,7 +16,9 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
         public bool IsWarning => false;
 
-        public bool IsValid(SupplementaryDataModel model)
+        public bool RejectFile => true;
+
+        public bool IsValid(SourceFileModel sourceFileModel, SupplementaryDataLooseModel model)
         {
             if (string.IsNullOrWhiteSpace(model.ConRefNumber))
             {
