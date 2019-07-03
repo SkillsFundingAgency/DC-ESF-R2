@@ -11,7 +11,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Helpers
                 return DateTime.MinValue;
             }
 
-            return new DateTime(calendarYear.Value, calendarMonth.Value, 1);
+            return new DateTime(calendarYear.Value, calendarMonth.Value, DateTime.Now.Day);
         }
     }
 }
