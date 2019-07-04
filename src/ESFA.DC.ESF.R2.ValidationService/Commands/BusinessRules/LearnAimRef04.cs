@@ -10,13 +10,16 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
     public class LearnAimRef04 : BaseValidationRule, IBusinessRuleValidator
     {
         private readonly IReferenceDataService _referenceDataService;
+        private readonly IMonthYearHelper _monthYearHelper;
 
         public LearnAimRef04(
             IValidationErrorMessageService errorMessageService,
-            IReferenceDataService referenceDataService)
+            IReferenceDataService referenceDataService,
+            IMonthYearHelper monthYearHelper)
             : base(errorMessageService)
         {
             _referenceDataService = referenceDataService;
+            _monthYearHelper = monthYearHelper;
         }
 
         public override string ErrorName => "LearnAimRef_04";
@@ -37,7 +40,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
                 return true;
             }
 
-            var monthYearDate = MonthYearHelper.GetCalendarDateTime(model.CalendarYear, model.CalendarMonth);
+            var monthYearDate = _monthYearHelper.GetCalendarDateTime(model.CalendarYear, model.CalendarMonth);
 
             return larsLearningDelivery.ValidityPeriods
                 .Any(validityPeriod => (validityPeriod.ValidityStartDate ?? DateTime.MaxValue) <= monthYearDate &&

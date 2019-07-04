@@ -118,6 +118,11 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests
             var dateTimeProvider = new Mock<IDateTimeProvider>();
             dateTimeProvider.Setup(m => m.GetNowUtc()).Returns(DateTime.Now);
 
+            var monthYearHelperMock = new Mock<IMonthYearHelper>();
+            monthYearHelperMock
+                .Setup(m => m.GetCalendarDateTime(It.IsAny<int>(), It.IsAny<int>()))
+                .Returns(DateTime.Now);
+
             return new List<IValidatorCommand>
             {
                 new BusinessRuleCommands(
@@ -138,7 +143,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests
                         new ReferenceTypeRule01(_messageServiceMock.Object),
                         new ULNRule01(_messageServiceMock.Object),
                         new ULNRule02(_messageServiceMock.Object, serviceMock.Object),
-                        new ULNRule03(_messageServiceMock.Object, dateTimeProvider.Object),
+                        new ULNRule03(_messageServiceMock.Object, dateTimeProvider.Object, monthYearHelperMock.Object),
                         new ULNRule04(_messageServiceMock.Object),
                         new ValueRule01(_messageServiceMock.Object),
                         new ValueRule02(_messageServiceMock.Object)

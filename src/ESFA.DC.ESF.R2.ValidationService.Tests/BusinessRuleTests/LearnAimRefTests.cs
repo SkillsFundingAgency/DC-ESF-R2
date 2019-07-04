@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules;
 using Moq;
@@ -173,11 +174,19 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         [Trait("Category", "ValidationService")]
         public void LearnAimRef04FailsNoMatchingValidityDates()
         {
+            var calendarMonth = 5;
+            var calendarYear = 2018;
+
+            var monthYearHelperMock = new Mock<IMonthYearHelper>();
+            monthYearHelperMock
+                .Setup(m => m.GetCalendarDateTime(calendarYear, calendarMonth))
+                .Returns(new DateTime(calendarYear, calendarMonth, 1));
+
             var suppData = new SupplementaryDataModel
             {
                 LearnAimRef = "Foo",
-                CalendarMonth = 5,
-                CalendarYear = 2018
+                CalendarMonth = calendarMonth,
+                CalendarYear = calendarYear
             };
 
             var refDataServiceMock = new Mock<IReferenceDataService>();
@@ -201,7 +210,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                     }
                 });
 
-            var rule = new LearnAimRef04(_messageServiceMock.Object, refDataServiceMock.Object);
+            var rule = new LearnAimRef04(_messageServiceMock.Object, refDataServiceMock.Object, monthYearHelperMock.Object);
 
             Assert.False(rule.IsValid(suppData));
         }
@@ -210,16 +219,24 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         [Trait("Category", "ValidationService")]
         public void LearnAimRef04PassesNoLearnRefNum()
         {
+            var calendarMonth = 5;
+            var calendarYear = 2018;
+
+            var monthYearHelperMock = new Mock<IMonthYearHelper>();
+            monthYearHelperMock
+                .Setup(m => m.GetCalendarDateTime(calendarYear, calendarMonth))
+                .Returns(DateTime.Now);
+
             var suppData = new SupplementaryDataModel
             {
                 LearnAimRef = null,
-                CalendarMonth = 5,
-                CalendarYear = 2018
+                CalendarMonth = calendarYear,
+                CalendarYear = calendarMonth
             };
 
             var refDataServiceMock = new Mock<IReferenceDataService>();
 
-            var rule = new LearnAimRef04(_messageServiceMock.Object, refDataServiceMock.Object);
+            var rule = new LearnAimRef04(_messageServiceMock.Object, refDataServiceMock.Object, monthYearHelperMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -228,11 +245,19 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         [Trait("Category", "ValidationService")]
         public void LearnAimRef04PassesNoMatchingLarsLearningDelivery()
         {
+            var calendarMonth = 5;
+            var calendarYear = 2018;
+
+            var monthYearHelperMock = new Mock<IMonthYearHelper>();
+            monthYearHelperMock
+                .Setup(m => m.GetCalendarDateTime(calendarYear, calendarMonth))
+                .Returns(DateTime.Now);
+
             var suppData = new SupplementaryDataModel
             {
                 LearnAimRef = "Foo",
-                CalendarMonth = 5,
-                CalendarYear = 2018
+                CalendarMonth = calendarMonth,
+                CalendarYear = calendarYear
             };
 
             var refDataServiceMock = new Mock<IReferenceDataService>();
@@ -240,7 +265,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 .Setup(m => m.GetLarsLearningDelivery(suppData.LearnAimRef))
                 .Returns((LarsLearningDeliveryModel)null);
 
-            var rule = new LearnAimRef04(_messageServiceMock.Object, refDataServiceMock.Object);
+            var rule = new LearnAimRef04(_messageServiceMock.Object, refDataServiceMock.Object, monthYearHelperMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }
@@ -249,11 +274,19 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         [Trait("Category", "ValidationService")]
         public void LearnAimRef04PassesMatchingValidityDates()
         {
+            var calendarMonth = 5;
+            var calendarYear = 2018;
+
+            var monthYearHelperMock = new Mock<IMonthYearHelper>();
+            monthYearHelperMock
+                .Setup(m => m.GetCalendarDateTime(calendarYear, calendarMonth))
+                .Returns(DateTime.Now);
+
             var suppData = new SupplementaryDataModel
             {
                 LearnAimRef = "Foo",
-                CalendarMonth = 5,
-                CalendarYear = 2018
+                CalendarMonth = calendarMonth,
+                CalendarYear = calendarYear
             };
 
             var refDataServiceMock = new Mock<IReferenceDataService>();
@@ -272,7 +305,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                     }
                 });
 
-            var rule = new LearnAimRef04(_messageServiceMock.Object, refDataServiceMock.Object);
+            var rule = new LearnAimRef04(_messageServiceMock.Object, refDataServiceMock.Object, monthYearHelperMock.Object);
 
             Assert.True(rule.IsValid(suppData));
         }

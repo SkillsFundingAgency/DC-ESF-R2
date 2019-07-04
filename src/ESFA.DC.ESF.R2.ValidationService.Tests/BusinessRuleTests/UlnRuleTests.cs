@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules;
 using Moq;
@@ -68,6 +69,11 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         {
             var date = DateTime.Now.AddMonths(-6);
 
+            var monthYearHelperMock = new Mock<IMonthYearHelper>();
+            monthYearHelperMock
+                .Setup(m => m.GetCalendarDateTime(date.Year, date.Month))
+                .Returns(new DateTime(date.Year, date.Month, 1));
+
             var model = new SupplementaryDataModel
             {
                 ReferenceType = "LearnRefNumber",
@@ -79,7 +85,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             var dateTimeProvider = new Mock<IDateTimeProvider>();
             dateTimeProvider.Setup(m => m.GetNowUtc()).Returns(DateTime.Now);
 
-            var rule = new ULNRule03(_messageServiceMock.Object, dateTimeProvider.Object);
+            var rule = new ULNRule03(_messageServiceMock.Object, dateTimeProvider.Object, monthYearHelperMock.Object);
 
             Assert.False(rule.IsValid(model));
         }
@@ -88,18 +94,25 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         [Trait("Category", "ValidationService")]
         public void ULNRule03PassesULNsForMonthsAfer2MonthsAgo()
         {
+            var date = DateTime.Now;
+
+            var monthYearHelperMock = new Mock<IMonthYearHelper>();
+            monthYearHelperMock
+                .Setup(m => m.GetCalendarDateTime(date.Year, date.Month))
+                .Returns(DateTime.Now);
+
             var model = new SupplementaryDataModel
             {
                 ReferenceType = "LearnRefNumber",
                 ULN = 9999999999,
-                CalendarYear = DateTime.Now.Year,
-                CalendarMonth = DateTime.Now.Month
+                CalendarYear = date.Year,
+                CalendarMonth = date.Month
             };
 
             var dateTimeProvider = new Mock<IDateTimeProvider>();
             dateTimeProvider.Setup(m => m.GetNowUtc()).Returns(DateTime.Now);
 
-            var rule = new ULNRule03(_messageServiceMock.Object, dateTimeProvider.Object);
+            var rule = new ULNRule03(_messageServiceMock.Object, dateTimeProvider.Object, monthYearHelperMock.Object);
 
             Assert.True(rule.IsValid(model));
         }
