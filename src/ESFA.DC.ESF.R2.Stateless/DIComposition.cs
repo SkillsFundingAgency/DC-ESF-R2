@@ -436,6 +436,7 @@ namespace ESFA.DC.ESF.R2.Stateless
         {
             containerBuilder.RegisterType<FileNameRule08>().As<IFileLevelValidator>();
             containerBuilder.RegisterType<ConRefNumberRule01>().As<IFileLevelValidator>();
+            containerBuilder.RegisterType<ConRefNumberRule02>().As<IFileLevelValidator>();
 
             containerBuilder.Register(c => new List<IFileLevelValidator>(c.Resolve<IEnumerable<IFileLevelValidator>>()))
                 .As<IList<IFileLevelValidator>>();
@@ -456,7 +457,6 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.RegisterType<CalendarYearCalendarMonthRule02>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<CalendarYearCalendarMonthRule03>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<CalendarYearRule01>().As<IBusinessRuleValidator>();
-            containerBuilder.RegisterType<ConRefNumberRule02>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<CostTypeRule01>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<CostTypeRule02>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<DeliverableCodeRule01>().As<IBusinessRuleValidator>();
