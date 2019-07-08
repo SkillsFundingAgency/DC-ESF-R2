@@ -27,9 +27,11 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
         public bool IsValid(SupplementaryDataModel model)
         {
+            var twoMonthsAgo = _dateTimeProvider.ConvertUtcToUk(_dateTimeProvider.GetNowUtc()).AddMonths(-2);
+
             return
                 (model.ULN ?? 0) != 9999999999 ||
-                _monthYearHelper.GetCalendarDateTime(model.CalendarYear, model.CalendarMonth) > _dateTimeProvider.GetNowUtc().AddMonths(-2);
+                _monthYearHelper.GetCalendarDateTime(model.CalendarYear, model.CalendarMonth) > twoMonthsAgo;
         }
     }
 }

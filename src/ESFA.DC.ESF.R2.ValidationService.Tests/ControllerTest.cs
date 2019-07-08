@@ -115,8 +115,10 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests
 
         private IList<IValidatorCommand> GetValidators(Mock<IReferenceDataService> serviceMock, Mock<IFcsCodeMappingHelper> mapperMock)
         {
+            var date = DateTime.Now;
             var dateTimeProvider = new Mock<IDateTimeProvider>();
-            dateTimeProvider.Setup(m => m.GetNowUtc()).Returns(DateTime.Now);
+            dateTimeProvider.Setup(m => m.GetNowUtc()).Returns(date);
+            dateTimeProvider.Setup(m => m.ConvertUtcToUk(date)).Returns(date);
 
             var monthYearHelperMock = new Mock<IMonthYearHelper>();
             monthYearHelperMock

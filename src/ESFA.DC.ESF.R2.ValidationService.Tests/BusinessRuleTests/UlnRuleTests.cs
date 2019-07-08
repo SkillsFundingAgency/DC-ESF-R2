@@ -82,8 +82,10 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
                 CalendarMonth = date.Month
             };
 
+            var dateNow = DateTime.Now;
             var dateTimeProvider = new Mock<IDateTimeProvider>();
-            dateTimeProvider.Setup(m => m.GetNowUtc()).Returns(DateTime.Now);
+            dateTimeProvider.Setup(m => m.GetNowUtc()).Returns(dateNow);
+            dateTimeProvider.Setup(m => m.ConvertUtcToUk(dateNow)).Returns(dateNow);
 
             var rule = new ULNRule03(_messageServiceMock.Object, dateTimeProvider.Object, monthYearHelperMock.Object);
 
@@ -99,7 +101,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             var monthYearHelperMock = new Mock<IMonthYearHelper>();
             monthYearHelperMock
                 .Setup(m => m.GetCalendarDateTime(date.Year, date.Month))
-                .Returns(DateTime.Now);
+                .Returns(date);
 
             var model = new SupplementaryDataModel
             {
@@ -110,7 +112,8 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
             };
 
             var dateTimeProvider = new Mock<IDateTimeProvider>();
-            dateTimeProvider.Setup(m => m.GetNowUtc()).Returns(DateTime.Now);
+            dateTimeProvider.Setup(m => m.GetNowUtc()).Returns(date);
+            dateTimeProvider.Setup(m => m.ConvertUtcToUk(date)).Returns(date);
 
             var rule = new ULNRule03(_messageServiceMock.Object, dateTimeProvider.Object, monthYearHelperMock.Object);
 
