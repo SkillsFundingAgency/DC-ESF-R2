@@ -1,17 +1,26 @@
 ﻿using System;
+using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.ESF.R2.Interfaces.Validation;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Helpers
 {
-    public class MonthYearHelper
+    public class MonthYearHelper : IMonthYearHelper
     {
-        public static DateTime GetCalendarDateTime(int? calendarYear, int? calendarMonth)
+        private readonly IDateTimeProvider _dateTimeProvider;
+
+        public MonthYearHelper(IDateTimeProvider dateTimeProvider)
+        {
+            _dateTimeProvider = dateTimeProvider;
+        }
+
+        public DateTime GetCalendarDateTime(int? calendarYear, int? calendarMonth)
         {
             if (calendarYear == null || calendarMonth == null || calendarMonth < 1 || calendarMonth > 12)
             {
                 return DateTime.MinValue;
             }
 
-            return new DateTime(calendarYear.Value, calendarMonth.Value, 1);
+            return new DateTime(calendarYear.Value, calendarMonth.Value, _dateTimeProvider.ConvertUtcToUk(_dateTimeProvider.GetNowUtc()).Day);
         }
     }
 }

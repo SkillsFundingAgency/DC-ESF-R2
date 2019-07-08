@@ -336,6 +336,8 @@ namespace ESFA.DC.ESF.R2.Stateless
 
             containerBuilder.RegisterType<ExcelStyleProvider>().As<IExcelStyleProvider>();
 
+            containerBuilder.RegisterType<MonthYearHelper>().As<IMonthYearHelper>();
+
             containerBuilder.RegisterType<ValueProvider>().As<IValueProvider>().SingleInstance();
             containerBuilder.RegisterType<ReferenceDataService>().As<IReferenceDataService>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PopulationService>().As<IPopulationService>().InstancePerLifetimeScope();
