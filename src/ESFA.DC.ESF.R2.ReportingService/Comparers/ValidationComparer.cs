@@ -26,12 +26,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Comparers
 
             if (!first.IsWarning && second.IsWarning)
             {
-                return 1;
+                return -1;
             }
 
             if (first.IsWarning && !second.IsWarning)
             {
-                return -1;
+                return 1;
             }
 
             var cmp = string.Compare(first.RuleName, second.RuleName, StringComparison.OrdinalIgnoreCase);
