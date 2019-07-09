@@ -29,7 +29,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             IValidationComparer comparer)
             : base(dateTimeProvider, valueProvider)
         {
-            ReportFileName = "ESF Round 2 Supplementary Data Rule Violation Report";
+            ReportFileName = "ESF (Round 2) Supplementary Data Rule Violation Report";
 
             _storage = storage;
             _comparer = comparer as ValidationComparer;
@@ -44,6 +44,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
         {
             string csv = GetCsv(wrapper.ValidErrorModels.ToList());
 
+            ReportFileName = $"{sourceFile.ConRefNumber} " + ReportFileName;
             string externalFileName = GetExternalFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
             string fileName = GetFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
 
