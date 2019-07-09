@@ -20,7 +20,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Helpers
                 return DateTime.MinValue;
             }
 
-            return new DateTime(calendarYear.Value, calendarMonth.Value, _dateTimeProvider.ConvertUtcToUk(_dateTimeProvider.GetNowUtc()).Day);
+            return new DateTime(calendarYear.Value, calendarMonth.Value, _dateTimeProvider.ConvertUtcToUk(_dateTimeProvider.GetNowUtc()).Day, 23, 59, 59);
         }
     }
 }
