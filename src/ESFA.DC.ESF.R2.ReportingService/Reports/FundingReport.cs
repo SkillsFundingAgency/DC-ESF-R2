@@ -31,7 +31,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             IReferenceDataService referenceDataService)
             : base(dateTimeProvider, valueProvider)
         {
-            ReportFileName = "ESF Round 2 Supplementary Data Funding Report";
+            ReportFileName = "ESF (Round 2) Supplementary Data Funding Report";
 
             _storage = storage;
             _referenceDataService = referenceDataService;
