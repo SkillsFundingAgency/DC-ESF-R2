@@ -5,15 +5,22 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.Logging.Interfaces;
 using FastMember;
 
 namespace ESFA.DC.ESF.R2.DataStore
 {
     public sealed class BulkInsert : IDisposable
     {
+        private readonly ILogger _logger;
         private readonly CancellationToken _cancellationToken;
 
         private readonly SqlBulkCopy _sqlBulkCopy;
+
+        public BulkInsert(ILogger logger)
+        {
+            _logger = logger;
+        }
 
         public BulkInsert(SqlConnection connection, SqlTransaction sqlTransaction, CancellationToken cancellationToken)
         {
@@ -61,8 +68,7 @@ namespace ESFA.DC.ESF.R2.DataStore
             }
             catch (Exception ex)
             {
-                Console.WriteLine(table);
-                Console.Write(ex);
+                _logger.LogError($"BulkInsert Insert<{typeof(T)}> failed for table {table}.", ex);
                 throw;
             }
         }

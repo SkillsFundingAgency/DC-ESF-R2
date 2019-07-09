@@ -276,6 +276,10 @@
       <Project>{78481300-11e2-4e22-8159-e40bdece9976}</Project>
       <Name>ESFA.DC.ESF.R2.Stateless</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.Utils\ESFA.DC.ESF.R2.Utils.csproj">
+      <Project>{51402a23-1dda-435e-bbb7-869458d02bce}</Project>
+      <Name>ESFA.DC.ESF.R2.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

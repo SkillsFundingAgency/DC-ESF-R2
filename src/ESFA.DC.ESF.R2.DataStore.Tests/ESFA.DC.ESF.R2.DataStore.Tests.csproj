@@ -119,6 +119,10 @@
       <Project>{5e5aac56-e3d6-4a45-9028-d8a992e422b0}</Project>
       <Name>ESFA.DC.ESF.R2.Models</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.Utils\ESFA.DC.ESF.R2.Utils.csproj">
+      <Project>{51402a23-1dda-435e-bbb7-869458d02bce}</Project>
+      <Name>ESFA.DC.ESF.R2.Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.2\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />

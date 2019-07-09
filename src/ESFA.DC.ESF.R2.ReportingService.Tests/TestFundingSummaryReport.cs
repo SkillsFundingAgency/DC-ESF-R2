@@ -31,6 +31,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
         {
             var dateTime = DateTime.UtcNow;
             var filename = $"10005752/1/ESF R2 Funding Summary Report {dateTime:yyyyMMdd-HHmmss}";
+            var sourceFileId = 1;
 
             Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(dateTime);
@@ -45,10 +46,32 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             var supplementaryDataService = new Mock<ISupplementaryDataService>();
             supplementaryDataService
                 .Setup(s => s.GetSupplementaryData(It.IsAny<IEnumerable<SourceFileModel>>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new Dictionary<int, IEnumerable<SupplementaryDataYearlyModel>>());
+                .ReturnsAsync(new Dictionary<int, IEnumerable<SupplementaryDataYearlyModel>>
+                {
+                    [sourceFileId] = new List<SupplementaryDataYearlyModel>
+                    {
+                        new SupplementaryDataYearlyModel
+                        {
+                            FundingYear = 1819,
+                            SupplementaryData = new List<SupplementaryDataModel>()
+                        }
+                    }
+                });
             supplementaryDataService
                 .Setup(s => s.GetImportFiles(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new List<SourceFileModel>());
+                .ReturnsAsync(new List<SourceFileModel>
+                {
+                    new SourceFileModel
+                    {
+                        ConRefNumber = "ESF-5234",
+                        FileName = filename,
+                        UKPRN = "10005752",
+                        SourceFileId = sourceFileId,
+                        PreparationDate = DateTime.Now,
+                        SuppliedDate = DateTime.Now,
+                        JobId = 1
+                    }
+                });
 
             Mock<IReferenceDataService> referenceDataService = new Mock<IReferenceDataService>();
             referenceDataService.Setup(m => m.GetLarsVersion(It.IsAny<CancellationToken>())).Returns("123456");
