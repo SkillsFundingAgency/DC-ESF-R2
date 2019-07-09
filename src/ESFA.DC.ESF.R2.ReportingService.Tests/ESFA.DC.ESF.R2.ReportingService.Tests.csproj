@@ -29,6 +29,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>ESFA.DC.ESF.R2.ReportingService.Tests.ruleset</CodeAnalysisRuleSet>
+    <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -242,6 +243,10 @@
     <ProjectReference Include="..\ESFA.DC.ESF.R2.ReportingService\ESFA.DC.ESF.R2.ReportingService.csproj">
       <Project>{DE38A36B-C220-4227-B10C-35E24C44EDCE}</Project>
       <Name>ESFA.DC.ESF.R2.ReportingService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.Utils\ESFA.DC.ESF.R2.Utils.csproj">
+      <Project>{51402a23-1dda-435e-bbb7-869458d02bce}</Project>
+      <Name>ESFA.DC.ESF.R2.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
