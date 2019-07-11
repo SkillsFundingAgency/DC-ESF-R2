@@ -1,4 +1,5 @@
-﻿using ESFA.DC.ESF.R2.Models;
+﻿using System.Threading.Tasks;
+using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel;
 using Xunit;
 
@@ -10,7 +11,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         [Theory]
         [InlineData("")]
         [InlineData("ESF-5000")]
-        public void ConRefNumber02PassesForEmptyOrValidConRefNumber(string conRefNumber)
+        public async Task ConRefNumber02PassesForEmptyOrValidConRefNumber(string conRefNumber)
         {
             var model = new SupplementaryDataLooseModel()
             {
@@ -19,12 +20,12 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ConRefNumberRule02(_messageServiceMock.Object);
 
-            Assert.True(rule.IsValid(null, model));
+            Assert.True(await rule.IsValid(null, model));
         }
 
         [Trait("Category", "ValidationService")]
         [Fact]
-        public void ConRefNumber02FailsWithInvalidConRefNumber()
+        public async Task ConRefNumber02FailsWithInvalidConRefNumber()
         {
             var model = new SupplementaryDataLooseModel()
             {
@@ -33,7 +34,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var rule = new ConRefNumberRule02(_messageServiceMock.Object);
 
-            Assert.False(rule.IsValid(null, model));
+            Assert.False(await rule.IsValid(null, model));
         }
     }
 }
