@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
@@ -24,9 +25,9 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
 
         public bool IsWarning => false;
 
-        public bool IsValid(SourceFileModel sourceFileModel, SupplementaryDataLooseModel model)
+        public async Task<bool> IsValid(SourceFileModel sourceFileModel, SupplementaryDataLooseModel model)
         {
-            var previousFiles = _esfRepository.AllPreviousFilesForValidation(sourceFileModel.UKPRN, sourceFileModel.ConRefNumber, CancellationToken.None).Result;
+            var previousFiles = await _esfRepository.AllPreviousFilesForValidation(sourceFileModel.UKPRN, sourceFileModel.ConRefNumber, CancellationToken.None);
 
             return previousFiles?.All(f => f.FilePreparationDate <= sourceFileModel.PreparationDate) ?? true;
         }

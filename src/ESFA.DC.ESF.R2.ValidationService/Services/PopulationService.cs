@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
@@ -52,9 +53,9 @@ namespace ESFA.DC.ESF.R2.ValidationService.Services
             _cache.PopulateLarsLearningDeliveries(learnAimRefs, cancellationToken);
         }
 
-        public void PrePopulateValidationErrorMessages(CancellationToken cancellationToken)
+        public async Task PrePopulateValidationErrorMessages(CancellationToken cancellationToken)
         {
-            _validationCache.PopulateErrorMessages(cancellationToken);
+            await _validationCache.PopulateErrorMessages(cancellationToken);
         }
     }
 }

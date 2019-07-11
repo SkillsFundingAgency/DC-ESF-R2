@@ -93,6 +93,13 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         {
             foreach (var mapping in mappings)
             {
+                if (CodeMappings.Any(cm =>
+                    cm.FundingStreamPeriodCode.CaseInsensitiveEquals(mapping.FundingStreamPeriodCode)
+                    && cm.ExternalDeliverableCode.CaseInsensitiveEquals(mapping.ExternalDeliverableCode)))
+                {
+                    continue;
+                }
+
                 CodeMappings.Add(mapping);
             }
         }
@@ -115,9 +122,17 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         public void PopulateUlnLookup(IEnumerable<long?> unknownUlns, CancellationToken cancellationToken)
         {
             var result = _referenceDataRepository.GetUlnLookup(unknownUlns, cancellationToken);
-            if (result != null)
+            if (result == null)
             {
-                Ulns.UnionWith(result);
+                return;
+            }
+
+            foreach (var uln in result)
+            {
+                if (!Ulns.Contains(uln))
+                {
+                    Ulns.Add(uln);
+                }
             }
         }
 
@@ -150,7 +165,12 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             var contractAllocation =
                 _fcsRepository.GetContractAllocation(conRefNum, deliverableCode, cancellationToken, ukPrn);
 
-            if (contractAllocation != null)
+            if (contractAllocation != null
+                && !ContractAllocations.Any(ca =>
+                    ca.ContractAllocationNumber.CaseInsensitiveEquals(contractAllocation.ContractAllocationNumber)
+                        && ca.DeliverableCode == contractAllocation.DeliverableCode
+                        && ca.StartDate == contractAllocation.StartDate
+                        && ca.EndDate == contractAllocation.EndDate))
             {
                 ContractAllocations.Add(contractAllocation);
             }
@@ -170,16 +190,27 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             int ukPrn,
             CancellationToken cancellationToken)
         {
-            var contractRefNumsForProvider = await _esfRepository.GetContractsForProvider(ukPrn.ToString(), cancellationToken);
+            var contractRefNumbersForProvider = await _esfRepository.GetContractsForProvider(ukPrn.ToString(), cancellationToken);
 
-            foreach (var conRefNum in contractRefNumsForProvider)
+            foreach (var conRefNum in contractRefNumbersForProvider)
             {
                 var deliverableUnitCosts =
                     _fcsRepository.GetDeliverableUnitCosts(newItemsNotInCache, ukPrn, conRefNum, cancellationToken);
 
-                if (deliverableUnitCosts != null)
+                if (deliverableUnitCosts == null)
                 {
-                    DeliverableUnitCosts.AddRange(deliverableUnitCosts);
+                    continue;
+                }
+
+                foreach (var cost in deliverableUnitCosts)
+                {
+                    if (DeliverableUnitCosts.Any(duc => duc.ConRefNum.CaseInsensitiveEquals(cost.ConRefNum)
+                                                        && duc.DeliverableCode.CaseInsensitiveEquals(cost.DeliverableCode)))
+                    {
+                        continue;
+                    }
+
+                    DeliverableUnitCosts.Add(cost);
                 }
             }
         }

@@ -71,6 +71,7 @@ namespace ESFA.DC.ESF.R2.DataStore
                 catch (Exception ex)
                 {
                     _logger.LogError("Failed to persist to DEDs", ex);
+                    throw;
                 }
                 finally
                 {
@@ -83,6 +84,7 @@ namespace ESFA.DC.ESF.R2.DataStore
                         catch (Exception ex2)
                         {
                             _logger.LogError("Failed to rollback DEDs persist transaction", ex2);
+                            throw;
                         }
                     }
                 }
@@ -120,6 +122,7 @@ namespace ESFA.DC.ESF.R2.DataStore
                 catch (Exception ex)
                 {
                     _logger.LogError("Failed to persist to DEDs", ex);
+                    throw;
                 }
                 finally
                 {
@@ -132,6 +135,7 @@ namespace ESFA.DC.ESF.R2.DataStore
                         catch (Exception ex2)
                         {
                             _logger.LogError("Failed to rollback DEDs persist transaction", ex2);
+                            throw;
                         }
                     }
                 }

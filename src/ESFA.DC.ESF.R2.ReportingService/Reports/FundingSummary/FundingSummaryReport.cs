@@ -68,7 +68,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             _supplementaryDataService = supplementaryDataService;
             _ilrService = ilrService;
 
-            ReportFileName = "ESF R2 Funding Summary Report";
+            ReportFileName = "ESF Round 2 Funding Summary Report";
             _fundingSummaryMapper = new FundingSummaryMapper();
             _cachedModelProperties = _fundingSummaryMapper
                 .MemberMaps
@@ -131,7 +131,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 sheet.Cells.Columns[0].Width = 63.93;
                 sheet.IsGridlinesVisible = false;
 
-                AddImageToReport(sheet);
+                //AddImageToReport(sheet);
 
                 workbook = GetWorkbookReport(workbook, sheet, fundingSummaryHeaderModel, fundingSummaryModels, fundingSummaryFooterModel);
                 ApplyAdditionalRowFormatting(sheet, rowOfData);

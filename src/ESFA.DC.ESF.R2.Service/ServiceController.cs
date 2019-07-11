@@ -52,7 +52,7 @@ namespace ESFA.DC.ESF.R2.Service
                 wrapper = await _fileValidationService.GetFile(jobContextModel, sourceFileModel, cancellationToken);
                 if (!wrapper.ValidErrorModels.Any())
                 {
-                    wrapper = _fileValidationService.RunFileValidators(sourceFileModel, wrapper);
+                    wrapper = await _fileValidationService.RunFileValidators(sourceFileModel, wrapper);
                 }
 
                 if (wrapper.ValidErrorModels.Any())

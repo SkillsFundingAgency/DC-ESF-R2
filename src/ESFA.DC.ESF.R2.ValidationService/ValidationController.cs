@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
@@ -30,7 +31,7 @@ namespace ESFA.DC.ESF.R2.ValidationService
 
         public bool RejectFile { get; private set; }
 
-        public void ValidateData(
+        public async Task ValidateData(
             SupplementaryDataWrapper wrapper,
             SourceFileModel sourceFile,
             CancellationToken cancellationToken)
@@ -59,7 +60,7 @@ namespace ESFA.DC.ESF.R2.ValidationService
 
             wrapper.SupplementaryDataModels = wrapper.SupplementaryDataLooseModels.Select(m => _mapper.GetSupplementaryDataModelFromLooseModel(m)).ToList();
 
-            PrePopulateReferenceDataCache(wrapper, sourceFile, cancellationToken);
+            await PrePopulateReferenceDataCache(wrapper, sourceFile, cancellationToken);
 
             foreach (var command in _validatorCommands)
             {
@@ -93,7 +94,7 @@ namespace ESFA.DC.ESF.R2.ValidationService
             wrapper.SupplementaryDataModels = FilterOutInvalidRows(wrapper);
         }
 
-        private void PrePopulateReferenceDataCache(
+        private async Task PrePopulateReferenceDataCache(
             SupplementaryDataWrapper wrapper,
             SourceFileModel sourceFile,
             CancellationToken cancellationToken)
@@ -112,7 +113,7 @@ namespace ESFA.DC.ESF.R2.ValidationService
             var learnAimRefs = wrapper.SupplementaryDataModels.Select(m => m.LearnAimRef).ToList();
             _populationService.PrePopulateLarsLearningDeliveries(learnAimRefs, cancellationToken);
 
-            _populationService.PrePopulateValidationErrorMessages(cancellationToken);
+            await _populationService.PrePopulateValidationErrorMessages(cancellationToken);
         }
 
         private IList<SupplementaryDataLooseModel> FilterOutInvalidLooseRows(
