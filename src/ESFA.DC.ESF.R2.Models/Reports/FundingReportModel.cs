@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ESFA.DC.ESF.R2.Models.Reports
+﻿namespace ESFA.DC.ESF.R2.Models.Reports
 {
     public class FundingReportModel
     {
@@ -26,7 +24,7 @@ namespace ESFA.DC.ESF.R2.Models.Reports
 
         public string LearnAimRef { get; set; }
 
-        public DateTime? SupplementaryDataPanelDate { get; set; }
+        public string SupplementaryDataPanelDate { get; set; }
 
         public string OfficialSensitive { get; }
     }

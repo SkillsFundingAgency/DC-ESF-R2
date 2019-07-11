@@ -3,7 +3,7 @@ using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Builders
 {
-    public class ValidationErrorBuilder
+    public static class ValidationErrorBuilder
     {
         public static ValidationErrorModel BuildValidationErrorModel(SupplementaryDataModel model,  IBaseValidator validator)
         {
@@ -22,7 +22,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Builders
                 ReferenceType = model.ReferenceType,
                 Reference = model.Reference,
                 LearnAimRef = model.LearnAimRef,
-                SupplementaryDataPanelDate = model.SupplementaryDataPanelDate.ToString(),
+                SupplementaryDataPanelDate = model.SupplementaryDataPanelDate?.ToString("dd/MM/yyyy"),
                 Value = model.Value.ToString()
             };
         }
