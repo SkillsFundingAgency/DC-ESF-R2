@@ -94,7 +94,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
                     ULN = model.ULN,
                     ProviderSpecifiedReference = model.ProviderSpecifiedReference,
                     LearnAimRef = model.LearnAimRef,
-                    SupplementaryDataPanelDate = model.SupplementaryDataPanelDate,
+                    SupplementaryDataPanelDate = model.SupplementaryDataPanelDate?.ToString("dd/MM/yyyy"),
                     Value = model.Value
                 };
 
