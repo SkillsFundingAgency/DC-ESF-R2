@@ -22,14 +22,13 @@ namespace ESFA.DC.ESF.R2.Service.Strategies
             return taskName == Constants.ValidationTask;
         }
 
-        public Task Execute(
+        public async Task Execute(
             JobContextModel jobContextModel,
             SourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             CancellationToken cancellationToken)
         {
-            _controller.ValidateData(wrapper, sourceFile, cancellationToken);
-            return Task.CompletedTask;
+            await _controller.ValidateData(wrapper, sourceFile, cancellationToken);
         }
     }
 }

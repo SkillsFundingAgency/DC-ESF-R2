@@ -24,7 +24,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Mappers
             Map(m => m.Value).Index(i++).Name("Value");
             Map(m => m.LearnAimRef).Index(i++).Name("LearnAimRef");
             Map(m => m.SupplementaryDataPanelDate).Index(i++).Name("SupplementaryDataPanelDate");
-            Map(m => m.OfficialSensitive).Index(i).Name("OFFICIAL – SENSITIVE");
+            Map(m => m.OfficialSensitive).Index(i).Name("OFFICIAL - SENSITIVE");
         }
     }
 }

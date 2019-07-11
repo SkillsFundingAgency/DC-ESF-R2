@@ -27,12 +27,12 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
         {
             using (var childLifetimeScope = _lifetimeScope.BeginLifetimeScope())
             {
-                _logger.LogInfo("ESF callback invoked");
+                _logger.LogInfo("ESF R2 callback invoked");
 
                 var jobContextModel = JobContextMapper.MapJobContextToModel(jobContextMessage);
                 if (!jobContextModel.Tasks.Any())
                 {
-                    _logger.LogInfo("ESF. No tasks to run.");
+                    _logger.LogInfo("ESF R2. No tasks to run.");
                     return true;
                 }
 

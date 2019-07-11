@@ -1,4 +1,5 @@
-﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+﻿using System.Threading.Tasks;
+using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
@@ -18,7 +19,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
 
         public bool RejectFile => true;
 
-        public bool IsValid(SourceFileModel sourceFileModel, SupplementaryDataLooseModel model)
+        public async Task<bool> IsValid(SourceFileModel sourceFileModel, SupplementaryDataLooseModel model)
         {
             string[] filenameParts = FileNameHelper.SplitFileName(sourceFileModel.FileName);
 

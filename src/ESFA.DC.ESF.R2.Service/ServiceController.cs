@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
+using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Helpers;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
@@ -17,6 +18,7 @@ namespace ESFA.DC.ESF.R2.Service
         private readonly IReportingController _reportingController;
         private readonly IStorageController _storageController;
         private readonly IIlrReferenceDataCacheService _referenceDataCacheService;
+        private readonly IValidationErrorMessageService _validationErrorMessageService;
 
         public ServiceController(
             IFileHelper fileHelper,
@@ -25,7 +27,8 @@ namespace ESFA.DC.ESF.R2.Service
             IFileValidationService fileValidationService,
             IStorageController storageController,
             IReportingController reportingController,
-            IIlrReferenceDataCacheService referenceDataCacheService)
+            IIlrReferenceDataCacheService referenceDataCacheService,
+            IValidationErrorMessageService validationErrorMessageService)
         {
             _fileHelper = fileHelper;
             _taskHelper = taskHelper;
@@ -34,6 +37,7 @@ namespace ESFA.DC.ESF.R2.Service
             _reportingController = reportingController;
             _storageController = storageController;
             _referenceDataCacheService = referenceDataCacheService;
+            _validationErrorMessageService = validationErrorMessageService;
         }
 
         public async Task RunTasks(
@@ -52,7 +56,8 @@ namespace ESFA.DC.ESF.R2.Service
                 wrapper = await _fileValidationService.GetFile(jobContextModel, sourceFileModel, cancellationToken);
                 if (!wrapper.ValidErrorModels.Any())
                 {
-                    wrapper = _fileValidationService.RunFileValidators(sourceFileModel, wrapper);
+                    await _validationErrorMessageService.PopulateErrorMessages(cancellationToken);
+                    wrapper = await _fileValidationService.RunFileValidators(sourceFileModel, wrapper);
                 }
 
                 if (wrapper.ValidErrorModels.Any())

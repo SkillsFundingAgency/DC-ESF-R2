@@ -15,24 +15,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRow
                 .OrderByDescending(sd => sd.CalendarMonth).Select(sd => sd.CalendarMonth).FirstOrDefault();
 
             var yearlyModels = new List<FundingSummaryReportYearlyValueModel>();
-            for (var i = 2015; i < 2018; i++)
+            for (var i = 2019; i <= maxYear; i++)
             {
                 yearlyModels.Add(new FundingSummaryReportYearlyValueModel
                 {
                     FundingYear = i,
-                    StartMonth = i == 2015 ? 6 : 1,
-                    EndMonth = 12,
-                    Values = new List<decimal>()
-                });
-            }
-
-            if (maxMonth != null && maxYear != null && ((maxYear == 2018 && maxMonth > 7) || maxYear == 2019))
-            {
-                yearlyModels.Add(new FundingSummaryReportYearlyValueModel
-                {
-                    FundingYear = 2018,
                     StartMonth = 1,
-                    EndMonth = FundingMonthCalculation(maxMonth.Value),
+                    EndMonth = i == maxYear ? FundingMonthCalculation(maxMonth.Value) : 12,
                     Values = new List<decimal>()
                 });
             }
