@@ -87,7 +87,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             };
             cellStyles.Add(new CellStyle(dataRowStyle, dataRowStyleFlag));
 
-            Style currentYearStyle = workbook.CreateStyle();        // 6
+            Style currentYearStyle = workbook.CreateStyle();        // 6 - No longer used
             currentYearStyle.Font.Color = Color.Red;
             currentYearStyle.Font.Size = 10;
             currentYearStyle.Font.IsBold = true;
@@ -132,7 +132,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             };
             cellStyles.Add(new CellStyle(headerFooterStyle, headerFooterStyleFlag));
 
-            Style headerFooterCurrentYearStyle = workbook.CreateStyle();       // 9
+            Style headerFooterCurrentYearStyle = workbook.CreateStyle();       // 9 - No longer used
             headerFooterCurrentYearStyle.Font.Color = Color.Red;
             headerFooterCurrentYearStyle.Font.Size = 10;
             headerFooterCurrentYearStyle.Font.IsBold = true;
