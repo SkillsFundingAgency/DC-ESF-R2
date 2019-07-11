@@ -30,7 +30,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
         public async Task TestFundingSummaryReportGeneration()
         {
             var dateTime = DateTime.UtcNow;
-            var filename = $"10005752/1/ESF R2 Funding Summary Report {dateTime:yyyyMMdd-HHmmss}";
+            var filename = $"10005752/1/ESF Round 2 Funding Summary Report {dateTime:yyyyMMdd-HHmmss}";
             var sourceFileId = 1;
 
             Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
