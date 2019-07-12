@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,17 +21,20 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
     public class AimAndDeliverableReport : AbstractReportBuilder, IModelReport
     {
         private readonly IFileService _storage;
-        private readonly IAimAndDeliverableService _aimAndDeliverableService;
+        private readonly IAimAndDeliverableService1819 _aimAndDeliverableService1819;
+        private readonly IAimAndDeliverableService1920 _aimAndDeliverableService1920;
 
         public AimAndDeliverableReport(
             IDateTimeProvider dateTimeProvider,
             IFileService storage,
             IValueProvider valueProvider,
-            IAimAndDeliverableService aimAndDeliverableService)
+            IAimAndDeliverableService1819 aimAndDeliverableService1819,
+            IAimAndDeliverableService1920 aimAndDeliverableService1920)
             : base(dateTimeProvider, valueProvider)
         {
             _storage = storage;
-            _aimAndDeliverableService = aimAndDeliverableService;
+            _aimAndDeliverableService1819 = aimAndDeliverableService1819;
+            _aimAndDeliverableService1920 = aimAndDeliverableService1920;
 
             ReportFileName = "ESF Round 2 Aim and Deliverable Report";
         }
@@ -47,7 +52,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             cancellationToken.ThrowIfCancellationRequested();
 
             var ukPrn = jobContextModel.UkPrn;
-            string csv = await GetCsv(ukPrn, cancellationToken);
+            string csv = await GetCsv(ukPrn, jobContextModel.CollectionYear, cancellationToken);
             if (csv != null)
             {
                 using (var stream = await _storage.OpenWriteStreamAsync(
@@ -65,11 +70,20 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             }
         }
 
-        private async Task<string> GetCsv(int ukPrn, CancellationToken cancellationToken)
+        private async Task<string> GetCsv(int ukPrn, int collectionYear, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            var reportData = await _aimAndDeliverableService.GetAimAndDeliverableModel(ukPrn, cancellationToken);
+            List<AimAndDeliverableModel> reportData;
+
+            if (collectionYear == 1819)
+            {
+                reportData = (await _aimAndDeliverableService1819.GetAimAndDeliverableModel(ukPrn, cancellationToken)).ToList();
+            }
+            else
+            {
+                reportData = (await _aimAndDeliverableService1920.GetAimAndDeliverableModel(ukPrn, cancellationToken)).ToList();
+            }
 
             using (var ms = new MemoryStream())
             {

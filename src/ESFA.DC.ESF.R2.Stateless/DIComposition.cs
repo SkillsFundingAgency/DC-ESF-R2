@@ -342,7 +342,8 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.RegisterType<ReferenceDataService>().As<IReferenceDataService>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<PopulationService>().As<IPopulationService>().InstancePerLifetimeScope();
 
-            containerBuilder.RegisterType<AimAndDeliverableService>().As<IAimAndDeliverableService>();
+            containerBuilder.RegisterType<AimAndDeliverableService1819>().As<IAimAndDeliverableService1819>();
+            containerBuilder.RegisterType<AimAndDeliverableService1920>().As<IAimAndDeliverableService1920>();
         }
 
         private static void RegisterControllers(ContainerBuilder containerBuilder)

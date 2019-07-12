@@ -15,7 +15,7 @@ using ESFA.DC.ILR.DataService.Models;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Services
 {
-    public class AimAndDeliverableService : IAimAndDeliverableService
+    public class AimAndDeliverableService1920 : IAimAndDeliverableService1920
     {
         private const string FundingStreamPeriodCode = "ESF1420";
 
@@ -23,29 +23,29 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
 
         private readonly string[] _reportMonths =
         {
-            "Aug-18",
-            "Sep-18",
-            "Oct-18",
-            "Nov-18",
-            "Dec-18",
-            "Jan-19",
-            "Feb-19",
-            "Mar-19",
-            "Apr-19",
-            "May-19",
-            "Jun-19",
-            "Jul-19",
+            "Aug-19",
+            "Sep-19",
+            "Oct-19",
+            "Nov-19",
+            "Dec-19",
+            "Jan-20",
+            "Feb-20",
+            "Mar-20",
+            "Apr-20",
+            "May-20",
+            "Jun-20",
+            "Jul-20"
         };
 
-        private readonly IValidLearnerDataService _validLearnerDataService;
+        private readonly IValidLearnerDataService1920 _validLearnerDataService;
         private readonly IReferenceDataService _referenceDataService;
         private readonly IFm70DataService _fm70DataService;
 
         private readonly AimAndDeliverableComparer _comparer;
 
-        public AimAndDeliverableService(
+        public AimAndDeliverableService1920(
             IFm70DataService fm70DataService,
-            IValidLearnerDataService validLearnerDataService,
+            IValidLearnerDataService1920 validLearnerDataService,
             IReferenceDataService referenceDataService,
             IAimAndDeliverableComparer comparer)
         {
@@ -272,6 +272,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                 ProgressionEarnings = period?.ProgressionEarnings,
                 TotalEarnings = total
             };
+
             return model;
         }
 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,7 +9,6 @@ using ESFA.DC.ESF.R2.ReportingService.Reports;
 using ESFA.DC.ESF.R2.ReportingService.Services;
 using ESFA.DC.ESF.R2.ReportingService.Tests.Builders;
 using ESFA.DC.FileService.Interface;
-using ESFA.DC.IO.Interfaces;
 using Moq;
 using Xunit;
 
@@ -36,7 +34,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             storage.Setup(x => x.OpenWriteStreamAsync($"{filename}.csv", It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(testStream);
 
-            var aimAndDeliverableServiceMock = new Mock<IAimAndDeliverableService>();
+            var aimAndDeliverableServiceMock = new Mock<IAimAndDeliverableService1819>();
             aimAndDeliverableServiceMock
                 .Setup(m => m.GetAimAndDeliverableModel(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(AimAndDeliverableBuilder.BuildAimAndDeliverableModels());
@@ -47,7 +45,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
                 dateTimeProviderMock.Object,
                 storage.Object,
                 valueProvider,
-                aimAndDeliverableServiceMock.Object);
+                aimAndDeliverableServiceMock.Object,
+                null);
 
             var wrapper = new JobContextModel
             {
