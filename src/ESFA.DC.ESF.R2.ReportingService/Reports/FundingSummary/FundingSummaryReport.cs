@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -29,7 +27,7 @@ using ESFA.DC.ILR.DataService.Models;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 {
-    public class FundingSummaryReport : AbstractReportBuilder, IModelReport
+    public sealed class FundingSummaryReport : AbstractReportBuilder, IModelReport
     {
         private readonly IFileService _storage;
         private readonly IList<IRowHelper> _rowHelpers;
@@ -134,10 +132,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 //AddImageToReport(sheet);
 
                 workbook = GetWorkbookReport(workbook, sheet, fundingSummaryHeaderModel, fundingSummaryModels, fundingSummaryFooterModel);
-                ApplyAdditionalRowFormatting(sheet, rowOfData);
             }
-
-            ApplyAdditionalHeaderFormatting(workbook, ilrYearlyFileData.Count);
 
             string externalFileName = GetExternalFilename(ukPrn.ToString(), jobContextModel.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
             string fileName = GetFilename(ukPrn.ToString(), jobContextModel.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
@@ -161,34 +156,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                     await WriteZipEntry(archive, $"{fileName}.xlsx", ms, cancellationToken);
                 }
             }
-        }
-
-        private void ApplyAdditionalHeaderFormatting(Workbook workbook, int noOfIlrFiles)
-        {
-            foreach (var worksheet in workbook.Worksheets)
-            {
-                worksheet.Cells.CreateRange(1, 3 + (noOfIlrFiles * 2), 4, 1).ApplyStyle(_cellStyles[8].Style, _cellStyles[8].StyleFlag); // Header
-            }
-        }
-
-        private void ApplyAdditionalRowFormatting(Worksheet worksheet, FundingSummaryModel rowOfData)
-        {
-            if (rowOfData == null)
-            {
-                return;
-            }
-
-            int valCount = rowOfData.YearlyValues.Sum(x => x.Values.Count);
-            int nonYearCount = rowOfData.YearlyValues.Sum(x => x.FundingYear != 2018 ? x.Values.Count : 0);
-            int yearCount = rowOfData.YearlyValues.Sum(x => x.FundingYear == 2018 ? x.Values.Count : 0);
-
-            if (yearCount <= 0)
-            {
-                return;
-            }
-
-            worksheet.Cells.CreateRange(9, nonYearCount + 1, 110, yearCount).ApplyStyle(_cellStyles[5].Style, _cellStyles[5].StyleFlag); // Current Year
-            worksheet.Cells.CreateRange(9, valCount + rowOfData.Totals.Count, 110, 1).ApplyStyle(_cellStyles[5].Style, _cellStyles[5].StyleFlag); // Current Year Subtotal
         }
 
         private void AddImageToReport(Worksheet worksheet)
@@ -262,6 +229,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             IEnumerable<FM70PeriodisedValuesYearly> fm70YearlyData,
             IEnumerable<SupplementaryDataYearlyModel> data)
         {
+            List<FM70PeriodisedValuesYearly> fm70YearlyDataList = fm70YearlyData.ToList();
+            List<SupplementaryDataYearlyModel> dataList = data.ToList();
+
             var fundingSummaryModels = new List<FundingSummaryModel>();
             foreach (var fundingReportRow in ReportDataTemplate.FundingModelRowDefinitions)
             {
@@ -272,7 +242,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                         continue;
                     }
 
-                    rowHelper.Execute(fundingSummaryModels, fundingReportRow, data, fm70YearlyData);
+                    rowHelper.Execute(fundingSummaryModels, fundingReportRow, dataList, fm70YearlyDataList);
                     break;
                 }
             }
