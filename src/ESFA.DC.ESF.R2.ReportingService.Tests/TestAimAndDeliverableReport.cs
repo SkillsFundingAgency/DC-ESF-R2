@@ -34,8 +34,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             storage.Setup(x => x.OpenWriteStreamAsync($"{filename}.csv", It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(testStream);
 
-            var aimAndDeliverableServiceMock = new Mock<IAimAndDeliverableService1819>();
-            aimAndDeliverableServiceMock
+            var aimAndDeliverableService1819Mock = new Mock<IAimAndDeliverableService1819>();
+            aimAndDeliverableService1819Mock
+                .Setup(m => m.GetAimAndDeliverableModel(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(AimAndDeliverableBuilder.BuildAimAndDeliverableModels());
+
+            var aimAndDeliverableService1920Mock = new Mock<IAimAndDeliverableService1920>();
+            aimAndDeliverableService1920Mock
                 .Setup(m => m.GetAimAndDeliverableModel(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(AimAndDeliverableBuilder.BuildAimAndDeliverableModels());
 
@@ -45,14 +50,15 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
                 dateTimeProviderMock.Object,
                 storage.Object,
                 valueProvider,
-                aimAndDeliverableServiceMock.Object,
-                null);
+                aimAndDeliverableService1819Mock.Object,
+                aimAndDeliverableService1920Mock.Object);
 
             var wrapper = new JobContextModel
             {
                 UkPrn = 10005752,
                 JobId = 2,
-                BlobContainerName = "TestBlob"
+                BlobContainerName = "TestBlob",
+                CollectionYear = 1819
             };
             SourceFileModel sourceFile = GetEsfSourceFileModel();
 
