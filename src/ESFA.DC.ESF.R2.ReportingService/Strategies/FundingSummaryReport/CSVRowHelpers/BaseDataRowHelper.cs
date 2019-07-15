@@ -7,21 +7,22 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRow
 {
     public abstract class BaseDataRowHelper
     {
-        protected List<FundingSummaryReportYearlyValueModel> InitialiseFundingYears(IEnumerable<SupplementaryDataYearlyModel> esfDataModels)
+        protected List<FundingSummaryReportYearlyValueModel> InitialiseFundingYears(
+            int endYear,
+            IEnumerable<SupplementaryDataYearlyModel> esfDataModels)
         {
             var suppData = esfDataModels.SelectMany(m => m.SupplementaryData).ToList();
-            var maxYear = suppData.Max(m => m.CalendarYear);
-            var maxMonth = suppData.Where(sd => sd.CalendarYear == maxYear)
+            var maxMonth = suppData.Where(sd => sd.CalendarYear == endYear)
                 .OrderByDescending(sd => sd.CalendarMonth).Select(sd => sd.CalendarMonth).FirstOrDefault();
 
             var yearlyModels = new List<FundingSummaryReportYearlyValueModel>();
-            for (var i = 2019; i <= maxYear; i++)
+            for (var i = Constants.StartYear; i <= endYear; i++)
             {
                 yearlyModels.Add(new FundingSummaryReportYearlyValueModel
                 {
                     FundingYear = i,
-                    StartMonth = 1,
-                    EndMonth = i == maxYear ? FundingMonthCalculation(maxMonth.Value) : 12,
+                    StartMonth = i == Constants.StartYear ? 9 : 12,
+                    EndMonth = 12,
                     Values = new List<decimal>()
                 });
             }

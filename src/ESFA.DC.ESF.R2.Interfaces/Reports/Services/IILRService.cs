@@ -9,6 +9,9 @@ namespace ESFA.DC.ESF.R2.Interfaces.Reports.Services
     {
         Task<IEnumerable<ILRFileDetails>> GetIlrFileDetails(int ukPrn, CancellationToken cancellationToken);
 
-        Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrData(int ukPrn, CancellationToken cancellationToken);
+        Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrData(
+            int endYear,
+            int ukPrn,
+            CancellationToken cancellationToken);
     }
 }

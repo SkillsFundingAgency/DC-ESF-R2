@@ -84,12 +84,14 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         {
             var ukPrn = Convert.ToInt32(jobContextModel.UkPrn);
 
+            var collectionYear = Convert.ToInt32($"20{jobContextModel.CollectionYear.ToString().Substring(0, 2)}");
+
             var sourceFiles = await _supplementaryDataService.GetImportFiles(jobContextModel.UkPrn.ToString(), cancellationToken);
             var supplementaryData =
-                await _supplementaryDataService.GetSupplementaryData(sourceFiles, cancellationToken);
+                await _supplementaryDataService.GetSupplementaryData(collectionYear, sourceFiles, cancellationToken);
 
             var ilrYearlyFileData = (await _ilrService.GetIlrFileDetails(ukPrn, cancellationToken)).ToList();
-            var fm70YearlyData = (await _ilrService.GetYearlyIlrData(ukPrn, cancellationToken)).ToList();
+            var fm70YearlyData = (await _ilrService.GetYearlyIlrData(collectionYear, ukPrn, cancellationToken)).ToList();
 
             FundingSummaryHeaderModel fundingSummaryHeaderModel =
                 PopulateReportHeader(sourceFile, ilrYearlyFileData, ukPrn, cancellationToken);
@@ -99,7 +101,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
             foreach (var file in sourceFiles)
             {
-                var fundingSummaryModels = PopulateReportData(fm70YearlyData, supplementaryData[file.SourceFileId]).ToList();
+                var fundingSummaryModels = PopulateReportData(collectionYear, fm70YearlyData, supplementaryData[file.SourceFileId]).ToList();
 
                 ReplaceConRefNumInTitle(fundingSummaryModels, file);
                 ReplaceFcsDescriptionsInTitle(fundingSummaryModels);
@@ -121,7 +123,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                     }
                 }
 
-                _cachedHeaders = GetHeaderEntries(yearAndDataLengthModels);
+                _cachedHeaders = GetHeaderEntries(collectionYear, yearAndDataLengthModels);
                 _cellStyles = _excelStyleProvider.GetFundingSummaryStyles(workbook);
 
                 Worksheet sheet = workbook.Worksheets.Add(file.ConRefNumber);
@@ -129,7 +131,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 sheet.Cells.Columns[0].Width = 63.93;
                 sheet.IsGridlinesVisible = false;
 
-                //AddImageToReport(sheet);
+                AddImageToReport(sheet);
 
                 workbook = GetWorkbookReport(workbook, sheet, fundingSummaryHeaderModel, fundingSummaryModels, fundingSummaryFooterModel);
             }
@@ -226,6 +228,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         }
 
         private IEnumerable<FundingSummaryModel> PopulateReportData(
+            int endYear,
             IEnumerable<FM70PeriodisedValuesYearly> fm70YearlyData,
             IEnumerable<SupplementaryDataYearlyModel> data)
         {
@@ -242,7 +245,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                         continue;
                     }
 
-                    rowHelper.Execute(fundingSummaryModels, fundingReportRow, dataList, fm70YearlyDataList);
+                    rowHelper.Execute(endYear, fundingSummaryModels, fundingReportRow, dataList, fm70YearlyDataList);
                     break;
                 }
             }
@@ -292,7 +295,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             return workbook;
         }
 
-        private string[] GetHeaderEntries(List<YearAndDataLengthModel> yearAndDataLengthModels)
+        private string[] GetHeaderEntries(int endYear, List<YearAndDataLengthModel> yearAndDataLengthModels)
         {
             var values = new List<string>
             {
@@ -302,8 +305,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             {
                 if (typeof(IEnumerable).IsAssignableFrom(cachedModelProperty.MethodInfo.PropertyType))
                 {
-                    BuildYears(values, cachedModelProperty.Names, yearAndDataLengthModels);
-                    BuildTotals(values, cachedModelProperty.Names, yearAndDataLengthModels);
+                    BuildYears(endYear, values, cachedModelProperty.Names, yearAndDataLengthModels);
+                    BuildTotals(endYear, values, cachedModelProperty.Names, yearAndDataLengthModels);
                 }
                 else
                 {
@@ -315,6 +318,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         }
 
         private void BuildTotals(
+            int endYear,
             List<string> values,
             string[] names,
             List<YearAndDataLengthModel> yearAndDataLengthModels)
@@ -324,7 +328,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 return;
             }
 
-            for (int i = 2015; i < 2019; i++)
+            for (int i = Constants.StartYear; i <= endYear; i++)
             {
                 YearAndDataLengthModel yearAndDataLengthModel = yearAndDataLengthModels.SingleOrDefault(x => x.Year == i);
                 if (yearAndDataLengthModel == null)
@@ -332,9 +336,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                     continue;
                 }
 
-                var year = i == 2015 ? i + 1 : i;
-                var startMonthIndex = i == 2015 ? 5 : 0;
-                var length = i == 2018 ? yearAndDataLengthModel.DataLength : 12 - startMonthIndex;
+                var year = i == Constants.StartYear ? i + 1 : i;
+                var startMonthIndex = i == Constants.StartYear ? 8 : 0;
+                var length = 12 - startMonthIndex;
                 var yearlyNames = new string[length];
                 Array.Copy(names, startMonthIndex, yearlyNames, 0, length);
 
@@ -363,11 +367,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         }
 
         private void BuildYears(
+            int endYear,
             List<string> values,
             string[] names,
             List<YearAndDataLengthModel> yearAndDataLengthModels)
         {
-            for (var i = 2015; i < 2019; i++)
+            for (var i = Constants.StartYear; i <= endYear; i++)
             {
                 YearAndDataLengthModel yearAndDataLengthModel = yearAndDataLengthModels.SingleOrDefault(x => x.Year == i);
                 if (yearAndDataLengthModel == null)

@@ -16,6 +16,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRow
         }
 
         public void Execute(
+            int endYear,
             IList<FundingSummaryModel> reportOutput,
             FundingReportRow row,
             IEnumerable<SupplementaryDataYearlyModel> esfDataModels,
@@ -53,7 +54,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRow
                 rowModel.ExcelRecordStyle = 6;
             }
 
-            var yearlyValueTotals = InitialiseFundingYears(esfDataModels);
+            var yearlyValueTotals = InitialiseFundingYears(endYear, esfDataModels);
             foreach (var year in reportRowsToTotal.First().YearlyValues)
             {
                 var yearValues = yearlyValueTotals.FirstOrDefault(yv => yv.FundingYear == year.FundingYear);
