@@ -45,7 +45,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
 
             var supplementaryDataService = new Mock<ISupplementaryDataService>();
             supplementaryDataService
-                .Setup(s => s.GetSupplementaryData(It.IsAny<IEnumerable<SourceFileModel>>(), It.IsAny<CancellationToken>()))
+                .Setup(s => s.GetSupplementaryData(It.IsAny<int>(), It.IsAny<IEnumerable<SourceFileModel>>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new Dictionary<int, IEnumerable<SupplementaryDataYearlyModel>>
                 {
                     [sourceFileId] = new List<SupplementaryDataYearlyModel>
@@ -91,7 +91,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
 
             IEnumerable<FM70PeriodisedValuesYearly> periodisedValues = new List<FM70PeriodisedValuesYearly>();
             var ilrMock = new Mock<IILRService>();
-            ilrMock.Setup(m => m.GetYearlyIlrData(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            ilrMock.Setup(m => m.GetYearlyIlrData(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(periodisedValues);
             ilrMock.Setup(m => m.GetIlrFileDetails(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(GetTestFileDetail());
@@ -113,7 +113,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             {
                 UkPrn = 10005752,
                 JobId = 1,
-                BlobContainerName = string.Empty
+                BlobContainerName = string.Empty,
+                CollectionYear = 1819
             };
 
             await fundingSummaryReport.GenerateReport(wrapper, sourceFile, null, null, CancellationToken.None);
