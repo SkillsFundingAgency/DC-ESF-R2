@@ -104,7 +104,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 var fundingSummaryModels = PopulateReportData(collectionYear, fm70YearlyData, supplementaryData[file.SourceFileId]).ToList();
 
                 ReplaceConRefNumInTitle(fundingSummaryModels, file);
-                ReplaceFcsDescriptionsInTitle(fundingSummaryModels);
 
                 FundingSummaryFooterModel fundingSummaryFooterModel = PopulateReportFooter(cancellationToken);
 
@@ -395,46 +394,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
                     values.Add(name.Replace("{SP}", i.ToString()).Replace("{SY}", (i + 1).ToString().Substring(2)));
                     counter++;
-                }
-            }
-        }
-
-        private void ReplaceFcsDescriptionsInTitle(IEnumerable<FundingSummaryModel> fundingSummaryModels)
-        {
-            var deliverableCodeTags = new List<string>
-            {
-                Constants.SD01Tag,
-                Constants.SD02Tag,
-                Constants.SD03Tag,
-                Constants.SD04Tag,
-                Constants.SD05Tag,
-                Constants.SD06Tag,
-                Constants.SD07Tag,
-                Constants.SD08Tag,
-                Constants.SD09Tag,
-                Constants.SD10Tag
-            };
-
-            foreach (var fundingSummaryModel in fundingSummaryModels)
-            {
-                if (string.IsNullOrEmpty(fundingSummaryModel.Title))
-                {
-                    continue;
-                }
-
-                foreach (var deliverableCodeTag in deliverableCodeTags)
-                {
-                    if (!fundingSummaryModel.Title.Contains(deliverableCodeTag))
-                    {
-                        continue;
-                    }
-
-                    var deliverableCode = deliverableCodeTag.Substring(deliverableCodeTag.IndexOf('-') + 1, 4);
-                    var mapping = _referenceDataService
-                        .GetContractDeliverableCodeMapping(new List<string> { deliverableCode }, CancellationToken.None)
-                        .FirstOrDefault(cm => cm.ExternalDeliverableCode.Equals(deliverableCode, StringComparison.OrdinalIgnoreCase));
-
-                    fundingSummaryModel.Title = fundingSummaryModel.Title.Replace(deliverableCodeTag, mapping?.ExternalDeliverableCode ?? string.Empty);
                 }
             }
         }
