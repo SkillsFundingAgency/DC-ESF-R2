@@ -16,7 +16,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Helpers
                        stringValue.Substring(stringValue.IndexOf('.') + 1).Length <= floatingPointLength;
             }
 
-            return stringValue.Length <= integerPartLength;
+            return stringValue.Length <= integerPartLength + floatingPointLength;
         }
     }
 }
