@@ -93,14 +93,14 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             var ilrYearlyFileData = (await _ilrService.GetIlrFileDetails(ukPrn, cancellationToken)).ToList();
             var fm70YearlyData = (await _ilrService.GetYearlyIlrData(collectionYear, ukPrn, cancellationToken)).ToList();
 
-            FundingSummaryHeaderModel fundingSummaryHeaderModel =
-                PopulateReportHeader(sourceFile, ilrYearlyFileData, ukPrn, cancellationToken);
-
             var workbook = new Workbook();
             workbook.Worksheets.Clear();
 
             foreach (var file in sourceFiles)
             {
+                FundingSummaryHeaderModel fundingSummaryHeaderModel =
+                    PopulateReportHeader(file, ilrYearlyFileData, ukPrn, cancellationToken);
+
                 var fundingSummaryModels = PopulateReportData(collectionYear, fm70YearlyData, supplementaryData[file.SourceFileId]).ToList();
 
                 ReplaceConRefNumInTitle(fundingSummaryModels, file);
