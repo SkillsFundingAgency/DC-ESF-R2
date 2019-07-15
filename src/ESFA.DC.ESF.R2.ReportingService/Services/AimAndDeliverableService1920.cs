@@ -110,7 +110,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             var learnAimRefs = validLearners.Select(ld => ld.Value.LearnAimRef).ToList();
 
             var larsDeliveries = _referenceDataService.GetLarsLearningDelivery(learnAimRefs)
-                .ToDictionary(t => t.LearnAimRef, t => t);
+                .ToDictionary(t => t.LearnAimRef, t => t, StringComparer.OrdinalIgnoreCase);
 
             foreach (var fm70Delivery in fm70LearningDeliveries)
             {
