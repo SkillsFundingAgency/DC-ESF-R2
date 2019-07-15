@@ -65,8 +65,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             new FundingReportRow { RowType = RowType.Spacer },
 
             new FundingReportRow { RowType = RowType.Title, Title = "Specification Defined" },
-            new FundingReportRow { CodeBase = "ESF", DeliverableCode = "SD01", RowType = RowType.Data, Title = "SUPPDATA SD01 " + Constants.SD01Tag + " (£)" },
-            new FundingReportRow { CodeBase = "ESF", DeliverableCode = "SD02", RowType = RowType.Data, Title = "SUPPDATA SD02 " + Constants.SD02Tag + " (£)" },
+            new FundingReportRow { CodeBase = "ESF", DeliverableCode = "SD01", RowType = RowType.Data, Title = "SUPPDATA SD01 Progression Within Work (£)" },
+            new FundingReportRow { CodeBase = "ESF", DeliverableCode = "SD02", RowType = RowType.Data, Title = "SUPPDATA SD02 LEP Agreed Delivery Plan (£)" },
             new FundingReportRow { DeliverableCode = "SD01, SD02, SD03, SD04, SD05, SD06, SD07, SD08, SD09, SD10", RowType = RowType.Total, Title = "Total Specification Defined (£)" },
             new FundingReportRow { RowType = RowType.Spacer },
 
