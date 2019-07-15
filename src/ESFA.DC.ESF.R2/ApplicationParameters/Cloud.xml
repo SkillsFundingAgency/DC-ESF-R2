@@ -16,6 +16,7 @@
     <Parameter Name="ILR1617ConnectionString" Value="__ILR1617ConnectionString__" />
     <Parameter Name="ILR1718ConnectionString" Value="__ILR1718ConnectionString__" />
     <Parameter Name="ILR1819ConnectionString" Value="__ILR1819ConnectionString__" />
+    <Parameter Name="ILR1920ConnectionString" Value="__ILR1920ConnectionString__" />
     <Parameter Name="ESFR2ConnectionString" Value="__ESFR2ConnectionString__" />
     <Parameter Name="LARSConnectionString" Value="__LARSConnectionString__" />
     <Parameter Name="OrganisationConnectionString" Value="__OrganisationsDbConnectionStringReadOnly__" />

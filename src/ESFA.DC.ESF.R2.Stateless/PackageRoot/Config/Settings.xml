@@ -24,6 +24,7 @@
     <Parameter Name="ILR1617ConnectionString" Value="" />
     <Parameter Name="ILR1718ConnectionString" Value="" />
     <Parameter Name="ILR1819ConnectionString" Value="" />
+    <Parameter Name="ILR1920ConnectionString" Value="" />
   </Section>
   <Section Name="ESFSection">
     <Parameter Name="ESFR2ConnectionString" Value="" />
