@@ -43,7 +43,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             {
                 version = context.VersionInfos
                     .OrderByDescending(v => v.VersionNumber)
-                    .Select(v => v.VersionNumber)
+                    .Select(v => $"{v.VersionNumber} : {v.ModifiedAt:dd MMM yyyy hh:mm:ss}")
                     .FirstOrDefault();
             }
 
@@ -62,7 +62,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                 {
                     version = context.LARS_Versions
                         .OrderByDescending(v => v.MainDataSchemaName)
-                        .Select(lv => lv.MainDataSchemaName)
+                        .Select(lv => $"{lv.MainDataSchemaName} : {lv.ModifiedOn:dd MMM yyyy hh:mm:ss}")
                         .FirstOrDefault();
                 }
             }
@@ -116,7 +116,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             {
                 version = context.OrgVersions
                     .OrderByDescending(v => v.MainDataSchemaName)
-                    .Select(lv => lv.MainDataSchemaName)
+                    .Select(lv => $"{lv.MainDataSchemaName} : {lv.ModifiedOn:dd MMM yyyy hh:mm:ss}")
                     .FirstOrDefault();
             }
 

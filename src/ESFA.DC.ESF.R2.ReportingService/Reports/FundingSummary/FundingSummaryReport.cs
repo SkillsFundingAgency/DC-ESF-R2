@@ -218,7 +218,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
             return new FundingSummaryFooterModel
             {
-                ReportGeneratedAt = "Report generated at " + dateTimeNowUk.ToString("HH:mm:ss") + " on " + dateTimeNowUk.ToString("dd/MM/yyyy"),
+                ReportGeneratedAt = dateTimeNowUk.ToString("HH:mm:ss") + " on " + dateTimeNowUk.ToString("dd/MM/yyyy"),
                 LarsData = _referenceDataService.GetLarsVersion(cancellationToken),
                 OrganisationData = _referenceDataService.GetOrganisationVersion(cancellationToken),
                 PostcodeData = _referenceDataService.GetPostcodeVersion(cancellationToken),
