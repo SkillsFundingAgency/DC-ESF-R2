@@ -16,6 +16,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRow
         }
 
         public void Execute(
+            int endYear,
             IList<FundingSummaryModel> reportOutput,
             FundingReportRow row,
             IEnumerable<SupplementaryDataYearlyModel> esfDataModels,

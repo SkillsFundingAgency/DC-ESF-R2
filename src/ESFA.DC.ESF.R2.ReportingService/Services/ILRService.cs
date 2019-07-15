@@ -10,9 +10,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
 {
     public class ILRService : IILRService
     {
-        private const int StartYear = 2019;
-        private const int EndYear = 2022;
-
         private readonly IFm70DataService _fm70DataService;
         private readonly IFileDetailsDataService _fileDetailsDataService;
 
@@ -31,16 +28,21 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             return ilrFileData;
         }
 
-        public async Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrData(int ukPrn, CancellationToken cancellationToken)
+        public async Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrData(
+            int endYear,
+            int ukPrn,
+            CancellationToken cancellationToken)
         {
             IEnumerable<FM70PeriodisedValues> ilrData = await _fm70DataService.GetPeriodisedValuesAllYears(ukPrn, cancellationToken);
 
-            var fm70YearlyData = GroupFm70DataIntoYears(ilrData);
+            var fm70YearlyData = GroupFm70DataIntoYears(endYear, ilrData);
 
             return fm70YearlyData;
         }
 
-        private IEnumerable<FM70PeriodisedValuesYearly> GroupFm70DataIntoYears(IEnumerable<FM70PeriodisedValues> fm70Data)
+        private IEnumerable<FM70PeriodisedValuesYearly> GroupFm70DataIntoYears(
+            int endYear,
+            IEnumerable<FM70PeriodisedValues> fm70Data)
         {
             var yearlyFm70Data = new List<FM70PeriodisedValuesYearly>();
             if (fm70Data == null)
@@ -48,7 +50,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                 return yearlyFm70Data;
             }
 
-            for (var i = StartYear; i < EndYear; i++)
+            for (var i = Constants.StartYear; i <= endYear; i++)
             {
                 yearlyFm70Data.Add(new FM70PeriodisedValuesYearly
                 {

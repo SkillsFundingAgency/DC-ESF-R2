@@ -16,6 +16,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRow
         }
 
         public void Execute(
+            int endYear,
             IList<FundingSummaryModel> reportOutput,
             FundingReportRow row,
             IEnumerable<SupplementaryDataYearlyModel> esfDataModels,
@@ -36,7 +37,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRow
                 return;
             }
 
-            var yearlyValues = InitialiseFundingYears(esfDataModels);
+            var yearlyValues = InitialiseFundingYears(endYear, esfDataModels);
             var cumulativeTotal = 0M;
             foreach (var year in grandTotalRow.YearlyValues)
             {

@@ -2,6 +2,9 @@
 {
     public class Constants
     {
+        public const int StartYear = 2018;
+        public const int EndYear = 2022;
+
         public const string LearningDeliveryFamTypeRES = "RES";
 
         // public const string FundingSummaryReportNumberFormat = "#,##0.00;(#,##0.00)";

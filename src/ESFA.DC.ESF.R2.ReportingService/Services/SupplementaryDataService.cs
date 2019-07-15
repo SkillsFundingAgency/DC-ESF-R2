@@ -16,8 +16,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
 
         private readonly ISupplementaryDataModelMapper _supplementaryDataMapper;
 
-        private int _startYear = 2019;
-        private int _endYear = 2022;
         private int _startMonth = 8;
 
         public SupplementaryDataService(
@@ -53,6 +51,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
         }
 
         public async Task<IDictionary<int, IEnumerable<SupplementaryDataYearlyModel>>> GetSupplementaryData(
+            int endYear,
             IEnumerable<SourceFileModel> sourceFiles,
             CancellationToken cancellationToken)
         {
@@ -61,6 +60,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             {
                 var supplementaryData =
                     await GetSupplementaryData(
+                        endYear,
                         sourceFile.SourceFileId,
                         cancellationToken);
 
@@ -76,19 +76,22 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
         }
 
         private async Task<IEnumerable<SupplementaryDataYearlyModel>> GetSupplementaryData(
+            int endYear,
             int sourceFileId,
             CancellationToken cancellationToken)
         {
             var supplementaryData = await _repository.GetSupplementaryDataPerSourceFile(sourceFileId, cancellationToken);
 
-            return GroupSupplementaryDataIntoYears(supplementaryData.Select(data => _supplementaryDataMapper.GetModelFromEntity(data)));
+            return GroupSupplementaryDataIntoYears(endYear, supplementaryData.Select(data => _supplementaryDataMapper.GetModelFromEntity(data)));
         }
 
-        private IEnumerable<SupplementaryDataYearlyModel> GroupSupplementaryDataIntoYears(IEnumerable<SupplementaryDataModel> supplementaryData)
+        private IEnumerable<SupplementaryDataYearlyModel> GroupSupplementaryDataIntoYears(
+            int endYear,
+            IEnumerable<SupplementaryDataModel> supplementaryData)
         {
             var yearlySupplementaryData = new List<SupplementaryDataYearlyModel>();
 
-            for (var i = _startYear; i < _endYear; i++)
+            for (var i = Constants.StartYear; i <= endYear; i++)
             {
                 yearlySupplementaryData.Add(new SupplementaryDataYearlyModel
                 {

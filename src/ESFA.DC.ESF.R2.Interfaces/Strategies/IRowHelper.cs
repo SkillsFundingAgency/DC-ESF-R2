@@ -10,6 +10,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.Strategies
         bool IsMatch(RowType rowType);
 
         void Execute(
+            int endYear,
             IList<FundingSummaryModel> reportOutput,
             FundingReportRow row,
             IEnumerable<SupplementaryDataYearlyModel> esfDataModels,

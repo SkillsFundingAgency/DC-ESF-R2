@@ -32,6 +32,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRow
         }
 
         public void Execute(
+            int endYear,
             IList<FundingSummaryModel> reportOutput,
             FundingReportRow row,
             IEnumerable<SupplementaryDataYearlyModel> esfDataModels,
@@ -45,7 +46,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRow
             };
 
             var supplementaryDataYearlyModels = esfDataModels.ToList();
-            var reportRowYearlyValues = InitialiseFundingYears(supplementaryDataYearlyModels);
+            var reportRowYearlyValues = InitialiseFundingYears(endYear, supplementaryDataYearlyModels);
 
             var codeBase = row.CodeBase;
             if (codeBase == EsfCodeBase)
