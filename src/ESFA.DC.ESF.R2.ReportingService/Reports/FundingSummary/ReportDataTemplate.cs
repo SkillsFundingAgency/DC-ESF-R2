@@ -8,7 +8,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         public static readonly List<FundingReportRow> FundingModelRowDefinitions = new List<FundingReportRow>
         {
             new FundingReportRow { RowType = RowType.Spacer },
-            new FundingReportRow { RowType = RowType.MainTitle, Title = "European Social Fund 2019-2022" },
+            new FundingReportRow { RowType = RowType.MainTitle, Title = "European Social Fund 2014-2020 (Round 2)" },
             new FundingReportRow { RowType = RowType.Spacer },
 
             new FundingReportRow { RowType = RowType.Title, Title = "Learner Assessment and Plan" },
