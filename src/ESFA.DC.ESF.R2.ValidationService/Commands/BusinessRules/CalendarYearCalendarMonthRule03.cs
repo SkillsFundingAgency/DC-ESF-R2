@@ -40,7 +40,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             var fcsDeliverableCode = _mappingHelper.GetFcsDeliverableCode(model, CancellationToken.None);
             var contractAllocation = _referenceDataService.GetContractAllocation(model.ConRefNumber, fcsDeliverableCode, CancellationToken.None);
 
-            return contractAllocation != null && contractAllocation.EndDate > startDateMonth;
+            return contractAllocation == null || contractAllocation.EndDate > startDateMonth;
         }
     }
 }
