@@ -15,7 +15,7 @@ using ESFA.DC.ILR.DataService.Models;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Services
 {
-    public class AimAndDeliverableService : IAimAndDeliverableService
+    public class AimAndDeliverableService1819 : IAimAndDeliverableService1819
     {
         private const string FundingStreamPeriodCode = "ESF1420";
 
@@ -37,15 +37,15 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             "Jul-19",
         };
 
-        private readonly IValidLearnerDataService _validLearnerDataService;
+        private readonly IValidLearnerDataService1819 _validLearnerDataService;
         private readonly IReferenceDataService _referenceDataService;
         private readonly IFm70DataService _fm70DataService;
 
         private readonly AimAndDeliverableComparer _comparer;
 
-        public AimAndDeliverableService(
+        public AimAndDeliverableService1819(
             IFm70DataService fm70DataService,
-            IValidLearnerDataService validLearnerDataService,
+            IValidLearnerDataService1819 validLearnerDataService,
             IReferenceDataService referenceDataService,
             IAimAndDeliverableComparer comparer)
         {
@@ -110,7 +110,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             var learnAimRefs = validLearners.Select(ld => ld.Value.LearnAimRef).ToList();
 
             var larsDeliveries = _referenceDataService.GetLarsLearningDelivery(learnAimRefs)
-                .ToDictionary(t => t.LearnAimRef, t => t);
+                .ToDictionary(t => t.LearnAimRef, t => t, StringComparer.OrdinalIgnoreCase);
 
             foreach (var fm70Delivery in fm70LearningDeliveries)
             {
@@ -272,6 +272,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                 ProgressionEarnings = period?.ProgressionEarnings,
                 TotalEarnings = total
             };
+
             return model;
         }
 

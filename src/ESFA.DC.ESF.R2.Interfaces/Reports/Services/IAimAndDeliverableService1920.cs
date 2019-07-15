@@ -5,7 +5,7 @@ using ESFA.DC.ESF.R2.Models.Reports;
 
 namespace ESFA.DC.ESF.R2.Interfaces.Reports.Services
 {
-    public interface IAimAndDeliverableService
+    public interface IAimAndDeliverableService1920
     {
         Task<IEnumerable<AimAndDeliverableModel>> GetAimAndDeliverableModel(
             int ukPrn,
