@@ -62,7 +62,10 @@ namespace ESFA.DC.ESF.R2.DataStore
                     int fileId = await _storeFileDetails.StoreAsync(connection, transaction, cancellationToken, sourceFile);
 
                     await _storeValidation.StoreAsync(connection, transaction, fileId, wrapper.ValidErrorModels, cancellationToken);
+
+                    _logger.LogDebug($"{wrapper.SupplementaryDataModels.Count} suppData rows to save.");
                     await _store.StoreAsync(connection, transaction, fileId, wrapper.SupplementaryDataModels, cancellationToken);
+
                     await _storeEsfUnitCost.StoreAsync(connection, transaction, wrapper.SupplementaryDataModels, cancellationToken);
 
                     transaction.Commit();
