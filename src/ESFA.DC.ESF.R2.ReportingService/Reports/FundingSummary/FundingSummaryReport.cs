@@ -24,6 +24,7 @@ using ESFA.DC.ESF.R2.ReportingService.Mappers;
 using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.FileService.Interface;
 using ESFA.DC.ILR.DataService.Models;
+using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 {
@@ -36,6 +37,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         private readonly IExcelStyleProvider _excelStyleProvider;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IVersionInfo _versionInfo;
+        private readonly ILogger _logger;
         private readonly ISupplementaryDataService _supplementaryDataService;
 
         private readonly ModelProperty[] _cachedModelProperties;
@@ -54,7 +56,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             IList<IRowHelper> rowHelpers,
             IReferenceDataService referenceDataService,
             IExcelStyleProvider excelStyleProvider,
-            IVersionInfo versionInfo)
+            IVersionInfo versionInfo,
+            ILogger logger)
             : base(dateTimeProvider, valueProvider)
         {
             _dateTimeProvider = dateTimeProvider;
@@ -63,6 +66,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             _referenceDataService = referenceDataService;
             _excelStyleProvider = excelStyleProvider;
             _versionInfo = versionInfo;
+            _logger = logger;
             _supplementaryDataService = supplementaryDataService;
             _ilrService = ilrService;
 
@@ -87,6 +91,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             var collectionYear = Convert.ToInt32($"20{jobContextModel.CollectionYear.ToString().Substring(0, 2)}");
 
             var sourceFiles = await _supplementaryDataService.GetImportFiles(jobContextModel.UkPrn.ToString(), cancellationToken);
+
+            _logger.LogDebug($"{sourceFiles.Count} esf files found for ukprn {ukPrn} and collection year 20{jobContextModel.CollectionYear.ToString().Substring(0, 2)}.");
+
             var supplementaryData =
                 await _supplementaryDataService.GetSupplementaryData(collectionYear, sourceFiles, cancellationToken);
 

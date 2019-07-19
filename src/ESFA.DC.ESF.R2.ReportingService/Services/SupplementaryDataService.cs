@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Services
 {
@@ -15,17 +16,20 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
         private readonly ISourceFileModelMapper _fileModelMapper;
 
         private readonly ISupplementaryDataModelMapper _supplementaryDataMapper;
+        private readonly ILogger _logger;
 
         private int _startMonth = 8;
 
         public SupplementaryDataService(
             IEsfRepository repository,
             ISourceFileModelMapper fileModelMapper,
-            ISupplementaryDataModelMapper supplementaryDataMapper)
+            ISupplementaryDataModelMapper supplementaryDataMapper,
+            ILogger logger)
         {
             _repository = repository;
             _fileModelMapper = fileModelMapper;
             _supplementaryDataMapper = supplementaryDataMapper;
+            _logger = logger;
         }
 
         public async Task<IList<SourceFileModel>> GetImportFiles(
@@ -36,8 +40,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
 
             var contractNumbers = await _repository.GetContractsForProvider(ukPrn, cancellationToken);
 
+            _logger.LogDebug($"Found {contractNumbers.Count} contracts for ukprn {ukPrn}");
+
             foreach (var contractNumber in contractNumbers)
             {
+                _logger.LogDebug($"Getting source file for contract {contractNumber}");
+
                 var file = await _repository.PreviousFiles(ukPrn, contractNumber, cancellationToken);
                 if (file == null)
                 {
