@@ -18,6 +18,7 @@ using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.Ilr;
 using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppData;
 using ESFA.DC.FileService.Interface;
 using ESFA.DC.ILR.DataService.Models;
+using ESFA.DC.Logging.Interfaces;
 using Moq;
 using Xunit;
 
@@ -96,6 +97,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             ilrMock.Setup(m => m.GetIlrFileDetails(It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(GetTestFileDetail());
 
+            var logger = new Mock<ILogger>();
+
             var fundingSummaryReport = new FundingSummaryReport(
                 dateTimeProviderMock.Object,
                 valueProvider,
@@ -105,7 +108,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
                 rowHelpers,
                 referenceDataService.Object,
                 excelStyleProvider,
-                versionInfo.Object);
+                versionInfo.Object,
+                logger.Object);
 
             SourceFileModel sourceFile = GetEsfSourceFileModel();
 
