@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Threading;
@@ -77,20 +78,28 @@ namespace ESFA.DC.ESF.R2.ReportingService
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
-                    if (!string.IsNullOrWhiteSpace(sourceFile?.FileName))
+                    try
                     {
-                        foreach (var validationReport in _validationReports)
+                        if (!string.IsNullOrWhiteSpace(sourceFile?.FileName))
                         {
-                            await validationReport.GenerateReport(jobContextModel, sourceFile, wrapper, archive, cancellationToken);
+                            foreach (var validationReport in _validationReports)
+                            {
+                                await validationReport.GenerateReport(jobContextModel, sourceFile, wrapper, archive, cancellationToken);
+                            }
+                        }
+
+                        if (passedFileValidation)
+                        {
+                            foreach (var report in _esfReports)
+                            {
+                                await report.GenerateReport(jobContextModel, sourceFile, wrapper, archive, cancellationToken);
+                            }
                         }
                     }
-
-                    if (passedFileValidation)
+                    catch (Exception ex)
                     {
-                        foreach (var report in _esfReports)
-                        {
-                            await report.GenerateReport(jobContextModel, sourceFile, wrapper, archive, cancellationToken);
-                        }
+                        _logger.LogError(ex.Message, ex);
+                        throw;
                     }
 
                     cancellationToken.ThrowIfCancellationRequested();

@@ -13,18 +13,5 @@
         public string[] LastSupplementaryDataFileUpdate { get; set; }
 
         public string SecurityClassification => "OFFICIAL-SENSITIVE";
-
-        //public List<FundingHeaderYear> FundingYears { get; set; }
-
-        //public class FundingHeaderYear
-        //{
-        //    public string Header { get; set; }
-
-        //    public string ILRFile { get; set; }
-
-        //    public string LastILRFileUpdate { get; set; }
-
-        //    public string FilePreparationDate { get; set; }
-        //}
     }
 }

@@ -36,7 +36,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests
 
             var looseValidation = GetLooseValidators();
             var validators = GetValidators(cacheService, mapperMock);
-            var controller = new ValidationController(looseValidation, validators, popMock.Object, mapper);
+            var controller = new ValidationController(looseValidation, validators, popMock.Object, mapper, null);
 
             var wrapper = new SupplementaryDataWrapper
             {
