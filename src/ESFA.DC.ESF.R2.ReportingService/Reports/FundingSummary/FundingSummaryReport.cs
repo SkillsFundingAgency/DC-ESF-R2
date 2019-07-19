@@ -140,22 +140,25 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
             using (var ms = new MemoryStream())
             {
-                if (workbook.Worksheets.Any())
+                if (!workbook.Worksheets.Any())
                 {
-                    workbook.Save(ms, SaveFormat.Xlsx);
-                    ms.Seek(0, SeekOrigin.Begin);
-
-                    using (var stream = await _storage.OpenWriteStreamAsync(
-                        $"{externalFileName}.xlsx",
-                        jobContextModel.BlobContainerName,
-                        cancellationToken))
-                    {
-                        await ms.CopyToAsync(stream, 81920, cancellationToken);
-                    }
-
-                    ms.Seek(0, SeekOrigin.Begin);
-                    await WriteZipEntry(archive, $"{fileName}.xlsx", ms, cancellationToken);
+                    workbook.Worksheets.Add(SheetType.Worksheet);
                 }
+
+                workbook.Save(ms, SaveFormat.Xlsx);
+
+                ms.Seek(0, SeekOrigin.Begin);
+
+                using (var stream = await _storage.OpenWriteStreamAsync(
+                    $"{externalFileName}.xlsx",
+                    jobContextModel.BlobContainerName,
+                    cancellationToken))
+                {
+                    await ms.CopyToAsync(stream, 81920, cancellationToken);
+                }
+
+                ms.Seek(0, SeekOrigin.Begin);
+                await WriteZipEntry(archive, $"{fileName}.xlsx", ms, cancellationToken);
             }
         }
 
