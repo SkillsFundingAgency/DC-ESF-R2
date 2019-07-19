@@ -7,6 +7,7 @@ using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ValidationService
 {
@@ -16,17 +17,20 @@ namespace ESFA.DC.ESF.R2.ValidationService
         private readonly IList<IValidatorCommand> _validatorCommands;
         private readonly IPopulationService _populationService;
         private readonly ISupplementaryDataModelMapper _mapper;
+        private readonly ILogger _logger;
 
         public ValidationController(
             ILooseValidatorCommand looseValidatorCommand,
             IList<IValidatorCommand> validatorCommands,
             IPopulationService populationService,
-            ISupplementaryDataModelMapper mapper)
+            ISupplementaryDataModelMapper mapper,
+            ILogger logger)
         {
             _looseValidatorCommand = looseValidatorCommand;
             _validatorCommands = validatorCommands.OrderBy(c => c.Priority).ToList();
             _populationService = populationService;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public bool RejectFile { get; private set; }
@@ -36,62 +40,71 @@ namespace ESFA.DC.ESF.R2.ValidationService
             SourceFileModel sourceFile,
             CancellationToken cancellationToken)
         {
-            foreach (var looseModel in wrapper.SupplementaryDataLooseModels)
+            try
             {
-                if (_looseValidatorCommand.Execute(looseModel))
+                foreach (var looseModel in wrapper.SupplementaryDataLooseModels)
                 {
-                    continue;
-                }
-
-                foreach (var error in _looseValidatorCommand.Errors)
-                {
-                    wrapper.ValidErrorModels.Add(error);
-                }
-
-                if (!_looseValidatorCommand.RejectFile)
-                {
-                    continue;
-                }
-
-                return;
-            }
-
-            wrapper.SupplementaryDataLooseModels = FilterOutInvalidLooseRows(wrapper);
-
-            wrapper.SupplementaryDataModels = wrapper.SupplementaryDataLooseModels.Select(m => _mapper.GetSupplementaryDataModelFromLooseModel(m)).ToList();
-
-            await PrePopulateReferenceDataCache(wrapper, sourceFile, cancellationToken);
-
-            foreach (var command in _validatorCommands)
-            {
-                if (command is ICrossRecordCommand)
-                {
-                    ((ICrossRecordCommand)command).AllRecords = wrapper.SupplementaryDataModels;
-                }
-
-                foreach (var model in wrapper.SupplementaryDataModels)
-                {
-                    if (command.IsValid(model))
+                    if (_looseValidatorCommand.Execute(looseModel))
                     {
                         continue;
                     }
 
-                    foreach (var error in command.Errors)
+                    foreach (var error in _looseValidatorCommand.Errors)
                     {
                         wrapper.ValidErrorModels.Add(error);
                     }
 
-                    if (!command.RejectFile)
+                    if (!_looseValidatorCommand.RejectFile)
                     {
                         continue;
                     }
 
-                    RejectFile = true;
                     return;
                 }
-            }
 
-            wrapper.SupplementaryDataModels = FilterOutInvalidRows(wrapper);
+                wrapper.SupplementaryDataLooseModels = FilterOutInvalidLooseRows(wrapper);
+
+                wrapper.SupplementaryDataModels = wrapper.SupplementaryDataLooseModels
+                    .Select(m => _mapper.GetSupplementaryDataModelFromLooseModel(m)).ToList();
+
+                await PrePopulateReferenceDataCache(wrapper, sourceFile, cancellationToken);
+
+                foreach (var command in _validatorCommands)
+                {
+                    if (command is ICrossRecordCommand)
+                    {
+                        ((ICrossRecordCommand)command).AllRecords = wrapper.SupplementaryDataModels;
+                    }
+
+                    foreach (var model in wrapper.SupplementaryDataModels)
+                    {
+                        if (command.IsValid(model))
+                        {
+                            continue;
+                        }
+
+                        foreach (var error in command.Errors)
+                        {
+                            wrapper.ValidErrorModels.Add(error);
+                        }
+
+                        if (!command.RejectFile)
+                        {
+                            continue;
+                        }
+
+                        RejectFile = true;
+                        return;
+                    }
+                }
+
+                wrapper.SupplementaryDataModels = FilterOutInvalidRows(wrapper);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw;
+            }
         }
 
         private async Task PrePopulateReferenceDataCache(
