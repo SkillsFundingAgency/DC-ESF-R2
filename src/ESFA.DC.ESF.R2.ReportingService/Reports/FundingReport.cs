@@ -61,7 +61,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
                 }
             }
 
-            if (!sourceFile.FileName.CaseInsensitiveContains("ILR"))
+            if (!jobContextModel.CollectionName.CaseInsensitiveContains("ILR"))
             {
                 await WriteZipEntry(archive, $"{fileName}.csv", csv);
             }

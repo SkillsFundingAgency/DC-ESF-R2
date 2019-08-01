@@ -31,9 +31,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
     {
         [Theory]
         [Trait("Category", "Reports")]
-        [InlineData("SUPPDATA-10005752-ESF-2108-20180909-090911.CSV", 1)]
-        [InlineData("ILR-10005752-1819-20181004-152148-02.XML", 0)]
-        private async Task TestFundingReportGeneration(string sourceFileName, int expectedZipEntryCount)
+        [InlineData("SUPPDATA-10005752-ESF-2108-20180909-090911.CSV", "ESF1819", 1)]
+        [InlineData("ILR-10005752-1819-20181004-152148-02.XML", "ILR1819", 0)]
+        private async Task TestFundingReportGeneration(string sourceFileName, string collectionName, int expectedZipEntryCount)
         {
             var dateTime = DateTime.UtcNow;
             var filename = $"10005752/1/ESF-2108 ESF (Round 2) Supplementary Data Funding Report {dateTime:yyyyMMdd-HHmmss}";
@@ -75,7 +75,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
                 UkPrn = 10005752,
                 JobId = 1,
                 BlobContainerName = "TestContainer",
-                CollectionYear = 1819
+                CollectionYear = 1819,
+                CollectionName = collectionName
             };
 
             var supplementaryDataWrapper = new SupplementaryDataWrapper()
