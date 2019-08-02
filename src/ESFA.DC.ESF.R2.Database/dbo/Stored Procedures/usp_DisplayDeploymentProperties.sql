@@ -44,5 +44,5 @@ BEGIN
 -- 
 END
 GO
-GRANT EXECUTE ON [dbo].[usp_DisplayDeploymentProperties] TO [DataViewer];
+GRANT EXECUTE ON [dbo].[usp_DisplayDeploymentProperties] TO [DataViewing];
 GO
