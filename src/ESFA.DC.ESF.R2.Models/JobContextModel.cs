@@ -22,5 +22,7 @@ namespace ESFA.DC.ESF.R2.Models
         public int CollectionYear { get; set; }
 
         public string IlrReferenceDataKey { get; set; }
+
+        public string CollectionName { get; set; }
     }
 }
