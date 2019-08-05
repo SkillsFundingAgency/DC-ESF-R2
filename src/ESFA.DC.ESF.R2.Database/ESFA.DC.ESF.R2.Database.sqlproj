@@ -62,6 +62,7 @@
     <Folder Include="dbo\Tables" />
     <Folder Include="Security" />
     <Folder Include="SeedData" />
+    <Folder Include="zzDeploymentProfiles" />
   </ItemGroup>
   <ItemGroup>
     <SqlCmdVariable Include="BUILD_BRANCHNAME">
@@ -73,8 +74,12 @@
       <Value>$(SqlCmdVar__2)</Value>
     </SqlCmdVariable>
     <SqlCmdVariable Include="DsciUserPassword">
-      <DefaultValue>NotUseLocally#</DefaultValue>
+      <DefaultValue>NotUseLocally#DSCI</DefaultValue>
       <Value>$(SqlCmdVar__3)</Value>
+    </SqlCmdVariable>
+    <SqlCmdVariable Include="MatchClaimROPassword">
+      <DefaultValue>NotUseLocally#MC</DefaultValue>
+      <Value>$(SqlCmdVar__7)</Value>
     </SqlCmdVariable>
     <SqlCmdVariable Include="RELEASE_RELEASENAME">
       <DefaultValue>From Dev Machine</DefaultValue>
@@ -97,8 +102,8 @@
     <Build Include="dbo\Tables\ValidationError.sql" />
     <Build Include="dbo\Tables\VersionInfo.sql" />
     <Build Include="dbo\Stored Procedures\usp_DisplayDeploymentProperties.sql" />
-    <Build Include="Security\Role_DataProcessor.sql" />
-    <Build Include="Security\Role_DataViewer.sql" />
+    <Build Include="Security\Role_DataProcessing.sql" />
+    <Build Include="Security\Role_DataViewing.sql" />
     <Build Include="Security\RoleMemberships.sql" />
     <Build Include="Security\Staging.sql" />
     <Build Include="Security\User_DsciUser.sql" />
@@ -106,8 +111,13 @@
     <Build Include="Security\User_RW.sql" />
     <Build Include="dbo\Tables\ValidationErrorMessage.sql" />
     <None Include="SeedData\ValidationErrorMessageData.sql" />
+    <Build Include="Security\MatchClaim_RO_User.sql" />
+    <None Include="z.ExtendedProperties.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="zzz.Script.PostDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="zzDeploymentProfiles\zz.Local.Dev.Version.publish.xml" />
   </ItemGroup>
 </Project>
