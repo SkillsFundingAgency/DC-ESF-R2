@@ -21,7 +21,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRow
                 yearlyModels.Add(new FundingSummaryReportYearlyValueModel
                 {
                     FundingYear = i,
-                    StartMonth = i == Constants.StartYear ? 9 : 12,
+                    StartMonth = i == Constants.StartYear ? 9 : 1,
                     EndMonth = 12,
                     Values = new List<decimal>()
                 });
