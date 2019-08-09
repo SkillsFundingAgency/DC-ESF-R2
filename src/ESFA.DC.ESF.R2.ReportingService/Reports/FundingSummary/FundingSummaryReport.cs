@@ -111,16 +111,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 var fm70YearlyDataForConRef = new List<FM70PeriodisedValuesYearly>();
                 foreach (var fm70Data in fm70YearlyData)
                 {
-                    var periodisedValuesPerConRef = fm70Data.Fm70PeriodisedValues.Where(x => x.ConRefNumber == file.ConRefNumber).ToList();
-
-                    if (periodisedValuesPerConRef.Any())
+                    var periodisedValuesPerConRef = fm70Data.Fm70PeriodisedValues.Where(x => file.ConRefNumber.CaseInsensitiveEquals(x.ConRefNumber)).ToList();
+                    fm70YearlyDataForConRef.Add(new FM70PeriodisedValuesYearly()
                     {
-                        fm70YearlyDataForConRef.Add(new FM70PeriodisedValuesYearly()
-                        {
-                            Fm70PeriodisedValues = periodisedValuesPerConRef.ToList(),
-                            FundingYear = fm70Data.FundingYear
-                        });
-                    }
+                        Fm70PeriodisedValues = periodisedValuesPerConRef.Any() ? periodisedValuesPerConRef : fm70Data.Fm70PeriodisedValues,
+                        FundingYear = fm70Data.FundingYear
+                    });
                 }
 
                 var fundingSummaryModels = PopulateReportData(collectionYear, fm70YearlyDataForConRef, supplementaryData[file.SourceFileId]).ToList();
