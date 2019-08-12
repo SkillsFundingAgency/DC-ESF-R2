@@ -97,7 +97,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             var supplementaryData =
                 await _supplementaryDataService.GetSupplementaryData(collectionYear, sourceFiles, cancellationToken);
 
-            var ilrYearlyFileData = (await _ilrService.GetIlrFileDetails(ukPrn, cancellationToken)).ToList();
+            var ilrYearlyFileData = (await _ilrService.GetIlrFileDetails(ukPrn, collectionYear, cancellationToken)).ToList();
             var fm70YearlyData = (await _ilrService.GetYearlyIlrData(collectionYear, ukPrn, cancellationToken)).ToList();
 
             var workbook = new Workbook();
