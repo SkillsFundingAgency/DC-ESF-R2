@@ -155,7 +155,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
         private bool IsNullableMapper(ClassMap mapper, ModelProperty modelProperty)
         {
             MemberMap memberMap = mapper.MemberMaps.SingleOrDefault(x => x.Data.Names.Names.Intersect(modelProperty.Names).Any());
-            return memberMap?.Data?.TypeConverterOptions?.NullValues?.ListCaseInsensitiveContains(NotApplicable) ?? false;
+            return memberMap?.Data?.TypeConverterOptions?.NullValues?.Any(x => x.CaseInsensitiveEquals(NotApplicable)) ?? false;
         }
 
         private bool CanAddZeroInt(ClassMap mapper, ModelProperty modelProperty)

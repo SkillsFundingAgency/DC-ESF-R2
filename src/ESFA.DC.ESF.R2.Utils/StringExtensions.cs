@@ -24,20 +24,5 @@ namespace ESFA.DC.ESF.R2.Utils
 
             return source?.ToLower().Trim().Contains(data.ToLower().Trim()) ?? false;
         }
-
-        public static bool ListCaseInsensitiveContains(this List<string> source, string data)
-        {
-            if (source == null && data == null)
-            {
-                return true;
-            }
-
-            foreach (var str in source)
-            {
-                return str?.CaseInsensitiveContains(data) == true;
-            }
-
-            return false;
-        }
     }
 }
