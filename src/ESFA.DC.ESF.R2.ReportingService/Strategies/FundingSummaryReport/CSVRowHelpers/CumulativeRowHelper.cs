@@ -62,9 +62,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRow
                 rowModel.Totals.Add(yearEndCumulative);
             }
 
-            rowModel.Totals.Add(null);
+            rowModel.Totals.Add(yearEndCumulative);
 
             rowModel.YearlyValues = yearlyValues;
+
             reportOutput.Add(rowModel);
         }
     }
