@@ -13,7 +13,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
     public sealed class ValueProvider : IValueProvider
     {
         private const string Zero = "0";
-        private const string NotApplicable = "n/a";
         private static readonly string DateTimeMin = DateTime.MinValue.ToString("dd/MM/yyyy");
 
         public void GetFormattedValue(List<object> values, object value, ClassMap mapper, ModelProperty modelProperty)
@@ -155,7 +154,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
         private bool IsNullableMapper(ClassMap mapper, ModelProperty modelProperty)
         {
             MemberMap memberMap = mapper.MemberMaps.SingleOrDefault(x => x.Data.Names.Names.Intersect(modelProperty.Names).Any());
-            return memberMap?.Data?.TypeConverterOptions?.NullValues?.Any(x => x.CaseInsensitiveEquals(NotApplicable)) ?? false;
+            return memberMap?.Data?.TypeConverterOptions?.NullValues?.Any(x => x.CaseInsensitiveEquals(Constants.NotApplicable)) ?? false;
         }
 
         private bool CanAddZeroInt(ClassMap mapper, ModelProperty modelProperty)
