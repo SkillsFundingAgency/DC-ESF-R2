@@ -94,7 +94,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             var ilrMock = new Mock<IILRService>();
             ilrMock.Setup(m => m.GetYearlyIlrData(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(periodisedValues);
-            ilrMock.Setup(m => m.GetIlrFileDetails(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            ilrMock.Setup(m => m.GetIlrFileDetails(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(GetTestFileDetail());
 
             var logger = new Mock<ILogger>();

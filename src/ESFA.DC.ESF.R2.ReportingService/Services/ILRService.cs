@@ -21,10 +21,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             _fileDetailsDataService = fileDetailsDataService;
         }
 
-        public async Task<IEnumerable<ILRFileDetails>> GetIlrFileDetails(int ukPrn, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ILRFileDetails>> GetIlrFileDetails(int ukPrn, int collectionYear, CancellationToken cancellationToken)
         {
-            IEnumerable<ILRFileDetails> ilrFileData = (await _fileDetailsDataService.GetFileDetailsForUkPrnAllYears(ukPrn, cancellationToken)).ToList();
-
+            var round2Flag = collectionYear >= 2019;
+            IEnumerable<ILRFileDetails> ilrFileData = (await _fileDetailsDataService.GetFileDetailsForUkPrnAllYears(ukPrn, cancellationToken, round2Flag)).ToList();
             return ilrFileData;
         }
 
