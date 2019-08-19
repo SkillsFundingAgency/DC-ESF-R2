@@ -32,7 +32,7 @@ namespace ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport
 
         public List<decimal?> Totals { get; set; }
 
-        public decimal GrandTotal { get; set; }
+        public decimal? GrandTotal { get; set; }
 
         public int ExcelHeaderStyle { get; set; }
 
