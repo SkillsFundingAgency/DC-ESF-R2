@@ -13,5 +13,7 @@
         public const string ContractReferenceNumberTag = "<ESF-1>";
 
         public const string LearnDelFamType_RES = "RES";
+
+        public const string NotApplicable = "n/a";
     }
 }
