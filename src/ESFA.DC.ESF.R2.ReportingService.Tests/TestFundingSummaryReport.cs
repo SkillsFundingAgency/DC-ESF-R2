@@ -254,7 +254,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             storage.Verify(s =>
                 s.OpenWriteStreamAsync($"{filename}.xlsx", It.IsAny<string>(), It.IsAny<CancellationToken>()));
 
-            File.WriteAllBytes($"{filename}.xlsx", testStream.GetBuffer());
+            // uncomment following line to generate the file
+           // File.WriteAllBytes($"{filename}.xlsx", testStream.GetBuffer());
         }
 
         private IEnumerable<ILRFileDetails> GetTestFileDetail()
