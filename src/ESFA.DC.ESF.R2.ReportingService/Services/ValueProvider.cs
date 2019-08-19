@@ -13,7 +13,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
     public sealed class ValueProvider : IValueProvider
     {
         private const string Zero = "0";
-        private const string NotApplicable = "n/a";
         private static readonly string DateTimeMin = DateTime.MinValue.ToString("dd/MM/yyyy");
 
         public void GetFormattedValue(List<object> values, object value, ClassMap mapper, ModelProperty modelProperty)
@@ -140,7 +139,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             {
                 if (IsNullableMapper(mapper, modelProperty))
                 {
-                    values.Add(NotApplicable);
+                    values.Add(Constants.NotApplicable);
                     return;
                 }
 
