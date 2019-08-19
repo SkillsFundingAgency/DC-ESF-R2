@@ -127,6 +127,136 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
                 s.OpenWriteStreamAsync($"{filename}.xlsx", It.IsAny<string>(), It.IsAny<CancellationToken>()));
         }
 
+        [Fact]
+        [Trait("Category", "Reports")]
+        public async Task Generate_FundingSummaryReport_WithCorrectFormat()
+        {
+            var dateTime = DateTime.UtcNow;
+            var filename = $"10005752/1/ESF Round 2 Funding Summary Report {dateTime:yyyyMMdd-HHmmss}";
+            var sourceFileId = 1;
+
+            Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
+            dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(dateTime);
+            dateTimeProviderMock.Setup(x => x.ConvertUtcToUk(It.IsAny<DateTime>())).Returns(dateTime);
+
+            var testStream = new MemoryStream();
+
+            Mock<IFileService> storage = new Mock<IFileService>();
+
+            storage.Setup(x => x.OpenWriteStreamAsync($"{filename}.xlsx", It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(testStream);
+
+            var supplementaryDataService = new Mock<ISupplementaryDataService>();
+            supplementaryDataService
+                .Setup(s => s.GetSupplementaryData(It.IsAny<int>(), It.IsAny<IEnumerable<SourceFileModel>>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new Dictionary<int, IEnumerable<SupplementaryDataYearlyModel>>
+                {
+                    [sourceFileId] = new List<SupplementaryDataYearlyModel>
+                    {
+                        new SupplementaryDataYearlyModel
+                        {
+                            FundingYear = 2018,
+                            SupplementaryData = new List<SupplementaryDataModel>()
+                                    { new SupplementaryDataModel() { DeliverableCode = "ST01", ConRefNumber = "ESF-5234", CostType = "TestCost", Value = 29.36M, CalendarYear = 2018, CalendarMonth = 9 } }
+                        }
+                    }
+                });
+            supplementaryDataService
+                .Setup(s => s.GetImportFiles(It.IsAny<string>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<SourceFileModel>
+                {
+                    new SourceFileModel
+                    {
+                        ConRefNumber = "ESF-5234",
+                        FileName = filename,
+                        UKPRN = "10005752",
+                        SourceFileId = sourceFileId,
+                        PreparationDate = DateTime.Now,
+                        SuppliedDate = DateTime.Now,
+                        JobId = 1
+                    }
+                });
+
+            var deliverableCost = new List<DeliverableUnitCost>()
+            {
+                new DeliverableUnitCost() { ConRefNum = "ESF-5234", UkPrn = 10005752, DeliverableCode = "ST01", UnitCost = 55.56M }
+            };
+
+            Mock<IReferenceDataService> referenceDataService = new Mock<IReferenceDataService>();
+            referenceDataService.Setup(m => m.GetLarsVersion(It.IsAny<CancellationToken>())).Returns("Version 3.0.0 : 08 December 2018 08:21:34:970");
+            referenceDataService.Setup(m => m.GetOrganisationVersion(It.IsAny<CancellationToken>())).Returns("Version 1.0.0 : 04 April 2019 09:56:25:653");
+            referenceDataService.Setup(m => m.GetPostcodeVersion(It.IsAny<CancellationToken>())).Returns("Version 2.0.0 : 09 March 2019 08:32:09:230");
+            referenceDataService.Setup(m => m.GetProviderName(It.IsAny<int>(), It.IsAny<CancellationToken>())).Returns("Test Data College");
+            referenceDataService.Setup(m =>
+                    m.GetDeliverableUnitCosts(It.IsAny<string>(), It.IsAny<IList<string>>()))
+                .Returns(deliverableCost);
+
+            IList<IRowHelper> rowHelpers = GenerateRowHelpersWithStrategies(referenceDataService.Object);
+
+            Mock<IVersionInfo> versionInfo = new Mock<IVersionInfo>();
+            versionInfo.Setup(m => m.ServiceReleaseVersion).Returns("1.2.3.4");
+            var valueProvider = new ValueProvider();
+            var excelStyleProvider = new ExcelStyleProvider();
+
+            FM70PeriodisedValues periodiseData = new FM70PeriodisedValues()
+            {
+                FundingYear = 2018,
+                AimSeqNumber = 1,
+                Period1 = 25.29M,
+                UKPRN = 10005752,
+                ConRefNumber = "ESF-5234",
+                DeliverableCode = "ILR"
+            };
+
+            FM70PeriodisedValuesYearly fM70 = new FM70PeriodisedValuesYearly()
+            {
+                FundingYear = 2018,
+                Fm70PeriodisedValues = new List<FM70PeriodisedValues> { periodiseData }
+            };
+
+            var periodisedValues = new List<FM70PeriodisedValuesYearly>
+            {
+                fM70
+            };
+
+            var ilrMock = new Mock<IILRService>();
+            ilrMock.Setup(m => m.GetYearlyIlrData(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(periodisedValues);
+            ilrMock.Setup(m => m.GetIlrFileDetails(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(GetTestFileDetail());
+
+            var logger = new Mock<ILogger>();
+
+            var fundingSummaryReport = new FundingSummaryReport(
+                dateTimeProviderMock.Object,
+                valueProvider,
+                storage.Object,
+                ilrMock.Object,
+                supplementaryDataService.Object,
+                rowHelpers,
+                referenceDataService.Object,
+                excelStyleProvider,
+                versionInfo.Object,
+                logger.Object);
+
+            SourceFileModel sourceFile = GetEsfSourceFileModel();
+
+            JobContextModel wrapper = new JobContextModel
+            {
+                UkPrn = 10005752,
+                JobId = 1,
+                BlobContainerName = string.Empty,
+                CollectionYear = 2018
+            };
+
+            await fundingSummaryReport.GenerateReport(wrapper, sourceFile, null, null, CancellationToken.None);
+
+            storage.Verify(s =>
+                s.OpenWriteStreamAsync($"{filename}.xlsx", It.IsAny<string>(), It.IsAny<CancellationToken>()));
+
+            File.WriteAllBytes($"{filename}.xlsx", testStream.GetBuffer());
+        }
+
         private IEnumerable<ILRFileDetails> GetTestFileDetail()
         {
             return new List<ILRFileDetails>

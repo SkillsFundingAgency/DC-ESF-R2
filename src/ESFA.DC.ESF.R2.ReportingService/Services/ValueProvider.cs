@@ -13,6 +13,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
     {
         private const string Zero = "0";
         private const string NotApplicable = "n/a";
+        private const string _decimalFormat = "N2";
         private static readonly string DateTimeMin = DateTime.MinValue.ToString("dd/MM/yyyy");
 
         public void GetFormattedValue(List<object> values, object value, ClassMap mapper, ModelProperty modelProperty)
@@ -44,7 +45,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                 decimal? d = (decimal?)value;
                 int decimalPoints = GetDecimalPoints(mapper, modelProperty);
                 decimal rounded = decimal.Round(d.GetValueOrDefault(0), decimalPoints);
-                values.Add(rounded);
+                values.Add(rounded.ToString(_decimalFormat));
                 return;
             }
 
@@ -75,7 +76,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                 {
                     int decimalPoints = GetDecimalPoints(mapper, modelProperty);
                     decimal rounded = decimal.Round(dec, decimalPoints);
-                    values.Add(rounded);
+                    values.Add(rounded.ToString(_decimalFormat));
                 }
 
                 return;
@@ -93,7 +94,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
 
                     int decimalPoints = GetDecimalPoints(mapper, modelProperty);
                     decimal rounded = decimal.Round(dec ?? 0, decimalPoints);
-                    values.Add(rounded);
+                    values.Add(rounded.ToString(_decimalFormat));
                 }
 
                 return;
@@ -123,7 +124,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                     {
                         int decimalPoints = GetDecimalPoints(mapper, modelProperty);
                         decimal rounded = decimal.Round(dec, decimalPoints);
-                        values.Add(rounded);
+                        values.Add(rounded.ToString(_decimalFormat));
                     }
                 }
 

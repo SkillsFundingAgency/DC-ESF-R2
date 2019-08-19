@@ -299,20 +299,43 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
                 if (fundingSummaryModel.HeaderType == HeaderType.All)
                 {
+                    // Align data to the Right
+                    excelHeaderStyle.Style.HorizontalAlignment = TextAlignmentType.Right;
+                    excelHeaderStyle.StyleFlag.HorizontalAlignment = true;
+
                     _fundingSummaryMapper.MemberMaps.Single(x => x.Data.Index == 0).Name(fundingSummaryModel.Title);
                     _cachedHeaders[0] = fundingSummaryModel.Title;
+
                     WriteRecordsFromArray(sheet, _fundingSummaryMapper, _cachedHeaders, excelHeaderStyle);
                     continue;
                 }
 
                 CellStyle excelRecordStyle = _excelStyleProvider.GetCellStyle(_cellStyles, fundingSummaryModel.ExcelRecordStyle);
 
+                // Align data to the Right
+                excelRecordStyle.Style.HorizontalAlignment = TextAlignmentType.Right;
+                excelRecordStyle.StyleFlag.HorizontalAlignment = true;
+
                 WriteExcelRecordsFromModelProperty(sheet, _fundingSummaryMapper, _cachedModelProperties, fundingSummaryModel, excelRecordStyle);
             }
 
+            AlignWorkSheetFirstColumnToLeft(workbook);
             WriteExcelRecords(sheet, new FundingSummaryFooterMapper(), new List<FundingSummaryFooterModel> { fundingSummaryFooterModel }, _cellStyles[7], _cellStyles[7], true);
 
             return workbook;
+        }
+
+        private void AlignWorkSheetFirstColumnToLeft(Workbook workbook)
+        {
+            Cells cells = workbook.Worksheets[0].Cells;
+            var rowCount = cells.LastCell.Row + 1;
+
+            for (int i = 9; i <= rowCount; i++)
+            {
+                Style currentStyle = cells["A" + i].GetStyle();
+                currentStyle.HorizontalAlignment = TextAlignmentType.Left;
+                cells["A" + i].SetStyle(currentStyle);
+            }
         }
 
         private string[] GetHeaderEntries(int endYear, List<YearAndDataLengthModel> yearAndDataLengthModels)
