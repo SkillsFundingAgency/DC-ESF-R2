@@ -6,5 +6,7 @@ namespace ESFA.DC.ESF.FundingData.Database.EF
     public partial class ESFFundingDataContext : IESFFundingDataContext
     {
         IQueryable<ESFFundingData> IESFFundingDataContext.ESFFundingDatas => ESFFundingDatas;
+
+        IQueryable<LatestProviderSubmission> IESFFundingDataContext.LatestProviderSubmissions => LatestProviderSubmissions;
     }
 }

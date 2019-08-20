@@ -62,11 +62,17 @@
     <Folder Include="Current\Tables" />
     <Folder Include="Import\Tables" />
     <Folder Include="Security" />
+    <Folder Include="dbo" />
+    <Folder Include="dbo\Views" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Current\Tables\ESFFundingData.sql" />
     <Build Include="Security\Current.sql" />
     <Build Include="Security\Import.sql" />
     <Build Include="Import\Tables\ESFFundingData.sql" />
+    <Build Include="dbo\Views\ESFFundingData.sql" />
+    <Build Include="Current\Tables\LatestProviderSubmission.sql" />
+    <Build Include="Import\Tables\LatestProviderSubmission.sql" />
+    <Build Include="dbo\Views\LatestProviderSubmission.sql" />
   </ItemGroup>
 </Project>

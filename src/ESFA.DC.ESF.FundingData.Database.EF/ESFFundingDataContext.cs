@@ -14,6 +14,7 @@ namespace ESFA.DC.ESF.FundingData.Database.EF
         }
 
         public virtual DbSet<ESFFundingData> ESFFundingDatas { get; set; }
+        public virtual DbSet<LatestProviderSubmission> LatestProviderSubmissions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -85,6 +86,21 @@ namespace ESFA.DC.ESF.FundingData.Database.EF
                 entity.Property(e => e.Period_8).HasColumnType("decimal(15, 5)");
 
                 entity.Property(e => e.Period_9).HasColumnType("decimal(15, 5)");
+            });
+
+            modelBuilder.Entity<LatestProviderSubmission>(entity =>
+            {
+                entity.HasKey(e => new { e.UKPRN, e.CollectionType, e.CollectionReturnCode });
+
+                entity.ToTable("LatestProviderSubmission", "Current");
+
+                entity.Property(e => e.CollectionType)
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CollectionReturnCode)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
             });
         }
     }
