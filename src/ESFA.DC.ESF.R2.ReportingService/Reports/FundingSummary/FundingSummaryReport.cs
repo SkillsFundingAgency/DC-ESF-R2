@@ -338,7 +338,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             // Get current style & adjust alignment
             Style style = cells.Columns[columnNumber].Style;
             style.HorizontalAlignment = textAlignmentType;
-            cells.Columns[0].ApplyStyle(style, new StyleFlag { HorizontalAlignment = true });
+            cells.Columns[columnNumber].ApplyStyle(style, new StyleFlag { HorizontalAlignment = true });
         }
 
         private string[] GetHeaderEntries(int endYear, List<YearAndDataLengthModel> yearAndDataLengthModels)
