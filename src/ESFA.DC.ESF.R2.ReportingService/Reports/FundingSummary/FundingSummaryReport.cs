@@ -319,23 +319,26 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 WriteExcelRecordsFromModelProperty(sheet, _fundingSummaryMapper, _cachedModelProperties, fundingSummaryModel, excelRecordStyle);
             }
 
-            AlignWorkSheetFirstColumnToLeft(workbook);
+            AlignWorkSheetColumn(workbook.Worksheets[0], 0, TextAlignmentType.Left);
             WriteExcelRecords(sheet, new FundingSummaryFooterMapper(), new List<FundingSummaryFooterModel> { fundingSummaryFooterModel }, _cellStyles[7], _cellStyles[7], true);
 
             return workbook;
         }
 
-        private void AlignWorkSheetFirstColumnToLeft(Workbook workbook)
+      /// <summary>
+      ///   Align column data to [Right] or [Left].
+      /// </summary>
+      /// <param name="worksheet"> worksheet number to use.</param>
+      /// <param name="columnNumber">column number to apply alignment.</param>
+      /// <param name="textAlignmentType">type of alignment [Left] [Right].</param>
+        private void AlignWorkSheetColumn(Worksheet worksheet, int columnNumber, TextAlignmentType textAlignmentType)
         {
-            Cells cells = workbook.Worksheets[0].Cells;
-            var rowCount = cells.LastCell.Row + 1;
+            Cells cells = worksheet.Cells;
 
-            for (int i = 9; i <= rowCount; i++)
-            {
-                Style currentStyle = cells["A" + i].GetStyle();
-                currentStyle.HorizontalAlignment = TextAlignmentType.Left;
-                cells["A" + i].SetStyle(currentStyle);
-            }
+            // Get current style & adjust alignment
+            Style style = cells.Columns[columnNumber].Style;
+            style.HorizontalAlignment = textAlignmentType;
+            cells.Columns[0].ApplyStyle(style, new StyleFlag { HorizontalAlignment = true });
         }
 
         private string[] GetHeaderEntries(int endYear, List<YearAndDataLengthModel> yearAndDataLengthModels)
