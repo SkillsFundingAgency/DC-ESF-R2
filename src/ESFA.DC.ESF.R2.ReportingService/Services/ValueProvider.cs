@@ -12,7 +12,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
     public sealed class ValueProvider : IValueProvider
     {
         private const string Zero = "0";
-        private const string NotApplicable = "n/a";
         private const string _decimalFormat = "N2";
         private static readonly string DateTimeMin = DateTime.MinValue.ToString("dd/MM/yyyy");
 
