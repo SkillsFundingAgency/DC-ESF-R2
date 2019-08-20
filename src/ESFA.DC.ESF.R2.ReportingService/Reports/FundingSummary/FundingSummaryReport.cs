@@ -299,20 +299,46 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
                 if (fundingSummaryModel.HeaderType == HeaderType.All)
                 {
+                    // Align data to the Right
+                    excelHeaderStyle.Style.HorizontalAlignment = TextAlignmentType.Right;
+                    excelHeaderStyle.StyleFlag.HorizontalAlignment = true;
+
                     _fundingSummaryMapper.MemberMaps.Single(x => x.Data.Index == 0).Name(fundingSummaryModel.Title);
                     _cachedHeaders[0] = fundingSummaryModel.Title;
+
                     WriteRecordsFromArray(sheet, _fundingSummaryMapper, _cachedHeaders, excelHeaderStyle);
                     continue;
                 }
 
                 CellStyle excelRecordStyle = _excelStyleProvider.GetCellStyle(_cellStyles, fundingSummaryModel.ExcelRecordStyle);
 
+                // Align data to the Right
+                excelRecordStyle.Style.HorizontalAlignment = TextAlignmentType.Right;
+                excelRecordStyle.StyleFlag.HorizontalAlignment = true;
+
                 WriteExcelRecordsFromModelProperty(sheet, _fundingSummaryMapper, _cachedModelProperties, fundingSummaryModel, excelRecordStyle);
             }
 
+            AlignWorkSheetColumn(workbook.Worksheets[0], 0, TextAlignmentType.Left);
             WriteExcelRecords(sheet, new FundingSummaryFooterMapper(), new List<FundingSummaryFooterModel> { fundingSummaryFooterModel }, _cellStyles[7], _cellStyles[7], true);
 
             return workbook;
+        }
+
+      /// <summary>
+      ///   Align column data to [Right] or [Left].
+      /// </summary>
+      /// <param name="worksheet"> worksheet number to use.</param>
+      /// <param name="columnNumber">column number to apply alignment.</param>
+      /// <param name="textAlignmentType">type of alignment [Left] [Right].</param>
+        private void AlignWorkSheetColumn(Worksheet worksheet, int columnNumber, TextAlignmentType textAlignmentType)
+        {
+            Cells cells = worksheet.Cells;
+
+            // Get current style & adjust alignment
+            Style style = cells.Columns[columnNumber].Style;
+            style.HorizontalAlignment = textAlignmentType;
+            cells.Columns[columnNumber].ApplyStyle(style, new StyleFlag { HorizontalAlignment = true });
         }
 
         private string[] GetHeaderEntries(int endYear, List<YearAndDataLengthModel> yearAndDataLengthModels)
