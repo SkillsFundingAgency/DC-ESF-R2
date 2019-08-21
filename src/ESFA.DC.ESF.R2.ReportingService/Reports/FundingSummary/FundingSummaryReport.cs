@@ -183,8 +183,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
         private void AddImageToReport(Worksheet worksheet)
         {
-            WriteBlankRow(worksheet, 3); // Add blankRows to position the image on top
-            worksheet.Cells.SetRowHeight(2, 5);
+            WriteBlankRow(worksheet, 1); // Add blank Row to position the image on top
+            worksheet.Cells.SetRowHeight(0, 27); // Adjust the image row height
 
             var assembly = Assembly.GetExecutingAssembly();
             string euFlag = assembly.GetManifestResourceNames().Single(str => str.EndsWith("ESF.png"));
