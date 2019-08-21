@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
@@ -182,11 +183,15 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
         private void AddImageToReport(Worksheet worksheet)
         {
+            WriteBlankRow(worksheet, 1); // Add blank Row to position the image on top
+            worksheet.Cells.SetRowHeight(0, 27); // Adjust the image row height
+
             var assembly = Assembly.GetExecutingAssembly();
             string euFlag = assembly.GetManifestResourceNames().Single(str => str.EndsWith("ESF.png"));
             using (Stream stream = assembly.GetManifestResourceStream(euFlag))
             {
-                worksheet.Pictures.Add(3, _reportWidth - 2, stream);
+                worksheet.Pictures.Add(0, _reportWidth - 2, stream);
+                worksheet.Pictures[0].Top = 2;
             }
         }
 
@@ -319,19 +324,19 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 WriteExcelRecordsFromModelProperty(sheet, _fundingSummaryMapper, _cachedModelProperties, fundingSummaryModel, excelRecordStyle);
             }
 
-            AlignWorkSheetColumn(workbook.Worksheets[0], 0, TextAlignmentType.Left);
+            AlignWorkSheetColumnData(workbook.Worksheets[0], 0, TextAlignmentType.Left);
             WriteExcelRecords(sheet, new FundingSummaryFooterMapper(), new List<FundingSummaryFooterModel> { fundingSummaryFooterModel }, _cellStyles[7], _cellStyles[7], true);
 
             return workbook;
         }
 
-      /// <summary>
-      ///   Align column data to [Right] or [Left].
-      /// </summary>
-      /// <param name="worksheet"> worksheet number to use.</param>
-      /// <param name="columnNumber">column number to apply alignment.</param>
-      /// <param name="textAlignmentType">type of alignment [Left] [Right].</param>
-        private void AlignWorkSheetColumn(Worksheet worksheet, int columnNumber, TextAlignmentType textAlignmentType)
+        /// <summary>
+        ///   Align column data to [Right] or [Left].
+        /// </summary>
+        /// <param name="worksheet"> worksheet number to use.</param>
+        /// <param name="columnNumber">column number to apply alignment.</param>
+        /// <param name="textAlignmentType">type of alignment [Left] [Right].</param>
+        private void AlignWorkSheetColumnData(Worksheet worksheet, int columnNumber, TextAlignmentType textAlignmentType)
         {
             Cells cells = worksheet.Cells;
 
