@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.9.0-beta1" />
     <PackageReference Include="ESFA.DC.FileService.Interface" Version="0.1.18-beta0001" />
     <PackageReference Include="ESFA.DC.ILR.ReferenceDataService.Model" Version="0.1.89" />
     <PackageReference Include="ESFA.DC.Serialization.Interfaces" Version="0.1.6-beta0001" />

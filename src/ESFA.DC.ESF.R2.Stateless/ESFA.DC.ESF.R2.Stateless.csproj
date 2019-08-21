@@ -81,11 +81,11 @@
     <Folder Include="Modules\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ESFA.DC.ESF.ILRReferenceData.1819\ESFA.DC.ESF.ILR1819.ReferenceData.csproj">
+    <ProjectReference Include="..\ESFA.DC.ESF.ILR1819.ReferenceData\ESFA.DC.ESF.ILR1819.ReferenceData.csproj">
       <Project>{09090293-77A8-4726-8019-025CE6ED65A6}</Project>
       <Name>ESFA.DC.ESF.ILR1819.ReferenceData</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ESFA.DC.ESF.ILRReferenceData.1920\ESFA.DC.ESF.ILR1920.ReferenceData.csproj">
+    <ProjectReference Include="..\ESFA.DC.ESF.ILR1920.ReferenceData\ESFA.DC.ESF.ILR1920.ReferenceData.csproj">
       <Project>{AABE3690-8799-4EDB-8FD3-5AAAABD7B923}</Project>
       <Name>ESFA.DC.ESF.ILR1920.ReferenceData</Name>
     </ProjectReference>
