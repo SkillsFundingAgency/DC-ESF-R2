@@ -15,6 +15,8 @@ namespace ESFA.DC.ESF.FundingData.Database.EF
 
         public virtual DbSet<ESFFundingData> ESFFundingDatas { get; set; }
         public virtual DbSet<LatestProviderSubmission> LatestProviderSubmissions { get; set; }
+        public virtual DbQuery<ESFFundingData> vw_ESFFundingDatas { get; set; }
+        public virtual DbQuery<LatestProviderSubmission> vw_LatestProviderSubmissions { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -102,6 +104,9 @@ namespace ESFA.DC.ESF.FundingData.Database.EF
                     .HasMaxLength(10)
                     .IsUnicode(false);
             });
+
+            modelBuilder.Query<ESFFundingData>().ToView("ESFFundingData", "dbo");
+            modelBuilder.Query<LatestProviderSubmission>().ToView("LatestProviderSubmissions","dbo");
         }
     }
 }
