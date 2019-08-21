@@ -5,7 +5,7 @@
         public string AcademicYear { get; set; }
         public int UKPRN { get; set; }
         public string CollectionType { get; set; }
-        public string CollectinReturnCode { get; set; }
+        public string CollectionReturnCode { get; set; }
         public string LearnRefNumber { get; set; }
         public int AimSeqNumber { get; set; }
         public string ConRefNumber { get; set; }

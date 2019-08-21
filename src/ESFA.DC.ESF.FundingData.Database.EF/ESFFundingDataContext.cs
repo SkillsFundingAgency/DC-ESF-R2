@@ -33,7 +33,7 @@ namespace ESFA.DC.ESF.FundingData.Database.EF
 
             modelBuilder.Entity<ESFFundingData>(entity =>
             {
-                entity.HasKey(e => new { e.AcademicYear, e.AttributeName, e.UKPRN, e.CollectionType, e.CollectinReturnCode, e.LearnRefNumber, e.AimSeqNumber, e.ConRefNumber, e.DeliverableCode });
+                entity.HasKey(e => new { e.AcademicYear, e.AttributeName, e.UKPRN, e.CollectionType, e.CollectionReturnCode, e.LearnRefNumber, e.AimSeqNumber, e.ConRefNumber, e.DeliverableCode });
 
                 entity.ToTable("ESFFundingData", "Current");
 
@@ -49,7 +49,7 @@ namespace ESFA.DC.ESF.FundingData.Database.EF
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
-                entity.Property(e => e.CollectinReturnCode)
+                entity.Property(e => e.CollectionReturnCode)
                     .HasMaxLength(10)
                     .IsUnicode(false);
 
