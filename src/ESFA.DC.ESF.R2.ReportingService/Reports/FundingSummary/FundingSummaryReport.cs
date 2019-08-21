@@ -324,7 +324,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 WriteExcelRecordsFromModelProperty(sheet, _fundingSummaryMapper, _cachedModelProperties, fundingSummaryModel, excelRecordStyle);
             }
 
-            AlignWorkSheetColumnData(workbook.Worksheets[0], 0, TextAlignmentType.Left);
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            {
+                AlignWorkSheetColumnData(workbook.Worksheets[i], 0, TextAlignmentType.Left);
+            }
+
             WriteExcelRecords(sheet, new FundingSummaryFooterMapper(), new List<FundingSummaryFooterModel> { fundingSummaryFooterModel }, _cellStyles[7], _cellStyles[7], true);
 
             return workbook;
