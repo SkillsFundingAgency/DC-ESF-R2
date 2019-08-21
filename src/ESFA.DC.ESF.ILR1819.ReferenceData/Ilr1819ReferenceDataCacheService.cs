@@ -10,15 +10,15 @@ using ESFA.DC.FileService.Interface;
 using ESFA.DC.ILR.ReferenceDataService.Model;
 using ESFA.DC.Serialization.Interfaces;
 
-namespace ESFA.DC.ESF.R2.Service.Services
+namespace ESFA.DC.ESF.ILR1819.ReferenceData
 {
-    public class IlrReferenceDataCacheService : IIlrReferenceDataCacheService
+    public class Ilr1819ReferenceDataCacheService : IIlrReferenceDataCacheService
     {
         private readonly IFileService _fileService;
         private readonly IJsonSerializationService _jsonSerializationService;
         private readonly IReferenceDataCache _referenceDataCache;
 
-        public IlrReferenceDataCacheService(
+        public Ilr1819ReferenceDataCacheService(
             IJsonSerializationService jsonSerializationService,
             IFileService fileService,
             IReferenceDataCache referenceDataCache)
