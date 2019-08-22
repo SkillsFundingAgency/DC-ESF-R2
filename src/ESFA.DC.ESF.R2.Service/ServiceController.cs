@@ -45,7 +45,7 @@ namespace ESFA.DC.ESF.R2.Service
             CancellationToken cancellationToken)
         {
             var wrapper = new SupplementaryDataWrapper();
-            var sourceFileModel = new SourceFileModel();
+            var sourceFileModel = new SourceFileModel() { SuppliedDate = jobContextModel.SubmissionDateTimeUtc };
 
             _periodHelper.CacheCurrentPeriod(jobContextModel);
 

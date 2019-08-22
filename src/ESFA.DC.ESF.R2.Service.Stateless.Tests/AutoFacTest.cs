@@ -4,10 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
+using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Stateless;
 using ESFA.DC.JobContextManager.Interface;
 using ESFA.DC.JobContextManager.Model;
 using ESFA.DC.JobContextManager.Model.Interface;
+using Moq;
 using Xunit;
 
 namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
@@ -29,6 +31,9 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
             cts.Cancel();
 
             ContainerBuilder containerBuilder = DIComposition.BuildContainer(new TestConfigurationHelper());
+
+            containerBuilder.Register(cb => new Mock<IIlrReferenceDataCacheService>().Object).As<IIlrReferenceDataCacheService>();
+
             IContainer c;
             try
             {

@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Aspose.Cells;
+using Aspose.Cells.Drawing;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
@@ -182,11 +183,15 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
         private void AddImageToReport(Worksheet worksheet)
         {
+            WriteBlankRow(worksheet, 1); // Add blank Row to position the image on top
+            worksheet.Cells.SetRowHeight(0, 27); // Adjust the image row height
+
             var assembly = Assembly.GetExecutingAssembly();
             string euFlag = assembly.GetManifestResourceNames().Single(str => str.EndsWith("ESF.png"));
             using (Stream stream = assembly.GetManifestResourceStream(euFlag))
             {
-                worksheet.Pictures.Add(3, _reportWidth - 2, stream);
+                worksheet.Pictures.Add(0, _reportWidth - 2, stream);
+                worksheet.Pictures[0].Top = 2;
             }
         }
 
@@ -299,20 +304,50 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
                 if (fundingSummaryModel.HeaderType == HeaderType.All)
                 {
+                    // Align data to the Right
+                    excelHeaderStyle.Style.HorizontalAlignment = TextAlignmentType.Right;
+                    excelHeaderStyle.StyleFlag.HorizontalAlignment = true;
+
                     _fundingSummaryMapper.MemberMaps.Single(x => x.Data.Index == 0).Name(fundingSummaryModel.Title);
                     _cachedHeaders[0] = fundingSummaryModel.Title;
+
                     WriteRecordsFromArray(sheet, _fundingSummaryMapper, _cachedHeaders, excelHeaderStyle);
                     continue;
                 }
 
                 CellStyle excelRecordStyle = _excelStyleProvider.GetCellStyle(_cellStyles, fundingSummaryModel.ExcelRecordStyle);
 
+                // Align data to the Right
+                excelRecordStyle.Style.HorizontalAlignment = TextAlignmentType.Right;
+                excelRecordStyle.StyleFlag.HorizontalAlignment = true;
+
                 WriteExcelRecordsFromModelProperty(sheet, _fundingSummaryMapper, _cachedModelProperties, fundingSummaryModel, excelRecordStyle);
+            }
+
+            for (int i = 0; i < workbook.Worksheets.Count; i++)
+            {
+                AlignWorkSheetColumnData(workbook.Worksheets[i], 0, TextAlignmentType.Left);
             }
 
             WriteExcelRecords(sheet, new FundingSummaryFooterMapper(), new List<FundingSummaryFooterModel> { fundingSummaryFooterModel }, _cellStyles[7], _cellStyles[7], true);
 
             return workbook;
+        }
+
+        /// <summary>
+        ///   Align column data to [Right] or [Left].
+        /// </summary>
+        /// <param name="worksheet"> worksheet number to use.</param>
+        /// <param name="columnNumber">column number to apply alignment.</param>
+        /// <param name="textAlignmentType">type of alignment [Left] [Right].</param>
+        private void AlignWorkSheetColumnData(Worksheet worksheet, int columnNumber, TextAlignmentType textAlignmentType)
+        {
+            Cells cells = worksheet.Cells;
+
+            // Get current style & adjust alignment
+            Style style = cells.Columns[columnNumber].Style;
+            style.HorizontalAlignment = textAlignmentType;
+            cells.Columns[columnNumber].ApplyStyle(style, new StyleFlag { HorizontalAlignment = true });
         }
 
         private string[] GetHeaderEntries(int endYear, List<YearAndDataLengthModel> yearAndDataLengthModels)

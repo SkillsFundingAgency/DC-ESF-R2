@@ -81,6 +81,14 @@
     <Folder Include="Modules\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.ESF.ILR1819.ReferenceData\ESFA.DC.ESF.ILR1819.ReferenceData.csproj">
+      <Project>{09090293-77A8-4726-8019-025CE6ED65A6}</Project>
+      <Name>ESFA.DC.ESF.ILR1819.ReferenceData</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.ILR1920.ReferenceData\ESFA.DC.ESF.ILR1920.ReferenceData.csproj">
+      <Project>{AABE3690-8799-4EDB-8FD3-5AAAABD7B923}</Project>
+      <Name>ESFA.DC.ESF.ILR1920.ReferenceData</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.DataAccessLayer\ESFA.DC.ESF.R2.DataAccessLayer.csproj">
       <Project>{e113d0a4-8cf5-46bf-a181-8c3bb92f785c}</Project>
       <Name>ESFA.DC.ESF.R2.DataAccessLayer</Name>
@@ -159,35 +167,35 @@
     <Reference Include="ESFA.DC.FileService.Interface, Version=0.1.18.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.FileService.Interface.0.1.18-beta0001\lib\netstandard2.0\ESFA.DC.FileService.Interface.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.DataAccessLayer, Version=0.1.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.45-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.DataAccessLayer.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.DataAccessLayer, Version=0.1.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.46-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.DataAccessLayer.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.ILR1516EF, Version=0.1.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.45-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1516EF.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.ILR1516EF, Version=0.1.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.46-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1516EF.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.ILR1617EF, Version=0.1.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.45-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1617EF.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.ILR1617EF, Version=0.1.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.46-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1617EF.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.ILR1718EF, Version=0.1.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.45-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1718EF.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.ILR1718EF, Version=0.1.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.46-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1718EF.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.ILR1819EF, Version=0.1.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.45-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1819EF.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.ILR1819EF, Version=0.1.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.46-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1819EF.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.ILR1920EF, Version=0.1.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.45-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1920EF.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.ILR1920EF, Version=0.1.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.46-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.ILR1920EF.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.Interfaces, Version=0.1.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.45-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.Interfaces.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.Interfaces, Version=0.1.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.46-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.Models, Version=0.1.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.45-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.Models.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.Models, Version=0.1.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.46-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.Models.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.Services, Version=0.1.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.45-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.Services.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.Services, Version=0.1.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.46-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.Services.dll</HintPath>
     </Reference>
-    <Reference Include="ESFA.DC.ILR.DataService.Utils, Version=0.1.45.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.45-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.Utils.dll</HintPath>
+    <Reference Include="ESFA.DC.ILR.DataService.Utils, Version=0.1.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ESFA.DC.ILR.DataService.Services.0.1.46-beta0001\lib\netstandard2.0\ESFA.DC.ILR.DataService.Utils.dll</HintPath>
     </Reference>
     <Reference Include="ESFA.DC.ILR.ReferenceDataService.Model, Version=0.1.89.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ESFA.DC.ILR.ReferenceDataService.Model.0.1.89\lib\netstandard2.0\ESFA.DC.ILR.ReferenceDataService.Model.dll</HintPath>
