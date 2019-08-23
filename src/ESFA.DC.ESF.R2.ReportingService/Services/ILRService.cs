@@ -33,7 +33,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             int ukPrn,
             CancellationToken cancellationToken)
         {
-            IEnumerable<FM70PeriodisedValues> ilrData = await _fm70DataService.GetPeriodisedValuesAllYears(ukPrn, cancellationToken);
+            IEnumerable<FM70PeriodisedValues> ilrData = await _fm70DataService.GetPeriodisedValuesAllYears(ukPrn, cancellationToken, true);
 
             var fm70YearlyData = GroupFm70DataIntoYears(endYear, ilrData);
 
