@@ -48,13 +48,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.ESF.R2.ReportingSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.ESF.R2.ReportingService.Tests", "ESFA.DC.ESF.R2.ReportingService.Tests\ESFA.DC.ESF.R2.ReportingService.Tests.csproj", "{334A121C-7276-4F7D-A8A9-8EAF6D3FA689}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.ESF.ILR1819.ReferenceData", "ESFA.DC.ESF.ILR1819.ReferenceData\ESFA.DC.ESF.ILR1819.ReferenceData.csproj", "{09090293-77A8-4726-8019-025CE6ED65A6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.ESF.ILR1920.ReferenceData", "ESFA.DC.ESF.ILR1920.ReferenceData\ESFA.DC.ESF.ILR1920.ReferenceData.csproj", "{AABE3690-8799-4EDB-8FD3-5AAAABD7B923}"
-EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "ESFA.DC.ESF.FundingData.Database", "ESFA.DC.ESF.FundingData.Database\ESFA.DC.ESF.FundingData.Database.sqlproj", "{15B1F516-2835-44B9-94E8-6A25ABCB0A95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ESFA.DC.ESF.FundingData.Database.EF", "ESFA.DC.ESF.FundingData.Database.EF\ESFA.DC.ESF.FundingData.Database.EF.csproj", "{F77DCDD9-9268-4500-9597-8D39CABA07BE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ESFA.DC.ESF.FundingData.Database.EF", "ESFA.DC.ESF.FundingData.Database.EF\ESFA.DC.ESF.FundingData.Database.EF.csproj", "{F77DCDD9-9268-4500-9597-8D39CABA07BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -240,22 +236,6 @@ Global
 		{F77DCDD9-9268-4500-9597-8D39CABA07BE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F77DCDD9-9268-4500-9597-8D39CABA07BE}.Release|x64.ActiveCfg = Release|Any CPU
 		{F77DCDD9-9268-4500-9597-8D39CABA07BE}.Release|x64.Build.0 = Release|Any CPU
-		{09090293-77A8-4726-8019-025CE6ED65A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{09090293-77A8-4726-8019-025CE6ED65A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{09090293-77A8-4726-8019-025CE6ED65A6}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{09090293-77A8-4726-8019-025CE6ED65A6}.Debug|x64.Build.0 = Debug|Any CPU
-		{09090293-77A8-4726-8019-025CE6ED65A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{09090293-77A8-4726-8019-025CE6ED65A6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{09090293-77A8-4726-8019-025CE6ED65A6}.Release|x64.ActiveCfg = Release|Any CPU
-		{09090293-77A8-4726-8019-025CE6ED65A6}.Release|x64.Build.0 = Release|Any CPU
-		{AABE3690-8799-4EDB-8FD3-5AAAABD7B923}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AABE3690-8799-4EDB-8FD3-5AAAABD7B923}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AABE3690-8799-4EDB-8FD3-5AAAABD7B923}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{AABE3690-8799-4EDB-8FD3-5AAAABD7B923}.Debug|x64.Build.0 = Debug|Any CPU
-		{AABE3690-8799-4EDB-8FD3-5AAAABD7B923}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AABE3690-8799-4EDB-8FD3-5AAAABD7B923}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AABE3690-8799-4EDB-8FD3-5AAAABD7B923}.Release|x64.ActiveCfg = Release|Any CPU
-		{AABE3690-8799-4EDB-8FD3-5AAAABD7B923}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
