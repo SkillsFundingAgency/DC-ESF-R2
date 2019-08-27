@@ -81,14 +81,6 @@
     <Folder Include="Modules\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ESFA.DC.ESF.ILR1819.ReferenceData\ESFA.DC.ESF.ILR1819.ReferenceData.csproj">
-      <Project>{09090293-77A8-4726-8019-025CE6ED65A6}</Project>
-      <Name>ESFA.DC.ESF.ILR1819.ReferenceData</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ESFA.DC.ESF.ILR1920.ReferenceData\ESFA.DC.ESF.ILR1920.ReferenceData.csproj">
-      <Project>{AABE3690-8799-4EDB-8FD3-5AAAABD7B923}</Project>
-      <Name>ESFA.DC.ESF.ILR1920.ReferenceData</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.DataAccessLayer\ESFA.DC.ESF.R2.DataAccessLayer.csproj">
       <Project>{e113d0a4-8cf5-46bf-a181-8c3bb92f785c}</Project>
       <Name>ESFA.DC.ESF.R2.DataAccessLayer</Name>

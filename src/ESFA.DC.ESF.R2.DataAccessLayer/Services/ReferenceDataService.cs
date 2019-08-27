@@ -4,6 +4,7 @@ using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 using ESFA.DC.ESF.R2.Models.Validation;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace ESFA.DC.ESF.R2.DataAccessLayer.Services
 {
@@ -11,13 +12,16 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer.Services
     {
         private readonly IReferenceDataRepository _referenceDataRepository;
         private readonly IReferenceDataCache _referenceDataCache;
+        private readonly IFCSRepository _fcsRepository;
 
         public ReferenceDataService(
             IReferenceDataRepository referenceDataRepository,
-            IReferenceDataCache referenceDataCache)
+            IReferenceDataCache referenceDataCache,
+            IFCSRepository fcsRepository)
         {
             _referenceDataRepository = referenceDataRepository;
             _referenceDataCache = referenceDataCache;
+            _fcsRepository = fcsRepository;
         }
 
         public int CurrentPeriod { get; set; }
@@ -77,7 +81,15 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer.Services
             IEnumerable<string> deliverableCodes,
             CancellationToken cancellationToken)
         {
-            return _referenceDataCache.GetContractDeliverableCodeMapping(deliverableCodes, cancellationToken);
+            var deliverableCodeMappings = _referenceDataCache.GetContractDeliverableCodeMapping(deliverableCodes, cancellationToken);
+
+            if (!deliverableCodeMappings.Any())
+            {
+                deliverableCodeMappings = _fcsRepository.GetContractDeliverableCodeMapping(deliverableCodes, cancellationToken);
+                _referenceDataCache.PopulateContractDeliverableCodeMappings(deliverableCodeMappings);
+            }
+
+            return deliverableCodeMappings;
         }
     }
 }

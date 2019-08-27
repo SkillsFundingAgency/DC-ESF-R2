@@ -2,8 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
-using ESFA.DC.ESF.ILR1819.ReferenceData;
-using ESFA.DC.ESF.ILR1920.ReferenceData;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Stateless.Mappers;
@@ -31,7 +29,7 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
 
         public async Task<bool> HandleAsync(JobContextMessage jobContextMessage, CancellationToken cancellationToken)
         {
-            using (var childLifetimeScope = GetChildLifetimeScope(jobContextMessage))
+            using (var childLifetimeScope = _lifetimeScope.BeginLifetimeScope())
             {
                 _logger.LogInfo("ESF R2 callback invoked");
 
@@ -50,21 +48,6 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
 
                 return true;
             }
-        }
-
-        public ILifetimeScope GetChildLifetimeScope(JobContextMessage jobContextMessage)
-        {
-            return _lifetimeScope.BeginLifetimeScope(c =>
-            {
-                if (jobContextMessage.KeyValuePairs[JobContextMessageKey.CollectionName].ToString() == Ilr1920CollectionName)
-                {
-                    c.RegisterType<Ilr1920ReferenceDataCacheService>().As<IIlrReferenceDataCacheService>();
-                }
-                else
-                {
-                    c.RegisterType<Ilr1819ReferenceDataCacheService>().As<IIlrReferenceDataCacheService>();
-                }
-            });
         }
     }
 }

@@ -32,8 +32,6 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
 
             ContainerBuilder containerBuilder = DIComposition.BuildContainer(new TestConfigurationHelper());
 
-            containerBuilder.Register(cb => new Mock<IIlrReferenceDataCacheService>().Object).As<IIlrReferenceDataCacheService>();
-
             IContainer c;
             try
             {

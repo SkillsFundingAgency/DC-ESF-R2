@@ -77,7 +77,6 @@
     <Compile Include="Services\IESFProviderService.cs" />
     <Compile Include="Services\IExcelStyleProvider.cs" />
     <Compile Include="Services\IFileValidationService.cs" />
-    <Compile Include="Services\IIlrReferenceDataCacheService.cs" />
     <Compile Include="Services\IValueProvider.cs" />
     <Compile Include="Strategies\IRowHelper.cs" />
     <Compile Include="Strategies\ITaskStrategy.cs" />
