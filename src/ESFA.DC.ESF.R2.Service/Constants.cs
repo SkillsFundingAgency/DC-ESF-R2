@@ -2,7 +2,7 @@
 {
     public class Constants
     {
-        public const string ReportingTask = "Reporting";
+        public const string ReportingTask = "Reports";
         public const string ValidationTask = "Validation";
         public const string StorageTask = "Storage";
 
