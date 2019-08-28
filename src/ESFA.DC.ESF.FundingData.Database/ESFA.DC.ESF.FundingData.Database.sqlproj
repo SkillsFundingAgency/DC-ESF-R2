@@ -56,6 +56,36 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
+    <SqlCmdVariable Include="BUILD_BRANCHNAME">
+      <DefaultValue>Local</DefaultValue>
+      <Value>$(SqlCmdVar__1)</Value>
+    </SqlCmdVariable>
+    <SqlCmdVariable Include="BUILD_BUILDNUMBER">
+      <DefaultValue>0.0.0</DefaultValue>
+      <Value>$(SqlCmdVar__2)</Value>
+    </SqlCmdVariable>
+    <SqlCmdVariable Include="DsciUserPassword">
+      <DefaultValue>NotUseLocally#DSCI</DefaultValue>
+      <Value>$(SqlCmdVar__3)</Value>
+    </SqlCmdVariable>
+    <SqlCmdVariable Include="MatchClaimROPassword">
+      <DefaultValue>NotUseLocally#MC</DefaultValue>
+      <Value>$(SqlCmdVar__7)</Value>
+    </SqlCmdVariable>
+    <SqlCmdVariable Include="RELEASE_RELEASENAME">
+      <DefaultValue>From Dev Machine</DefaultValue>
+      <Value>$(SqlCmdVar__4)</Value>
+    </SqlCmdVariable>
+    <SqlCmdVariable Include="ROUserPassword">
+      <DefaultValue>NotUseLocally#</DefaultValue>
+      <Value>$(SqlCmdVar__5)</Value>
+    </SqlCmdVariable>
+    <SqlCmdVariable Include="RWUserPassword">
+      <DefaultValue>NotUseLocally##</DefaultValue>
+      <Value>$(SqlCmdVar__6)</Value>
+    </SqlCmdVariable>
+  </ItemGroup>
+  <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="Import" />
     <Folder Include="Current" />
@@ -64,6 +94,8 @@
     <Folder Include="Security" />
     <Folder Include="dbo" />
     <Folder Include="dbo\Views" />
+    <Folder Include="zzDeploymentProfiles" />
+    <Folder Include="dbo\Stored Procedures" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Current\Tables\ESFFundingData.sql" />
@@ -74,5 +106,20 @@
     <Build Include="Current\Tables\LatestProviderSubmission.sql" />
     <Build Include="Import\Tables\LatestProviderSubmission.sql" />
     <Build Include="dbo\Views\LatestProviderSubmission.sql" />
+    <Build Include="Security\MatchClaim_RO_User.sql" />
+    <Build Include="Security\Role_DataProcessing.sql" />
+    <Build Include="Security\Role_DataViewing.sql" />
+    <Build Include="Security\RoleMemberships.sql" />
+    <Build Include="Security\User_DsciUser.sql" />
+    <Build Include="Security\User_RO.sql" />
+    <Build Include="Security\User_RW.sql" />
+    <None Include="z.ExtendedProperties.sql" />
+    <Build Include="dbo\Stored Procedures\usp_DisplayDeploymentProperties.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="zzDeploymentProfiles\zz.Local.Dev.Version.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="zzz.Script.PostDeployment.sql" />
   </ItemGroup>
 </Project>
