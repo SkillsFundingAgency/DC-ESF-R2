@@ -15,5 +15,10 @@
         public const string LearnDelFamType_RES = "RES";
 
         public const string NotApplicable = "n/a";
+
+        public const string ILR1819 = "ILR1819";
+        public const string ILR1920 = "ILR1920";
+        public const string ESFR21819 = "ESFR2-1819";
+        public const string ESFR21920 = "ESFR2-1920";
     }
 }
