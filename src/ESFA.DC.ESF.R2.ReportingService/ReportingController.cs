@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
@@ -90,7 +91,8 @@ namespace ESFA.DC.ESF.R2.ReportingService
 
                         if (passedFileValidation)
                         {
-                            foreach (var report in _esfReports)
+                            var reportsToRun = _esfReports.Where(r => r.GeneratedFor.Contains(jobContextModel.CollectionName, StringComparer.OrdinalIgnoreCase));
+                            foreach (var report in reportsToRun)
                             {
                                 await report.GenerateReport(jobContextModel, sourceFile, wrapper, archive, cancellationToken);
                             }

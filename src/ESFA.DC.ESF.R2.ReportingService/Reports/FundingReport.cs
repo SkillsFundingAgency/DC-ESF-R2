@@ -35,7 +35,14 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
 
             _storage = storage;
             _referenceDataService = referenceDataService;
+
+            GeneratedFor = new List<string>
+            {
+                Constants.ESFR21819, Constants.ESFR21920
+            };
         }
+
+        public IEnumerable<string> GeneratedFor { get; }
 
         public async Task GenerateReport(
             JobContextModel jobContextModel,
@@ -61,10 +68,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
                 }
             }
 
-            if (!jobContextModel.CollectionName.CaseInsensitiveContains("ILR"))
-            {
-                await WriteZipEntry(archive, $"{fileName}.csv", csv);
-            }
+            await WriteZipEntry(archive, $"{fileName}.csv", csv);
         }
 
         private string GetCsv(SupplementaryDataWrapper wrapper)

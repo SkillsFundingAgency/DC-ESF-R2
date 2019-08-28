@@ -37,7 +37,14 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             _aimAndDeliverableService1920 = aimAndDeliverableService1920;
 
             ReportFileName = "ESF Round 2 Aim and Deliverable Report";
+
+            GeneratedFor = new List<string>
+            {
+                Constants.ILR1819, Constants.ILR1920, Constants.ESFR21819, Constants.ESFR21920
+            };
         }
+
+        public IEnumerable<string> GeneratedFor { get; }
 
         public async Task GenerateReport(
             JobContextModel jobContextModel,
