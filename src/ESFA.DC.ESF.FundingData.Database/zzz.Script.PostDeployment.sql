@@ -9,31 +9,24 @@ Post-Deployment Script Template
                SELECT * FROM [$(TableName)]					
 --------------------------------------------------------------------------------------
 */
-
-SET NOCOUNT ON ;
-	:r .\SeedData\ValidationErrorMessageData.sql
-
+GO
 -- Set ExtendedProperties fro DB.
 	:r .\z.ExtendedProperties.sql
 GO
 RAISERROR('		   Update User Account Passwords',10,1) WITH NOWAIT;
 GO
---DROP ROLE IF EXISTS [DataViewer];
---DROP ROLE IF EXISTS [DataProcessor];
+ALTER ROLE [db_datareader] DROP MEMBER [EsfFunding_RO_User];
 GO
-
-ALTER ROLE [db_datareader] DROP MEMBER [ESF_R2_RO_User];
+ALTER ROLE [db_datareader] DROP MEMBER [EsfFunding_RW_User];
 GO
-ALTER ROLE [db_datareader] DROP MEMBER [ESF_R2_RW_User];
-GO
-ALTER ROLE [db_datawriter] DROP MEMBER [ESF_R2_RW_User];
+ALTER ROLE [db_datawriter] DROP MEMBER [EsfFunding_RW_User];
 GO
 
 RAISERROR('		       RO User',10,1) WITH NOWAIT;
-ALTER USER [ESF_R2_RO_User] WITH PASSWORD = N'$(ROUserPassword)';
+ALTER USER [EsfFunding_RO_User] WITH PASSWORD = N'$(ROUserPassword)';
 GO
 RAISERROR('		       RW User',10,1) WITH NOWAIT;
-ALTER USER [ESF_R2_RW_User] WITH PASSWORD = N'$(RWUserPassword)';
+ALTER USER [EsfFunding_RW_User] WITH PASSWORD = N'$(RWUserPassword)';
 GO
 RAISERROR('		       DSCI User',10,1) WITH NOWAIT;
 ALTER USER [User_DSCI] WITH PASSWORD = N'$(DsciUserPassword)';

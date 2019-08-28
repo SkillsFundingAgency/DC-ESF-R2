@@ -8,5 +8,5 @@
 		[UKPRN] ASC,
 		[CollectionType] ASC,
 		[CollectionReturnCode] ASC
-	) ON [PRIMARY]
-) ON [PRIMARY]
+	)
+)
