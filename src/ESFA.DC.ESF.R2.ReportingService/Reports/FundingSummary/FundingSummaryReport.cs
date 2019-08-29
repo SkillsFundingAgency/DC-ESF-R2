@@ -30,6 +30,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 {
     public sealed class FundingSummaryReport : AbstractReportBuilder, IModelReport
     {
+        private const string NotApplicable = "Not Applicable";
         private readonly IFileService _storage;
         private readonly IList<IRowHelper> _rowHelpers;
         private readonly IILRService _ilrService;
@@ -95,11 +96,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         {
             var ukPrn = Convert.ToInt32(jobContextModel.UkPrn);
 
-            var conRefNumbers = (await _referenceDataService.GetContractAllocationsForUkprn(ukPrn, cancellationToken)).ToList();
+            var conRefNumbers = await _referenceDataService.GetContractAllocationsForUkprn(ukPrn, cancellationToken);
 
             if (!conRefNumbers.Any())
             {
-                conRefNumbers.Add("Not Applicable");
+                conRefNumbers = new List<string> { NotApplicable };
             }
 
             var collectionYear = Convert.ToInt32($"20{jobContextModel.CollectionYear.ToString().Substring(0, 2)}");
