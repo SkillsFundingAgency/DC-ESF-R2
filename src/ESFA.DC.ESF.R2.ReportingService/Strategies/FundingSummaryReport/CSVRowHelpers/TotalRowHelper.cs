@@ -73,7 +73,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRow
                 var periodValueCount = periodValues.First().Values.Count;
                 for (var i = 0; i < periodValueCount; i++)
                 {
-                    yearValues.Values.Add(periodValues.Sum(model => model.Values[i]));
+                    yearValues.Values.Add(periodValues.Sum(model => model.Values.ElementAtOrDefault(i)));
                 }
             }
 

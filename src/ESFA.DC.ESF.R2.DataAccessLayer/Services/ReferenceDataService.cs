@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
@@ -90,6 +91,11 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer.Services
             }
 
             return deliverableCodeMappings;
+        }
+
+        public async Task<IEnumerable<string>> GetContractAllocationsForUkprn(int ukprn, CancellationToken cancellationToken)
+        {
+            return await _fcsRepository.GetContractAllocationsForUkprn(ukprn, cancellationToken);
         }
     }
 }

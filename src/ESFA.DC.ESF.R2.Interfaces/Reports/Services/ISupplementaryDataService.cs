@@ -11,7 +11,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.Reports.Services
             string ukPrn,
             CancellationToken cancellationToken);
 
-        Task<IDictionary<int, IEnumerable<SupplementaryDataYearlyModel>>> GetSupplementaryData(
+        Task<IDictionary<string, IEnumerable<SupplementaryDataYearlyModel>>> GetSupplementaryData(
             int endYear,
             IEnumerable<SourceFileModel> sourceFiles,
             CancellationToken cancellationToken);
