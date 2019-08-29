@@ -58,12 +58,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             return sourceFiles;
         }
 
-        public async Task<IDictionary<int, IEnumerable<SupplementaryDataYearlyModel>>> GetSupplementaryData(
+        public async Task<IDictionary<string, IEnumerable<SupplementaryDataYearlyModel>>> GetSupplementaryData(
             int endYear,
             IEnumerable<SourceFileModel> sourceFiles,
             CancellationToken cancellationToken)
         {
-            var supplementaryDataModels = new Dictionary<int, IEnumerable<SupplementaryDataYearlyModel>>();
+            var supplementaryDataModels = new Dictionary<string, IEnumerable<SupplementaryDataYearlyModel>>();
             foreach (var sourceFile in sourceFiles)
             {
                 var supplementaryData =
@@ -77,7 +77,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                     continue;
                 }
 
-                supplementaryDataModels.Add(sourceFile.SourceFileId, supplementaryData);
+                supplementaryDataModels.Add(sourceFile.ConRefNumber, supplementaryData);
             }
 
             return supplementaryDataModels;

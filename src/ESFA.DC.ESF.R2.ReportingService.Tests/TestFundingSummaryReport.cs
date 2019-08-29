@@ -32,7 +32,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
         {
             var dateTime = DateTime.UtcNow;
             var filename = $"10005752/1/ESF Round 2 Funding Summary Report {dateTime:yyyyMMdd-HHmmss}";
-            var sourceFileId = 1;
+            var conRefNumber = "ESF-5234";
 
             Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(dateTime);
@@ -47,9 +47,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             var supplementaryDataService = new Mock<ISupplementaryDataService>();
             supplementaryDataService
                 .Setup(s => s.GetSupplementaryData(It.IsAny<int>(), It.IsAny<IEnumerable<SourceFileModel>>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new Dictionary<int, IEnumerable<SupplementaryDataYearlyModel>>
+                .ReturnsAsync(new Dictionary<string, IEnumerable<SupplementaryDataYearlyModel>>
                 {
-                    [sourceFileId] = new List<SupplementaryDataYearlyModel>
+                    [conRefNumber] = new List<SupplementaryDataYearlyModel>
                     {
                         new SupplementaryDataYearlyModel
                         {
@@ -64,10 +64,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
                 {
                     new SourceFileModel
                     {
-                        ConRefNumber = "ESF-5234",
+                        ConRefNumber = conRefNumber,
                         FileName = filename,
                         UKPRN = "10005752",
-                        SourceFileId = sourceFileId,
+                        SourceFileId = 1,
                         PreparationDate = DateTime.Now,
                         SuppliedDate = DateTime.Now,
                         JobId = 1
@@ -133,7 +133,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
         {
             var dateTime = DateTime.UtcNow;
             var filename = $"10005752/1/ESF Round 2 Funding Summary Report {dateTime:yyyyMMdd-HHmmss}";
-            var sourceFileId = 1;
+            var conRefNumber = "ESF-5234";
 
             Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(dateTime);
@@ -149,9 +149,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             var supplementaryDataService = new Mock<ISupplementaryDataService>();
             supplementaryDataService
                 .Setup(s => s.GetSupplementaryData(It.IsAny<int>(), It.IsAny<IEnumerable<SourceFileModel>>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new Dictionary<int, IEnumerable<SupplementaryDataYearlyModel>>
+                .ReturnsAsync(new Dictionary<string, IEnumerable<SupplementaryDataYearlyModel>>
                 {
-                    [sourceFileId] = new List<SupplementaryDataYearlyModel>
+                    [conRefNumber] = new List<SupplementaryDataYearlyModel>
                     {
                         new SupplementaryDataYearlyModel
                         {
@@ -167,10 +167,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
                 {
                     new SourceFileModel
                     {
-                        ConRefNumber = "ESF-5234",
+                        ConRefNumber = conRefNumber,
                         FileName = filename,
                         UKPRN = "10005752",
-                        SourceFileId = sourceFileId,
+                        SourceFileId = 1,
                         PreparationDate = DateTime.Now,
                         SuppliedDate = DateTime.Now,
                         JobId = 1

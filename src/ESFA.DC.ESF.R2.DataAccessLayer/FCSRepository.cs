@@ -2,19 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 using ESFA.DC.ESF.R2.Models.Validation;
 using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.ReferenceData.FCS.Model.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace ESFA.DC.ESF.R2.DataAccessLayer
 {
     public class FCSRepository : IFCSRepository
     {
-        private readonly Func<IFcsContext> _fcsContextFactory;
+        private const string ESFPeriodTypeCode = "ESF";
+        private DateTime ESFR2ContractStartDate = new DateTime(2019, 04, 01);
 
+        private readonly Func<IFcsContext> _fcsContextFactory;
         private readonly object _fcsContextLock = new object();
 
         public FCSRepository(
@@ -77,6 +81,19 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             }
 
             return contractAllocationModel;
+        }
+
+        public async Task<IEnumerable<string>> GetContractAllocationsForUkprn(int ukprn, CancellationToken cancellationToken)
+        {
+            using (var fcsContext = _fcsContextFactory.Invoke())
+            {
+                return await fcsContext.ContractAllocations
+                                .Where(ca => ca.DeliveryUkprn == ukprn
+                                             && ca.PeriodTypeCode == ESFPeriodTypeCode
+                                             && ca.StartDate >= ESFR2ContractStartDate)
+                                .Select(ca => ca.ContractAllocationNumber)
+                                .ToListAsync(cancellationToken);
+            }
         }
 
         public IEnumerable<DeliverableUnitCost> GetDeliverableUnitCosts(

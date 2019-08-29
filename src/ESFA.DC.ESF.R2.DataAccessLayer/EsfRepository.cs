@@ -62,6 +62,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                         sd => sd.SourceFileId,
                         (sf, sd) => sf) // not all files will have data
                     .Where(s => s.Ukprn == ukPrn && s.ConRefNumber.CaseInsensitiveEquals(conRefNumber))
+                    .OrderByDescending(sd => sd.DateTime)
                     .FirstOrDefaultAsync(cancellationToken);
             }
 

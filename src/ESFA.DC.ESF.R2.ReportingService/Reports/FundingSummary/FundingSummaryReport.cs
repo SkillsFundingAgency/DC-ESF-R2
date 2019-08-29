@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Aspose.Cells;
-using Aspose.Cells.Drawing;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
@@ -31,6 +30,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 {
     public sealed class FundingSummaryReport : AbstractReportBuilder, IModelReport
     {
+        private const string NotApplicable = "Not Applicable";
         private readonly IFileService _storage;
         private readonly IList<IRowHelper> _rowHelpers;
         private readonly IILRService _ilrService;
@@ -96,6 +96,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         {
             var ukPrn = Convert.ToInt32(jobContextModel.UkPrn);
 
+            var conRefNumbers = await _referenceDataService.GetContractAllocationsForUkprn(ukPrn, cancellationToken);
+
+            if (!conRefNumbers.Any())
+            {
+                conRefNumbers = new List<string> { NotApplicable };
+            }
+
             var collectionYear = Convert.ToInt32($"20{jobContextModel.CollectionYear.ToString().Substring(0, 2)}");
 
             var sourceFiles = await _supplementaryDataService.GetImportFiles(jobContextModel.UkPrn.ToString(), cancellationToken);
@@ -111,25 +118,29 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             var workbook = new Workbook();
             workbook.Worksheets.Clear();
 
-            foreach (var file in sourceFiles)
+            foreach (var conRefNumber in conRefNumbers)
             {
+                var file = sourceFiles.FirstOrDefault(sf => sf.ConRefNumber.CaseInsensitiveEquals(conRefNumber));
+
                 FundingSummaryHeaderModel fundingSummaryHeaderModel =
-                    PopulateReportHeader(file, ilrYearlyFileData, ukPrn, cancellationToken);
+                    PopulateReportHeader(file, ilrYearlyFileData, ukPrn, conRefNumber, cancellationToken);
 
                 var fm70YearlyDataForConRef = new List<FM70PeriodisedValuesYearly>();
                 foreach (var fm70Data in fm70YearlyData)
                 {
-                    var periodisedValuesPerConRef = fm70Data.Fm70PeriodisedValues.Where(x => file.ConRefNumber.CaseInsensitiveEquals(x.ConRefNumber)).ToList();
+                    var periodisedValuesPerConRef = fm70Data.Fm70PeriodisedValues.Where(x => conRefNumber.CaseInsensitiveEquals(x.ConRefNumber)).ToList();
                     fm70YearlyDataForConRef.Add(new FM70PeriodisedValuesYearly()
                     {
-                        Fm70PeriodisedValues = periodisedValuesPerConRef.Any() ? periodisedValuesPerConRef : fm70Data.Fm70PeriodisedValues,
+                        Fm70PeriodisedValues = periodisedValuesPerConRef,
                         FundingYear = fm70Data.FundingYear
                     });
                 }
 
-                var fundingSummaryModels = PopulateReportData(collectionYear, fm70YearlyDataForConRef, supplementaryData[file.SourceFileId]).ToList();
+                supplementaryData.TryGetValue(conRefNumber, out var suppData);
 
-                ReplaceConRefNumInTitle(fundingSummaryModels, file);
+                var fundingSummaryModels = PopulateReportData(collectionYear, fm70YearlyDataForConRef, suppData).ToList();
+
+                ReplaceConRefNumInTitle(fundingSummaryModels, conRefNumber);
 
                 FundingSummaryFooterModel fundingSummaryFooterModel = PopulateReportFooter(cancellationToken);
 
@@ -151,7 +162,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 _cachedHeaders = GetHeaderEntries(collectionYear, yearAndDataLengthModels);
                 _cellStyles = _excelStyleProvider.GetFundingSummaryStyles(workbook);
 
-                Worksheet sheet = workbook.Worksheets.Add(file.ConRefNumber);
+                Worksheet sheet = workbook.Worksheets.Add(conRefNumber);
                 sheet.Cells.StandardWidth = 19;
                 sheet.Cells.Columns[0].Width = 63.93;
                 sheet.IsGridlinesVisible = false;
@@ -206,12 +217,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             SourceFileModel sourceFile,
             IEnumerable<ILRFileDetails> fileData,
             int ukPrn,
+            string conRefNumber,
             CancellationToken cancellationToken)
         {
             var ukPrnRow =
                 new List<string> { ukPrn.ToString(), null, null };
             var contractReferenceNumberRow =
-                new List<string> { sourceFile?.ConRefNumber, null, null, "ILR File :" };
+                new List<string> { conRefNumber, null, null, "ILR File :" };
             var supplementaryDataFileRow =
                 new List<string> { sourceFile?.FileName?.Contains("/") ?? false ? sourceFile.FileName.Substring(sourceFile.FileName.IndexOf("/", StringComparison.Ordinal) + 1) : sourceFile?.FileName, null, null, "Last ILR File Update :" };
             var lastSupplementaryDataFileUpdateRow =
@@ -265,7 +277,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             IEnumerable<SupplementaryDataYearlyModel> data)
         {
             List<FM70PeriodisedValuesYearly> fm70YearlyDataList = fm70YearlyData.ToList();
-            List<SupplementaryDataYearlyModel> dataList = data.ToList();
+            List<SupplementaryDataYearlyModel> dataList = data?.ToList() ?? new List<SupplementaryDataYearlyModel>();
 
             var fundingSummaryModels = new List<FundingSummaryModel>();
             foreach (var fundingReportRow in ReportDataTemplate.FundingModelRowDefinitions)
@@ -461,7 +473,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             }
         }
 
-        private void ReplaceConRefNumInTitle(IEnumerable<FundingSummaryModel> fundingSummaryModels, SourceFileModel sourceFile)
+        private void ReplaceConRefNumInTitle(IEnumerable<FundingSummaryModel> fundingSummaryModels, string conRefNumber)
         {
             foreach (var fundingSummaryModel in fundingSummaryModels)
             {
@@ -470,7 +482,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                     continue;
                 }
 
-                fundingSummaryModel.Title = fundingSummaryModel.Title.Replace(Constants.ContractReferenceNumberTag, sourceFile.ConRefNumber);
+                fundingSummaryModel.Title = fundingSummaryModel.Title.Replace(Constants.ContractReferenceNumberTag, conRefNumber);
             }
         }
     }
