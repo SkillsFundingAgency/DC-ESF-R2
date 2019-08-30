@@ -23,7 +23,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer.Mappers
                 ProviderSpecifiedReference = entity.ProviderSpecifiedReference,
                 LearnAimRef = entity.LearnAimRef,
                 SupplementaryDataPanelDate = entity.SupplementaryDataPanelDate,
-                Value = entity.Value
+                Value = entity.SupplementaryDataUnitCost?.Value ?? entity.Value
             };
         }
 

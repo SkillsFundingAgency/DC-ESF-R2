@@ -83,12 +83,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppDa
                 return 0M;
             }
 
-            var deliverableUnitCost = _service.GetDeliverableUnitCosts(sample.ConRefNumber, new List<string> { sample.DeliverableCode })
-                .FirstOrDefault(uc => uc.DeliverableCode == sample.DeliverableCode && uc.ConRefNum == sample.ConRefNumber)
-                ?.UnitCost ?? 0M;
-
             return data.Sum(d => d.CostType?.Equals(ESFConstants.UnitCostDeductionCostType, StringComparison.OrdinalIgnoreCase)
-                                 ?? false ? deliverableUnitCost * -1 : deliverableUnitCost);
+                                 ?? false ? d.Value.GetValueOrDefault() * -1 : d.Value.GetValueOrDefault());
         }
     }
 }

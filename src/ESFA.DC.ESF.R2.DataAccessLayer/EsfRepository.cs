@@ -98,6 +98,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             {
                 data = await context.SupplementaryDatas
                     .Where(s => s.SourceFileId == sourceFileId)
+                    .Include(s => s.SupplementaryDataUnitCost)
                     .ToListAsync(cancellationToken);
             }
 
