@@ -69,7 +69,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                 .ToDictionary(vl => new ValidLearnerKey(vl.LearnRefNumber, vl.AimSeqNumber ?? 0), vl => vl);
 
             var fm70LearningDeliveries =
-                (await _fm70DataService.GetLearningDeliveries(ukPrn, cancellationToken)).ToList();
+                (await _fm70DataService.GetLearningDeliveries(ukPrn, true, cancellationToken)).ToList();
 
             var learningDeliveryFams =
                 (await _validLearnerDataService.GetLearningDeliveryFams(ukPrn, Constants.LearningDeliveryFamTypeRES, cancellationToken)).ToList();
