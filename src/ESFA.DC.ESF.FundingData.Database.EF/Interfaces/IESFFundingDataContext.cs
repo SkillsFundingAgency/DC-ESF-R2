@@ -9,5 +9,7 @@ namespace ESFA.DC.ESF.FundingData.Database.EF.Interfaces
         IQueryable<ESFFundingData> ESFFundingDatas { get; }
 
         IQueryable<LatestProviderSubmission> LatestProviderSubmissions { get; }
+
+        IQueryable<ESFFundingDataSummarised> ESFFundingDatasSummarised { get; }
     }
 }

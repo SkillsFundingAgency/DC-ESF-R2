@@ -13,10 +13,11 @@ namespace ESFA.DC.ESF.FundingData.Database.EF
         {
         }
 
-        public virtual DbSet<ESFFundingData> ESFFundingDatas { get; set; }
-        public virtual DbSet<LatestProviderSubmission> LatestProviderSubmissions { get; set; }
-        public virtual DbQuery<ESFFundingData> vw_ESFFundingDatas { get; set; }
-        public virtual DbQuery<LatestProviderSubmission> vw_LatestProviderSubmissions { get; set; }
+        public virtual DbSet<Entity.ESFFundingData> ESFFundingDatas { get; set; }
+        public virtual DbSet<Entity.LatestProviderSubmission> LatestProviderSubmissions { get; set; }
+        public virtual DbQuery<Query.ESFFundingData> vw_ESFFundingDatas { get; set; }
+        public virtual DbQuery<Query.LatestProviderSubmission> vw_LatestProviderSubmissions { get; set; }
+        public virtual DbQuery<ESFFundingDataSummarised> vw_ESFFundingDataSummarised { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -31,7 +32,7 @@ namespace ESFA.DC.ESF.FundingData.Database.EF
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.3-servicing-35854");
 
-            modelBuilder.Entity<ESFFundingData>(entity =>
+            modelBuilder.Entity<Entity.ESFFundingData>(entity =>
             {
                 entity.HasKey(e => new { e.AcademicYear, e.AttributeName, e.UKPRN, e.CollectionType, e.CollectionReturnCode, e.LearnRefNumber, e.AimSeqNumber, e.ConRefNumber, e.DeliverableCode });
 
@@ -90,7 +91,7 @@ namespace ESFA.DC.ESF.FundingData.Database.EF
                 entity.Property(e => e.Period_9).HasColumnType("decimal(15, 5)");
             });
 
-            modelBuilder.Entity<LatestProviderSubmission>(entity =>
+            modelBuilder.Entity<Entity.LatestProviderSubmission>(entity =>
             {
                 entity.HasKey(e => new { e.UKPRN, e.CollectionType, e.CollectionReturnCode });
 
@@ -105,8 +106,9 @@ namespace ESFA.DC.ESF.FundingData.Database.EF
                     .IsUnicode(false);
             });
 
-            modelBuilder.Query<ESFFundingData>().ToView("ESFFundingData", "dbo");
-            modelBuilder.Query<LatestProviderSubmission>().ToView("LatestProviderSubmissions","dbo");
+            modelBuilder.Query<Query.ESFFundingData>().ToView("ESFFundingData", "dbo");
+            modelBuilder.Query<Query.LatestProviderSubmission>().ToView("LatestProviderSubmissions","dbo");
+            modelBuilder.Query<ESFFundingDataSummarised>().ToView("ESFFundingDataSummarised", "dbo");
         }
     }
 }
