@@ -115,6 +115,7 @@
     <Build Include="Security\User_RW.sql" />
     <None Include="z.ExtendedProperties.sql" />
     <Build Include="dbo\Stored Procedures\usp_DisplayDeploymentProperties.sql" />
+    <Build Include="dbo\Views\ESFFundingDataSummarised.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="zzDeploymentProfiles\zz.Local.Dev.Version.publish.xml" />
