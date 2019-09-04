@@ -23,13 +23,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppDa
 
         protected virtual string DeliverableCode { get; set; }
 
-        protected virtual string ReferenceType { get; set; }
+        protected virtual string CostType { get; set; }
 
-        public bool IsMatch(string deliverableCode, string referenceType = null)
+        public bool IsMatch(string deliverableCode, string costType = null)
         {
-            if (referenceType != null)
+            if (costType != null)
             {
-                return deliverableCode == DeliverableCode && referenceType == ReferenceType;
+                return deliverableCode == DeliverableCode && costType == CostType;
             }
 
             return deliverableCode == DeliverableCode;
@@ -52,10 +52,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppDa
                     var deliverableData = year.SupplementaryData.Where(supp => (supp.CalendarMonth >= EsfStartMonth ?
                         supp.CalendarMonth - EsfFirstYearMonthPadding == i : supp.CalendarMonth + EsfSecondYearMonthPadding == i)
                                            && supp.DeliverableCode == DeliverableCode);
-                    if (ReferenceType != null)
+                    if (CostType != null)
                     {
                         deliverableData =
-                            deliverableData.Where(supp => supp.ReferenceType == ReferenceType);
+                            deliverableData.Where(supp => supp.CostType == CostType);
                     }
 
                     if (ESFConstants.UnitCostDeliverableCodes.Contains(DeliverableCode))

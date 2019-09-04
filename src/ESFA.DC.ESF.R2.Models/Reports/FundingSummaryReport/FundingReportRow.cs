@@ -22,7 +22,7 @@ namespace ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport
 
         public string DeliverableCode { get; set; }
 
-        public string ReferenceType { get; set; }
+        public string CostType { get; set; }
 
         public List<string> AttributeNames { get; set; }
 
