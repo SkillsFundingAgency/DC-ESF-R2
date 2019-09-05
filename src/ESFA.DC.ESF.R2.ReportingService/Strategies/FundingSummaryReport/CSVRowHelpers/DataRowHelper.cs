@@ -53,9 +53,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRow
             {
                 foreach (var strategy in _esfStrategies)
                 {
-                    if (row.ReferenceType != null)
+                    if (row.CostType != null)
                     {
-                        if (!strategy.IsMatch(row.DeliverableCode, row.ReferenceType))
+                        if (!strategy.IsMatch(row.DeliverableCode, row.CostType))
                         {
                             continue;
                         }

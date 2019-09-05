@@ -21,7 +21,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             new FundingReportRow { CodeBase = "ILR", DeliverableCode = "RQ01", RowType = RowType.Data, Title = "ILR RQ01 Regulated Learning - Start Funding (£)", AttributeNames = new List<string> { "StartEarnings" } },
             new FundingReportRow { CodeBase = "ILR", DeliverableCode = "RQ01", RowType = RowType.Data, Title = "ILR RQ01 Regulated Learning - Achievement Funding (£)", AttributeNames = new List<string> { "AchievementEarnings" } },
             new FundingReportRow { CodeBase = "ILR", DeliverableCode = "RQ01", RowType = RowType.Total, Title = "ILR Total RQ01 Regulated Learning (£)" },
-            new FundingReportRow { CodeBase = "ESF", DeliverableCode = "RQ01", RowType = RowType.Data, Title = "SUPPDATA RQ01 Regulated Learning Authorised Claims (£)", ReferenceType = "Authorised Claims" },
+            new FundingReportRow { CodeBase = "ESF", DeliverableCode = "RQ01", RowType = RowType.Data, Title = "SUPPDATA RQ01 Regulated Learning Authorised Claims (£)", CostType = "Authorised Claims" },
             new FundingReportRow { DeliverableCode = "RQ01", RowType = RowType.Total, Title = "Total Regulated Learning (£)" },
             new FundingReportRow { RowType = RowType.Spacer },
 
@@ -29,7 +29,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             new FundingReportRow { CodeBase = "ILR", DeliverableCode = "NR01", RowType = RowType.Data, Title = "ILR NR01 Non Regulated Activity - Start Funding (£)", AttributeNames = new List<string> { "StartEarnings" } },
             new FundingReportRow { CodeBase = "ILR", DeliverableCode = "NR01", RowType = RowType.Data, Title = "ILR NR01 Non Regulated Activity - Achievement Funding (£)", AttributeNames = new List<string> { "AchievementEarnings" } },
             new FundingReportRow { CodeBase = "ILR", DeliverableCode = "NR01", RowType = RowType.Total, Title = "ILR Total NR01 Non Regulated Activity (£)" },
-            new FundingReportRow { CodeBase = "ESF", DeliverableCode = "NR01", RowType = RowType.Data, Title = "SUPPDATA NR01 Non Regulated Activity Authorised Claims (£)", ReferenceType = "Authorised Claims" },
+            new FundingReportRow { CodeBase = "ESF", DeliverableCode = "NR01", RowType = RowType.Data, Title = "SUPPDATA NR01 Non Regulated Activity Authorised Claims (£)", CostType = "Authorised Claims" },
             new FundingReportRow { DeliverableCode = "NR01", RowType = RowType.Total, Title = "Total Non Regulated Activity (£)" },
             new FundingReportRow { RowType = RowType.Spacer },
 

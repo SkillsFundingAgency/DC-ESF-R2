@@ -12,6 +12,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppDa
 
         protected override string DeliverableCode => "RQ01";
 
-        protected override string ReferenceType => "Authorised Claims";
+        protected override string CostType => "Authorised Claims";
     }
 }
