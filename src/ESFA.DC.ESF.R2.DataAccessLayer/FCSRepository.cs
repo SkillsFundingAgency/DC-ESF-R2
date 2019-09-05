@@ -92,6 +92,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                                              && ca.PeriodTypeCode == ESFPeriodTypeCode
                                              && ca.StartDate >= ESFR2ContractStartDate)
                                 .Select(ca => ca.ContractAllocationNumber)
+                                .OrderBy(ca => ca)
                                 .ToListAsync(cancellationToken);
             }
         }
