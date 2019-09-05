@@ -23,4 +23,15 @@ GRANT
 	VIEW DEFINITION 
 ON SCHEMA::[Current]
 	TO [DataProcessing];
+
+GO
+GRANT 
+	DELETE, 
+	EXECUTE, 
+	INSERT, 
+	SELECT, 
+	UPDATE, 
+	VIEW DEFINITION 
+ON SCHEMA::[Import]
+	TO [DataProcessing];
 GO
