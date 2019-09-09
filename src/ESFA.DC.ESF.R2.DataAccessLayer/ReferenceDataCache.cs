@@ -243,10 +243,10 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             return larsLearningDeliveries;
         }
 
-        public void PopulateLarsLearningDeliveries(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken)
+        public async Task PopulateLarsLearningDeliveries(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken)
         {
             var larsLearningDeliveries =
-                _referenceDataRepository.GetLarsLearningDelivery(learnAimRefs, cancellationToken);
+                await _referenceDataRepository.GetLarsLearningDelivery(learnAimRefs, cancellationToken);
 
             if (larsLearningDeliveries == null)
             {

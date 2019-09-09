@@ -109,7 +109,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
 
             var learnAimRefs = validLearners.Select(ld => ld.Value.LearnAimRef).ToList();
 
-            var larsDeliveries = _referenceDataService.GetLarsLearningDelivery(learnAimRefs)
+            var larsDeliveries = (await _referenceDataService.GetLarsLearningDelivery(learnAimRefs, cancellationToken))
                 .ToDictionary(t => t.LearnAimRef, t => t, StringComparer.OrdinalIgnoreCase);
 
             foreach (var fm70Delivery in fm70LearningDeliveries)
@@ -194,12 +194,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                         periodReportedForDeliverable = true;
                         reportData.Add(model);
                     }
-                }
 
-                if (!periodReportedForDeliverable)
-                {
-                    var model = GetAimAndDeliverableModel(learningDelivery, fm70Delivery, larsDelivery, outcome, fm70Outcome, fam, learnerMonitorings, deliveryMonitorings);
-                    reportData.Add(model);
+                    if (!periodReportedForDeliverable)
+                    {
+                        var model = GetAimAndDeliverableModel(learningDelivery, fm70Delivery, larsDelivery, outcome, fm70Outcome, fam, learnerMonitorings, deliveryMonitorings, deliverable, null, fcsMapping, null);
+                        reportData.Add(model);
+                    }
                 }
             }
 

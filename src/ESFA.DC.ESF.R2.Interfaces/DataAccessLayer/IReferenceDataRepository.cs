@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
@@ -16,6 +17,6 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
 
         IEnumerable<long> GetUlnLookup(IEnumerable<long?> searchUlns, CancellationToken cancellationToken);
 
-        IDictionary<string, LarsLearningDeliveryModel> GetLarsLearningDelivery(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken);
+        Task<IDictionary<string, LarsLearningDeliveryModel>> GetLarsLearningDelivery(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken);
     }
 }

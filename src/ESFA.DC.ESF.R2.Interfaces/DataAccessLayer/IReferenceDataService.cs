@@ -37,7 +37,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
             IEnumerable<string> deliverableCodes,
             CancellationToken cancellationToken);
 
-        IEnumerable<LarsLearningDeliveryModel> GetLarsLearningDelivery(IEnumerable<string> learnAimRefs);
+        Task<IEnumerable<LarsLearningDeliveryModel>> GetLarsLearningDelivery(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken);
 
         Task<IEnumerable<string>> GetContractAllocationsForUkprn(int ukprn, CancellationToken cancellationToken);
     }
