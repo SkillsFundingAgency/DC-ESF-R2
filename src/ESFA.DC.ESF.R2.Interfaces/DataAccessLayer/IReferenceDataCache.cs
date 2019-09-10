@@ -48,7 +48,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
             string conRefNum,
             IList<string> deliverableCodes);
 
-        void PopulateLarsLearningDeliveries(IEnumerable<string> uncached, CancellationToken cancellationToken);
+        Task PopulateLarsLearningDeliveries(IEnumerable<string> uncached, CancellationToken cancellationToken);
 
         LarsLearningDeliveryModel GetLarsLearningDelivery(string learnAimRef);
 

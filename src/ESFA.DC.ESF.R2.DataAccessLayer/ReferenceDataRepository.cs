@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ReferenceData.LARS.Model.Interface;
@@ -70,36 +72,33 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             return version;
         }
 
-        public IDictionary<string, LarsLearningDeliveryModel> GetLarsLearningDelivery(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken)
+        public async Task<IDictionary<string, LarsLearningDeliveryModel>> GetLarsLearningDelivery(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken)
         {
             var learningDeliveries = new Dictionary<string, LarsLearningDeliveryModel>();
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            lock (_larsDeliveryLock)
+            using (var context = _larsContext.Invoke())
             {
-                using (var context = _larsContext())
-                {
-                    var deliveries = context.LARS_LearningDeliveries
-                        .Where(x => learnAimRefs.Contains(x.LearnAimRef))
-                        .Select(x => new LarsLearningDeliveryModel
-                        {
-                            LearnAimRef = x.LearnAimRef,
-                            LearningDeliveryGenre = x.LearningDeliveryGenre,
-                            LearnAimRefTitle = x.LearnAimRefTitle,
-                            NotionalNVQLevelv2 = x.NotionalNvqlevelv2,
-                            SectorSubjectAreaTier2 = x.SectorSubjectAreaTier2,
-                            ValidityPeriods = x.LarsValidities.Select(lv => new LarsValidityPeriod
-                            {
-                                ValidityStartDate = lv.StartDate,
-                                ValidityEndDate = lv.EndDate
-                            })
-                        });
-
-                    foreach (var delivery in deliveries)
+                var deliveries = await context.LARS_LearningDeliveries
+                    .Where(x => learnAimRefs.Contains(x.LearnAimRef))
+                    .Select(x => new LarsLearningDeliveryModel
                     {
-                        learningDeliveries.Add(delivery.LearnAimRef, delivery);
-                    }
+                        LearnAimRef = x.LearnAimRef,
+                        LearningDeliveryGenre = x.LearningDeliveryGenre,
+                        LearnAimRefTitle = x.LearnAimRefTitle,
+                        NotionalNVQLevelv2 = x.NotionalNvqlevelv2,
+                        SectorSubjectAreaTier2 = x.SectorSubjectAreaTier2,
+                        ValidityPeriods = x.LarsValidities.Select(lv => new LarsValidityPeriod
+                        {
+                            ValidityStartDate = lv.StartDate,
+                            ValidityEndDate = lv.EndDate
+                        })
+                    }).ToListAsync(cancellationToken);
+
+                foreach (var delivery in deliveries)
+                {
+                    learningDeliveries.Add(delivery.LearnAimRef, delivery);
                 }
             }
 
