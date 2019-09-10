@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,6 +9,7 @@ using ESFA.DC.ReferenceData.LARS.Model.Interface;
 using ESFA.DC.ReferenceData.Organisations.Model.Interface;
 using ESFA.DC.ReferenceData.Postcodes.Model.Interface;
 using ESFA.DC.ReferenceData.ULN.Model.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace ESFA.DC.ESF.R2.DataAccessLayer
 {
