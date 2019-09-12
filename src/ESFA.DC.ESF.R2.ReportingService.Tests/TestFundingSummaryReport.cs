@@ -92,8 +92,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
 
             IEnumerable<FM70PeriodisedValuesYearly> periodisedValues = new List<FM70PeriodisedValuesYearly>();
             var ilrMock = new Mock<IILRService>();
-            ilrMock.Setup(m => m.GetYearlyIlrData(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(periodisedValues);
+            ilrMock.Setup(m => m.GetYearlyIlrData(10005752, "ILR1819", 1819, It.IsAny<string>(), It.IsAny<CancellationToken>())).ReturnsAsync(periodisedValues);
+
             ilrMock.Setup(m => m.GetIlrFileDetails(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(GetTestFileDetail());
 
@@ -220,8 +220,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             };
 
             var ilrMock = new Mock<IILRService>();
-            ilrMock.Setup(m => m.GetYearlyIlrData(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            ilrMock.Setup(m => m.GetYearlyIlrData(10005752, "ILR1819", 2018, It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(periodisedValues);
+
             ilrMock.Setup(m => m.GetIlrFileDetails(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(GetTestFileDetail());
 

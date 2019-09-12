@@ -48,7 +48,8 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
                 case "ESFSection":
                     return (T)(object)new ESFConfiguration
                     {
-                        ESFR2ConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;"
+                        ESFR2ConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;",
+                        ESFFundingConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;"
                     };
                 case "FCSSection":
                     return (T)(object)new FCSConfiguration

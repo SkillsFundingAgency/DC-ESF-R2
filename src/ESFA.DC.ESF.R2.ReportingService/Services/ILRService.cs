@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
+using ESFA.DC.ILR.DataService.ILR1819EF.Rulebase;
 using ESFA.DC.ILR.DataService.Interfaces.Services;
 using ESFA.DC.ILR.DataService.Models;
 
@@ -12,13 +13,19 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
     {
         private readonly IFm70DataService _fm70DataService;
         private readonly IFileDetailsDataService _fileDetailsDataService;
+        private readonly IESFFundingService _esfFundingService;
+        private readonly IReturnPeriodLookup _returnPeriodLookup;
 
         public ILRService(
             IFm70DataService fm70DataService,
-            IFileDetailsDataService fileDetailsDataService)
+            IFileDetailsDataService fileDetailsDataService,
+            IESFFundingService esfFundingService,
+            IReturnPeriodLookup returnPeriodLookup)
         {
             _fm70DataService = fm70DataService;
             _fileDetailsDataService = fileDetailsDataService;
+            _esfFundingService = esfFundingService;
+            _returnPeriodLookup = returnPeriodLookup;
         }
 
         public async Task<IEnumerable<ILRFileDetails>> GetIlrFileDetails(int ukPrn, int collectionYear, CancellationToken cancellationToken)
@@ -36,6 +43,29 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             IEnumerable<FM70PeriodisedValues> ilrData = await _fm70DataService.GetPeriodisedValuesAllYears(ukPrn, cancellationToken, true);
 
             var fm70YearlyData = GroupFm70DataIntoYears(endYear, ilrData);
+
+            return fm70YearlyData;
+        }
+
+        public async Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrData(int ukprn, string collectionName, int collectionYear, string collectionReturnCode, CancellationToken cancellationToken)
+        {
+            IEnumerable<FM70PeriodisedValues> ilrData;
+            if (collectionName == Constants.ILR1819)
+            {
+                ilrData = await _esfFundingService.GetLatestFundingDataForProvider(ukprn, collectionYear, collectionName, collectionReturnCode, cancellationToken);
+            }
+            else
+            {
+                var previousYearReturnPeriod = _returnPeriodLookup.GetReturnPeriodForPreviousCollectionYear(collectionReturnCode);
+
+                var fm701819Data = await _esfFundingService.GetLatestFundingDataForProvider(ukprn, collectionYear - 1, Constants.ILR1819, previousYearReturnPeriod, cancellationToken);
+
+                var fm701920Data = await _esfFundingService.GetLatestFundingDataForProvider(ukprn, collectionYear, collectionName, collectionReturnCode, cancellationToken);
+
+                ilrData = fm701819Data.Concat(fm701920Data);
+            }
+
+            var fm70YearlyData = GroupFm70DataIntoYears(collectionYear, ilrData);
 
             return fm70YearlyData;
         }

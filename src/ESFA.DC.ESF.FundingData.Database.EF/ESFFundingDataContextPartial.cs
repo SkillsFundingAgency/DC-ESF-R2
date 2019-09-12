@@ -8,8 +8,8 @@ namespace ESFA.DC.ESF.FundingData.Database.EF
     {
         IQueryable<ESFFundingDataSummarised> IESFFundingDataContext.ESFFundingDatasSummarised => vw_ESFFundingDataSummarised;
 
-        IQueryable<ESFFundingData> IESFFundingDataContext.ESFFundingDatas => vw_ESFFundingDatas;
+        IQueryable<Query.ESFFundingData> IESFFundingDataContext.ESFFundingDatas => vw_ESFFundingDatas;
 
-        IQueryable<LatestProviderSubmission> IESFFundingDataContext.LatestProviderSubmissions => vw_LatestProviderSubmissions;
+        IQueryable<Query.LatestProviderSubmission> IESFFundingDataContext.LatestProviderSubmissions => vw_LatestProviderSubmissions;
     }
 }

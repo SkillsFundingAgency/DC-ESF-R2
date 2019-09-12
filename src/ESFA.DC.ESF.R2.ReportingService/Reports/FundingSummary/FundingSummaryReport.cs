@@ -94,7 +94,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             ZipArchive archive,
             CancellationToken cancellationToken)
         {
-            var ukPrn = Convert.ToInt32(jobContextModel.UkPrn);
+            var ukPrn = jobContextModel.UkPrn;
 
             var conRefNumbers = await _referenceDataService.GetContractAllocationsForUkprn(ukPrn, cancellationToken);
 
@@ -113,7 +113,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 await _supplementaryDataService.GetSupplementaryData(collectionYear, sourceFiles, cancellationToken);
 
             var ilrYearlyFileData = (await _ilrService.GetIlrFileDetails(ukPrn, collectionYear, cancellationToken)).ToList();
-            var fm70YearlyData = (await _ilrService.GetYearlyIlrData(collectionYear, ukPrn, cancellationToken)).ToList();
+            var fm70YearlyData = (await _ilrService.GetYearlyIlrData(ukPrn, jobContextModel.CollectionName, collectionYear, jobContextModel.ReturnPeriod, cancellationToken)).ToList();
 
             var workbook = new Workbook();
             workbook.Worksheets.Clear();

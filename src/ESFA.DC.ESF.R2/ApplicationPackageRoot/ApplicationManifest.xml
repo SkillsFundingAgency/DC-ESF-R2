@@ -18,6 +18,7 @@
     <Parameter Name="ILR1819ConnectionString" DefaultValue="" />
     <Parameter Name="ILR1920ConnectionString" DefaultValue="" />
     <Parameter Name="ESFR2ConnectionString" DefaultValue="" />
+    <Parameter Name="ESFFundingConnectionString" DefaultValue="" />
     <Parameter Name="FCSConnectionString" DefaultValue="" />
     <Parameter Name="LARSConnectionString" DefaultValue="" />
     <Parameter Name="OrganisationConnectionString" DefaultValue="" />
@@ -60,6 +61,7 @@
           </Section>
           <Section Name="ESFSection">
             <Parameter Name="ESFR2ConnectionString" Value="[ESFR2ConnectionString]" />
+            <Parameter Name="ESFFundingConnectionString" Value="[ESFFundingConnectionString]" />
           </Section>
           <Section Name="FCSSection">
             <Parameter Name="FCSConnectionString" Value="[FCSConnectionString]" />
