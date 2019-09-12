@@ -48,9 +48,9 @@ namespace ESFA.DC.ESF.R2.ValidationService.Services
             _cache.PopulateDeliverableUnitCosts(ESFConstants.UnitCostDeliverableCodes, ukPrn, cancellationToken);
         }
 
-        public void PrePopulateLarsLearningDeliveries(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken)
+        public async Task PrePopulateLarsLearningDeliveries(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken)
         {
-            _cache.PopulateLarsLearningDeliveries(learnAimRefs, cancellationToken);
+            await _cache.PopulateLarsLearningDeliveries(learnAimRefs, cancellationToken);
         }
 
         public async Task PrePopulateValidationErrorMessages(CancellationToken cancellationToken)
