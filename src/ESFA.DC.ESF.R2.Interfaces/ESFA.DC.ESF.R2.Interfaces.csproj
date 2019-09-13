@@ -70,7 +70,9 @@
     <Compile Include="Reports\IValidationResultReport.cs" />
     <Compile Include="Reports\Services\IAimAndDeliverableService1920.cs" />
     <Compile Include="Reports\Services\IAimAndDeliverableService1819.cs" />
+    <Compile Include="Reports\Services\IESFFundingService.cs" />
     <Compile Include="Reports\Services\IILRService.cs" />
+    <Compile Include="Reports\Services\IReturnPeriodLookup.cs" />
     <Compile Include="Reports\Services\ISupplementaryDataService.cs" />
     <Compile Include="Reports\Strategies\IILRDataStrategy.cs" />
     <Compile Include="Reports\Strategies\ISupplementaryDataStrategy.cs" />
@@ -102,6 +104,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.ESF.FundingData.Database.EF\ESFA.DC.ESF.FundingData.Database.EF.csproj">
+      <Project>{F77DCDD9-9268-4500-9597-8D39CABA07BE}</Project>
+      <Name>ESFA.DC.ESF.FundingData.Database.EF</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Database.EF\ESFA.DC.ESF.R2.Database.EF.csproj">
       <Project>{fa5d4376-7328-4828-ad72-5a7891600137}</Project>
       <Name>ESFA.DC.ESF.R2.Database.EF</Name>

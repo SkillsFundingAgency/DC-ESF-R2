@@ -19,6 +19,8 @@ namespace ESFA.DC.ESF.R2.Models
 
         public int CurrentPeriod { get; set; }
 
+        public string ReturnPeriod => $"R{CurrentPeriod:D2}";
+
         public int CollectionYear { get; set; }
 
         public string IlrReferenceDataKey { get; set; }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Autofac;
 using ESFA.DC.Auditing.Interface;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.ESF.FundingData.Database.EF;
+using ESFA.DC.ESF.FundingData.Database.EF.Interfaces;
 using ESFA.DC.ESF.R2.DataAccessLayer;
 using ESFA.DC.ESF.R2.DataAccessLayer.Mappers;
 using ESFA.DC.ESF.R2.DataAccessLayer.Services;
@@ -156,6 +158,15 @@ namespace ESFA.DC.ESF.R2.Stateless
                 return new ESFR2Context(options);
             }).As<IESFR2Context>();
             containerBuilder.RegisterInstance(esfConfig).As<ESFConfiguration>().SingleInstance();
+
+            containerBuilder.Register(c =>
+            {
+                var options = new DbContextOptionsBuilder<ESFFundingDataContext>()
+                    .UseSqlServer(esfConfig.ESFFundingConnectionString)
+                    .Options;
+
+                return new ESFFundingDataContext(options);
+            }).As<IESFFundingDataContext>();
 
             var fcsConfig = configHelper.GetSectionValues<FCSConfiguration>("FCSSection");
 
@@ -342,6 +353,9 @@ namespace ESFA.DC.ESF.R2.Stateless
 
             containerBuilder.RegisterType<AimAndDeliverableService1819>().As<IAimAndDeliverableService1819>();
             containerBuilder.RegisterType<AimAndDeliverableService1920>().As<IAimAndDeliverableService1920>();
+
+            containerBuilder.RegisterType<ESFFundingService>().As<IESFFundingService>();
+            containerBuilder.RegisterType<ReturnPeriodLookup>().As<IReturnPeriodLookup>();
         }
 
         private static void RegisterControllers(ContainerBuilder containerBuilder)

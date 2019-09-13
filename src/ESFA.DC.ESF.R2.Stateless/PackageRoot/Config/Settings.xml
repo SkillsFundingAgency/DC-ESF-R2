@@ -28,6 +28,7 @@
   </Section>
   <Section Name="ESFSection">
     <Parameter Name="ESFR2ConnectionString" Value="" />
+    <Parameter Name="ESFFundingConnectionString" Value="" />
   </Section>
   <Section Name="FCSSection">
     <Parameter Name="FCSConnectionString" Value="" />
