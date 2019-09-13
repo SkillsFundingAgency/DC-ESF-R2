@@ -33,7 +33,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             return await _esfFundingDataContext
                 .ESFFundingDatas.Where(fd =>
                     fd.CollectionType == collectionType &&
-                    fd.UKPRN == ukprn & fd.CollectionReturnCode == returnCode)
+                    fd.UKPRN == ukprn && fd.CollectionReturnCode == returnCode)
                 .Select(fd => new FM70PeriodisedValues
                 {
                     UKPRN = fd.UKPRN,
