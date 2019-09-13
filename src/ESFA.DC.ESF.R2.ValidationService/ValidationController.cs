@@ -124,7 +124,7 @@ namespace ESFA.DC.ESF.R2.ValidationService
             _populationService.PrePopulateContractDeliverableCodeMappings(deliverableCodes, cancellationToken);
 
             var learnAimRefs = wrapper.SupplementaryDataModels.Select(m => m.LearnAimRef).ToList();
-            _populationService.PrePopulateLarsLearningDeliveries(learnAimRefs, cancellationToken);
+            await _populationService.PrePopulateLarsLearningDeliveries(learnAimRefs, cancellationToken);
 
             await _populationService.PrePopulateValidationErrorMessages(cancellationToken);
         }
