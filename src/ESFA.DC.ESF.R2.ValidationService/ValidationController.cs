@@ -118,7 +118,7 @@ namespace ESFA.DC.ESF.R2.ValidationService
             var ukPrn = Convert.ToInt32(sourceFile.UKPRN);
             _populationService.PrePopulateContractAllocations(ukPrn, wrapper.SupplementaryDataModels, cancellationToken);
 
-            _populationService.PrePopulateContractDeliverableUnitCosts(ukPrn, cancellationToken);
+            await _populationService.PrePopulateContractDeliverableUnitCosts(ukPrn, cancellationToken);
 
             var deliverableCodes = wrapper.SupplementaryDataModels.Select(m => m.DeliverableCode).ToList();
             _populationService.PrePopulateContractDeliverableCodeMappings(deliverableCodes, cancellationToken);
