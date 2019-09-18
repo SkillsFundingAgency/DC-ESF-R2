@@ -26,6 +26,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                     fd.UKPRN == ukprn &&
                     fd.CollectionType == collectionType)
                 .Select(fd => fd.CollectionReturnCode)
+                .DefaultIfEmpty()
                 .Distinct()
                 .Where(cr => string.Compare(cr, collectionReturnCode, StringComparison.OrdinalIgnoreCase) <= 0)
                 .MaxAsync(fd => fd, cancellationToken);
