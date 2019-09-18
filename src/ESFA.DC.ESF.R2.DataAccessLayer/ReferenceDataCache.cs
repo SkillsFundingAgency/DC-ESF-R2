@@ -190,7 +190,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             int ukPrn,
             CancellationToken cancellationToken)
         {
-            var contractRefNumbersForProvider = await _esfRepository.GetContractsForProvider(ukPrn.ToString(), cancellationToken);
+            var contractRefNumbersForProvider = await _fcsRepository.GetContractAllocationsForUkprn(ukPrn, cancellationToken);
 
             foreach (var conRefNum in contractRefNumbersForProvider)
             {

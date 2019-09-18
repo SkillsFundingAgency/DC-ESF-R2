@@ -11,7 +11,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.Validation
 
         void PrePopulateContractAllocations(int ukPrn, IList<SupplementaryDataModel> models, CancellationToken cancellationToken);
 
-        void PrePopulateContractDeliverableUnitCosts(int ukPrn, CancellationToken cancellationToken);
+        Task PrePopulateContractDeliverableUnitCosts(int ukPrn, CancellationToken cancellationToken);
 
         void PrePopulateContractDeliverableCodeMappings(
             IEnumerable<string> deliverableCodes,
