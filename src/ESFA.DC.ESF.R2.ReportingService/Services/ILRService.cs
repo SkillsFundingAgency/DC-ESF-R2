@@ -60,7 +60,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
 
                 var fm701819Data = await _esfFundingService.GetLatestFundingDataForProvider(ukprn, collectionYear - 1, Constants.ILR1819, previousYearReturnPeriod, cancellationToken);
 
-                var fm701920Data = await _esfFundingService.GetLatestFundingDataForProvider(ukprn, collectionYear, collectionName, collectionReturnCode, cancellationToken);
+                var fm701920Data = await _esfFundingService.GetLatestFundingDataForProvider(ukprn, collectionYear, Constants.ILR1920, collectionReturnCode, cancellationToken);
 
                 ilrData = fm701819Data.Concat(fm701920Data);
             }
