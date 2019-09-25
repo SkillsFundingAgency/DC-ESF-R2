@@ -19,22 +19,30 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             _esfFundingDataContext = esfFundingDataContext;
         }
 
-        public async Task<IEnumerable<FM70PeriodisedValues>> GetLatestFundingDataForProvider(int ukprn, int collectionYear, string collectionType, string collectionReturnCode, CancellationToken cancellationToken)
+        public async Task<string> GetLatestReturnCodeSubmittedForProvider(int ukprn, string collectionType, string collectionReturnCode, CancellationToken cancellationToken)
         {
-            var returnCode = await _esfFundingDataContext
+            int.TryParse(collectionReturnCode.Substring(1), out var returnPeriod);
+
+            var returnPeriods = await _esfFundingDataContext
                 .ESFFundingDatas.Where(fd =>
                     fd.UKPRN == ukprn &&
                     fd.CollectionType == collectionType)
                 .Select(fd => fd.CollectionReturnCode)
-                .DefaultIfEmpty()
                 .Distinct()
-                .Where(cr => string.Compare(cr, collectionReturnCode, StringComparison.OrdinalIgnoreCase) <= 0)
-                .MaxAsync(fd => fd, cancellationToken);
+                .ToListAsync(cancellationToken);
 
+            return returnPeriods
+                ?.Where(cr => int.Parse(cr.Substring(1)) <= returnPeriod)
+                .Max(fd => fd);
+        }
+
+        public async Task<IEnumerable<FM70PeriodisedValues>> GetLatestFundingDataForProvider(int ukprn, int collectionYear, string collectionType, string collectionReturnCode, CancellationToken cancellationToken)
+        {
             return await _esfFundingDataContext
                 .ESFFundingDatas.Where(fd =>
+                    fd.UKPRN == ukprn &&
                     fd.CollectionType == collectionType &&
-                    fd.UKPRN == ukprn && fd.CollectionReturnCode == returnCode)
+                    fd.CollectionReturnCode == collectionReturnCode)
                 .Select(fd => new FM70PeriodisedValues
                 {
                     UKPRN = fd.UKPRN,

@@ -8,6 +8,9 @@ namespace ESFA.DC.ESF.R2.Interfaces.Reports.Services
 {
     public interface IESFFundingService
     {
+        Task<string> GetLatestReturnCodeSubmittedForProvider(int ukprn, string collectionType,
+            string collectionReturnCode, CancellationToken cancellationToken);
+
         Task<IEnumerable<FM70PeriodisedValues>> GetLatestFundingDataForProvider(int ukprn, int collectionYear,
             string collectionType, string collectionReturnCode, CancellationToken cancellationToken);
     }
