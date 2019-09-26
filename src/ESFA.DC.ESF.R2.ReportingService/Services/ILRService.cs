@@ -3,9 +3,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
-using ESFA.DC.ILR.DataService.ILR1819EF.Rulebase;
 using ESFA.DC.ILR.DataService.Interfaces.Services;
 using ESFA.DC.ILR.DataService.Models;
+using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Services
 {
@@ -15,17 +15,20 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
         private readonly IFileDetailsDataService _fileDetailsDataService;
         private readonly IESFFundingService _esfFundingService;
         private readonly IReturnPeriodLookup _returnPeriodLookup;
+        private readonly ILogger _logger;
 
         public ILRService(
             IFm70DataService fm70DataService,
             IFileDetailsDataService fileDetailsDataService,
             IESFFundingService esfFundingService,
-            IReturnPeriodLookup returnPeriodLookup)
+            IReturnPeriodLookup returnPeriodLookup,
+            ILogger logger)
         {
             _fm70DataService = fm70DataService;
             _fileDetailsDataService = fileDetailsDataService;
             _esfFundingService = esfFundingService;
             _returnPeriodLookup = returnPeriodLookup;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<ILRFileDetails>> GetIlrFileDetails(int ukPrn, int collectionYear, CancellationToken cancellationToken)
@@ -33,18 +36,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             var round2Flag = collectionYear >= 2019;
             IEnumerable<ILRFileDetails> ilrFileData = (await _fileDetailsDataService.GetFileDetailsForUkPrnAllYears(ukPrn, cancellationToken, round2Flag)).ToList();
             return ilrFileData;
-        }
-
-        public async Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrData(
-            int endYear,
-            int ukPrn,
-            CancellationToken cancellationToken)
-        {
-            IEnumerable<FM70PeriodisedValues> ilrData = await _fm70DataService.GetPeriodisedValuesAllYears(ukPrn, cancellationToken, true);
-
-            var fm70YearlyData = GroupFm70DataIntoYears(endYear, ilrData);
-
-            return fm70YearlyData;
         }
 
         public async Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrData(int ukprn, string collectionName, int collectionYear, string collectionReturnCode, CancellationToken cancellationToken)
@@ -58,9 +49,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             {
                 var previousYearReturnPeriod = _returnPeriodLookup.GetReturnPeriodForPreviousCollectionYear(collectionReturnCode);
 
-                var fm701819Data = await _esfFundingService.GetLatestFundingDataForProvider(ukprn, collectionYear - 1, Constants.ILR1819, previousYearReturnPeriod, cancellationToken);
+                var fm701819Data = await GetAcademicYearIlrData(ukprn, collectionYear - 1, Constants.ILR1819, previousYearReturnPeriod, cancellationToken);
 
-                var fm701920Data = await _esfFundingService.GetLatestFundingDataForProvider(ukprn, collectionYear, Constants.ILR1920, collectionReturnCode, cancellationToken);
+                var fm701920Data = await GetAcademicYearIlrData(ukprn, collectionYear, Constants.ILR1920, collectionReturnCode, cancellationToken);
 
                 ilrData = fm701819Data.Concat(fm701920Data);
             }
@@ -68,6 +59,24 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             var fm70YearlyData = GroupFm70DataIntoYears(collectionYear, ilrData);
 
             return fm70YearlyData;
+        }
+
+        private async Task<IEnumerable<FM70PeriodisedValues>> GetAcademicYearIlrData(int ukprn, int collectionYear, string collectionType, string currentReturnCode, CancellationToken cancellationToken)
+        {
+            _logger.LogInfo($"Retrieving Latest return code for UKPRN {ukprn} for {collectionType}");
+            var returnCode = await _esfFundingService.GetLatestReturnCodeSubmittedForProvider(ukprn, collectionType, currentReturnCode, cancellationToken);
+
+            if (returnCode != null)
+            {
+                _logger.LogInfo($"ReturnCode {returnCode} found for UKPRN {ukprn} for {collectionType}");
+                var providerData = await _esfFundingService.GetLatestFundingDataForProvider(ukprn, collectionYear, collectionType, returnCode, cancellationToken);
+                _logger.LogInfo($"Retrieved provider data for UKPRN {ukprn} for {collectionType}");
+
+                return providerData;
+            }
+
+            _logger.LogInfo($"No Return code found for UKPRN {ukprn} for {collectionType}");
+            return Enumerable.Empty<FM70PeriodisedValues>();
         }
 
         private IEnumerable<FM70PeriodisedValuesYearly> GroupFm70DataIntoYears(

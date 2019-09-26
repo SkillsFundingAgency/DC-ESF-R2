@@ -34,3 +34,8 @@
 		[DeliverableCode]
 	)
 )
+
+GO
+
+
+CREATE INDEX [IX_ESFFundingData_UKPRN_CollectionType_CollectionReturnCode] ON [Import].[ESFFundingData] ([UKPRN] ASC, [CollectionType] ASC, [CollectionReturnCode] ASC)
