@@ -162,7 +162,9 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.Register(c =>
             {
                 var options = new DbContextOptionsBuilder<ESFFundingDataContext>()
-                    .UseSqlServer(esfConfig.ESFFundingConnectionString)
+                    .UseSqlServer(
+                        esfConfig.ESFFundingConnectionString,
+                        providerOptions => providerOptions.CommandTimeout(300))
                     .Options;
 
                 return new ESFFundingDataContext(options);
