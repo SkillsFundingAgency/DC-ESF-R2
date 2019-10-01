@@ -107,7 +107,7 @@ namespace ESFA.DC.ESF.FundingData.Database.EF
             });
 
             modelBuilder.Query<Query.ESFFundingData>().ToView("ESFFundingData", "dbo");
-            modelBuilder.Query<Query.LatestProviderSubmission>().ToView("LatestProviderSubmissions","dbo");
+            modelBuilder.Query<Query.LatestProviderSubmission>().ToView("LatestProviderSubmission","dbo");
             modelBuilder.Query<ESFFundingDataSummarised>().ToView("ESFFundingDataSummarised", "dbo");
         }
     }
