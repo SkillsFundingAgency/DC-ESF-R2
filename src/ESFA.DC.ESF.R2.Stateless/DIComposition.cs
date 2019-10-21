@@ -480,6 +480,7 @@ namespace ESFA.DC.ESF.R2.Stateless
             containerBuilder.RegisterType<DeliverableCodeRule02>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ProviderSpecifiedReferenceRule01>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ReferenceRule01>().As<IBusinessRuleValidator>();
+            containerBuilder.RegisterType<ReferenceRule03>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ReferenceTypeRule01>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ReferenceTypeRule02>().As<IBusinessRuleValidator>();
             containerBuilder.RegisterType<ULNRule01>().As<IBusinessRuleValidator>();
