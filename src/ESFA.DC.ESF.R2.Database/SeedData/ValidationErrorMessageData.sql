@@ -25,6 +25,7 @@
 					UNION ALL SELECT 'LearnAimRef_06' AS RuleName, 'LearnAimRef must be a non-regulated aim on LARS for the selected DeliverableCode.' AS ErrorMessage
 					UNION ALL SELECT 'ProviderSpecifiedReference_01' AS RuleName, 'The ProviderSpecifiedReference contains invalid characters.' AS ErrorMessage
 					UNION ALL SELECT 'Reference_01' AS RuleName, 'The Reference contains invalid characters.' AS ErrorMessage
+					UNION ALL SELECT 'Reference_03' AS RuleName, 'The Reference contains invalid characters for ReferenceType LearnRefNumber. It should only contain A-Z, a-z, 0-9, Space.' AS ErrorMessage
 					UNION ALL SELECT 'ReferenceType_01' AS RuleName, 'The ReferenceType is not valid.' AS ErrorMessage
 					UNION ALL SELECT 'ReferenceType_02' AS RuleName, 'The ReferenceType is not valid for the selected CostType. Please refer to the ESF Supplementary Data supporting documentation for further information.' AS ErrorMessage
 					UNION ALL SELECT 'SupplementaryDataPanelDate_01' AS RuleName, 'The SupplementaryDataPanelDate cannot be in the future.' AS ErrorMessage

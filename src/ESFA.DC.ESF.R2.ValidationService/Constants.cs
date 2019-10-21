@@ -1,4 +1,6 @@
-﻿namespace ESFA.DC.ESF.R2.ValidationService
+﻿using System.Text.RegularExpressions;
+
+namespace ESFA.DC.ESF.R2.ValidationService
 {
     public static class Constants
     {
@@ -36,5 +38,7 @@
         public const string LarsLearningDeliveryGenre_EQQ = "EQQ";
         public const string LarsLearningDeliveryGenre_EOU = "EOU";
         public const string LarsLearningDeliveryGenre_IHE = "IHE";
+
+        public static Regex ReferenceRule03Regex = new Regex(@"^[A-Z,a-z,0-9,\s]*$", RegexOptions.Compiled);
     }
 }

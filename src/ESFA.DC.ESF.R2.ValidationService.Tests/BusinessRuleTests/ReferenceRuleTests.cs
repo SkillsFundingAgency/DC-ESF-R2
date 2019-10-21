@@ -68,6 +68,51 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
         [Fact]
         [Trait("Category", "ValidationService")]
+        public void ReferenceRule03CatchesRegexViolations()
+        {
+            var model = new SupplementaryDataModel
+            {
+                Reference = @"Aa0 .,;:~!”@#$&’()/+-<=>[]{}^£€",
+                ReferenceType = "LearnRefNumber"
+            };
+
+            var rule = new ReferenceRule03(_messageServiceMock.Object);
+
+            Assert.False(rule.IsValid(model));
+        }
+
+        [Fact]
+        [Trait("Category", "ValidationService")]
+        public void ReferenceRule03IgnoresIrrelevantReferenceTypes()
+        {
+            var model = new SupplementaryDataModel
+            {
+                Reference = @"Aa0 .,;:~!”@#$&’()/+-<=>[]{}^£€",
+                ReferenceType = "NotLearnRefNumber"
+            };
+
+            var rule = new ReferenceRule03(_messageServiceMock.Object);
+
+            Assert.True(rule.IsValid(model));
+        }
+
+        [Fact]
+        [Trait("Category", "ValidationService")]
+        public void ReferenceRule03PassesValidReferences()
+        {
+            var model = new SupplementaryDataModel
+            {
+                Reference = @"Aa0 Zz9 ",
+                ReferenceType = "LearnRefNumber"
+            };
+
+            var rule = new ReferenceRule03(_messageServiceMock.Object);
+
+            Assert.True(rule.IsValid(model));
+        }
+
+        [Fact]
+        [Trait("Category", "ValidationService")]
         public void ReferenceTypeRule01CatchesInvalidTypes()
         {
             var model = new SupplementaryDataModel
