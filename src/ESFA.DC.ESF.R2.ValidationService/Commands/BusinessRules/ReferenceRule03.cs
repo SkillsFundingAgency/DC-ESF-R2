@@ -19,7 +19,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
         public bool IsValid(SupplementaryDataModel model)
         {
-            return model.ReferenceType.CaseInsensitiveEquals(Constants.ReferenceType_LearnRefNumber)
+            return !model.ReferenceType.CaseInsensitiveEquals(Constants.ReferenceType_LearnRefNumber)
                    || (string.IsNullOrEmpty(model.Reference) || Constants.ReferenceRule03Regex.IsMatch(model.Reference));
         }
     }
