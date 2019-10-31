@@ -25,7 +25,6 @@ using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.FileService.Interface;
 using ESFA.DC.ILR.DataService.Models;
 using ESFA.DC.Logging.Interfaces;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 {
