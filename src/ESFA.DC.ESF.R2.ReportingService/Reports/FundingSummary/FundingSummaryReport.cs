@@ -126,6 +126,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                     PopulateReportHeader(file, ilrYearlyFileData, ukPrn, conRefNumber, cancellationToken);
 
                 var fm70YearlyDataForConRef = new List<FM70PeriodisedValuesYearly>();
+                var supplementaryDataYearlyModels = new List<SupplementaryDataYearlyModel>();
+                supplementaryData.TryGetValue(conRefNumber, out var suppData);
+
                 foreach (var fm70Data in fm70YearlyData)
                 {
                     var periodisedValuesPerConRef = fm70Data.Fm70PeriodisedValues.Where(x => conRefNumber.CaseInsensitiveEquals(x.ConRefNumber)).ToList();
@@ -134,11 +137,15 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                         Fm70PeriodisedValues = periodisedValuesPerConRef,
                         FundingYear = fm70Data.FundingYear
                     });
+
+                    supplementaryDataYearlyModels.Add(new SupplementaryDataYearlyModel
+                    {
+                        FundingYear = fm70Data.FundingYear,
+                        SupplementaryData = suppData?.FirstOrDefault(x => x.FundingYear == fm70Data.FundingYear)?.SupplementaryData ?? new List<SupplementaryDataModel>()
+                    });
                 }
 
-                supplementaryData.TryGetValue(conRefNumber, out var suppData);
-
-                var fundingSummaryModels = PopulateReportData(collectionYear, fm70YearlyDataForConRef, suppData).ToList();
+                var fundingSummaryModels = PopulateReportData(collectionYear, fm70YearlyDataForConRef, supplementaryDataYearlyModels).ToList();
 
                 ReplaceConRefNumInTitle(fundingSummaryModels, conRefNumber);
 
