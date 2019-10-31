@@ -141,7 +141,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                     supplementaryDataYearlyModels.Add(new SupplementaryDataYearlyModel
                     {
                         FundingYear = fm70Data.FundingYear,
-                        SupplementaryData = suppData?.FirstOrDefault(x => x.FundingYear == fm70Data.FundingYear).SupplementaryData ?? new List<SupplementaryDataModel>()
+                        SupplementaryData = suppData?.FirstOrDefault(x => x.FundingYear == fm70Data.FundingYear)?.SupplementaryData ?? new List<SupplementaryDataModel>()
                     });
                 }
 
