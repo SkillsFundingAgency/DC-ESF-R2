@@ -245,9 +245,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 ukPrnRow.Add($"{model.Year}/{secondYear}");
                 contractReferenceNumberRow.Add(model.FileName.Substring(model.FileName.Contains("/") ? model.FileName.IndexOf("/", StringComparison.Ordinal) + 1 : 0));
                 contractReferenceNumberRow.Add(null);
-                supplementaryDataFileRow.Add(model.LastSubmission?.ToString("dd/MM/yyyy hh:mm:ss"));
+                supplementaryDataFileRow.Add(preparationDate);
                 supplementaryDataFileRow.Add(null);
-                lastSupplementaryDataFileUpdateRow.Add(sourceFile?.PreparationDate.ToString("dd/MM/yyyy hh:mm:ss") ?? preparationDate);
+                lastSupplementaryDataFileUpdateRow.Add(model.LastSubmission?.ToString("dd/MM/yyyy hh:mm:ss"));
                 lastSupplementaryDataFileUpdateRow.Add(null);
             }
 
