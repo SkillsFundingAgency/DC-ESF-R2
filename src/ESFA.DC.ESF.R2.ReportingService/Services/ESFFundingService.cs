@@ -26,10 +26,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             using (var esfFundingDataContext = _esfFundingDataContextFunc.Invoke())
             {
                 var returnPeriods = await esfFundingDataContext
-                    .ESFFundingDatas.Where(fd =>
-                        fd.UKPRN == ukprn &&
-                        fd.CollectionType == collectionType)
-                    .Select(fd => fd.CollectionReturnCode)
+                    .LatestProviderSubmissions.Where(ps =>
+                        ps.UKPRN == ukprn &&
+                        ps.CollectionType == collectionType)
+                    .Select(ps => ps.CollectionReturnCode)
                     .Distinct()
                     .ToListAsync(cancellationToken);
 
