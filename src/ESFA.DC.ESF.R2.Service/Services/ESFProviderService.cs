@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -51,6 +52,7 @@ namespace ESFA.DC.ESF.R2.Service.Services
                     {
                         csvReader.Configuration.RegisterClassMap(new ESFMapper());
                         csvReader.Configuration.TrimOptions = TrimOptions.Trim;
+                        csvReader.Configuration.MissingFieldFound = null;
                         model = csvReader.GetRecords<SupplementaryDataLooseModel>().ToList();
                     }
                 }
