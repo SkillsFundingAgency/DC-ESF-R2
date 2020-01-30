@@ -51,6 +51,7 @@ namespace ESFA.DC.ESF.R2.Service.Services
                     {
                         csvReader.Configuration.RegisterClassMap(new ESFMapper());
                         csvReader.Configuration.TrimOptions = TrimOptions.Trim;
+                        csvReader.Configuration.MissingFieldFound = null;
                         model = csvReader.GetRecords<SupplementaryDataLooseModel>().ToList();
                     }
                 }
