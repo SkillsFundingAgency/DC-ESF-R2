@@ -12,6 +12,8 @@
 
         public string[] LastSupplementaryDataFileUpdate { get; set; }
 
-        public string SecurityClassification => "OFFICIAL-SENSITIVE";
+        public string[] SecurityClassification { get; set; }
+
+        //public string SecurityClassification => "OFFICIAL-SENSITIVE";
     }
 }
