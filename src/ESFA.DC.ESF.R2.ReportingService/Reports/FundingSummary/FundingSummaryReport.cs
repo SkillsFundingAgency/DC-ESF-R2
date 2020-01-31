@@ -235,6 +235,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 new List<string> { sourceFile?.FileName?.Contains("/") ?? false ? sourceFile.FileName.Substring(sourceFile.FileName.IndexOf("/", StringComparison.Ordinal) + 1) : sourceFile?.FileName, null, null, "Last ILR File Update :" };
             var lastSupplementaryDataFileUpdateRow =
                 new List<string> { sourceFile?.SuppliedDate?.ToString("dd/MM/yyyy hh:mm:ss"), null, null, "File Preparation Date :" };
+            var securityClassificationRow =
+                new List<string> { "OFFICIAL-SENSITIVE", null, null, null };
 
             foreach (var model in fileData)
             {
@@ -249,6 +251,14 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 supplementaryDataFileRow.Add(null);
                 lastSupplementaryDataFileUpdateRow.Add(model.LastSubmission?.ToString("dd/MM/yyyy hh:mm:ss"));
                 lastSupplementaryDataFileUpdateRow.Add(null);
+
+                if (model.Equals(fileData.Last()))
+                {
+                    continue;
+                }
+
+                securityClassificationRow.Add("(most recent closed collection for year)");
+                securityClassificationRow.Add(null);
             }
 
             var header = new FundingSummaryHeaderModel
@@ -257,7 +267,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 Ukprn = ukPrnRow.ToArray(),
                 ContractReferenceNumber = contractReferenceNumberRow.ToArray(),
                 SupplementaryDataFile = supplementaryDataFileRow.ToArray(),
-                LastSupplementaryDataFileUpdate = lastSupplementaryDataFileUpdateRow.ToArray()
+                LastSupplementaryDataFileUpdate = lastSupplementaryDataFileUpdateRow.ToArray(),
+                SecurityClassification = securityClassificationRow.ToArray()
             };
 
             return header;
