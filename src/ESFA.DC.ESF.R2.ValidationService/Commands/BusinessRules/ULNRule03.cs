@@ -29,7 +29,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
         public bool IsValid(SupplementaryDataModel model)
         {
             var now = _dateTimeProvider.ConvertUtcToUk(_dateTimeProvider.GetNowUtc());
-            var twoMonthsAgo = new DateTime(now.Year, now.Month, 1).AddMonths(-2);
+            var twoMonthsAgo = _monthYearHelper.GetFirstOfCalendarMonthDateTime(now.Year, now.Month).AddMonths(-2);
 
             return
                 (model.ULN ?? 0) != 9999999999 ||
