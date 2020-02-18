@@ -348,6 +348,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                     _fundingSummaryMapper.MemberMaps.Single(x => x.Data.Index == 0).Name(fundingSummaryModel.Title);
                     _cachedHeaders[0] = fundingSummaryModel.Title;
 
+                    ////this line is the month/year header
                     WriteRecordsFromArray(sheet, _fundingSummaryMapper, _cachedHeaders, excelHeaderStyle);
                     continue;
                 }
@@ -358,6 +359,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 excelRecordStyle.Style.HorizontalAlignment = TextAlignmentType.Right;
                 excelRecordStyle.StyleFlag.HorizontalAlignment = true;
 
+                // this line is subtotals below the month/year header
                 WriteExcelRecordsFromModelProperty(sheet, _fundingSummaryMapper, _cachedModelProperties, fundingSummaryModel, excelRecordStyle);
             }
 
@@ -403,6 +405,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 else
                 {
                     values.Add(cachedModelProperty.Names[0]);
+                    var b = cachedModelProperty.Names;
                 }
             }
 
