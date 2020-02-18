@@ -280,6 +280,10 @@ namespace ESFA.DC.ESF.R2.ReportingService
         {
             int currentRow = GetCurrentRow(worksheet);
 
+            var total = 16;
+
+            _dateTimeProvider.GetNowUtc();
+
             int column = 0;
             if (pivot)
             {
@@ -299,6 +303,13 @@ namespace ESFA.DC.ESF.R2.ReportingService
                 worksheet.Cells.CreateRange(currentRow, column, pivot ? values.Count : 1, pivot ? 1 : values.Count).ApplyStyle(recordStyle.Style, recordStyle.StyleFlag);
             }
 
+            recordStyle.Style.Font.IsItalic = true;
+            var startInt = StartItaliciedMonths();
+            var endInt = 17 - startInt;
+
+            worksheet.Cells.CreateRange(currentRow, startInt, 1, endInt).ApplyStyle(recordStyle.Style, recordStyle.StyleFlag);
+            recordStyle.Style.Font.IsItalic = false;
+
             if (pivot)
             {
                 currentRow += values.Count;
@@ -309,6 +320,38 @@ namespace ESFA.DC.ESF.R2.ReportingService
             }
 
             SetCurrentRow(worksheet, currentRow);
+        }
+
+        protected int StartItaliciedMonths()
+        {
+            var dictionary = new Dictionary<int, Dictionary<int, int>>();
+            var today = _dateTimeProvider.GetNowUtc();
+
+            dictionary.Add(2019, new Dictionary<int, int>()
+            {
+                { 4, 2 },
+                { 5, 3 },
+                { 6, 4 },
+                { 7, 5 },
+                { 8, 6 },
+                { 9, 7 },
+                { 10, 8 },
+                { 11, 9 },
+                { 12, 10 }
+            });
+
+            dictionary.Add(2020, new Dictionary<int, int>
+            {
+                { 1, 11 },
+                { 2, 12 },
+                { 3, 13 },
+                { 4, 14 },
+                { 5, 15 },
+                { 6, 16 },
+                { 7, 17 }
+            });
+
+            return dictionary[today.Year][today.Month];
         }
 
         /// <summary>
