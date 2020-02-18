@@ -1,4 +1,5 @@
-﻿using ESFA.DC.DateTimeProvider.Interface;
+﻿using System;
+using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
@@ -27,7 +28,8 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
         public bool IsValid(SupplementaryDataModel model)
         {
-            var twoMonthsAgo = _dateTimeProvider.ConvertUtcToUk(_dateTimeProvider.GetNowUtc()).AddMonths(-2);
+            var now = _dateTimeProvider.ConvertUtcToUk(_dateTimeProvider.GetNowUtc());
+            var twoMonthsAgo = new DateTime(now.Year, now.Month, 1).AddMonths(-2);
 
             return
                 (model.ULN ?? 0) != 9999999999 ||
