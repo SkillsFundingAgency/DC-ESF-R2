@@ -33,7 +33,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
             return
                 (model.ULN ?? 0) != 9999999999 ||
-                _monthYearHelper.GetCalendarDateTime(model.CalendarYear, model.CalendarMonth) > twoMonthsAgo;
+                _monthYearHelper.GetFirstOfCalendarMonthDateTime(model.CalendarYear, model.CalendarMonth) > twoMonthsAgo;
         }
     }
 }

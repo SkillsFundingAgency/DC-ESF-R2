@@ -19,7 +19,7 @@
         {
             var monthYearHelper = new MonthYearHelper();
 
-            var getDate = monthYearHelper.GetCalendarDateTime(calendarYear, calendarMonth);
+            var getDate = monthYearHelper.GetFirstOfCalendarMonthDateTime(calendarYear, calendarMonth);
 
             getDate.Should().Be(1.February(2020).At(23, 59, 59));
         }
@@ -31,7 +31,7 @@
         {
             var monthYearHelper = new MonthYearHelper();
 
-            var getDate = monthYearHelper.GetCalendarDateTime(calendarYear, calendarMonth);
+            var getDate = monthYearHelper.GetFirstOfCalendarMonthDateTime(calendarYear, calendarMonth);
 
             getDate.Should().Be(1.January(0001));
         }
@@ -43,7 +43,7 @@
         {
             var monthYearHelper = new MonthYearHelper();
 
-            var getDate = monthYearHelper.GetCalendarDateTime(calendarYear, calendarMonth);
+            var getDate = monthYearHelper.GetFirstOfCalendarMonthDateTime(calendarYear, calendarMonth);
 
             getDate.Should().Be(1.January(0001));
         }

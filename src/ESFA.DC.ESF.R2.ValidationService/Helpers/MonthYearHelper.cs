@@ -6,7 +6,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Helpers
 {
     public class MonthYearHelper : IMonthYearHelper
     {
-        public DateTime GetCalendarDateTime(int? calendarYear, int? calendarMonth)
+        public DateTime GetFirstOfCalendarMonthDateTime(int? calendarYear, int? calendarMonth)
         {
             if (calendarYear == null || calendarMonth == null || calendarMonth < 1 || calendarMonth > 12)
             {

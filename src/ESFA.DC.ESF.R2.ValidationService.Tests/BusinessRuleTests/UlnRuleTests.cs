@@ -71,7 +71,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var monthYearHelperMock = new Mock<IMonthYearHelper>();
             monthYearHelperMock
-                .Setup(m => m.GetCalendarDateTime(date.Year, date.Month))
+                .Setup(m => m.GetFirstOfCalendarMonthDateTime(date.Year, date.Month))
                 .Returns(new DateTime(date.Year, date.Month, 1));
 
             var model = new SupplementaryDataModel
@@ -100,7 +100,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
 
             var monthYearHelperMock = new Mock<IMonthYearHelper>();
             monthYearHelperMock
-                .Setup(m => m.GetCalendarDateTime(date.Year, date.Month))
+                .Setup(m => m.GetFirstOfCalendarMonthDateTime(date.Year, date.Month))
                 .Returns(date);
 
             var model = new SupplementaryDataModel
