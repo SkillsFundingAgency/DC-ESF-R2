@@ -6,21 +6,14 @@ namespace ESFA.DC.ESF.R2.ValidationService.Helpers
 {
     public class MonthYearHelper : IMonthYearHelper
     {
-        private readonly IDateTimeProvider _dateTimeProvider;
-
-        public MonthYearHelper(IDateTimeProvider dateTimeProvider)
-        {
-            _dateTimeProvider = dateTimeProvider;
-        }
-
-        public DateTime GetCalendarDateTime(int? calendarYear, int? calendarMonth)
+        public DateTime GetFirstOfCalendarMonthDateTime(int? calendarYear, int? calendarMonth)
         {
             if (calendarYear == null || calendarMonth == null || calendarMonth < 1 || calendarMonth > 12)
             {
                 return DateTime.MinValue;
             }
 
-            return new DateTime(calendarYear.Value, calendarMonth.Value, _dateTimeProvider.ConvertUtcToUk(_dateTimeProvider.GetNowUtc()).Day, 23, 59, 59);
+            return new DateTime(calendarYear.Value, calendarMonth.Value, 1, 23, 59, 59);
         }
     }
 }

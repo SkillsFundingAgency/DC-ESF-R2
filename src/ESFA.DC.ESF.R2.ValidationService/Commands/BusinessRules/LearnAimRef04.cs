@@ -40,7 +40,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
                 return true;
             }
 
-            var monthYearDate = _monthYearHelper.GetCalendarDateTime(model.CalendarYear, model.CalendarMonth);
+            var monthYearDate = _monthYearHelper.GetFirstOfCalendarMonthDateTime(model.CalendarYear, model.CalendarMonth);
 
             return larsLearningDelivery.ValidityPeriods
                 .Any(validityPeriod => (validityPeriod.ValidityStartDate ?? DateTime.MaxValue) <= monthYearDate &&
