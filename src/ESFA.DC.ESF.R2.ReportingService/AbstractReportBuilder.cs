@@ -304,7 +304,38 @@ namespace ESFA.DC.ESF.R2.ReportingService
             }
 
             recordStyle.Style.Font.IsItalic = true;
-            var startInt = StartItaliciedMonths();
+
+            // using implicit logic to pair months with their respective columns
+            var monthColumnPairs = new Dictionary<int, Dictionary<int, int>>()
+            {
+                { 2019, new Dictionary<int, int>()
+                    {
+                        { 4, 2 },
+                        { 5, 3 },
+                        { 6, 4 },
+                        { 7, 5 },
+                        { 8, 6 },
+                        { 9, 7 },
+                        { 10, 8 },
+                        { 11, 9 },
+                        { 12, 10 }
+                    }
+                },
+                {
+                    2020, new Dictionary<int, int>()
+                    {
+                        { 1, 11 },
+                        { 2, 12 },
+                        { 3, 13 },
+                        { 4, 14 },
+                        { 5, 15 },
+                        { 6, 16 },
+                        { 7, 17 }
+                    }
+                }
+            };
+
+            var startInt = GetFutureColumns(monthColumnPairs);
             var endInt = 17 - startInt;
 
             worksheet.Cells.CreateRange(currentRow, startInt, 1, endInt).ApplyStyle(recordStyle.Style, recordStyle.StyleFlag);
@@ -322,36 +353,11 @@ namespace ESFA.DC.ESF.R2.ReportingService
             SetCurrentRow(worksheet, currentRow);
         }
 
-        protected int StartItaliciedMonths()
+        protected int GetFutureColumns(Dictionary<int, Dictionary<int, int>> monthColumnPairs)
         {
-            var dictionary = new Dictionary<int, Dictionary<int, int>>();
             var today = _dateTimeProvider.GetNowUtc();
 
-            dictionary.Add(2019, new Dictionary<int, int>()
-            {
-                { 4, 2 },
-                { 5, 3 },
-                { 6, 4 },
-                { 7, 5 },
-                { 8, 6 },
-                { 9, 7 },
-                { 10, 8 },
-                { 11, 9 },
-                { 12, 10 }
-            });
-
-            dictionary.Add(2020, new Dictionary<int, int>
-            {
-                { 1, 11 },
-                { 2, 12 },
-                { 3, 13 },
-                { 4, 14 },
-                { 5, 15 },
-                { 6, 16 },
-                { 7, 17 }
-            });
-
-            return dictionary[today.Year][today.Month];
+            return monthColumnPairs[today.Year][today.Month];
         }
 
         /// <summary>
