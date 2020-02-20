@@ -256,7 +256,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
 
             headerStyle.Style.Font.IsItalic = true;
             var total = 17;
-            var startInt = GetFutureColumns(monthColumnPairs);
+            var startInt = GetFirstFutureColumn(monthColumnPairs);
             var endInt = total - startInt;
 
             worksheet.Cells.CreateRange(currentRow, startInt, 1, endInt).ApplyStyle(headerStyle.Style, headerStyle.StyleFlag);
@@ -309,7 +309,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
 
             recordStyle.Style.Font.IsItalic = true;
             var total = 17;
-            var startInt = GetFutureColumns(monthColumnPairs);
+            var startInt = GetFirstFutureColumn(monthColumnPairs);
             var endInt = total - startInt;
 
             worksheet.Cells.CreateRange(currentRow, startInt, 1, endInt).ApplyStyle(recordStyle.Style, recordStyle.StyleFlag);
@@ -327,7 +327,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
             SetCurrentRow(worksheet, currentRow);
         }
 
-        protected int GetFutureColumns(Dictionary<int, Dictionary<int, int>> monthColumnPairs)
+        protected int GetFirstFutureColumn(Dictionary<int, Dictionary<int, int>> monthColumnPairs)
         {
             // using implicit logic to pair months with their respective columns
 
