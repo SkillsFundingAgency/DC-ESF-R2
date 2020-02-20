@@ -243,7 +243,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
             WriteRecordsFromClassMap(worksheet, classMap, names, headerStyle, pivot);
         }
 
-        protected void WriteRecordsFromArray<TMapper>(Worksheet worksheet, TMapper classMap, object[] names, CellStyle headerStyle, bool pivot = false)
+        protected void WriteRecordsFromArray<TMapper>(Worksheet worksheet, TMapper classMap, object[] names, CellStyle headerStyle, Dictionary<int, Dictionary<int, int>> monthColumnPairs, bool pivot = false)
             where TMapper : ClassMap
         {
             int currentRow = GetCurrentRow(worksheet);
@@ -256,7 +256,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
 
             headerStyle.Style.Font.IsItalic = true;
             var total = 17;
-            var startInt = GetFutureColumns();
+            var startInt = GetFutureColumns(monthColumnPairs);
             var endInt = total - startInt;
 
             worksheet.Cells.CreateRange(currentRow, startInt, 1, endInt).ApplyStyle(headerStyle.Style, headerStyle.StyleFlag);
@@ -279,10 +279,10 @@ namespace ESFA.DC.ESF.R2.ReportingService
             where TModel : class
         {
             ModelProperty[] names = classMap.MemberMaps.OrderBy(x => x.Data.Index).Select(x => new ModelProperty(x.Data.Names.Names.ToArray(), (PropertyInfo)x.Data.Member)).ToArray();
-            WriteExcelRecordsFromModelProperty(worksheet, classMap, names, record, recordStyle, pivot);
+            WriteExcelRecordsFromModelProperty(worksheet, classMap, names, record, recordStyle, null, pivot);
         }
 
-        protected void WriteExcelRecordsFromModelProperty<TMapper, TModel>(Worksheet worksheet, TMapper classMap, ModelProperty[] modelProperties, TModel record, CellStyle recordStyle, bool pivot = false)
+        protected void WriteExcelRecordsFromModelProperty<TMapper, TModel>(Worksheet worksheet, TMapper classMap, ModelProperty[] modelProperties, TModel record, CellStyle recordStyle, Dictionary<int, Dictionary<int, int>> monthColumnPairs, bool pivot = false)
             where TMapper : ClassMap
             where TModel : class
         {
@@ -311,7 +311,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
 
             recordStyle.Style.Font.IsItalic = true;
             var total = 17;
-            var startInt = GetFutureColumns();
+            var startInt = GetFutureColumns(monthColumnPairs);
             var endInt = total - startInt;
 
             worksheet.Cells.CreateRange(currentRow, startInt, 1, endInt).ApplyStyle(recordStyle.Style, recordStyle.StyleFlag);
@@ -329,38 +329,10 @@ namespace ESFA.DC.ESF.R2.ReportingService
             SetCurrentRow(worksheet, currentRow);
         }
 
-        protected int GetFutureColumns()
+        protected int GetFutureColumns(Dictionary<int, Dictionary<int, int>> monthColumnPairs)
         {
             // using implicit logic to pair months with their respective columns
-            var monthColumnPairs = new Dictionary<int, Dictionary<int, int>>()
-            {
-                // using implicit logic to pair months with their respective columns
-                { 2019, new Dictionary<int, int>()
-                    {
-                        { 4, 2 },
-                        { 5, 3 },
-                        { 6, 4 },
-                        { 7, 5 },
-                        { 8, 6 },
-                        { 9, 7 },
-                        { 10, 8 },
-                        { 11, 9 },
-                        { 12, 10 }
-                    }
-                },
-                {
-                    2020, new Dictionary<int, int>()
-                    {
-                        { 1, 11 },
-                        { 2, 12 },
-                        { 3, 13 },
-                        { 4, 14 },
-                        { 5, 15 },
-                        { 6, 16 },
-                        { 7, 17 }
-                    }
-                }
-            };
+
             var today = _dateTimeProvider.GetNowUtc();
 
             return monthColumnPairs[today.Year][today.Month];
