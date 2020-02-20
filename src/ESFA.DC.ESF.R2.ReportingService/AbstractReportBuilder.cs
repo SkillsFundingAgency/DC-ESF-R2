@@ -254,6 +254,14 @@ namespace ESFA.DC.ESF.R2.ReportingService
                 worksheet.Cells.CreateRange(currentRow, 0, pivot ? names.Length : 1, pivot ? 1 : names.Length).ApplyStyle(headerStyle.Style, headerStyle.StyleFlag);
             }
 
+            headerStyle.Style.Font.IsItalic = true;
+            var total = 17;
+            var startInt = GetFutureColumns();
+            var endInt = total - startInt;
+
+            worksheet.Cells.CreateRange(currentRow, startInt, 1, endInt).ApplyStyle(headerStyle.Style, headerStyle.StyleFlag);
+            headerStyle.Style.Font.IsItalic = false;
+
             if (pivot)
             {
                 currentRow += names.Length;
@@ -280,8 +288,6 @@ namespace ESFA.DC.ESF.R2.ReportingService
         {
             int currentRow = GetCurrentRow(worksheet);
 
-            var total = 16;
-
             _dateTimeProvider.GetNowUtc();
 
             int column = 0;
@@ -304,10 +310,31 @@ namespace ESFA.DC.ESF.R2.ReportingService
             }
 
             recordStyle.Style.Font.IsItalic = true;
+            var total = 17;
+            var startInt = GetFutureColumns();
+            var endInt = total - startInt;
 
+            worksheet.Cells.CreateRange(currentRow, startInt, 1, endInt).ApplyStyle(recordStyle.Style, recordStyle.StyleFlag);
+            recordStyle.Style.Font.IsItalic = false;
+
+            if (pivot)
+            {
+                currentRow += values.Count;
+            }
+            else
+            {
+                currentRow++;
+            }
+
+            SetCurrentRow(worksheet, currentRow);
+        }
+
+        protected int GetFutureColumns()
+        {
             // using implicit logic to pair months with their respective columns
             var monthColumnPairs = new Dictionary<int, Dictionary<int, int>>()
             {
+                // using implicit logic to pair months with their respective columns
                 { 2019, new Dictionary<int, int>()
                     {
                         { 4, 2 },
@@ -334,27 +361,6 @@ namespace ESFA.DC.ESF.R2.ReportingService
                     }
                 }
             };
-
-            var startInt = GetFutureColumns(monthColumnPairs);
-            var endInt = 17 - startInt;
-
-            worksheet.Cells.CreateRange(currentRow, startInt, 1, endInt).ApplyStyle(recordStyle.Style, recordStyle.StyleFlag);
-            recordStyle.Style.Font.IsItalic = false;
-
-            if (pivot)
-            {
-                currentRow += values.Count;
-            }
-            else
-            {
-                currentRow++;
-            }
-
-            SetCurrentRow(worksheet, currentRow);
-        }
-
-        protected int GetFutureColumns(Dictionary<int, Dictionary<int, int>> monthColumnPairs)
-        {
             var today = _dateTimeProvider.GetNowUtc();
 
             return monthColumnPairs[today.Year][today.Month];
