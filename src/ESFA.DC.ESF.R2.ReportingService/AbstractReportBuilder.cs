@@ -288,8 +288,6 @@ namespace ESFA.DC.ESF.R2.ReportingService
         {
             int currentRow = GetCurrentRow(worksheet);
 
-            _dateTimeProvider.GetNowUtc();
-
             int column = 0;
             if (pivot)
             {
