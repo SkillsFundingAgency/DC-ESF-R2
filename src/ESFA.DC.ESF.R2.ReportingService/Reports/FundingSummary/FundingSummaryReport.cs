@@ -322,6 +322,36 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             IEnumerable<FundingSummaryModel> fundingSummaryModels,
             FundingSummaryFooterModel fundingSummaryFooterModel)
         {
+            var monthColumnPairs = new Dictionary<int, Dictionary<int, int>>()
+            {
+                // using implicit logic to pair months with their respective columns
+                { 2019, new Dictionary<int, int>()
+                    {
+                        { 4, 2 },
+                        { 5, 3 },
+                        { 6, 4 },
+                        { 7, 5 },
+                        { 8, 6 },
+                        { 9, 7 },
+                        { 10, 8 },
+                        { 11, 9 },
+                        { 12, 10 }
+                    }
+                },
+                {
+                    2020, new Dictionary<int, int>()
+                    {
+                        { 1, 11 },
+                        { 2, 12 },
+                        { 3, 13 },
+                        { 4, 14 },
+                        { 5, 15 },
+                        { 6, 16 },
+                        { 7, 17 }
+                    }
+                }
+            };
+
             WriteExcelRecords(sheet, new FundingSummaryHeaderMapper(), new List<FundingSummaryHeaderModel> { fundingSummaryHeaderModel }, _cellStyles[7], _cellStyles[7], true);
             foreach (var fundingSummaryModel in fundingSummaryModels)
             {
@@ -349,7 +379,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                     _cachedHeaders[0] = fundingSummaryModel.Title;
 
                     ////this line is the month/year header
-                    WriteRecordsFromArray(sheet, _fundingSummaryMapper, _cachedHeaders, excelHeaderStyle);
+                    WriteRecordsFromArray(sheet, _fundingSummaryMapper, _cachedHeaders, excelHeaderStyle, monthColumnPairs);
                     continue;
                 }
 
@@ -360,7 +390,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 excelRecordStyle.StyleFlag.HorizontalAlignment = true;
 
                 // this line is subtotals below the month/year header
-                WriteExcelRecordsFromModelProperty(sheet, _fundingSummaryMapper, _cachedModelProperties, fundingSummaryModel, excelRecordStyle);
+                WriteExcelRecordsFromModelProperty(sheet, _fundingSummaryMapper, _cachedModelProperties, fundingSummaryModel, excelRecordStyle, monthColumnPairs);
             }
 
             for (int i = 0; i < workbook.Worksheets.Count; i++)
