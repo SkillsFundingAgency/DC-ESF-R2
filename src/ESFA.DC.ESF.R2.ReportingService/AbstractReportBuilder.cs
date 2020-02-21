@@ -297,7 +297,6 @@ namespace ESFA.DC.ESF.R2.ReportingService
             if (recordStyle != null)
             {
                 worksheet.Cells.CreateRange(currentRow, column, pivot ? values.Count : 1, pivot ? 1 : values.Count).ApplyStyle(recordStyle.Style, recordStyle.StyleFlag);
-                ItaliciseFutureData(sheet);
             }
 
             if (pivot)

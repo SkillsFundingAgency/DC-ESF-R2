@@ -146,11 +146,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
 
             Style styleItalacise = workbook.CreateStyle();            // 9
             styleItalacise.Font.IsItalic = true;
-            // sectionStyle.SetCustom(Constants.FundingSummaryReportNumberFormat, true);
+            styleItalacise.Font.Size = 100;
 
             var styleItalaciseStyleFlag = new StyleFlag
             {
-                FontItalic = true
+                FontItalic = true,
+                FontSize = true
             };
             cellStyles.Add(new CellStyle(styleItalacise, styleItalaciseStyleFlag));
 

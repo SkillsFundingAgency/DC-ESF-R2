@@ -177,6 +177,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 AddImageToReport(sheet);
 
                 workbook = GetWorkbookReport(workbook, sheet, fundingSummaryHeaderModel, fundingSummaryModels, fundingSummaryFooterModel);
+
+                try
+                {
+                    ItaliciseFutureData(sheet);
+                }
+                catch { };
             }
 
             string externalFileName = GetExternalFilename(ukPrn.ToString(), jobContextModel.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
@@ -351,6 +357,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
                         ////this line is the month/year header
                         WriteRecordsFromArray(sheet, _fundingSummaryMapper, _cachedHeaders, excelHeaderStyle);
+                        ItaliciseFutureData(sheet);
                         continue;
                     }
 
@@ -362,12 +369,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
                     // this line is subtotals below the month/year header
                     WriteExcelRecordsFromModelProperty(sheet, _fundingSummaryMapper, _cachedModelProperties, fundingSummaryModel, excelRecordStyle);
-                    //try
-                    //{
-                    //    ItaliciseFutureData(sheet);
-                    //}
-                    //catch { Exception ex; }
-                }
+                 }
 
                 for (int i = 0; i < workbook.Worksheets.Count; i++)
                 {
@@ -531,7 +533,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             var currentRow = GetCurrentRow(sheet);
             if (firstColumn > 0)
             {
-                sheet.Cells.CreateRange(currentRow, firstColumn, true).ApplyStyle(_cellStyles[9].Style, _cellStyles[9].StyleFlag);
+                sheet.Cells.CreateRange(currentRow, firstColumn, 20, 10).ApplyStyle(_cellStyles[9].Style, _cellStyles[9].StyleFlag);
             }
         }
     }
