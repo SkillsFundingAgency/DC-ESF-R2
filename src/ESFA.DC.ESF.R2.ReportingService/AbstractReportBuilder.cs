@@ -243,7 +243,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
             WriteRecordsFromClassMap(worksheet, classMap, names, headerStyle, pivot);
         }
 
-        protected void WriteRecordsFromArray<TMapper>(Worksheet worksheet, TMapper classMap, object[] names, CellStyle headerStyle, Dictionary<int, Dictionary<int, int>> monthColumnPairs, bool pivot = false)
+        protected void WriteRecordsFromArray<TMapper>(Worksheet worksheet, TMapper classMap, object[] names, CellStyle headerStyle, bool pivot = false)
             where TMapper : ClassMap
         {
             int currentRow = GetCurrentRow(worksheet);
@@ -253,14 +253,6 @@ namespace ESFA.DC.ESF.R2.ReportingService
             {
                 worksheet.Cells.CreateRange(currentRow, 0, pivot ? names.Length : 1, pivot ? 1 : names.Length).ApplyStyle(headerStyle.Style, headerStyle.StyleFlag);
             }
-
-            headerStyle.Style.Font.IsItalic = true;
-            var total = 17;
-            var startInt = GetFirstFutureColumn(monthColumnPairs);
-            var endInt = total - startInt;
-
-            worksheet.Cells.CreateRange(currentRow, startInt, 1, endInt).ApplyStyle(headerStyle.Style, headerStyle.StyleFlag);
-            headerStyle.Style.Font.IsItalic = false;
 
             if (pivot)
             {
@@ -279,10 +271,10 @@ namespace ESFA.DC.ESF.R2.ReportingService
             where TModel : class
         {
             ModelProperty[] names = classMap.MemberMaps.OrderBy(x => x.Data.Index).Select(x => new ModelProperty(x.Data.Names.Names.ToArray(), (PropertyInfo)x.Data.Member)).ToArray();
-            WriteExcelRecordsFromModelProperty(worksheet, classMap, names, record, recordStyle, null, pivot);
+            WriteExcelRecordsFromModelProperty(worksheet, classMap, names, record, recordStyle, pivot);
         }
 
-        protected void WriteExcelRecordsFromModelProperty<TMapper, TModel>(Worksheet worksheet, TMapper classMap, ModelProperty[] modelProperties, TModel record, CellStyle recordStyle, Dictionary<int, Dictionary<int, int>> monthColumnPairs, bool pivot = false)
+        protected void WriteExcelRecordsFromModelProperty<TMapper, TModel>(Worksheet worksheet, TMapper classMap, ModelProperty[] modelProperties, TModel record, CellStyle recordStyle, bool pivot = false)
             where TMapper : ClassMap
             where TModel : class
         {
@@ -305,15 +297,8 @@ namespace ESFA.DC.ESF.R2.ReportingService
             if (recordStyle != null)
             {
                 worksheet.Cells.CreateRange(currentRow, column, pivot ? values.Count : 1, pivot ? 1 : values.Count).ApplyStyle(recordStyle.Style, recordStyle.StyleFlag);
+                ItaliciseFutureData(sheet);
             }
-
-            recordStyle.Style.Font.IsItalic = true;
-            var total = 17;
-            var startInt = GetFirstFutureColumn(monthColumnPairs);
-            var endInt = total - startInt;
-
-            worksheet.Cells.CreateRange(currentRow, startInt, 1, endInt).ApplyStyle(recordStyle.Style, recordStyle.StyleFlag);
-            recordStyle.Style.Font.IsItalic = false;
 
             if (pivot)
             {
@@ -325,15 +310,6 @@ namespace ESFA.DC.ESF.R2.ReportingService
             }
 
             SetCurrentRow(worksheet, currentRow);
-        }
-
-        protected int GetFirstFutureColumn(Dictionary<int, Dictionary<int, int>> monthColumnPairs)
-        {
-            // using implicit logic to pair months with their respective columns
-
-            var today = _dateTimeProvider.GetNowUtc();
-
-            return monthColumnPairs[today.Year][today.Month];
         }
 
         /// <summary>
@@ -412,7 +388,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
             }
         }
 
-        private int GetCurrentRow(Worksheet worksheet)
+        protected int GetCurrentRow(Worksheet worksheet)
         {
             if (!_currentRow.ContainsKey(worksheet))
             {

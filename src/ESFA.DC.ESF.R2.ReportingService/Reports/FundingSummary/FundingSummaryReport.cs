@@ -322,85 +322,62 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             IEnumerable<FundingSummaryModel> fundingSummaryModels,
             FundingSummaryFooterModel fundingSummaryFooterModel)
         {
-            var monthColumnPairs = new Dictionary<int, Dictionary<int, int>>()
             {
-                // using implicit logic to pair months with their respective columns
-                { 2019, new Dictionary<int, int>()
+                WriteExcelRecords(sheet, new FundingSummaryHeaderMapper(), new List<FundingSummaryHeaderModel> { fundingSummaryHeaderModel }, _cellStyles[7], _cellStyles[7], true);
+                foreach (var fundingSummaryModel in fundingSummaryModels)
+                {
+                    if (string.IsNullOrEmpty(fundingSummaryModel.Title))
                     {
-                        { 4, 2 },
-                        { 5, 3 },
-                        { 6, 4 },
-                        { 7, 5 },
-                        { 8, 6 },
-                        { 9, 7 },
-                        { 10, 8 },
-                        { 11, 9 },
-                        { 12, 10 }
+                        WriteBlankRow(sheet);
+                        continue;
                     }
-                },
-                {
-                    2020, new Dictionary<int, int>()
+
+                    CellStyle excelHeaderStyle = _excelStyleProvider.GetCellStyle(_cellStyles, fundingSummaryModel.ExcelHeaderStyle);
+
+                    if (fundingSummaryModel.HeaderType == HeaderType.TitleOnly)
                     {
-                        { 1, 11 },
-                        { 2, 12 },
-                        { 3, 13 },
-                        { 4, 14 },
-                        { 5, 15 },
-                        { 6, 16 },
-                        { 7, 17 }
+                        WriteTitleRecord(sheet, fundingSummaryModel.Title, excelHeaderStyle, _reportWidth);
+                        continue;
                     }
-                }
-            };
 
-            WriteExcelRecords(sheet, new FundingSummaryHeaderMapper(), new List<FundingSummaryHeaderModel> { fundingSummaryHeaderModel }, _cellStyles[7], _cellStyles[7], true);
-            foreach (var fundingSummaryModel in fundingSummaryModels)
-            {
-                if (string.IsNullOrEmpty(fundingSummaryModel.Title))
-                {
-                    WriteBlankRow(sheet);
-                    continue;
-                }
+                    if (fundingSummaryModel.HeaderType == HeaderType.All)
+                    {
+                        // Align data to the Right
+                        excelHeaderStyle.Style.HorizontalAlignment = TextAlignmentType.Right;
+                        excelHeaderStyle.StyleFlag.HorizontalAlignment = true;
 
-                CellStyle excelHeaderStyle = _excelStyleProvider.GetCellStyle(_cellStyles, fundingSummaryModel.ExcelHeaderStyle);
+                        _fundingSummaryMapper.MemberMaps.Single(x => x.Data.Index == 0).Name(fundingSummaryModel.Title);
+                        _cachedHeaders[0] = fundingSummaryModel.Title;
 
-                if (fundingSummaryModel.HeaderType == HeaderType.TitleOnly)
-                {
-                    WriteTitleRecord(sheet, fundingSummaryModel.Title, excelHeaderStyle, _reportWidth);
-                    continue;
-                }
+                        ////this line is the month/year header
+                        WriteRecordsFromArray(sheet, _fundingSummaryMapper, _cachedHeaders, excelHeaderStyle);
+                        continue;
+                    }
 
-                if (fundingSummaryModel.HeaderType == HeaderType.All)
-                {
+                    CellStyle excelRecordStyle = _excelStyleProvider.GetCellStyle(_cellStyles, fundingSummaryModel.ExcelRecordStyle);
+
                     // Align data to the Right
-                    excelHeaderStyle.Style.HorizontalAlignment = TextAlignmentType.Right;
-                    excelHeaderStyle.StyleFlag.HorizontalAlignment = true;
+                    excelRecordStyle.Style.HorizontalAlignment = TextAlignmentType.Right;
+                    excelRecordStyle.StyleFlag.HorizontalAlignment = true;
 
-                    _fundingSummaryMapper.MemberMaps.Single(x => x.Data.Index == 0).Name(fundingSummaryModel.Title);
-                    _cachedHeaders[0] = fundingSummaryModel.Title;
-
-                    ////this line is the month/year header
-                    WriteRecordsFromArray(sheet, _fundingSummaryMapper, _cachedHeaders, excelHeaderStyle, monthColumnPairs);
-                    continue;
+                    // this line is subtotals below the month/year header
+                    WriteExcelRecordsFromModelProperty(sheet, _fundingSummaryMapper, _cachedModelProperties, fundingSummaryModel, excelRecordStyle);
+                    //try
+                    //{
+                    //    ItaliciseFutureData(sheet);
+                    //}
+                    //catch { Exception ex; }
                 }
 
-                CellStyle excelRecordStyle = _excelStyleProvider.GetCellStyle(_cellStyles, fundingSummaryModel.ExcelRecordStyle);
+                for (int i = 0; i < workbook.Worksheets.Count; i++)
+                {
+                    AlignWorkSheetColumnData(workbook.Worksheets[i], 0, TextAlignmentType.Left);
+                }
 
-                // Align data to the Right
-                excelRecordStyle.Style.HorizontalAlignment = TextAlignmentType.Right;
-                excelRecordStyle.StyleFlag.HorizontalAlignment = true;
+                WriteExcelRecords(sheet, new FundingSummaryFooterMapper(), new List<FundingSummaryFooterModel> { fundingSummaryFooterModel }, _cellStyles[7], _cellStyles[7], true);
 
-                // this line is subtotals below the month/year header
-                WriteExcelRecordsFromModelProperty(sheet, _fundingSummaryMapper, _cachedModelProperties, fundingSummaryModel, excelRecordStyle, monthColumnPairs);
+                return workbook;
             }
-
-            for (int i = 0; i < workbook.Worksheets.Count; i++)
-            {
-                AlignWorkSheetColumnData(workbook.Worksheets[i], 0, TextAlignmentType.Left);
-            }
-
-            WriteExcelRecords(sheet, new FundingSummaryFooterMapper(), new List<FundingSummaryFooterModel> { fundingSummaryFooterModel }, _cellStyles[7], _cellStyles[7], true);
-
-            return workbook;
         }
 
         /// <summary>
@@ -534,6 +511,27 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 }
 
                 fundingSummaryModel.Title = fundingSummaryModel.Title.Replace(Constants.ContractReferenceNumberTag, conRefNumber);
+            }
+        }
+
+        private int GetFirstFutureColumn()
+        {
+            // using implicit logic to pair months with their respective columns
+            // var reportStartYear = Constants.StartYear + 1;
+            var reportStartDate = new DateTime(Constants.StartYear + 1, 4, 1);
+            var curentDate = _dateTimeProvider.GetNowUtc();
+
+            var firstFutureColumn = (((curentDate.Year - reportStartDate.Year) * 12) + (curentDate.Month - reportStartDate.Month)) + 3;
+            return firstFutureColumn;
+        }
+
+        private void ItaliciseFutureData(Worksheet sheet)
+        {
+            var firstColumn = GetFirstFutureColumn();
+            var currentRow = GetCurrentRow(sheet);
+            if (firstColumn > 0)
+            {
+                sheet.Cells.CreateRange(currentRow, firstColumn, true).ApplyStyle(_cellStyles[9].Style, _cellStyles[9].StyleFlag);
             }
         }
     }
