@@ -325,7 +325,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             {
                 WriteExcelRecords(sheet, new FundingSummaryHeaderMapper(), new List<FundingSummaryHeaderModel> { fundingSummaryHeaderModel }, _cellStyles[7], _cellStyles[7], true);
                 var firstColumn = GetFirstFutureColumn();
-                var lastOperatedRow = 0;
+                int lastOperatedRow;
+                // number of columns minus number of static columns (3)
+                var endColumn = _cachedHeaders.Count() - 3;
                 foreach (var fundingSummaryModel in fundingSummaryModels)
                 {
                     if (string.IsNullOrEmpty(fundingSummaryModel.Title))
@@ -351,23 +353,23 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                         _fundingSummaryMapper.MemberMaps.Single(x => x.Data.Index == 0).Name(fundingSummaryModel.Title);
                         _cachedHeaders[0] = fundingSummaryModel.Title;
 
-                        ////this line is the month/year header
+                        // this line is the month/year header
                         WriteRecordsFromArray(sheet, _fundingSummaryMapper, _cachedHeaders, excelHeaderStyle);
                         lastOperatedRow = GetCurrentRow(sheet) - 1;
-                        ItaliciseFutureData(sheet, firstColumn, lastOperatedRow);
+                        ItaliciseFutureData(sheet, firstColumn, lastOperatedRow, endColumn);
                         continue;
                     }
 
                     CellStyle excelRecordStyle = _excelStyleProvider.GetCellStyle(_cellStyles, fundingSummaryModel.ExcelRecordStyle);
 
-                    //Align data to the Right
+                    // Align data to the Right
                     excelRecordStyle.Style.HorizontalAlignment = TextAlignmentType.Right;
                     excelRecordStyle.StyleFlag.HorizontalAlignment = true;
 
-                    //this line is subtotals below the month/ year header
+                    // this line is subtotals below the month/ year header
                     WriteExcelRecordsFromModelProperty(sheet, _fundingSummaryMapper, _cachedModelProperties, fundingSummaryModel, excelRecordStyle);
                     lastOperatedRow = GetCurrentRow(sheet) - 1;
-                    ItaliciseFutureData(sheet, firstColumn, lastOperatedRow);
+                    ItaliciseFutureData(sheet, firstColumn, lastOperatedRow, endColumn);
                 }
 
                 for (int i = 0; i < workbook.Worksheets.Count; i++)
@@ -525,13 +527,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             return firstFutureColumn;
         }
 
-        private void ItaliciseFutureData(Worksheet sheet, int firstColumn, int lastOperatedRow)
+        private void ItaliciseFutureData(Worksheet sheet, int firstColumn, int lastOperatedRow, int lastColumn)
         {
             var italicCellStyle = _excelStyleProvider.GetCellStyle(_cellStyles, 9);
             //current row is incremeneted on leaving the write function, so decrement to update style.
             if (firstColumn > 0)
             {
-                sheet.Cells.CreateRange(lastOperatedRow, firstColumn, 1, 17 - firstColumn).ApplyStyle(italicCellStyle.Style, italicCellStyle.StyleFlag);            }
+                sheet.Cells.CreateRange(lastOperatedRow, firstColumn, 1, lastColumn - firstColumn).ApplyStyle(italicCellStyle.Style, italicCellStyle.StyleFlag);            }
         }
     }
 }
