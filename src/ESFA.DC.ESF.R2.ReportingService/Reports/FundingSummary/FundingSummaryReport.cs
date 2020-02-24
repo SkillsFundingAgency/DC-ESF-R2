@@ -324,6 +324,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         {
             {
                 WriteExcelRecords(sheet, new FundingSummaryHeaderMapper(), new List<FundingSummaryHeaderModel> { fundingSummaryHeaderModel }, _cellStyles[7], _cellStyles[7], true);
+                var firstColumn = GetFirstFutureColumn();
+                var lastOperatedRow = 0;
                 foreach (var fundingSummaryModel in fundingSummaryModels)
                 {
                     if (string.IsNullOrEmpty(fundingSummaryModel.Title))
@@ -351,7 +353,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
                         ////this line is the month/year header
                         WriteRecordsFromArray(sheet, _fundingSummaryMapper, _cachedHeaders, excelHeaderStyle);
-                        ItaliciseFutureData(sheet);
+                        lastOperatedRow = GetCurrentRow(sheet) - 1;
+                        ItaliciseFutureData(sheet, firstColumn, lastOperatedRow);
                         continue;
                     }
 
@@ -363,7 +366,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
                     //this line is subtotals below the month/ year header
                     WriteExcelRecordsFromModelProperty(sheet, _fundingSummaryMapper, _cachedModelProperties, fundingSummaryModel, excelRecordStyle);
-                    ItaliciseFutureData(sheet);
+                    lastOperatedRow = GetCurrentRow(sheet) - 1;
+                    ItaliciseFutureData(sheet, firstColumn, lastOperatedRow);
                 }
 
                 for (int i = 0; i < workbook.Worksheets.Count; i++)
@@ -521,11 +525,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             return firstFutureColumn;
         }
 
-        private void ItaliciseFutureData(Worksheet sheet)
+        private void ItaliciseFutureData(Worksheet sheet, int firstColumn, int lastOperatedRow)
         {
             var italicCellStyle = _excelStyleProvider.GetCellStyle(_cellStyles, 9);
-            var firstColumn = GetFirstFutureColumn();
-            var lastOperatedRow = GetCurrentRow(sheet) - 1; //current row is incremeneted on leaving the write function, so decrement to update style.
+            //current row is incremeneted on leaving the write function, so decrement to update style.
             if (firstColumn > 0)
             {
                 sheet.Cells.CreateRange(lastOperatedRow, firstColumn, 1, 17 - firstColumn).ApplyStyle(italicCellStyle.Style, italicCellStyle.StyleFlag);            }
