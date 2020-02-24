@@ -351,6 +351,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
                         ////this line is the month/year header
                         WriteRecordsFromArray(sheet, _fundingSummaryMapper, _cachedHeaders, excelHeaderStyle);
+                        ItaliciseFutureData(sheet);
                         continue;
                     }
 
@@ -522,11 +523,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
         private void ItaliciseFutureData(Worksheet sheet)
         {
+            var italicCellStyle = _excelStyleProvider.GetCellStyle(_cellStyles, 9);
             var firstColumn = GetFirstFutureColumn();
             var lastOperatedRow = GetCurrentRow(sheet) - 1; //current row is incremeneted on leaving the write function, so decrement to update style.
             if (firstColumn > 0)
             {
-                sheet.Cells.CreateRange(lastOperatedRow, firstColumn, 1, 17 - firstColumn).ApplyStyle(_cellStyles[9].Style, _cellStyles[9].StyleFlag);            }
+                sheet.Cells.CreateRange(lastOperatedRow, firstColumn, 1, 17 - firstColumn).ApplyStyle(italicCellStyle.Style, italicCellStyle.StyleFlag);            }
         }
     }
 }
