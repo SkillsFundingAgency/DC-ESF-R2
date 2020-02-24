@@ -523,7 +523,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         private void ItaliciseFutureData(Worksheet sheet)
         {
             var firstColumn = GetFirstFutureColumn();
-            var lastOperatedRow = GetCurrentRow(sheet) - 1; //current row is incremeneted on leaving the write function, so deincrement to update style.
+            var lastOperatedRow = GetCurrentRow(sheet) - 1; //current row is incremeneted on leaving the write function, so decrement to update style.
             if (firstColumn > 0)
             {
                 sheet.Cells.CreateRange(lastOperatedRow, firstColumn, 1, 17 - firstColumn).ApplyStyle(_cellStyles[9].Style, _cellStyles[9].StyleFlag);            }
