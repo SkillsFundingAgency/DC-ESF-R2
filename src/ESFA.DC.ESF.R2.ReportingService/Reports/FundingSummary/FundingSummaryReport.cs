@@ -523,17 +523,29 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             var reportStartDate = new DateTime(Constants.StartYear + 1, 4, 1);
             var curentDate = _dateTimeProvider.GetNowUtc();
 
-            var firstFutureColumn = (((curentDate.Year - reportStartDate.Year) * 12) + (curentDate.Month - reportStartDate.Month)) + 2; //calculate months difference
+            var firstFutureColumn = (((curentDate.Year - reportStartDate.Year) * 12) + (curentDate.Month - reportStartDate.Month)) + 2; // calculate months difference
+
             return firstFutureColumn;
         }
 
         private void ItaliciseFutureData(Worksheet sheet, int firstColumn, int lastOperatedRow, int lastColumn)
         {
+            int totalColumns;
             var italicCellStyle = _excelStyleProvider.GetCellStyle(_cellStyles, 9);
-            //current row is incremeneted on leaving the write function, so decrement to update style.
+            if ((lastColumn - firstColumn) < 0)
+            {
+              totalColumns = 1;
+            }
+            else
+            {
+                totalColumns = lastColumn - firstColumn;
+            }
+
+            // current row is incremeneted on leaving the write function, so decrement to update style.
             if (firstColumn > 0)
             {
-                sheet.Cells.CreateRange(lastOperatedRow, firstColumn, 1, lastColumn - firstColumn).ApplyStyle(italicCellStyle.Style, italicCellStyle.StyleFlag);            }
+                sheet.Cells.CreateRange(lastOperatedRow, firstColumn, 1, totalColumns).ApplyStyle(italicCellStyle.Style, italicCellStyle.StyleFlag);
+            }
         }
     }
 }
