@@ -177,12 +177,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 AddImageToReport(sheet);
 
                 workbook = GetWorkbookReport(workbook, sheet, fundingSummaryHeaderModel, fundingSummaryModels, fundingSummaryFooterModel);
-
-                try
-                {
-                    ItaliciseFutureData(sheet);
-                }
-                catch { };
             }
 
             string externalFileName = GetExternalFilename(ukPrn.ToString(), jobContextModel.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
@@ -357,19 +351,19 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
                         ////this line is the month/year header
                         WriteRecordsFromArray(sheet, _fundingSummaryMapper, _cachedHeaders, excelHeaderStyle);
-                        ItaliciseFutureData(sheet);
                         continue;
                     }
 
                     CellStyle excelRecordStyle = _excelStyleProvider.GetCellStyle(_cellStyles, fundingSummaryModel.ExcelRecordStyle);
 
-                    // Align data to the Right
+                    //Align data to the Right
                     excelRecordStyle.Style.HorizontalAlignment = TextAlignmentType.Right;
                     excelRecordStyle.StyleFlag.HorizontalAlignment = true;
 
-                    // this line is subtotals below the month/year header
+                    //this line is subtotals below the month/ year header
                     WriteExcelRecordsFromModelProperty(sheet, _fundingSummaryMapper, _cachedModelProperties, fundingSummaryModel, excelRecordStyle);
-                 }
+                    ItaliciseFutureData(sheet);
+                }
 
                 for (int i = 0; i < workbook.Worksheets.Count; i++)
                 {
@@ -519,22 +513,20 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         private int GetFirstFutureColumn()
         {
             // using implicit logic to pair months with their respective columns
-            // var reportStartYear = Constants.StartYear + 1;
             var reportStartDate = new DateTime(Constants.StartYear + 1, 4, 1);
             var curentDate = _dateTimeProvider.GetNowUtc();
 
-            var firstFutureColumn = (((curentDate.Year - reportStartDate.Year) * 12) + (curentDate.Month - reportStartDate.Month)) + 3;
+            var firstFutureColumn = (((curentDate.Year - reportStartDate.Year) * 12) + (curentDate.Month - reportStartDate.Month)) + 2; //calculate months difference
             return firstFutureColumn;
         }
 
         private void ItaliciseFutureData(Worksheet sheet)
         {
             var firstColumn = GetFirstFutureColumn();
-            var currentRow = GetCurrentRow(sheet);
+            var lastOperatedRow = GetCurrentRow(sheet) - 1; //current row is incremeneted on leaving the write function, so deincrement to update style.
             if (firstColumn > 0)
             {
-                sheet.Cells.CreateRange(currentRow, firstColumn, 20, 10).ApplyStyle(_cellStyles[9].Style, _cellStyles[9].StyleFlag);
-            }
+                sheet.Cells.CreateRange(lastOperatedRow, firstColumn, 1, 17 - firstColumn).ApplyStyle(_cellStyles[9].Style, _cellStyles[9].StyleFlag);            }
         }
     }
 }

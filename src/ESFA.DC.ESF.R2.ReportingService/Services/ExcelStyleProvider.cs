@@ -144,16 +144,14 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             };
             cellStyles.Add(new CellStyle(headerFooterCurrentYearStyle, headerFooterCurrentYearStyleFlag));
 
-            Style styleItalacise = workbook.CreateStyle();            // 9
-            styleItalacise.Font.IsItalic = true;
-            styleItalacise.Font.Size = 100;
+            Style styleItalicise = workbook.CreateStyle();            // 9
+            styleItalicise.Font.IsItalic = true;
 
-            var styleItalaciseStyleFlag = new StyleFlag
+            var styleItaliciseStyleFlag = new StyleFlag
             {
                 FontItalic = true,
-                FontSize = true
             };
-            cellStyles.Add(new CellStyle(styleItalacise, styleItalaciseStyleFlag));
+            cellStyles.Add(new CellStyle(styleItalicise, styleItaliciseStyleFlag));
 
             return cellStyles.ToArray();
         }
