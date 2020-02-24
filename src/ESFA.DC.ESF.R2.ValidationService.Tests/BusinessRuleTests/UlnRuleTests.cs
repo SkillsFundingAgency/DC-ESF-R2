@@ -67,12 +67,17 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         [Trait("Category", "ValidationService")]
         public void ULNRule03CatchesULNsForDatesOlderThan2MonthsAgo()
         {
+            var datenow = DateTime.Now;
             var date = DateTime.Now.AddMonths(-6);
 
             var monthYearHelperMock = new Mock<IMonthYearHelper>();
             monthYearHelperMock
-                .Setup(m => m.GetCalendarDateTime(date.Year, date.Month))
-                .Returns(new DateTime(date.Year, date.Month, 1));
+                .Setup(m => m.GetFirstOfCalendarMonthDateTime(date.Year, date.Month))
+                .Returns(date);
+
+            monthYearHelperMock
+                .Setup(m => m.GetFirstOfCalendarMonthDateTime(datenow.Year, datenow.Month))
+                .Returns(datenow);
 
             var model = new SupplementaryDataModel
             {
@@ -96,12 +101,17 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests.BusinessRuleTests
         [Trait("Category", "ValidationService")]
         public void ULNRule03PassesULNsForMonthsAfer2MonthsAgo()
         {
-            var date = DateTime.Now;
+            var datenow = DateTime.Now;
+            var date = DateTime.Now.AddMonths(-6);
 
             var monthYearHelperMock = new Mock<IMonthYearHelper>();
             monthYearHelperMock
-                .Setup(m => m.GetCalendarDateTime(date.Year, date.Month))
+                .Setup(m => m.GetFirstOfCalendarMonthDateTime(date.Year, date.Month))
                 .Returns(date);
+
+            monthYearHelperMock
+                .Setup(m => m.GetFirstOfCalendarMonthDateTime(datenow.Year, datenow.Month))
+                .Returns(datenow);
 
             var model = new SupplementaryDataModel
             {

@@ -122,7 +122,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Tests
 
             var monthYearHelperMock = new Mock<IMonthYearHelper>();
             monthYearHelperMock
-                .Setup(m => m.GetCalendarDateTime(It.IsAny<int>(), It.IsAny<int>()))
+                .Setup(m => m.GetFirstOfCalendarMonthDateTime(It.IsAny<int>(), It.IsAny<int>()))
                 .Returns(DateTime.Now);
 
             return new List<IValidatorCommand>
