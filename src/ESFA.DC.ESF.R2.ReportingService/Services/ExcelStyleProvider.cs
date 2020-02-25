@@ -12,7 +12,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
         {
             List<CellStyle> cellStyles = new List<CellStyle>();
 
-            Style mainTitleStyle = workbook.CreateStyle();          // 1
+            Style mainTitleStyle = workbook.CreateStyle();          // 0l
             mainTitleStyle.ForegroundColor = Color.FromArgb(191, 191, 191);
             mainTitleStyle.Pattern = BackgroundType.Solid;
             mainTitleStyle.Font.Size = 13;
@@ -26,7 +26,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             };
             cellStyles.Add(new CellStyle(mainTitleStyle, mainTitleStyleFlag));
 
-            Style notUsedStyle = workbook.CreateStyle();            // 2
+            Style notUsedStyle = workbook.CreateStyle();            // 1
             notUsedStyle.ForegroundColor = Color.FromArgb(216, 216, 216);
             notUsedStyle.Pattern = BackgroundType.Solid;
             notUsedStyle.Font.Size = 12;
@@ -40,25 +40,25 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             };
             cellStyles.Add(new CellStyle(notUsedStyle, notUsedStyleFlag));
 
-            Style sectionStyle = workbook.CreateStyle();            // 3
-            sectionStyle.ForegroundColor = Color.FromArgb(242, 242, 242);
-            sectionStyle.Pattern = BackgroundType.Solid;
-            sectionStyle.Font.Size = 11;
-            sectionStyle.Font.IsBold = true;
-            sectionStyle.Font.Name = Constants.FundingSummaryReportFont;
+            Style headerStyle = workbook.CreateStyle();            // 2
+            headerStyle.ForegroundColor = Color.FromArgb(242, 242, 242);
+            headerStyle.Pattern = BackgroundType.Solid;
+            headerStyle.Font.Size = 11;
+            headerStyle.Font.IsBold = true;
+            headerStyle.Font.Name = Constants.FundingSummaryReportFont;
             // sectionStyle.SetCustom(Constants.FundingSummaryReportNumberFormat, true);
-            ApplyBorderToStyle(sectionStyle);
+            ApplyBorderToStyle(headerStyle);
 
-            var titleStyleFlag = new StyleFlag
+            var headerStyleFlag = new StyleFlag
             {
                 CellShading = true,
                 Font = true,
                 Borders = true,
                 NumberFormat = true
             };
-            cellStyles.Add(new CellStyle(sectionStyle, titleStyleFlag));
+            cellStyles.Add(new CellStyle(headerStyle, headerStyleFlag));
 
-            Style subTotalStyle = workbook.CreateStyle();           // 4
+            Style subTotalStyle = workbook.CreateStyle();           // 3
             subTotalStyle.Font.Size = 10;
             subTotalStyle.Font.IsBold = true;
             subTotalStyle.Font.Name = Constants.FundingSummaryReportFont;
@@ -73,8 +73,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             };
             cellStyles.Add(new CellStyle(subTotalStyle, subTotalStyleFlag));
 
-            Style dataRowStyle = workbook.CreateStyle();            // 5
-            dataRowStyle.Font.Size = 10;
+            Style dataRowStyle = workbook.CreateStyle();            // 4
+            dataRowStyle.Font.Size = 11;
             dataRowStyle.Font.Name = Constants.FundingSummaryReportFont;
             // dataRowStyle.SetCustom(Constants.FundingSummaryReportNumberFormat, true);
             ApplyBorderToStyle(dataRowStyle);
@@ -87,7 +87,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             };
             cellStyles.Add(new CellStyle(dataRowStyle, dataRowStyleFlag));
 
-            Style currentYearStyle = workbook.CreateStyle();        // 6 - No longer used
+            Style currentYearStyle = workbook.CreateStyle();        // 5 - No longer used
             currentYearStyle.Font.Color = Color.Red;
             currentYearStyle.Font.Size = 10;
             currentYearStyle.Font.IsBold = true;
@@ -103,7 +103,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             };
             cellStyles.Add(new CellStyle(currentYearStyle, currentYearStyleFlag));
 
-            Style grandTotalStyle = workbook.CreateStyle();         // 7
+            Style grandTotalStyle = workbook.CreateStyle();         // 6
             grandTotalStyle.ForegroundColor = Color.FromArgb(191, 191, 191);
             grandTotalStyle.Pattern = BackgroundType.Solid;
             grandTotalStyle.Font.Size = 13;
@@ -121,7 +121,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             };
             cellStyles.Add(new CellStyle(grandTotalStyle, grandTotalStyleFlag));
 
-            Style headerFooterStyle = workbook.CreateStyle();       // 8
+            Style headerFooterStyle = workbook.CreateStyle();       // 7
             headerFooterStyle.Font.Size = 10;
             headerFooterStyle.Font.IsBold = true;
             headerFooterStyle.Font.Name = Constants.FundingSummaryReportFont;
@@ -132,7 +132,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             };
             cellStyles.Add(new CellStyle(headerFooterStyle, headerFooterStyleFlag));
 
-            Style headerFooterCurrentYearStyle = workbook.CreateStyle();       // 9 - No longer used
+            Style headerFooterCurrentYearStyle = workbook.CreateStyle();       // 8 - No longer used
             headerFooterCurrentYearStyle.Font.Color = Color.Red;
             headerFooterCurrentYearStyle.Font.Size = 10;
             headerFooterCurrentYearStyle.Font.IsBold = true;
@@ -143,6 +143,15 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                 Font = true
             };
             cellStyles.Add(new CellStyle(headerFooterCurrentYearStyle, headerFooterCurrentYearStyleFlag));
+
+            Style styleItalicise = workbook.CreateStyle();            // 9
+            styleItalicise.Font.IsItalic = true;
+
+            var styleItaliciseStyleFlag = new StyleFlag
+            {
+                FontItalic = true,
+            };
+            cellStyles.Add(new CellStyle(styleItalicise, styleItaliciseStyleFlag));
 
             return cellStyles.ToArray();
         }

@@ -387,7 +387,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
             }
         }
 
-        private int GetCurrentRow(Worksheet worksheet)
+        protected int GetCurrentRow(Worksheet worksheet)
         {
             if (!_currentRow.ContainsKey(worksheet))
             {
