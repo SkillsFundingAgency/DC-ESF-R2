@@ -324,7 +324,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         {
             {
                 WriteExcelRecords(sheet, new FundingSummaryHeaderMapper(), new List<FundingSummaryHeaderModel> { fundingSummaryHeaderModel }, _cellStyles[7], _cellStyles[7], true);
-                var firstColumn = GetFirstFutureColumn();
+                var firstFutureColumn = GetFirstFutureColumn();
                 int lastOperatedRow;
                 // number of columns minus number of static columns (3)
                 var endColumn = _cachedHeaders.Count() - 3;
@@ -356,7 +356,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                         // this line is the month/year header
                         WriteRecordsFromArray(sheet, _fundingSummaryMapper, _cachedHeaders, excelHeaderStyle);
                         lastOperatedRow = GetCurrentRow(sheet) - 1;
-                        ItaliciseFutureData(sheet, firstColumn, lastOperatedRow, endColumn);
+                        ItaliciseFutureData(sheet, firstFutureColumn, lastOperatedRow, endColumn);
                         continue;
                     }
 
@@ -369,7 +369,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                     // this line is subtotals below the month/ year header
                     WriteExcelRecordsFromModelProperty(sheet, _fundingSummaryMapper, _cachedModelProperties, fundingSummaryModel, excelRecordStyle);
                     lastOperatedRow = GetCurrentRow(sheet) - 1;
-                    ItaliciseFutureData(sheet, firstColumn, lastOperatedRow, endColumn);
+                    ItaliciseFutureData(sheet, firstFutureColumn, lastOperatedRow, endColumn);
                 }
 
                 for (int i = 0; i < workbook.Worksheets.Count; i++)
