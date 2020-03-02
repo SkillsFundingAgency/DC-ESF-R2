@@ -249,7 +249,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 contractReferenceNumberRow.Add(null);
                 supplementaryDataFileRow.Add(preparationDate);
                 supplementaryDataFileRow.Add(null);
-                lastSupplementaryDataFileUpdateRow.Add(model.LastSubmission?.ToString("dd/MM/yyyy hh:mm:ss"));
+                lastSupplementaryDataFileUpdateRow.Add(model.FilePreparationDate?.ToString("dd/MM/yyyy hh:mm:ss"));
                 lastSupplementaryDataFileUpdateRow.Add(null);
 
                 if (model.Equals(fileData.Last()))
