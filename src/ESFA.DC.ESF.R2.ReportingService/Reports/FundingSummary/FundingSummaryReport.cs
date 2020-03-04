@@ -245,11 +245,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
                 ukPrnRow.Add(null);
                 ukPrnRow.Add($"{model.Year}/{secondYear}");
-                contractReferenceNumberRow.Add(model.FileName.Substring(model.FileName.Contains("/") ? model.FileName.IndexOf("/", StringComparison.Ordinal) + 1 : 0));
+                contractReferenceNumberRow.Add(model.FileName?.Substring(model.FileName.Contains("/") ? model.FileName.IndexOf("/", StringComparison.Ordinal) + 1 : 0));
                 contractReferenceNumberRow.Add(null);
                 supplementaryDataFileRow.Add(preparationDate);
                 supplementaryDataFileRow.Add(null);
-                lastSupplementaryDataFileUpdateRow.Add(model.LastSubmission?.ToString("dd/MM/yyyy hh:mm:ss"));
+                lastSupplementaryDataFileUpdateRow.Add(model.FilePreparationDate?.ToString("dd/MM/yyyy hh:mm:ss"));
                 lastSupplementaryDataFileUpdateRow.Add(null);
 
                 if (model.Equals(fileData.Last()))
