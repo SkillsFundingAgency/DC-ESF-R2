@@ -41,7 +41,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
         private readonly IValidLearnerDataService1920 _validLearnerDataService;
         private readonly IReferenceDataService _referenceDataService;
         private readonly IFm70DataService _fm70DataService;
-        private readonly ILogger _logger;
 
         private readonly AimAndDeliverableComparer _comparer;
 
@@ -49,14 +48,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             IFm70DataService fm70DataService,
             IValidLearnerDataService1920 validLearnerDataService,
             IReferenceDataService referenceDataService,
-            IAimAndDeliverableComparer comparer,
-            ILogger logger)
+            IAimAndDeliverableComparer comparer)
         {
             _fm70DataService = fm70DataService;
             _validLearnerDataService = validLearnerDataService;
             _referenceDataService = referenceDataService;
             _comparer = comparer as AimAndDeliverableComparer;
-            _logger = logger;
         }
 
         public async Task<IEnumerable<AimAndDeliverableModel>> GetAimAndDeliverableModel(
@@ -115,8 +112,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
 
             var larsDeliveries = (await _referenceDataService.GetLarsLearningDelivery(learnAimRefs, cancellationToken))
                 .ToDictionary(t => t.LearnAimRef, t => t, StringComparer.OrdinalIgnoreCase);
-
-            _logger.LogDebug($"UKPrn:{ukPrn} has retrieved {larsDeliveries?.Count ?? 0} lars learning deliveries for {learnAimRefs?.Count() ?? 0} learnAimRefs");
 
             foreach (var fm70Delivery in fm70LearningDeliveries)
             {
