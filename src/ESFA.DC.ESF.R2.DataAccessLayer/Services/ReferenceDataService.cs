@@ -66,13 +66,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer.Services
 
         public async Task<IEnumerable<LarsLearningDeliveryModel>> GetLarsLearningDelivery(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken)
         {
-            var larsLearningDeliveries = _referenceDataCache.GetLarsLearningDelivery(learnAimRefs);
-
-            if (!larsLearningDeliveries.Any())
-            {
-                await _referenceDataCache.PopulateLarsLearningDeliveries(learnAimRefs, cancellationToken);
-            }
-
+            await _referenceDataCache.PopulateLarsLearningDeliveries(learnAimRefs, cancellationToken);
             return _referenceDataCache.GetLarsLearningDelivery(learnAimRefs);
         }
 
