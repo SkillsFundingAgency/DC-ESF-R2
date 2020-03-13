@@ -12,7 +12,6 @@ using ESFA.DC.ESF.R2.ReportingService.Comparers;
 using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.ILR.DataService.Interfaces.Services;
 using ESFA.DC.ILR.DataService.Models;
-using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Services
 {
