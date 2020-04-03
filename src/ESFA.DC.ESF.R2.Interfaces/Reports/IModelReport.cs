@@ -16,6 +16,6 @@ namespace ESFA.DC.ESF.R2.Interfaces.Reports
             ZipArchive archive,
             CancellationToken cancellationToken);
 
-        IEnumerable<string> GeneratedFor { get; }
+        string TaskName { get; }
     }
 }

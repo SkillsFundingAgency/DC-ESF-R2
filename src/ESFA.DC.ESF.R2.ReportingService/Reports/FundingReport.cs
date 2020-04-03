@@ -29,20 +29,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             IValueProvider valueProvider,
             IFileService storage,
             IReferenceDataService referenceDataService)
-            : base(dateTimeProvider, valueProvider)
+            : base(dateTimeProvider, valueProvider, Constants.TaskGenerateFundingReport)
         {
             ReportFileName = "ESF (Round 2) Supplementary Data Funding Report";
 
             _storage = storage;
             _referenceDataService = referenceDataService;
-
-            GeneratedFor = new List<string>
-            {
-                Constants.ESFR21819, Constants.ESFR21920
-            };
         }
-
-        public IEnumerable<string> GeneratedFor { get; }
 
         public async Task GenerateReport(
             JobContextModel jobContextModel,

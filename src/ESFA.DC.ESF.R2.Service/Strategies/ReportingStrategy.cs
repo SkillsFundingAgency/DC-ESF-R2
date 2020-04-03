@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.Strategies;
@@ -10,6 +12,13 @@ namespace ESFA.DC.ESF.R2.Service.Strategies
     {
         private readonly IReportingController _reportingController;
 
+        private string[] _reportingTasks =
+        {
+            Constants.TaskGenerateEsfAimAndDeliverableReport,
+            Constants.TaskGenerateFundingSummaryReport,
+            Constants.TaskGenerateFundingReport
+        };
+
         public ReportingStrategy(IReportingController reportingController)
         {
             _reportingController = reportingController;
@@ -19,7 +28,7 @@ namespace ESFA.DC.ESF.R2.Service.Strategies
 
         public bool IsMatch(string taskName)
         {
-            return taskName == Constants.ReportingTask;
+            return _reportingTasks.Contains(taskName, StringComparer.OrdinalIgnoreCase);
         }
 
         public async Task Execute(

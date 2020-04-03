@@ -27,7 +27,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             IValueProvider valueProvider,
             IFileService storage,
             IValidationComparer comparer)
-            : base(dateTimeProvider, valueProvider)
+            : base(dateTimeProvider, valueProvider, string.Empty)
         {
             ReportFileName = "ESF (Round 2) Supplementary Data Rule Violation Report";
 

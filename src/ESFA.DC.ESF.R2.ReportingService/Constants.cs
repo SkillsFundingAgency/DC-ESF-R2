@@ -35,5 +35,9 @@
         public const string R12 = "R12";
         public const string R13 = "R13";
         public const string R14 = "R14";
+
+        public const string TaskGenerateEsfAimAndDeliverableReport = "TaskGenerateEsfAimAndDeliverableReport";
+        public const string TaskGenerateFundingSummaryReport = "TaskGenerateFundingSummaryReport";
+        public const string TaskGenerateFundingReport = "TaskGenerateFundingReport";
     }
 }

@@ -25,19 +25,22 @@ namespace ESFA.DC.ESF.R2.ReportingService
 
         private readonly Dictionary<Worksheet, int> _currentRow;
 
-        protected AbstractReportBuilder(IDateTimeProvider dateTimeProvider, IValueProvider valueProvider)
+        protected AbstractReportBuilder(IDateTimeProvider dateTimeProvider, IValueProvider valueProvider, string taskName)
         {
             _dateTimeProvider = dateTimeProvider;
             _valueProvider = valueProvider;
+            TaskName = taskName;
 
             _currentRow = new Dictionary<Worksheet, int>();
         }
 
-        public string ReportTaskName { get; set; }
+        public string ReportName { get; set; }
+
+        public string TaskName { get; }
 
         public bool IsMatch(string reportTaskName)
         {
-            return reportTaskName == ReportTaskName;
+            return reportTaskName == ReportName;
         }
 
         public string GetExternalFilename(string ukPrn, long jobId, DateTime submissionDateTime)

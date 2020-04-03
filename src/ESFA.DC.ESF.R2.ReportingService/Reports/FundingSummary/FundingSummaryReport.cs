@@ -59,7 +59,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             IExcelStyleProvider excelStyleProvider,
             IVersionInfo versionInfo,
             ILogger logger)
-            : base(dateTimeProvider, valueProvider)
+            : base(dateTimeProvider, valueProvider, Constants.TaskGenerateFundingSummaryReport)
         {
             _dateTimeProvider = dateTimeProvider;
             _storage = storage;
@@ -78,14 +78,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 .OrderBy(x => x.Data.Index)
                 .Select(x => new ModelProperty(x.Data.Names.Names.ToArray(), (PropertyInfo)x.Data.Member))
                 .ToArray();
-
-            GeneratedFor = new List<string>
-            {
-                    Constants.ILR1819, Constants.ILR1920, Constants.ESFR21819, Constants.ESFR21920
-            };
         }
-
-        public IEnumerable<string> GeneratedFor { get; }
 
         public async Task GenerateReport(
             JobContextModel jobContextModel,
