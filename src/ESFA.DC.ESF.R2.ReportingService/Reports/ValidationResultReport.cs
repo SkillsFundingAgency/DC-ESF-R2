@@ -26,7 +26,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             IValueProvider valueProvider,
             IJsonSerializationService jsonSerializationService,
             IFileService storage)
-            : base(dateTimeProvider, valueProvider)
+            : base(dateTimeProvider, valueProvider, string.Empty)
         {
             ReportFileName = "ESF Supplementary Data Rule Violation Report";
 

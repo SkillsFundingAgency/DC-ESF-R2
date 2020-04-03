@@ -91,7 +91,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
 
                         if (passedFileValidation)
                         {
-                            var reportsToRun = _esfReports.Where(r => r.GeneratedFor.Contains(jobContextModel.CollectionName, StringComparer.OrdinalIgnoreCase));
+                            var reportsToRun = _esfReports.Where(r => jobContextModel.Tasks.Contains(r.TaskName, StringComparer.OrdinalIgnoreCase));
                             foreach (var report in reportsToRun)
                             {
                                 await report.GenerateReport(jobContextModel, sourceFile, wrapper, archive, cancellationToken);
