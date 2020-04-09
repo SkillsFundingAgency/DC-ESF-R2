@@ -409,7 +409,6 @@ namespace ESFA.DC.ESF.R2.Stateless
         {
             containerBuilder.RegisterType<PersistenceStrategy>().As<ITaskStrategy>();
             containerBuilder.RegisterType<ValidationStrategy>().As<ITaskStrategy>();
-            containerBuilder.RegisterType<ReportingStrategy>().As<ITaskStrategy>();
             containerBuilder.Register(c => new List<ITaskStrategy>(c.Resolve<IEnumerable<ITaskStrategy>>()))
                 .As<IList<ITaskStrategy>>();
 
