@@ -66,6 +66,7 @@ namespace ESFA.DC.ESF.R2.Service
             }
 
             await _taskHelper.ExecuteTasks(jobContextModel, sourceFileModel, wrapper, cancellationToken);
+            await _reportingController.ProduceReports(jobContextModel, wrapper, sourceFileModel, cancellationToken);
         }
     }
 }
