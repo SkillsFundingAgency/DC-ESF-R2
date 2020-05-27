@@ -55,7 +55,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppDa
                     if (CostType != null)
                     {
                         deliverableData =
-                            deliverableData.Where(supp => supp.CostType == CostType);
+                            deliverableData.Where(supp => supp.CostType.Equals(CostType, StringComparison.OrdinalIgnoreCase));
                     }
 
                     if (ESFConstants.UnitCostDeliverableCodes.Contains(DeliverableCode))
