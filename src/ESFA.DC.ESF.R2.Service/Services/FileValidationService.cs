@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CsvHelper;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Helpers;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
@@ -30,7 +31,7 @@ namespace ESFA.DC.ESF.R2.Service.Services
         }
 
         public async Task<SupplementaryDataWrapper> GetFile(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SourceFileModel sourceFileModel,
             CancellationToken cancellationToken)
         {
@@ -39,7 +40,7 @@ namespace ESFA.DC.ESF.R2.Service.Services
             IList<ValidationErrorModel> errors = new List<ValidationErrorModel>();
             try
             {
-                esfRecords = await _fileHelper.GetESFRecords(jobContextModel, sourceFileModel, cancellationToken);
+                esfRecords = await _fileHelper.GetESFRecords(esfJobContext, sourceFileModel, cancellationToken);
                 if (esfRecords == null || !esfRecords.Any())
                 {
                     _logger.LogInfo("No ESF records to process");

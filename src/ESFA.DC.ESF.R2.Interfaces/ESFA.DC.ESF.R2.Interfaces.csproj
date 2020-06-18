@@ -61,6 +61,7 @@
     <Compile Include="Helpers\IPeriodHelper.cs" />
     <Compile Include="Helpers\ITaskHelper.cs" />
     <Compile Include="IClassMapper.cs" />
+    <Compile Include="IEsfJobContext.cs" />
     <Compile Include="PersistenceStorageKeys.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reports\IValidationComparer.cs" />

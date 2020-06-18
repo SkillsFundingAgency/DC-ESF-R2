@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Helpers;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
@@ -19,14 +20,14 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
             _providerService = providerService;
         }
 
-        public SourceFileModel GetSourceFileData(JobContextModel jobContextModel)
+        public SourceFileModel GetSourceFileData(IEsfJobContext esfJobContext)
         {
-            if (string.IsNullOrWhiteSpace(jobContextModel.FileName))
+            if (string.IsNullOrWhiteSpace(esfJobContext.FileName))
             {
                 throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is required");
             }
 
-            var fileName = jobContextModel.FileName;
+            var fileName = esfJobContext.FileName;
 
             string[] fileNameParts = FileNameHelper.SplitFileName(fileName);
 
@@ -41,7 +42,7 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
                 throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is invalid");
             }
 
-            var jobId = jobContextModel.JobId;
+            var jobId = esfJobContext.JobId;
 
             return new SourceFileModel
             {
@@ -49,17 +50,17 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
                 UKPRN = fileNameParts[1],
                 FileName = fileName,
                 PreparationDate = preparationDateTime,
-                SuppliedDate = jobContextModel.SubmissionDateTimeUtc,
+                SuppliedDate = esfJobContext.SubmissionDateTimeUtc,
                 JobId = jobId
             };
         }
 
         public async Task<IList<SupplementaryDataLooseModel>> GetESFRecords(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SourceFileModel sourceFileModel,
             CancellationToken cancellationToken)
         {
-            return await _providerService.GetESFRecordsFromFile(jobContextModel, sourceFileModel, cancellationToken);
+            return await _providerService.GetESFRecordsFromFile(esfJobContext, sourceFileModel, cancellationToken);
         }
     }
 }

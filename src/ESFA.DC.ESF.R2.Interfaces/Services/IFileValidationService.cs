@@ -7,7 +7,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.Services
     public interface IFileValidationService
     {
         Task<SupplementaryDataWrapper> GetFile(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SourceFileModel sourceFileModel,
             CancellationToken cancellationToken);
 

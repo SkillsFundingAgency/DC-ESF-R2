@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
@@ -113,15 +114,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
 
             SourceFileModel sourceFile = GetEsfSourceFileModel();
 
-            JobContextModel wrapper = new JobContextModel
-            {
-                UkPrn = 10005752,
-                JobId = 1,
-                BlobContainerName = string.Empty,
-                CollectionYear = 1819
-            };
+            var esfJobContextMock = new Mock<IEsfJobContext>();
+            esfJobContextMock.Setup(x => x.UkPrn).Returns(10005752);
+            esfJobContextMock.Setup(x => x.JobId).Returns(1);
+            esfJobContextMock.Setup(x => x.BlobContainerName).Returns(string.Empty);
+            esfJobContextMock.Setup(x => x.CollectionYear).Returns(1819);
 
-            await fundingSummaryReport.GenerateReport(wrapper, sourceFile, null, null, CancellationToken.None);
+            await fundingSummaryReport.GenerateReport(esfJobContextMock.Object, sourceFile, null, null, CancellationToken.None);
 
             storage.Verify(s =>
                 s.OpenWriteStreamAsync($"{filename}.xlsx", It.IsAny<string>(), It.IsAny<CancellationToken>()));
@@ -242,15 +241,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
 
             SourceFileModel sourceFile = GetEsfSourceFileModel();
 
-            JobContextModel wrapper = new JobContextModel
-            {
-                UkPrn = 10005752,
-                JobId = 1,
-                BlobContainerName = string.Empty,
-                CollectionYear = 2018
-            };
+            var esfJobContextMock = new Mock<IEsfJobContext>();
+            esfJobContextMock.Setup(x => x.UkPrn).Returns(10005752);
+            esfJobContextMock.Setup(x => x.JobId).Returns(1);
+            esfJobContextMock.Setup(x => x.BlobContainerName).Returns(string.Empty);
+            esfJobContextMock.Setup(x => x.CollectionYear).Returns(2018);
 
-            await fundingSummaryReport.GenerateReport(wrapper, sourceFile, null, null, CancellationToken.None);
+            await fundingSummaryReport.GenerateReport(esfJobContextMock.Object, sourceFile, null, null, CancellationToken.None);
 
             storage.Verify(s =>
                 s.OpenWriteStreamAsync($"{filename}.xlsx", It.IsAny<string>(), It.IsAny<CancellationToken>()));

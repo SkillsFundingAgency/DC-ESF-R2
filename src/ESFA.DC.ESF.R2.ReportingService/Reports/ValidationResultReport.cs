@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
@@ -35,7 +36,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
         }
 
         public async Task GenerateReport(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             ZipArchive archive,
@@ -47,7 +48,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             var externalFilename = GetExternalFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
 
             var json = _jsonSerializationService.Serialize(report);
-            await SaveJson(jobContextModel, externalFilename, json, cancellationToken);
+            await SaveJson(esfJobContext, externalFilename, json, cancellationToken);
             await WriteZipEntry(archive, $"{fileName}.json", json);
         }
 
@@ -69,11 +70,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             };
         }
 
-        private async Task SaveJson(JobContextModel jobContextModel, string fileName, string json, CancellationToken cancellationToken)
+        private async Task SaveJson(IEsfJobContext esfJobContext, string fileName, string json, CancellationToken cancellationToken)
         {
             using (var stream = await _storage.OpenWriteStreamAsync(
                 $"{fileName}.json",
-                jobContextModel.BlobContainerName,
+                esfJobContext.BlobContainerName,
                 cancellationToken))
             {
                 using (var writer = new StreamWriter(stream, new UTF8Encoding(false, true)))

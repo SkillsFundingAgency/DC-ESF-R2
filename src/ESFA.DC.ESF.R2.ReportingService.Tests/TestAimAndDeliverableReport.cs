@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.ReportingService.Reports;
@@ -53,16 +54,15 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
                 aimAndDeliverableService1819Mock.Object,
                 aimAndDeliverableService1920Mock.Object);
 
-            var wrapper = new JobContextModel
-            {
-                UkPrn = 10005752,
-                JobId = 2,
-                BlobContainerName = "TestBlob",
-                CollectionYear = 1819
-            };
+            var esfJobContextMock = new Mock<IEsfJobContext>();
+            esfJobContextMock.Setup(x => x.UkPrn).Returns(10005752);
+            esfJobContextMock.Setup(x => x.JobId).Returns(2);
+            esfJobContextMock.Setup(x => x.BlobContainerName).Returns("TestBlob");
+            esfJobContextMock.Setup(x => x.CollectionYear).Returns(1819);
+
             SourceFileModel sourceFile = GetEsfSourceFileModel();
 
-            await aimAndDeliverableReport.GenerateReport(wrapper, sourceFile, null, null, CancellationToken.None);
+            await aimAndDeliverableReport.GenerateReport(esfJobContextMock.Object, sourceFile, null, null, CancellationToken.None);
 
             storage.Verify(s => s.OpenWriteStreamAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
         }

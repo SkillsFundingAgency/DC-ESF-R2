@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
-using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Interfaces;
+using ESFA.DC.ESF.R2.Stateless.Context;
 using ESFA.DC.JobContext.Interface;
 using ESFA.DC.JobContextManager.Model.Interface;
 
@@ -8,9 +9,9 @@ namespace ESFA.DC.ESF.R2.Stateless.Mappers
 {
     public class JobContextMapper
     {
-        public static JobContextModel MapJobContextToModel(IJobContextMessage message)
+        public static IEsfJobContext MapJobContextToModel(IJobContextMessage message)
         {
-            return new JobContextModel
+            return new EsfJobContext
             {
                 JobId = message.JobId,
                 UkPrn = Convert.ToInt32(message.KeyValuePairs[JobContextMessageKey.UkPrn]),

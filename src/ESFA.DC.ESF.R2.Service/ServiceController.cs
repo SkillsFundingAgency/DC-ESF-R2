@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Helpers;
@@ -38,19 +39,19 @@ namespace ESFA.DC.ESF.R2.Service
         }
 
         public async Task RunTasks(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             CancellationToken cancellationToken)
         {
             var wrapper = new SupplementaryDataWrapper();
-            var sourceFileModel = new SourceFileModel() { SuppliedDate = jobContextModel.SubmissionDateTimeUtc };
+            var sourceFileModel = new SourceFileModel() { SuppliedDate = esfJobContext.SubmissionDateTimeUtc };
 
-            _periodHelper.CacheCurrentPeriod(jobContextModel);
+            _periodHelper.CacheCurrentPeriod(esfJobContext);
 
-            if (jobContextModel.Tasks.Contains(Constants.ValidationTask))
+            if (esfJobContext.Tasks.Contains(Constants.ValidationTask))
             {
-                sourceFileModel = _fileHelper.GetSourceFileData(jobContextModel);
+                sourceFileModel = _fileHelper.GetSourceFileData(esfJobContext);
 
-                wrapper = await _fileValidationService.GetFile(jobContextModel, sourceFileModel, cancellationToken);
+                wrapper = await _fileValidationService.GetFile(esfJobContext, sourceFileModel, cancellationToken);
                 if (!wrapper.ValidErrorModels.Any())
                 {
                     await _validationErrorMessageService.PopulateErrorMessages(cancellationToken);
@@ -60,13 +61,13 @@ namespace ESFA.DC.ESF.R2.Service
                 if (wrapper.ValidErrorModels.Any())
                 {
                     await _storageController.StoreValidationOnly(sourceFileModel, wrapper, cancellationToken);
-                    await _reportingController.FileLevelErrorReport(jobContextModel, wrapper, sourceFileModel, cancellationToken);
+                    await _reportingController.FileLevelErrorReport(esfJobContext, wrapper, sourceFileModel, cancellationToken);
                     return;
                 }
             }
 
-            await _taskHelper.ExecuteTasks(jobContextModel, sourceFileModel, wrapper, cancellationToken);
-            await _reportingController.ProduceReports(jobContextModel, wrapper, sourceFileModel, cancellationToken);
+            await _taskHelper.ExecuteTasks(esfJobContext, sourceFileModel, wrapper, cancellationToken);
+            await _reportingController.ProduceReports(esfJobContext, wrapper, sourceFileModel, cancellationToken);
         }
     }
 }

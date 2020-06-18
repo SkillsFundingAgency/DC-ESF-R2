@@ -4,6 +4,6 @@ namespace ESFA.DC.ESF.R2.Interfaces.Helpers
 {
     public interface IPeriodHelper
     {
-        void CacheCurrentPeriod(JobContextModel jobContextModel);
+        void CacheCurrentPeriod(IEsfJobContext esfJobContext);
     }
 }

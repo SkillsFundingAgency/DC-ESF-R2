@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.Strategies;
 using ESFA.DC.ESF.R2.Models;
@@ -23,7 +24,7 @@ namespace ESFA.DC.ESF.R2.Service.Strategies
         }
 
         public async Task Execute(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             CancellationToken cancellationToken)

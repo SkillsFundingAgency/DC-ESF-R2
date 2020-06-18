@@ -58,6 +58,7 @@
     <IsServiceFabricServiceProject>true</IsServiceFabricServiceProject>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Context\EsfJobContext.cs" />
     <Compile Include="DIComposition.cs" />
     <Compile Include="Handlers\JobContextMessageHandler.cs" />
     <Compile Include="Mappers\JobContextMapper.cs" />
