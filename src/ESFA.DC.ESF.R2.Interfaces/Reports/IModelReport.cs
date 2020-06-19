@@ -10,7 +10,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.Reports
     public interface IModelReport
     {
         Task GenerateReport(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             ZipArchive archive,

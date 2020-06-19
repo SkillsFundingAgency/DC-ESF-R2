@@ -24,5 +24,9 @@
     <Parameter Name="PostcodesConnectionString" Value="__PostcodesConnectionString__" />
     <Parameter Name="ULNConnectionString" Value="__ULNConnectionString__" />
     <Parameter Name="FCSConnectionString" Value="__FCSConnectionString__" />
+    <Parameter Name="TopicMaxConcurrentCalls" Value="__TopicMaxConcurrentCalls__" />
+    <Parameter Name="TopicMaxCallbackTimeSpanMinutes" Value="__TopicMaxCallbackTimeSpanMinutes__" />
+    <Parameter Name="JobStatusMaxConcurrentCalls" Value="__JobStatusMaxConcurrentCalls__" />
+    <Parameter Name="AuditMaxConcurrentCalls" Value="__AuditMaxConcurrentCalls__" />
   </Parameters>
 </Application>

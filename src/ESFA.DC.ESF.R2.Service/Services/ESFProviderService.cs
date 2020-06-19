@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CsvHelper;
 using CsvHelper.Configuration;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Service.Mappers;
@@ -31,7 +32,7 @@ namespace ESFA.DC.ESF.R2.Service.Services
         }
 
         public async Task<IList<SupplementaryDataLooseModel>> GetESFRecordsFromFile(
-            JobContextModel jobContextMessage,
+            IEsfJobContext esfJobContext,
             SourceFileModel sourceFile,
             CancellationToken cancellationToken)
         {
@@ -43,7 +44,7 @@ namespace ESFA.DC.ESF.R2.Service.Services
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var stream = await _storage.OpenReadStreamAsync(sourceFile.FileName, jobContextMessage.BlobContainerName, cancellationToken))
+            using (var stream = await _storage.OpenReadStreamAsync(sourceFile.FileName, esfJobContext.BlobContainerName, cancellationToken))
             {
                 using (var reader = new StreamReader(stream))
                 {

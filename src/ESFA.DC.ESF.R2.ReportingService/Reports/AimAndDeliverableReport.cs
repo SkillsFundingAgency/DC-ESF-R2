@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CsvHelper;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Interfaces.Services;
@@ -40,24 +41,24 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
         }
 
         public async Task GenerateReport(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             ZipArchive archive,
             CancellationToken cancellationToken)
         {
-            var externalFileName = GetExternalFilename(jobContextModel.UkPrn.ToString(), jobContextModel.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
-            var fileName = GetFilename(jobContextModel.UkPrn.ToString(), jobContextModel.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
+            var externalFileName = GetExternalFilename(esfJobContext.UkPrn.ToString(), esfJobContext.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
+            var fileName = GetFilename(esfJobContext.UkPrn.ToString(), esfJobContext.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            var ukPrn = jobContextModel.UkPrn;
-            string csv = await GetCsv(ukPrn, jobContextModel.CollectionYear, cancellationToken);
+            var ukPrn = esfJobContext.UkPrn;
+            string csv = await GetCsv(ukPrn, esfJobContext.CollectionYear, cancellationToken);
             if (csv != null)
             {
                 using (var stream = await _storage.OpenWriteStreamAsync(
                     $"{externalFileName}.csv",
-                    jobContextModel.BlobContainerName,
+                    esfJobContext.BlobContainerName,
                     cancellationToken))
                 {
                     using (var writer = new StreamWriter(stream, new UTF8Encoding(false, true)))

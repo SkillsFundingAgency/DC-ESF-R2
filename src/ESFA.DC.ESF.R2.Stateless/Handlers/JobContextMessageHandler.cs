@@ -14,8 +14,6 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
 {
     public class JobContextMessageHandler : IMessageHandler<JobContextMessage>
     {
-        private const string Ilr1920CollectionName = "ILR1920";
-
         private readonly ILifetimeScope _lifetimeScope;
         private readonly ILogger _logger;
 

@@ -7,7 +7,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.Helpers
     public interface ITaskHelper
     {
         Task ExecuteTasks(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SourceFileModel sourceFileModel,
             SupplementaryDataWrapper supplementaryDataWrapper,
             CancellationToken cancellationToken);

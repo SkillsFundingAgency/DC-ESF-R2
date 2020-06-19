@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Models;
@@ -34,25 +35,25 @@ namespace ESFA.DC.ESF.R2.ReportingService
         }
 
         public async Task FileLevelErrorReport(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SupplementaryDataWrapper wrapper,
             SourceFileModel sourceFile,
             CancellationToken cancellationToken)
         {
-            await ProduceReports(jobContextModel, wrapper, sourceFile, cancellationToken, false);
+            await ProduceReports(esfJobContext, wrapper, sourceFile, cancellationToken, false);
         }
 
         public async Task ProduceReports(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SupplementaryDataWrapper wrapper,
             SourceFileModel sourceFile,
             CancellationToken cancellationToken)
         {
-            await ProduceReports(jobContextModel, wrapper, sourceFile, cancellationToken, true);
+            await ProduceReports(esfJobContext, wrapper, sourceFile, cancellationToken, true);
         }
 
         private async Task ProduceReports(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SupplementaryDataWrapper wrapper,
             SourceFileModel sourceFile,
             CancellationToken cancellationToken,
@@ -60,15 +61,15 @@ namespace ESFA.DC.ESF.R2.ReportingService
         {
             _logger.LogInfo("ESF Reporting service called");
 
-            var fileName = $"{jobContextModel.UkPrn}/{jobContextModel.JobId}/Reports.zip";
+            var fileName = $"{esfJobContext.UkPrn}/{esfJobContext.JobId}/Reports.zip";
             using (Stream memoryStream = new MemoryStream())
             {
-                if (await _persistenceService.ExistsAsync(fileName, jobContextModel.BlobContainerName, cancellationToken))
+                if (await _persistenceService.ExistsAsync(fileName, esfJobContext.BlobContainerName, cancellationToken))
                 {
                     using (var readStream = await
                         _persistenceService.OpenReadStreamAsync(
                             fileName,
-                            jobContextModel.BlobContainerName,
+                            esfJobContext.BlobContainerName,
                             cancellationToken))
                     {
                         await readStream.CopyToAsync(memoryStream);
@@ -85,16 +86,16 @@ namespace ESFA.DC.ESF.R2.ReportingService
                         {
                             foreach (var validationReport in _validationReports)
                             {
-                                await validationReport.GenerateReport(jobContextModel, sourceFile, wrapper, archive, cancellationToken);
+                                await validationReport.GenerateReport(esfJobContext, sourceFile, wrapper, archive, cancellationToken);
                             }
                         }
 
                         if (passedFileValidation)
                         {
-                            var reportsToRun = _esfReports.Where(r => jobContextModel.Tasks.Contains(r.TaskName, StringComparer.OrdinalIgnoreCase));
+                            var reportsToRun = _esfReports.Where(r => esfJobContext.Tasks.Contains(r.TaskName, StringComparer.OrdinalIgnoreCase));
                             foreach (var report in reportsToRun)
                             {
-                                await report.GenerateReport(jobContextModel, sourceFile, wrapper, archive, cancellationToken);
+                                await report.GenerateReport(esfJobContext, sourceFile, wrapper, archive, cancellationToken);
                             }
                         }
                     }
@@ -109,7 +110,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
 
                 using (var writeStream = await _persistenceService.OpenWriteStreamAsync(
                     fileName,
-                    jobContextModel.BlobContainerName,
+                    esfJobContext.BlobContainerName,
                     cancellationToken))
                 {
                     memoryStream.Position = 0;

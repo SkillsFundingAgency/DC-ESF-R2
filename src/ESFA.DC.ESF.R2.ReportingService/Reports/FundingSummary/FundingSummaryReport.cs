@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Aspose.Cells;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
@@ -81,13 +82,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         }
 
         public async Task GenerateReport(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             ZipArchive archive,
             CancellationToken cancellationToken)
         {
-            var ukPrn = jobContextModel.UkPrn;
+            var ukPrn = esfJobContext.UkPrn;
 
             var conRefNumbers = await _referenceDataService.GetContractAllocationsForUkprn(ukPrn, cancellationToken);
 
@@ -96,17 +97,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 conRefNumbers = new List<string> { NotApplicable };
             }
 
-            var collectionYear = Convert.ToInt32($"20{jobContextModel.CollectionYear.ToString().Substring(0, 2)}");
+            var collectionYear = Convert.ToInt32($"20{esfJobContext.CollectionYear.ToString().Substring(0, 2)}");
 
-            var sourceFiles = await _supplementaryDataService.GetImportFiles(jobContextModel.UkPrn.ToString(), cancellationToken);
+            var sourceFiles = await _supplementaryDataService.GetImportFiles(esfJobContext.UkPrn.ToString(), cancellationToken);
 
-            _logger.LogDebug($"{sourceFiles.Count} esf files found for ukprn {ukPrn} and collection year 20{jobContextModel.CollectionYear.ToString().Substring(0, 2)}.");
+            _logger.LogDebug($"{sourceFiles.Count} esf files found for ukprn {ukPrn} and collection year 20{esfJobContext.CollectionYear.ToString().Substring(0, 2)}.");
 
             var supplementaryData =
                 await _supplementaryDataService.GetSupplementaryData(collectionYear, sourceFiles, cancellationToken);
 
             var ilrYearlyFileData = (await _ilrService.GetIlrFileDetails(ukPrn, collectionYear, cancellationToken)).ToList();
-            var fm70YearlyData = (await _ilrService.GetYearlyIlrData(ukPrn, jobContextModel.CollectionName, collectionYear, jobContextModel.ReturnPeriod, cancellationToken)).ToList();
+            var fm70YearlyData = (await _ilrService.GetYearlyIlrData(ukPrn, esfJobContext.CollectionName, collectionYear, esfJobContext.ReturnPeriod, cancellationToken)).ToList();
 
             var workbook = new Workbook();
             workbook.Worksheets.Clear();
@@ -172,8 +173,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 workbook = GetWorkbookReport(workbook, sheet, fundingSummaryHeaderModel, fundingSummaryModels, fundingSummaryFooterModel);
             }
 
-            string externalFileName = GetExternalFilename(ukPrn.ToString(), jobContextModel.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
-            string fileName = GetFilename(ukPrn.ToString(), jobContextModel.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
+            string externalFileName = GetExternalFilename(ukPrn.ToString(), esfJobContext.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
+            string fileName = GetFilename(ukPrn.ToString(), esfJobContext.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
 
             using (var ms = new MemoryStream())
             {
@@ -188,7 +189,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
                 using (var stream = await _storage.OpenWriteStreamAsync(
                     $"{externalFileName}.xlsx",
-                    jobContextModel.BlobContainerName,
+                    esfJobContext.BlobContainerName,
                     cancellationToken))
                 {
                     await ms.CopyToAsync(stream, 81920, cancellationToken);

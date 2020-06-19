@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
@@ -70,14 +71,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             SourceFileModel sourceFile = GetEsfSourceFileModel();
             sourceFile.FileName = sourceFileName;
 
-            JobContextModel jobContextModel = new JobContextModel
-            {
-                UkPrn = 10005752,
-                JobId = 1,
-                BlobContainerName = "TestContainer",
-                CollectionYear = 1819,
-                CollectionName = collectionName
-            };
+            var esfJobContextMock = new Mock<IEsfJobContext>();
+            esfJobContextMock.Setup(x => x.UkPrn).Returns(10005752);
+            esfJobContextMock.Setup(x => x.JobId).Returns(1);
+            esfJobContextMock.Setup(x => x.BlobContainerName).Returns("TestContainer");
+            esfJobContextMock.Setup(x => x.CollectionYear).Returns(1819);
+            esfJobContextMock.Setup(x => x.CollectionName).Returns(collectionName);
 
             var supplementaryDataWrapper = new SupplementaryDataWrapper()
             {
@@ -91,7 +90,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             {
                 using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Update, true))
                 {
-                    await fundigReport.GenerateReport(jobContextModel, sourceFile, supplementaryDataWrapper, archive, CancellationToken.None);
+                    await fundigReport.GenerateReport(esfJobContextMock.Object, sourceFile, supplementaryDataWrapper, archive, CancellationToken.None);
 
                     storage.Verify(s =>
                         s.OpenWriteStreamAsync($"{filename}.csv", It.IsAny<string>(), It.IsAny<CancellationToken>()));

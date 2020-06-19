@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CsvHelper;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
@@ -36,7 +37,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
         }
 
         public async Task GenerateReport(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             ZipArchive archive,
@@ -50,7 +51,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
 
             using (var stream = await _storage.OpenWriteStreamAsync(
                 $"{externalFileName}.csv",
-                jobContextModel.BlobContainerName,
+                esfJobContext.BlobContainerName,
                 cancellationToken))
             {
                 using (var writer = new StreamWriter(stream, new UTF8Encoding(false, true)))

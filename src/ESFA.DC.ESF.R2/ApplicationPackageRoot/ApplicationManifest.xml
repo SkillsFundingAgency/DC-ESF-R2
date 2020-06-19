@@ -24,6 +24,10 @@
     <Parameter Name="OrganisationConnectionString" DefaultValue="" />
     <Parameter Name="PostcodesConnectionString" DefaultValue="" />
     <Parameter Name="ULNConnectionString" DefaultValue="" />
+    <Parameter Name="TopicMaxConcurrentCalls" DefaultValue="" />
+    <Parameter Name="TopicMaxCallbackTimeSpanMinutes" DefaultValue="" />
+    <Parameter Name="JobStatusMaxConcurrentCalls" DefaultValue="" />
+    <Parameter Name="AuditMaxConcurrentCalls" DefaultValue="" />
   </Parameters>
   <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
        should match the Name and Version attributes of the ServiceManifest element defined in the 
@@ -33,12 +37,17 @@
     <ConfigOverrides>
       <ConfigOverride Name="Config">
         <Settings>
-          <Section Name="ServiceBusSettings">
+          <Section Name="StatelessServiceConfiguration">
             <Parameter Name="ServiceBusConnectionString" Value="[ServiceBusConnectionString]" />
             <Parameter Name="TopicName" Value="[TopicName]" />
             <Parameter Name="SubscriptionName" Value="[SubscriptionName]" />
             <Parameter Name="JobStatusQueueName" Value="[JobStatusQueueName]" />
             <Parameter Name="AuditQueueName" Value="[AuditQueueName]" />
+            <Parameter Name="TopicMaxConcurrentCalls" Value="[TopicMaxConcurrentCalls]" />
+            <Parameter Name="TopicMaxCallbackTimeSpanMinutes" Value="[TopicMaxCallbackTimeSpanMinutes]" />
+            <Parameter Name="JobStatusMaxConcurrentCalls" Value="[JobStatusMaxConcurrentCalls]" />
+            <Parameter Name="AuditMaxConcurrentCalls" Value="[AuditMaxConcurrentCalls]" />
+            <Parameter Name="LoggerConnectionString" Value="[LoggerConnectionString]" />
           </Section>
           <Section Name="VersionSection">
             <Parameter Name="ServiceReleaseVersion" Value="[ServiceReleaseVersion]" />
@@ -46,7 +55,7 @@
           <Section Name="LoggerSection">
             <Parameter Name="LoggerConnectionstring" Value="[LoggerConnectionstring]" />
           </Section>
-          <Section Name="AzureStorageSection">
+          <Section Name="AzureStorageFileServiceConfiguration">
             <Parameter Name="ConnectionString" Value="[AzureBlobConnectionString]" />
           </Section>
           <Section Name="SoftwareLicenceSection">

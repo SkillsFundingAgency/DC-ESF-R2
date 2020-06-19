@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using ESFA.DC.ESF.R2.Interfaces;
 
-namespace ESFA.DC.ESF.R2.Models
+namespace ESFA.DC.ESF.R2.Stateless.Context
 {
-    public class JobContextModel
+    public class EsfJobContext : IEsfJobContext
     {
         public long JobId { get; set; }
 

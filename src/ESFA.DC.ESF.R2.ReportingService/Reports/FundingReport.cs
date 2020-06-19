@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CsvHelper;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Services;
@@ -38,7 +39,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
         }
 
         public async Task GenerateReport(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             ZipArchive archive,
@@ -47,12 +48,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             string csv = GetCsv(wrapper);
 
             ReportFileName = $"{sourceFile.ConRefNumber} " + ReportFileName;
-            string externalFileName = GetExternalFilename(jobContextModel.UkPrn.ToString(), jobContextModel.JobId, sourceFile.SuppliedDate ?? DateTime.MinValue);
-            string fileName = GetFilename(jobContextModel.UkPrn.ToString(), jobContextModel.JobId, sourceFile.SuppliedDate ?? DateTime.MinValue);
+            string externalFileName = GetExternalFilename(esfJobContext.UkPrn.ToString(), esfJobContext.JobId, sourceFile.SuppliedDate ?? DateTime.MinValue);
+            string fileName = GetFilename(esfJobContext.UkPrn.ToString(), esfJobContext.JobId, sourceFile.SuppliedDate ?? DateTime.MinValue);
 
             using (var stream = await _storage.OpenWriteStreamAsync(
                 $"{externalFileName}.csv",
-                jobContextModel.BlobContainerName,
+                esfJobContext.BlobContainerName,
                 cancellationToken))
             {
                 using (var writer = new StreamWriter(stream, new UTF8Encoding(false, true)))
