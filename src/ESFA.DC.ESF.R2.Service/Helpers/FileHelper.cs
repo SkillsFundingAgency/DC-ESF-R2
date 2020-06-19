@@ -13,6 +13,7 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
 {
     public class FileHelper : IFileHelper
     {
+        private const string _filenameExtension = @"\.csv";
         private readonly IESFProviderService _providerService;
 
         public FileHelper(IESFProviderService providerService)
@@ -29,7 +30,7 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
 
             var fileName = esfJobContext.FileName;
 
-            string[] fileNameParts = fileName.SplitFileName();
+            string[] fileNameParts = fileName.SplitFileName(_filenameExtension);
 
             if (fileNameParts.Length != 5)
             {
@@ -62,7 +63,7 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
                 return null;
             }
 
-            var fileNameParts = fileName.SplitFileName();
+            var fileNameParts = fileName.SplitFileName(_filenameExtension);
             return fileNameParts.Length < 5 || fileNameParts[3].Length < 8 || fileNameParts[4].Length < 6
                 ? string.Empty
                 : $"{fileNameParts[3].Substring(0, 4)}/{fileNameParts[3].Substring(4, 2)}/{fileNameParts[3].Substring(6, 2)} " +

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ESFA.DC.ESF.R2.Interfaces.Constants;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
-using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppData
 {

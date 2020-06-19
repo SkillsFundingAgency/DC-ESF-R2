@@ -25,12 +25,12 @@ namespace ESFA.DC.ESF.R2.Utils
             return source?.ToLower().Trim().Contains(data.ToLower().Trim()) ?? false;
         }
 
-        public static string[] SplitFileName(this string fileName)
+        public static string[] SplitFileName(this string fileName, string extension)
         {
             const int lengthOfDateTimePart = 15;
             const int ukPrnLength = 8;
 
-            fileName = Regex.Replace(fileName, @"\.csv", string.Empty, RegexOptions.IgnoreCase);
+            fileName = Regex.Replace(fileName, extension, string.Empty, RegexOptions.IgnoreCase);
 
             if (fileName.Contains("/"))
             {

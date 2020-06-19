@@ -8,6 +8,8 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
 {
     public class ConRefNumberRule01 : BaseValidationRule, IFileLevelValidator
     {
+        private const string _filenameExtension = @"\.csv";
+
         public ConRefNumberRule01(IValidationErrorMessageService errorMessageService)
             : base(errorMessageService)
         {
@@ -21,7 +23,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
 
         public async Task<bool> IsValid(SourceFileModel sourceFileModel, SupplementaryDataLooseModel model)
         {
-            string[] filenameParts = sourceFileModel.FileName.SplitFileName();
+            string[] filenameParts = sourceFileModel.FileName.SplitFileName(_filenameExtension);
 
             return filenameParts[2] == model.ConRefNumber;
         }

@@ -39,6 +39,7 @@
     <Compile Include="Config\ILoggerOptions.cs" />
     <Compile Include="Config\IReferenceDataConfig.cs" />
     <Compile Include="Config\IVersionInfo.cs" />
+    <Compile Include="Constants\ESFConstants.cs" />
     <Compile Include="Controllers\IReportingController.cs" />
     <Compile Include="Controllers\IServiceController.cs" />
     <Compile Include="Controllers\IStorageController.cs" />
