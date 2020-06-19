@@ -4,7 +4,7 @@ using ESFA.DC.ESF.R2.Models;
 
 namespace ESFA.DC.ESF.R2.Service.Mappers
 {
-    public sealed class ESFMapper : ClassMap<SupplementaryDataModel>, IClassMapper
+    public sealed class ESFMapper : ClassMap<SupplementaryDataLooseModel>, IClassMapper
     {
         public ESFMapper()
         {

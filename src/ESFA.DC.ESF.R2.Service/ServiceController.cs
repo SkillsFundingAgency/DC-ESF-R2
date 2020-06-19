@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces;
+using ESFA.DC.ESF.R2.Interfaces.Builders;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Helpers;
@@ -12,7 +13,7 @@ namespace ESFA.DC.ESF.R2.Service
 {
     public class ServiceController : IServiceController
     {
-        private readonly IFileHelper _fileHelper;
+        private readonly ISourceFileModelBuilder _sourceFileModelBuilder;
         private readonly ITaskHelper _taskHelper;
         private readonly IPeriodHelper _periodHelper;
         private readonly IFileValidationService _fileValidationService;
@@ -21,7 +22,7 @@ namespace ESFA.DC.ESF.R2.Service
         private readonly IValidationErrorMessageService _validationErrorMessageService;
 
         public ServiceController(
-            IFileHelper fileHelper,
+            ISourceFileModelBuilder sourceFileModelBuilder,
             ITaskHelper taskHelper,
             IPeriodHelper periodHelper,
             IFileValidationService fileValidationService,
@@ -29,7 +30,7 @@ namespace ESFA.DC.ESF.R2.Service
             IReportingController reportingController,
             IValidationErrorMessageService validationErrorMessageService)
         {
-            _fileHelper = fileHelper;
+            _sourceFileModelBuilder = sourceFileModelBuilder;
             _taskHelper = taskHelper;
             _periodHelper = periodHelper;
             _fileValidationService = fileValidationService;
@@ -43,13 +44,13 @@ namespace ESFA.DC.ESF.R2.Service
             CancellationToken cancellationToken)
         {
             var wrapper = new SupplementaryDataWrapper();
-            var sourceFileModel = new SourceFileModel() { SuppliedDate = esfJobContext.SubmissionDateTimeUtc };
+            var sourceFileModel = _sourceFileModelBuilder.BuildDefault(esfJobContext);
 
             _periodHelper.CacheCurrentPeriod(esfJobContext);
 
             if (esfJobContext.Tasks.Contains(Constants.ValidationTask))
             {
-                sourceFileModel = _fileHelper.GetSourceFileData(esfJobContext);
+                sourceFileModel = _sourceFileModelBuilder.Build(esfJobContext);
 
                 wrapper = await _fileValidationService.GetFile(esfJobContext, sourceFileModel, cancellationToken);
                 if (!wrapper.ValidErrorModels.Any())

@@ -4,6 +4,7 @@ using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.Strategies;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 
 namespace ESFA.DC.ESF.R2.Service.Strategies
 {
@@ -25,7 +26,7 @@ namespace ESFA.DC.ESF.R2.Service.Strategies
 
         public async Task Execute(
             IEsfJobContext esfJobContext,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             CancellationToken cancellationToken)
         {

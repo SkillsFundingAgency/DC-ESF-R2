@@ -12,6 +12,7 @@ using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.ESF.R2.ReportingService.Comparers;
 using ESFA.DC.ESF.R2.ReportingService.Mappers;
 using ESFA.DC.FileService.Interface;
@@ -20,25 +21,25 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
 {
     public class ValidationErrorReport : AbstractReportBuilder, IValidationReport
     {
-        private readonly IFileService _storage;
+        private readonly IFileService _fileService;
         private readonly ValidationComparer _comparer;
 
         public ValidationErrorReport(
             IDateTimeProvider dateTimeProvider,
             IValueProvider valueProvider,
-            IFileService storage,
+            IFileService fileService,
             IValidationComparer comparer)
             : base(dateTimeProvider, valueProvider, string.Empty)
         {
             ReportFileName = "ESF (Round 2) Supplementary Data Rule Violation Report";
 
-            _storage = storage;
+            _fileService = fileService;
             _comparer = comparer as ValidationComparer;
         }
 
         public async Task GenerateReport(
             IEsfJobContext esfJobContext,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             ZipArchive archive,
             CancellationToken cancellationToken)
@@ -49,7 +50,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             string externalFileName = GetExternalFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
             string fileName = GetFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
 
-            using (var stream = await _storage.OpenWriteStreamAsync(
+            using (var stream = await _fileService.OpenWriteStreamAsync(
                 $"{externalFileName}.csv",
                 esfJobContext.BlobContainerName,
                 cancellationToken))

@@ -11,6 +11,7 @@ using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.FileService.Interface;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.Serialization.Interfaces;
@@ -37,7 +38,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
 
         public async Task GenerateReport(
             IEsfJobContext esfJobContext,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             ZipArchive archive,
             CancellationToken cancellationToken)
@@ -53,8 +54,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
         }
 
         private FileValidationResult GetValidationReport(
-            IList<SupplementaryDataModel> data,
-            IList<ValidationErrorModel> validationErrors)
+            ICollection<SupplementaryDataModel> data,
+            ICollection<ValidationErrorModel> validationErrors)
         {
             var errors = validationErrors.Where(x => !x.IsWarning).ToList();
             var warnings = validationErrors.Where(x => x.IsWarning).ToList();

@@ -35,7 +35,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Services
             _cache.PopulateContractDeliverableCodeMappings(deliverableCodes, cancellationToken);
         }
 
-        public void PrePopulateContractAllocations(int ukPrn, IList<SupplementaryDataModel> models, CancellationToken cancellationToken)
+        public void PrePopulateContractAllocations(int ukPrn, ICollection<SupplementaryDataModel> models, CancellationToken cancellationToken)
         {
             foreach (var model in models)
             {

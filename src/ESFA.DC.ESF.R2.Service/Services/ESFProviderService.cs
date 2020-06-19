@@ -1,15 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CsvHelper;
 using CsvHelper.Configuration;
+using ESFA.DC.CsvService.Interface;
 using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Service.Mappers;
-using ESFA.DC.FileService.Interface;
 using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.Service.Services
@@ -17,50 +14,34 @@ namespace ESFA.DC.ESF.R2.Service.Services
     public class ESFProviderService : IESFProviderService
     {
         private readonly ILogger _logger;
+        private readonly ICsvFileService _csvFileService;
 
-        private readonly IFileService _storage;
-
-        private readonly SemaphoreSlim _getESFLock;
-
-        public ESFProviderService(
-            ILogger logger,
-            IFileService storage)
+        public ESFProviderService(ILogger logger, ICsvFileService csvFileService)
         {
             _logger = logger;
-            _storage = storage;
-            _getESFLock = new SemaphoreSlim(1, 1);
+            _csvFileService = csvFileService;
         }
 
-        public async Task<IList<SupplementaryDataLooseModel>> GetESFRecordsFromFile(
-            IEsfJobContext esfJobContext,
-            SourceFileModel sourceFile,
-            CancellationToken cancellationToken)
+        public async Task<ICollection<SupplementaryDataLooseModel>> GetESFRecordsFromFile(IEsfJobContext esfJobContext, CancellationToken cancellationToken)
         {
             List<SupplementaryDataLooseModel> model = null;
-
-            await _getESFLock.WaitAsync(cancellationToken);
 
             _logger.LogInfo("Try and get csv from Azure blob.");
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var stream = await _storage.OpenReadStreamAsync(sourceFile.FileName, esfJobContext.BlobContainerName, cancellationToken))
-            {
-                using (var reader = new StreamReader(stream))
-                {
-                    using (var csvReader = new CsvReader(reader))
-                    {
-                        csvReader.Configuration.RegisterClassMap(new ESFMapper());
-                        csvReader.Configuration.TrimOptions = TrimOptions.Trim;
-                        csvReader.Configuration.MissingFieldFound = null;
-                        model = csvReader.GetRecords<SupplementaryDataLooseModel>().ToList();
-                    }
-                }
-            }
+            var csvConfig = GetCsvConfig();
 
-            _getESFLock.Release();
+            return await _csvFileService.ReadAllAsync<SupplementaryDataLooseModel, ESFMapper>(esfJobContext.FileName, esfJobContext.BlobContainerName, cancellationToken, csvConfig);
+        }
 
-            return model;
+        private Configuration GetCsvConfig()
+        {
+            var csvConfig = _csvFileService.BuildDefaultConfiguration();
+            csvConfig.TrimOptions = TrimOptions.Trim;
+            csvConfig.MissingFieldFound = null;
+
+            return csvConfig;
         }
     }
 }

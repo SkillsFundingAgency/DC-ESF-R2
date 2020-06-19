@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.DataStore;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.ESF.R2.Service.Config;
 using ESFA.DC.Logging.Interfaces;
 
@@ -36,7 +37,7 @@ namespace ESFA.DC.ESF.R2.DataStore
         }
 
         public async Task<bool> StoreData(
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             CancellationToken cancellationToken)
         {
@@ -97,7 +98,7 @@ namespace ESFA.DC.ESF.R2.DataStore
         }
 
         public async Task<bool> StoreValidationOnly(
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             CancellationToken cancellationToken)
         {

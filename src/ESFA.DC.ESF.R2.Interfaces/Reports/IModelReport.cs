@@ -1,9 +1,9 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 
 namespace ESFA.DC.ESF.R2.Interfaces.Reports
 {
@@ -11,7 +11,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.Reports
     {
         Task GenerateReport(
             IEsfJobContext esfJobContext,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             ZipArchive archive,
             CancellationToken cancellationToken);

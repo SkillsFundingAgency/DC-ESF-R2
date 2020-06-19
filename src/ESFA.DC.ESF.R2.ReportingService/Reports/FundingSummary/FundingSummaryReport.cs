@@ -18,6 +18,7 @@ using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Interfaces.Strategies;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Generation;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.ESF.R2.Models.Reports;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 using ESFA.DC.ESF.R2.Models.Styling;
@@ -83,7 +84,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
         public async Task GenerateReport(
             IEsfJobContext esfJobContext,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             ZipArchive archive,
             CancellationToken cancellationToken)

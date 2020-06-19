@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using ESFA.DC.CsvService;
+using ESFA.DC.CsvService.Interface;
 using ESFA.DC.FileService;
 using ESFA.DC.FileService.Config.Interface;
 using ESFA.DC.FileService.Interface;
@@ -19,6 +21,7 @@ namespace ESFA.DC.ESF.R2.Stateless.Modules
             containerBuilder.RegisterInstance(_azureStorageFileServiceConfig).As<IAzureStorageFileServiceConfiguration>();
 
             containerBuilder.RegisterType<AzureStorageFileService>().As<IFileService>();
+            containerBuilder.RegisterType<CsvFileService>().As<ICsvFileService>();
         }
     }
 }

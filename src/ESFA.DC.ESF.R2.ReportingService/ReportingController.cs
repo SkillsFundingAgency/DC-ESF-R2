@@ -9,6 +9,7 @@ using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.FileService.Interface;
 using ESFA.DC.Logging.Interfaces;
 
@@ -37,7 +38,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
         public async Task FileLevelErrorReport(
             IEsfJobContext esfJobContext,
             SupplementaryDataWrapper wrapper,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             CancellationToken cancellationToken)
         {
             await ProduceReports(esfJobContext, wrapper, sourceFile, cancellationToken, false);
@@ -46,7 +47,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
         public async Task ProduceReports(
             IEsfJobContext esfJobContext,
             SupplementaryDataWrapper wrapper,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             CancellationToken cancellationToken)
         {
             await ProduceReports(esfJobContext, wrapper, sourceFile, cancellationToken, true);
@@ -55,7 +56,7 @@ namespace ESFA.DC.ESF.R2.ReportingService
         private async Task ProduceReports(
             IEsfJobContext esfJobContext,
             SupplementaryDataWrapper wrapper,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             CancellationToken cancellationToken,
             bool passedFileValidation)
         {

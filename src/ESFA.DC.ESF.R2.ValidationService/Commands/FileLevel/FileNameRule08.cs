@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
 {
@@ -25,7 +26,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
 
         public bool IsWarning => false;
 
-        public async Task<bool> IsValid(SourceFileModel sourceFileModel, SupplementaryDataLooseModel model)
+        public async Task<bool> IsValid(ISourceFileModel sourceFileModel, SupplementaryDataLooseModel model)
         {
             var previousFiles = await _esfRepository.AllPreviousFilesForValidation(sourceFileModel.UKPRN, sourceFileModel.ConRefNumber, CancellationToken.None);
 

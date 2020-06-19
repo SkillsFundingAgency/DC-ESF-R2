@@ -13,6 +13,7 @@ using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.ESF.R2.Models.Reports;
 using ESFA.DC.ESF.R2.ReportingService.Mappers;
 using ESFA.DC.FileService.Interface;
@@ -42,7 +43,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
 
         public async Task GenerateReport(
             IEsfJobContext esfJobContext,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
             ZipArchive archive,
             CancellationToken cancellationToken)
