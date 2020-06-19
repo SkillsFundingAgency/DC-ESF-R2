@@ -29,14 +29,14 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
 
             var fileName = esfJobContext.FileName;
 
-            string[] fileNameParts = FileNameHelper.SplitFileName(fileName);
+            string[] fileNameParts = fileName.SplitFileName();
 
             if (fileNameParts.Length != 5)
             {
                 throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is invalid");
             }
 
-            var fileNameDatePart = FileNameHelper.GetPreparedDateFromFileName(fileName);
+            var fileNameDatePart = GetPreparedDateFromFileName(fileName);
             if (!DateTime.TryParse(fileNameDatePart, out var preparationDateTime))
             {
                 throw new ArgumentException($"{nameof(JobContextMessageKey.Filename)} is invalid");
@@ -53,6 +53,20 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
                 SuppliedDate = esfJobContext.SubmissionDateTimeUtc,
                 JobId = jobId
             };
+        }
+
+        public static string GetPreparedDateFromFileName(string fileName)
+        {
+            if (fileName == null)
+            {
+                return null;
+            }
+
+            var fileNameParts = fileName.SplitFileName();
+            return fileNameParts.Length < 5 || fileNameParts[3].Length < 8 || fileNameParts[4].Length < 6
+                ? string.Empty
+                : $"{fileNameParts[3].Substring(0, 4)}/{fileNameParts[3].Substring(4, 2)}/{fileNameParts[3].Substring(6, 2)} " +
+                  $"{fileNameParts[4].Substring(0, 2)}:{fileNameParts[4].Substring(2, 2)}:{fileNameParts[4].Substring(4, 2)}";
         }
 
         public async Task<IList<SupplementaryDataLooseModel>> GetESFRecords(

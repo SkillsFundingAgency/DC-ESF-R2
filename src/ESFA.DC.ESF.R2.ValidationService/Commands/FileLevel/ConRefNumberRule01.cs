@@ -21,7 +21,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
 
         public async Task<bool> IsValid(SourceFileModel sourceFileModel, SupplementaryDataLooseModel model)
         {
-            string[] filenameParts = FileNameHelper.SplitFileName(sourceFileModel.FileName);
+            string[] filenameParts = sourceFileModel.FileName.SplitFileName();
 
             return filenameParts[2] == model.ConRefNumber;
         }

@@ -234,8 +234,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
             foreach (var model in fileData)
             {
-                var preparationDate = FileNameHelper.GetPreparedDateFromILRFileName(model.FileName);
-                var secondYear = FileNameHelper.GetSecondYearFromReportYear(model.Year);
+                var preparationDate = GetPreparedDateFromILRFileName(model.FileName);
+                var secondYear = GetSecondYearFromReportYear(model.Year);
 
                 ukPrnRow.Add(null);
                 ukPrnRow.Add($"{model.Year}/{secondYear}");
@@ -540,6 +540,31 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             {
                 sheet.Cells.CreateRange(lastOperatedRow, firstColumn, 1, totalColumns).ApplyStyle(italicCellStyle.Style, italicCellStyle.StyleFlag);
             }
+        }
+
+        private string GetSecondYearFromReportYear(int year)
+        {
+            return year.ToString().Length > 3 ?
+                (Convert.ToInt32(year.ToString().Substring(year.ToString().Length - 2)) + 1).ToString() :
+                string.Empty;
+        }
+
+        private string GetPreparedDateFromILRFileName(string fileName)
+        {
+            if (fileName == null)
+            {
+                return null;
+            }
+
+            var fileNameParts = fileName.Split('-');
+            if (fileNameParts.Length < 6 || fileNameParts[3].Length != 8 || fileNameParts[4].Length != 6)
+            {
+                return string.Empty;
+            }
+
+            var dateString = $"{fileNameParts[3].Substring(0, 4)}/{fileNameParts[3].Substring(4, 2)}/{fileNameParts[3].Substring(6, 2)} " +
+                             $"{fileNameParts[4].Substring(0, 2)}:{fileNameParts[4].Substring(2, 2)}:{fileNameParts[4].Substring(4, 2)}";
+            return Convert.ToDateTime(dateString).ToString("dd/MM/yyyy hh:mm:ss");
         }
     }
 }
