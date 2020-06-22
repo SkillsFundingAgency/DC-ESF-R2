@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using CsvHelper;
+using ESFA.DC.CsvService.Interface;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Constants;
@@ -16,58 +13,50 @@ using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.ESF.R2.Models.Reports;
+using ESFA.DC.ESF.R2.ReportingService.Abstract;
+using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.ESF.R2.ReportingService.Mappers;
 using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.FileService.Interface;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Reports
 {
-    public class FundingReport : AbstractReportBuilder, IModelReport
+    public class FundingReport : AbstractCsvReportService<FundingReportModel, FundingReportMapper>, IModelReport
     {
-        private readonly IFileService _storage;
+        private const string _reportExtension = ".csv";
+
         private readonly IReferenceDataService _referenceDataService;
 
         public FundingReport(
             IDateTimeProvider dateTimeProvider,
             IValueProvider valueProvider,
-            IFileService storage,
+            IFileService fileService,
+            ICsvFileService csvFileService,
             IReferenceDataService referenceDataService)
-            : base(dateTimeProvider, valueProvider, Constants.TaskGenerateFundingReport)
+            : base(dateTimeProvider, valueProvider, fileService, csvFileService, ReportTaskConstants.TaskGenerateFundingReport)
         {
-            ReportFileName = "ESF (Round 2) Supplementary Data Funding Report";
+            ReportFileName = ReportNameConstants.FundingReport;
 
-            _storage = storage;
             _referenceDataService = referenceDataService;
         }
 
-        public async Task GenerateReport(
+        public async Task<string> GenerateReport(
             IEsfJobContext esfJobContext,
             ISourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
-            ZipArchive archive,
             CancellationToken cancellationToken)
         {
-            string csv = GetCsv(wrapper);
+            var reportModels = GetModels(wrapper);
 
             ReportFileName = $"{sourceFile.ConRefNumber} " + ReportFileName;
-            string externalFileName = GetExternalFilename(esfJobContext.UkPrn.ToString(), esfJobContext.JobId, sourceFile.SuppliedDate ?? DateTime.MinValue);
-            string fileName = GetFilename(esfJobContext.UkPrn.ToString(), esfJobContext.JobId, sourceFile.SuppliedDate ?? DateTime.MinValue);
+            string externalFileName = GetExternalFilename(esfJobContext.UkPrn.ToString(), esfJobContext.JobId, sourceFile.SuppliedDate ?? DateTime.MinValue, _reportExtension);
 
-            using (var stream = await _storage.OpenWriteStreamAsync(
-                $"{externalFileName}.csv",
-                esfJobContext.BlobContainerName,
-                cancellationToken))
-            {
-                using (var writer = new StreamWriter(stream, new UTF8Encoding(false, true)))
-                {
-                    writer.Write(csv);
-                }
-            }
+            await WriteCsv(esfJobContext, externalFileName, reportModels, cancellationToken);
 
-            await WriteZipEntry(archive, $"{fileName}.csv", csv);
+            return externalFileName;
         }
 
-        private string GetCsv(SupplementaryDataWrapper wrapper)
+        private ICollection<FundingReportModel> GetModels(SupplementaryDataWrapper wrapper)
         {
             var fundingModels = new List<FundingReportModel>();
 
@@ -116,20 +105,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
                 fundingModels.Add(fundModel);
             }
 
-            using (var ms = new MemoryStream())
-            {
-                var utF8Encoding = new UTF8Encoding(false, true);
-                using (TextWriter textWriter = new StreamWriter(ms, utF8Encoding))
-                {
-                    using (var csvWriter = new CsvWriter(textWriter))
-                    {
-                        WriteCsvRecords<FundingReportMapper, FundingReportModel>(csvWriter, fundingModels);
-                        csvWriter.Flush();
-                        textWriter.Flush();
-                        return Encoding.UTF8.GetString(ms.ToArray());
-                    }
-                }
-            }
+            return fundingModels;
         }
     }
 }

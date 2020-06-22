@@ -10,6 +10,7 @@ using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Interfaces;
+using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.FileService.Interface;
 using ESFA.DC.Logging.Interfaces;
 
@@ -18,18 +19,21 @@ namespace ESFA.DC.ESF.R2.ReportingService
     public class ReportingController : IReportingController
     {
         private readonly ILogger _logger;
-        private readonly IFileService _persistenceService;
+        private readonly IFileService _fileService;
+        private readonly IZipArchiveService _zipArchiveService;
 
         private readonly IList<IValidationReport> _validationReports;
         private readonly IList<IModelReport> _esfReports;
 
         public ReportingController(
-            IFileService persistenceService,
+            IFileService fileService,
+            IZipArchiveService zipArchiveService,
             ILogger logger,
             IList<IValidationReport> validationReports,
             IList<IModelReport> esfReports)
         {
-            _persistenceService = persistenceService;
+            _fileService = fileService;
+            _zipArchiveService = zipArchiveService;
             _logger = logger;
             _validationReports = validationReports;
             _esfReports = esfReports;
@@ -62,61 +66,77 @@ namespace ESFA.DC.ESF.R2.ReportingService
         {
             _logger.LogInfo("ESF Reporting service called");
 
-            var fileName = $"{esfJobContext.UkPrn}/{esfJobContext.JobId}/Reports.zip";
-            using (Stream memoryStream = new MemoryStream())
+            var reportNames = new List<string>();
+
+            try
             {
-                if (await _persistenceService.ExistsAsync(fileName, esfJobContext.BlobContainerName, cancellationToken))
+                if (!string.IsNullOrWhiteSpace(sourceFile?.FileName))
                 {
-                    using (var readStream = await
-                        _persistenceService.OpenReadStreamAsync(
-                            fileName,
-                            esfJobContext.BlobContainerName,
-                            cancellationToken))
+                    foreach (var validationReport in _validationReports)
                     {
-                        await readStream.CopyToAsync(memoryStream);
+                        reportNames.Add(await validationReport.GenerateReport(esfJobContext, sourceFile, wrapper, cancellationToken));
                     }
                 }
 
-                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Update, true))
+                if (passedFileValidation)
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    try
+                    var reportsToRun = _esfReports.Where(r => esfJobContext.Tasks.Contains(r.TaskName, StringComparer.OrdinalIgnoreCase));
+                    foreach (var report in reportsToRun)
                     {
-                        if (!string.IsNullOrWhiteSpace(sourceFile?.FileName))
-                        {
-                            foreach (var validationReport in _validationReports)
-                            {
-                                await validationReport.GenerateReport(esfJobContext, sourceFile, wrapper, archive, cancellationToken);
-                            }
-                        }
-
-                        if (passedFileValidation)
-                        {
-                            var reportsToRun = _esfReports.Where(r => esfJobContext.Tasks.Contains(r.TaskName, StringComparer.OrdinalIgnoreCase));
-                            foreach (var report in reportsToRun)
-                            {
-                                await report.GenerateReport(esfJobContext, sourceFile, wrapper, archive, cancellationToken);
-                            }
-                        }
+                        reportNames.Add(await report.GenerateReport(esfJobContext, sourceFile, wrapper, cancellationToken));
                     }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex.Message, ex);
-                        throw;
-                    }
-
-                    cancellationToken.ThrowIfCancellationRequested();
                 }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw;
+            }
 
-                using (var writeStream = await _persistenceService.OpenWriteStreamAsync(
-                    fileName,
-                    esfJobContext.BlobContainerName,
-                    cancellationToken))
+            await CreateZipAsync(esfJobContext, reportNames, cancellationToken);
+        }
+
+        private async Task CreateZipAsync(IEsfJobContext esfJobContext, IEnumerable<string> reportNames, CancellationToken cancellationToken)
+        {
+            var zipFileName = $"{esfJobContext.UkPrn}/{esfJobContext.JobId}{ReportNameConstants.ZipName}";
+
+            try
+            {
+                if (await _fileService.ExistsAsync(zipFileName, esfJobContext.BlobContainerName, cancellationToken))
                 {
-                    memoryStream.Position = 0;
+                    using (var fileStream = await _fileService.OpenReadStreamAsync(zipFileName, esfJobContext.BlobContainerName, cancellationToken))
+                    {
+                        using (var archive = new ZipArchive(fileStream, ZipArchiveMode.Update, true))
+                        {
+                            await AddReportsToZip(esfJobContext, archive, reportNames, cancellationToken);
+                        }
+                    }
+                }
+                else
+                {
+                    using (Stream stream = new MemoryStream())
+                    {
+                        using (var archive = new ZipArchive(stream, ZipArchiveMode.Update, true))
+                        {
+                            await AddReportsToZip(esfJobContext, archive, reportNames, cancellationToken);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw;
+            }
+        }
 
-                    await memoryStream.CopyToAsync(writeStream);
+        private async Task AddReportsToZip(IEsfJobContext esfJobContext, ZipArchive zipArchive, IEnumerable<string> reportNames, CancellationToken cancellationToken)
+        {
+            foreach (var report in reportNames)
+            {
+                using (var fileStream = await _fileService.OpenReadStreamAsync(report, esfJobContext.BlobContainerName, cancellationToken))
+                {
+                    await _zipArchiveService.AddEntryToZip(zipArchive, fileStream, report, cancellationToken);
                 }
             }
         }

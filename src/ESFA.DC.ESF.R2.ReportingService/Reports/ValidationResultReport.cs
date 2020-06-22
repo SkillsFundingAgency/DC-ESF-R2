@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
@@ -12,45 +9,41 @@ using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Interfaces;
+using ESFA.DC.ESF.R2.ReportingService.Abstract;
+using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.FileService.Interface;
 using ESFA.DC.Jobs.Model;
 using ESFA.DC.Serialization.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Reports
 {
-    public class ValidationResultReport : AbstractReportBuilder, IValidationResultReport
+    public class ValidationResultReport : AbstractJsonReportService, IValidationResultReport
     {
-        private readonly IFileService _storage;
-        private readonly IJsonSerializationService _jsonSerializationService;
+        private const string _reportExtension = ".json";
 
         public ValidationResultReport(
             IDateTimeProvider dateTimeProvider,
             IValueProvider valueProvider,
-            IJsonSerializationService jsonSerializationService,
-            IFileService storage)
-            : base(dateTimeProvider, valueProvider, string.Empty)
+            IFileService fileService,
+            IJsonSerializationService jsonSerializationService)
+            : base(dateTimeProvider, valueProvider, fileService, jsonSerializationService, string.Empty)
         {
-            ReportFileName = "ESF Supplementary Data Rule Violation Report";
-
-            _jsonSerializationService = jsonSerializationService;
-            _storage = storage;
+            ReportFileName = ReportNameConstants.ValidationResultReport;
         }
 
-        public async Task GenerateReport(
+        public async Task<string> GenerateReport(
             IEsfJobContext esfJobContext,
             ISourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
-            ZipArchive archive,
             CancellationToken cancellationToken)
         {
             var report = GetValidationReport(wrapper.SupplementaryDataModels, wrapper.ValidErrorModels);
 
-            var fileName = GetFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
-            var externalFilename = GetExternalFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue);
+            var externalFilename = GetExternalFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue, _reportExtension);
 
-            var json = _jsonSerializationService.Serialize(report);
-            await SaveJson(esfJobContext, externalFilename, json, cancellationToken);
-            await WriteZipEntry(archive, $"{fileName}.json", json);
+            await SaveJson(esfJobContext, externalFilename, report, cancellationToken);
+
+            return externalFilename;
         }
 
         private FileValidationResult GetValidationReport(
@@ -69,20 +62,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
                 TotalErrorLearners = errors.GroupBy(e => e.ULN).Count(),
                 ErrorMessage = validationErrors.FirstOrDefault(x => string.IsNullOrEmpty(x.ConRefNumber))?.ErrorMessage
             };
-        }
-
-        private async Task SaveJson(IEsfJobContext esfJobContext, string fileName, string json, CancellationToken cancellationToken)
-        {
-            using (var stream = await _storage.OpenWriteStreamAsync(
-                $"{fileName}.json",
-                esfJobContext.BlobContainerName,
-                cancellationToken))
-            {
-                using (var writer = new StreamWriter(stream, new UTF8Encoding(false, true)))
-                {
-                    writer.Write(json);
-                }
-            }
         }
     }
 }

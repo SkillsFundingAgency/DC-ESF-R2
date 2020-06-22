@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
 using Aspose.Cells;
 using CsvHelper;
 using CsvHelper.Configuration;
@@ -13,22 +9,29 @@ using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models.Generation;
 using ESFA.DC.ESF.R2.Models.Styling;
+using ESFA.DC.FileService.Interface;
 
-namespace ESFA.DC.ESF.R2.ReportingService
+namespace ESFA.DC.ESF.R2.ReportingService.Abstract
 {
-    public abstract class AbstractReportBuilder
+    public abstract class AbstractReportService
     {
         protected string ReportFileName;
 
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IValueProvider _valueProvider;
+        private readonly IFileService _fileService;
 
         private readonly Dictionary<Worksheet, int> _currentRow;
 
-        protected AbstractReportBuilder(IDateTimeProvider dateTimeProvider, IValueProvider valueProvider, string taskName)
+        protected AbstractReportService(
+            IDateTimeProvider dateTimeProvider,
+            IValueProvider valueProvider,
+            IFileService fileService,
+            string taskName)
         {
             _dateTimeProvider = dateTimeProvider;
             _valueProvider = valueProvider;
+            _fileService = fileService;
             TaskName = taskName;
 
             _currentRow = new Dictionary<Worksheet, int>();
@@ -43,16 +46,10 @@ namespace ESFA.DC.ESF.R2.ReportingService
             return reportTaskName == ReportName;
         }
 
-        public string GetExternalFilename(string ukPrn, long jobId, DateTime submissionDateTime)
+        public string GetExternalFilename(string ukPrn, long jobId, DateTime submissionDateTime, string extension)
         {
             DateTime dateTime = _dateTimeProvider.ConvertUtcToUk(submissionDateTime);
-            return $"{ukPrn}/{jobId.ToString()}/{ReportFileName} {dateTime:yyyyMMdd-HHmmss}";
-        }
-
-        public string GetFilename(string ukPrn, long jobId, DateTime submissionDateTime)
-        {
-            DateTime dateTime = _dateTimeProvider.ConvertUtcToUk(submissionDateTime);
-            return $"{ReportFileName} {dateTime:yyyyMMdd-HHmmss}";
+            return $"{ukPrn}/{jobId.ToString()}/{ReportFileName} {dateTime:yyyyMMdd-HHmmss}{extension}";
         }
 
         /// <summary>
@@ -84,86 +81,6 @@ namespace ESFA.DC.ESF.R2.ReportingService
             csvWriter.Configuration.UnregisterClassMap();
         }
 
-        protected void WriteCsvRecords<TMapper>(CsvWriter csvWriter, TMapper mapper)
-            where TMapper : ClassMap
-        {
-            object[] names = mapper.MemberMaps.OrderBy(x => x.Data.Index).SelectMany(x => x.Data.Names.Names).Select(x => (object)x).ToArray();
-            WriteCsvRecords(csvWriter, names);
-        }
-
-        protected void WriteCsvRecords<TMapper, TModel>(CsvWriter csvWriter, TMapper mapper, TModel record)
-            where TMapper : ClassMap
-            where TModel : class
-        {
-            ModelProperty[] names = mapper.MemberMaps.OrderBy(x => x.Data.Index).Select(x => new ModelProperty(x.Data.Names.Names.ToArray(), (PropertyInfo)x.Data.Member)).ToArray();
-            WriteCsvRecords(csvWriter, mapper, names, record);
-        }
-
-        protected void WriteCsvRecords<TMapper, TModel>(CsvWriter csvWriter, TMapper mapper, ModelProperty[] modelProperties, TModel record)
-            where TMapper : ClassMap
-        {
-            List<object> values = new List<object>();
-            foreach (var modelProperty in modelProperties)
-            {
-                _valueProvider.GetFormattedValue(values, modelProperty.MethodInfo.GetValue(record), mapper, modelProperty);
-            }
-
-            WriteCsvRecords(csvWriter, values.ToArray());
-        }
-
-        /// <summary>
-        /// Builds a CSV report using the specified mapper as the list of column names.
-        /// </summary>
-        /// <typeparam name="TMapper">The mapper.</typeparam>
-        /// <typeparam name="TModel">The model.</typeparam>
-        /// <param name="writer">The memory stream to write to.</param>
-        /// <param name="record">The record to persist.</param>
-        protected void WriteCsvRecords<TMapper, TModel>(CsvWriter writer, TModel record)
-            where TMapper : ClassMap
-            where TModel : class
-        {
-            WriteCsvRecords<TMapper, TModel>(writer, new[] { record });
-        }
-
-        /// <summary>
-        /// Writes a blank row to the csv file.
-        /// </summary>
-        /// <param name="writer">The memory stream to write to.</param>
-        /// <param name="numberOfBlankRows">The optional number of blank rows to create.</param>
-        protected void WriteCsvRecords(CsvWriter writer, int numberOfBlankRows = 1)
-        {
-            for (int i = 0; i < numberOfBlankRows; i++)
-            {
-                writer.NextRecord();
-            }
-        }
-
-        /// <summary>
-        /// Writes the items as individual tokens to the CSV.
-        /// </summary>
-        /// <param name="writer">The writer target.</param>
-        /// <param name="items">The strings to write.</param>
-        protected void WriteCsvRecords(CsvWriter writer, params object[] items)
-        {
-            foreach (object item in items)
-            {
-                writer.WriteField(item);
-            }
-
-            writer.NextRecord();
-        }
-
-        /// <summary>
-        /// Builds an Excel report using the specified mapper as the list of column names.
-        /// </summary>
-        /// <typeparam name="TMapper">The mapper.</typeparam>
-        /// <typeparam name="TModel">The model.</typeparam>
-        /// <param name="worksheet">The worksheet to operate on.</param>
-        /// <param name="classMap">The class mapper to use to write the headers, and to get the properties references from.</param>
-        /// <param name="records">The records to write.</param>
-        /// <param name="headerStyle">The style to apply to the header.</param>
-        /// <param name="recordStyle">The style to apply to the records.</param>
-        /// <param name="pivot">Whether to write the data vertically, rather than horizontally.</param>
         protected void WriteExcelRecords<TMapper, TModel>(Worksheet worksheet, TMapper classMap, IEnumerable<TModel> records, CellStyle headerStyle, CellStyle recordStyle, bool pivot = false)
             where TMapper : ClassMap
             where TModel : class
@@ -239,13 +156,6 @@ namespace ESFA.DC.ESF.R2.ReportingService
             SetCurrentRow(worksheet, currentRow);
         }
 
-        protected void WriteHeaderRecordsFromClassMap<TMapper>(Worksheet worksheet, TMapper classMap, CellStyle headerStyle, bool pivot = false)
-            where TMapper : ClassMap
-        {
-            string[] names = classMap.MemberMaps.OrderBy(x => x.Data.Index).Select(x => x.Data.Names[0]).ToArray();
-            WriteRecordsFromClassMap(worksheet, classMap, names, headerStyle, pivot);
-        }
-
         protected void WriteRecordsFromArray<TMapper>(Worksheet worksheet, TMapper classMap, object[] names, CellStyle headerStyle, bool pivot = false)
             where TMapper : ClassMap
         {
@@ -267,14 +177,6 @@ namespace ESFA.DC.ESF.R2.ReportingService
             }
 
             SetCurrentRow(worksheet, currentRow);
-        }
-
-        protected void WriteRecordsFromClassMap<TMapper, TModel>(Worksheet worksheet, TMapper classMap, TModel record, CellStyle recordStyle, bool pivot = false)
-            where TMapper : ClassMap
-            where TModel : class
-        {
-            ModelProperty[] names = classMap.MemberMaps.OrderBy(x => x.Data.Index).Select(x => new ModelProperty(x.Data.Names.Names.ToArray(), (PropertyInfo)x.Data.Member)).ToArray();
-            WriteExcelRecordsFromModelProperty(worksheet, classMap, names, record, recordStyle, pivot);
         }
 
         protected void WriteExcelRecordsFromModelProperty<TMapper, TModel>(Worksheet worksheet, TMapper classMap, ModelProperty[] modelProperties, TModel record, CellStyle recordStyle, bool pivot = false)
@@ -314,11 +216,6 @@ namespace ESFA.DC.ESF.R2.ReportingService
             SetCurrentRow(worksheet, currentRow);
         }
 
-        /// <summary>
-        /// Writes a blank row to the worksheet (increments the current row number)
-        /// </summary>
-        /// <param name="worksheet">The current worksheet.</param>
-        /// <param name="numberOfBlankRows">The optional number of blank rows to create.</param>
         protected void WriteBlankRow(Worksheet worksheet, int numberOfBlankRows = 1)
         {
             int currentRow = GetCurrentRow(worksheet);
@@ -326,13 +223,6 @@ namespace ESFA.DC.ESF.R2.ReportingService
             SetCurrentRow(worksheet, currentRow);
         }
 
-        /// <summary>
-        /// Writes a new heading row in column 1, optionally extends across a number of columns
-        /// </summary>
-        /// <param name="worksheet">The current worksheet,</param>
-        /// <param name="heading">The heading text to write out.</param>
-        /// <param name="headerStyle">The optional header style.</param>
-        /// <param name="numberOfColumns">The optional number of columns.</param>
         protected void WriteTitleRecord(Worksheet worksheet, string heading, CellStyle headerStyle = null, int numberOfColumns = 1)
         {
             int currentRow = GetCurrentRow(worksheet);
@@ -344,50 +234,6 @@ namespace ESFA.DC.ESF.R2.ReportingService
 
             currentRow++;
             SetCurrentRow(worksheet, currentRow);
-        }
-
-        /// <summary>
-        /// Writes the data to the zip file with the specified filename.
-        /// </summary>
-        /// <param name="archive">Archive to write to.</param>
-        /// <param name="filename">Filename to use in zip file.</param>
-        /// <param name="data">Data to write.</param>
-        /// <returns>Awaitable task.</returns>
-        protected async Task WriteZipEntry(ZipArchive archive, string filename, string data)
-        {
-            if (archive == null)
-            {
-                return;
-            }
-
-            ZipArchiveEntry archivedFile = archive.CreateEntry(filename, CompressionLevel.Optimal);
-            using (StreamWriter sw = new StreamWriter(archivedFile.Open()))
-            {
-                await sw.WriteAsync(data);
-            }
-        }
-
-        /// <summary>
-        /// Writes the stream to the zip file with the specified filename.
-        /// </summary>
-        /// <param name="archive">Archive to write to.</param>
-        /// <param name="filename">Filename to use in zip file.</param>
-        /// <param name="data">Data to write.</param>
-        /// <param name="cancellationToken">Cancellation token for cancelling copy operation.</param>
-        /// <returns>Awaitable task.</returns>
-        protected async Task WriteZipEntry(ZipArchive archive, string filename, Stream data, CancellationToken cancellationToken)
-        {
-            if (archive == null)
-            {
-                return;
-            }
-
-            ZipArchiveEntry archivedFile = archive.CreateEntry(filename, CompressionLevel.Optimal);
-            using (Stream sw = archivedFile.Open())
-            {
-                data.Seek(0, SeekOrigin.Begin);
-                await data.CopyToAsync(sw, 81920, cancellationToken);
-            }
         }
 
         protected int GetCurrentRow(Worksheet worksheet)

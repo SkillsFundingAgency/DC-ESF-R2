@@ -24,8 +24,6 @@ namespace ESFA.DC.ESF.R2.Service.Services
 
         public async Task<ICollection<SupplementaryDataLooseModel>> GetESFRecordsFromFile(IEsfJobContext esfJobContext, CancellationToken cancellationToken)
         {
-            List<SupplementaryDataLooseModel> model = null;
-
             _logger.LogInfo("Try and get csv from Azure blob.");
 
             cancellationToken.ThrowIfCancellationRequested();

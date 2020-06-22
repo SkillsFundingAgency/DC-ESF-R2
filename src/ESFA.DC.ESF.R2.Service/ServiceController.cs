@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces;
@@ -8,11 +9,14 @@ using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Helpers;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ExcelService.Interface;
 
 namespace ESFA.DC.ESF.R2.Service
 {
     public class ServiceController : IServiceController
     {
+        private const string LicenseResource = "EESFA.DC.ESF.R2.Service.Resources.Aspose.Cells.lic";
+
         private readonly ISourceFileModelBuilder _sourceFileModelBuilder;
         private readonly ITaskHelper _taskHelper;
         private readonly IPeriodHelper _periodHelper;
@@ -20,6 +24,7 @@ namespace ESFA.DC.ESF.R2.Service
         private readonly IReportingController _reportingController;
         private readonly IStorageController _storageController;
         private readonly IValidationErrorMessageService _validationErrorMessageService;
+        private readonly IExcelFileService _excelFileService;
 
         public ServiceController(
             ISourceFileModelBuilder sourceFileModelBuilder,
@@ -28,7 +33,8 @@ namespace ESFA.DC.ESF.R2.Service
             IFileValidationService fileValidationService,
             IStorageController storageController,
             IReportingController reportingController,
-            IValidationErrorMessageService validationErrorMessageService)
+            IValidationErrorMessageService validationErrorMessageService,
+            IExcelFileService excelFileService)
         {
             _sourceFileModelBuilder = sourceFileModelBuilder;
             _taskHelper = taskHelper;
@@ -37,6 +43,7 @@ namespace ESFA.DC.ESF.R2.Service
             _reportingController = reportingController;
             _storageController = storageController;
             _validationErrorMessageService = validationErrorMessageService;
+            _excelFileService = excelFileService;
         }
 
         public async Task RunTasks(
@@ -47,6 +54,8 @@ namespace ESFA.DC.ESF.R2.Service
             var sourceFileModel = _sourceFileModelBuilder.BuildDefault(esfJobContext);
 
             _periodHelper.CacheCurrentPeriod(esfJobContext);
+
+            _excelFileService.ApplyLicense(Assembly.GetExecutingAssembly().GetManifestResourceStream(LicenseResource));
 
             if (esfJobContext.Tasks.Contains(Constants.ValidationTask))
             {

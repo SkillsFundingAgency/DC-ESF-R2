@@ -10,6 +10,7 @@ using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports;
 using ESFA.DC.ESF.R2.ReportingService.Comparers;
+using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.ILR.DataService.Interfaces.Services;
 using ESFA.DC.ILR.DataService.Models;
@@ -73,7 +74,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                 (await _fm70DataService.GetLearningDeliveries(ukPrn, false, cancellationToken)).ToList();
 
             var learningDeliveryFams =
-                (await _validLearnerDataService.GetLearningDeliveryFams(ukPrn, Constants.LearningDeliveryFamTypeRES, cancellationToken)).ToList();
+                (await _validLearnerDataService.GetLearningDeliveryFams(ukPrn, ReportingConstants.LearningDeliveryFamTypeRES, cancellationToken)).ToList();
 
             var learnerMonitorings = (await _validLearnerDataService.GetLearnerMonitorings(ukPrn, cancellationToken))
                 .ToDictionary(
