@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using Autofac;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
-using ESFA.DC.ESF.R2.ReportingService.Comparers;
 using ESFA.DC.ESF.R2.ReportingService.Reports;
 using ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary;
 
@@ -18,8 +17,6 @@ namespace ESFA.DC.ESF.R2.Stateless.Modules
             containerBuilder.RegisterType<FundingSummaryReport>().As<IModelReport>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<AimAndDeliverableReport>().As<IModelReport>().InstancePerLifetimeScope();
             containerBuilder.Register(c => new List<IModelReport>(c.Resolve<IEnumerable<IModelReport>>())).As<IList<IModelReport>>();
-            containerBuilder.RegisterType<AimAndDeliverableComparer>().As<IAimAndDeliverableComparer>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<ValidationComparer>().As<IValidationComparer>().InstancePerLifetimeScope();
         }
     }
 }

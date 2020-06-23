@@ -9,7 +9,6 @@ using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports;
-using ESFA.DC.ESF.R2.ReportingService.Comparers;
 using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.ILR.DataService.Interfaces.Services;
@@ -43,18 +42,14 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
         private readonly IReferenceDataService _referenceDataService;
         private readonly IFm70DataService _fm70DataService;
 
-        private readonly AimAndDeliverableComparer _comparer;
-
         public AimAndDeliverableService1920(
             IFm70DataService fm70DataService,
             IValidLearnerDataService1920 validLearnerDataService,
-            IReferenceDataService referenceDataService,
-            IAimAndDeliverableComparer comparer)
+            IReferenceDataService referenceDataService)
         {
             _fm70DataService = fm70DataService;
             _validLearnerDataService = validLearnerDataService;
             _referenceDataService = referenceDataService;
-            _comparer = comparer as AimAndDeliverableComparer;
         }
 
         public async Task<IEnumerable<AimAndDeliverableModel>> GetAimAndDeliverableModel(
@@ -204,8 +199,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                     }
                 }
             }
-
-            reportData.Sort(_comparer);
 
             return reportData;
         }

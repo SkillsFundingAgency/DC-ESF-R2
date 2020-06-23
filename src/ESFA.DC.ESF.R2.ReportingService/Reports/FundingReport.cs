@@ -49,7 +49,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             var reportModels = GetModels(wrapper);
 
             ReportFileName = $"{sourceFile.ConRefNumber} " + ReportFileName;
-            string externalFileName = GetExternalFilename(esfJobContext.UkPrn.ToString(), esfJobContext.JobId, sourceFile.SuppliedDate ?? DateTime.MinValue, _reportExtension);
+            string externalFileName = GetExternalFilename(esfJobContext.UkPrn, esfJobContext.JobId, sourceFile.SuppliedDate ?? DateTime.MinValue, _reportExtension);
 
             await WriteCsv(esfJobContext, externalFileName, reportModels, cancellationToken);
 

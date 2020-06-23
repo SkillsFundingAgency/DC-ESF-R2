@@ -40,8 +40,6 @@
     <Compile Include="Abstract\AbstractCsvReportService.cs" />
     <Compile Include="Abstract\AbstractJsonReportService.cs" />
     <Compile Include="Abstract\AbstractReportService.cs" />
-    <Compile Include="Comparers\ValidationComparer.cs" />
-    <Compile Include="Comparers\AimAndDeliverableComparer.cs" />
     <Compile Include="Constants\ReportTaskConstants.cs" />
     <Compile Include="Constants\ReportingConstants.cs" />
     <Compile Include="Constants\ReportNameConstants.cs" />

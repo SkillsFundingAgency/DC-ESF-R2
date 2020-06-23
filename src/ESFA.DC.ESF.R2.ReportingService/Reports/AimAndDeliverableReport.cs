@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.CsvService.Interface;
@@ -46,7 +47,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             SupplementaryDataWrapper wrapper,
             CancellationToken cancellationToken)
         {
-            var externalFileName = GetExternalFilename(esfJobContext.UkPrn.ToString(), esfJobContext.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue, _reportExtension);
+            var externalFileName = GetExternalFilename(esfJobContext.UkPrn, esfJobContext.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue, _reportExtension);
 
             cancellationToken.ThrowIfCancellationRequested();
 
@@ -73,7 +74,14 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
                 reportData = await _aimAndDeliverableService1920.GetAimAndDeliverableModel(ukPrn, cancellationToken);
             }
 
-            return reportData;
+            return
+                reportData
+                .OrderBy(x => x.LearnRefNumber)
+                .ThenBy(x => x.ConRefNumber)
+                .ThenBy(x => x.LearnStartDate)
+                .ThenBy(x => x.AimSeqNumber)
+                .ThenBy(x => x.Period)
+                .ThenBy(x => x.DeliverableCode);
         }
     }
 }

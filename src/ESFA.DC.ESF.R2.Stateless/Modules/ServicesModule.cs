@@ -43,6 +43,8 @@ namespace ESFA.DC.ESF.R2.Stateless.Modules
             containerBuilder.RegisterType<ESFFundingService>().As<IESFFundingService>();
             containerBuilder.RegisterType<ReturnPeriodLookup>().As<IReturnPeriodLookup>();
 
+            containerBuilder.RegisterType<ZipService>().As<IZipService>();
+
             RegisterCommands(containerBuilder);
         }
 

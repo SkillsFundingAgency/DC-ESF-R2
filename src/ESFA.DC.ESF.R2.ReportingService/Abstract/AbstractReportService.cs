@@ -46,10 +46,16 @@ namespace ESFA.DC.ESF.R2.ReportingService.Abstract
             return reportTaskName == ReportName;
         }
 
+        public string GetExternalFilename(int ukPrn, long jobId, DateTime submissionDateTime, string extension)
+        {
+            DateTime dateTime = _dateTimeProvider.ConvertUtcToUk(submissionDateTime);
+            return $"{ukPrn}/{jobId}/{ReportFileName} {dateTime:yyyyMMdd-HHmmss}{extension}";
+        }
+
         public string GetExternalFilename(string ukPrn, long jobId, DateTime submissionDateTime, string extension)
         {
             DateTime dateTime = _dateTimeProvider.ConvertUtcToUk(submissionDateTime);
-            return $"{ukPrn}/{jobId.ToString()}/{ReportFileName} {dateTime:yyyyMMdd-HHmmss}{extension}";
+            return $"{ukPrn}/{jobId}/{ReportFileName} {dateTime:yyyyMMdd-HHmmss}{extension}";
         }
 
         /// <summary>

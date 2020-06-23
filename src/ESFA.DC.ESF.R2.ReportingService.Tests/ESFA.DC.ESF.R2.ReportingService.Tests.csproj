@@ -252,7 +252,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AimAndDeliverableComparerTests.cs" />
     <Compile Include="Builders\AimAndDeliverableBuilder.cs" />
     <Compile Include="Builders\SupplementaryDataModelBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
