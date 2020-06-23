@@ -36,6 +36,8 @@
     <CodeAnalysisRuleSet>ESFA.DC.ESF.R2.Interfaces.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Config\IESFConfiguration.cs" />
+    <Compile Include="Config\IFCSConfiguration.cs" />
     <Compile Include="Config\ILoggerOptions.cs" />
     <Compile Include="Config\IReferenceDataConfig.cs" />
     <Compile Include="Config\IVersionInfo.cs" />

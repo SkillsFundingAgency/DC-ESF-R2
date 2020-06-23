@@ -2,11 +2,11 @@
 using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.DataStore;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Interfaces;
-using ESFA.DC.ESF.R2.Service.Config;
 using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.DataStore
@@ -14,15 +14,17 @@ namespace ESFA.DC.ESF.R2.DataStore
     public class StorageController : IStorageController
     {
         private readonly IStoreESF _store;
+        private readonly IStoreClear _storeClear;
         private readonly IStoreESFUnitCost _storeEsfUnitCost;
         private readonly IStoreFileDetails _storeFileDetails;
         private readonly IStoreValidation _storeValidation;
-        private readonly ESFConfiguration _dbConfiguration;
+        private readonly IESFConfiguration _dbConfiguration;
         private readonly ILogger _logger;
 
         public StorageController(
-            ESFConfiguration databaseConfiguration,
+            IESFConfiguration databaseConfiguration,
             IStoreESF store,
+            IStoreClear storeClear,
             IStoreESFUnitCost storeEsfUnitCost,
             IStoreValidation storeValidation,
             IStoreFileDetails storeFileDetails,
@@ -30,21 +32,18 @@ namespace ESFA.DC.ESF.R2.DataStore
         {
             _dbConfiguration = databaseConfiguration;
             _store = store;
+            _storeClear = storeClear;
             _storeEsfUnitCost = storeEsfUnitCost;
             _storeFileDetails = storeFileDetails;
             _storeValidation = storeValidation;
             _logger = logger;
         }
 
-        public async Task<bool> StoreData(
-            ISourceFileModel sourceFile,
-            SupplementaryDataWrapper wrapper,
-            CancellationToken cancellationToken)
+        public async Task<bool> StoreData(ISourceFileModel sourceFile, SupplementaryDataWrapper wrapper, CancellationToken cancellationToken)
         {
             bool successfullyCommitted = false;
 
-            using (SqlConnection connection =
-                new SqlConnection(_dbConfiguration.ESFR2ConnectionString))
+            using (SqlConnection connection = new SqlConnection(_dbConfiguration.ESFR2ConnectionString))
             {
                 SqlTransaction transaction = null;
                 try
@@ -57,10 +56,9 @@ namespace ESFA.DC.ESF.R2.DataStore
 
                     var ukPrn = Convert.ToInt32(sourceFile.UKPRN);
 
-                    var storeClear = new StoreClear(connection, transaction);
-                    await storeClear.ClearAsync(ukPrn, sourceFile.ConRefNumber, cancellationToken);
+                    await _storeClear.ClearAsync(ukPrn, sourceFile.ConRefNumber, connection, transaction, cancellationToken);
 
-                    int fileId = await _storeFileDetails.StoreAsync(connection, transaction, cancellationToken, sourceFile);
+                    int fileId = await _storeFileDetails.StoreAsync(connection, sourceFile, cancellationToken);
 
                     await _storeValidation.StoreAsync(connection, transaction, fileId, wrapper.ValidErrorModels, cancellationToken);
 
@@ -116,7 +114,7 @@ namespace ESFA.DC.ESF.R2.DataStore
 
                     transaction = connection.BeginTransaction();
 
-                    int fileId = await _storeFileDetails.StoreAsync(connection, transaction, cancellationToken, sourceFile);
+                    int fileId = await _storeFileDetails.StoreAsync(connection, sourceFile, cancellationToken);
 
                     await _storeValidation.StoreAsync(connection, transaction, fileId, wrapper.ValidErrorModels, cancellationToken);
 

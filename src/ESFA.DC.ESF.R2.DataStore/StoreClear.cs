@@ -2,25 +2,16 @@
 using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.ESF.R2.DataStore.Constants;
 using ESFA.DC.ESF.R2.Interfaces.DataStore;
 
 namespace ESFA.DC.ESF.R2.DataStore
 {
     public sealed class StoreClear : IStoreClear
     {
-        private readonly SqlConnection _connection;
-        private readonly SqlTransaction _transaction;
-
-        public StoreClear(SqlConnection connection, SqlTransaction transaction)
+        public async Task ClearAsync(int ukPrn, string conRefNum, SqlConnection sqlConnection, SqlTransaction sqlTransaction, CancellationToken cancellationToken)
         {
-            _connection = connection;
-            _transaction = transaction;
-        }
-
-        public async Task ClearAsync(int ukPrn, string conRefNum, CancellationToken cancellationToken)
-        {
-            using (SqlCommand sqlCommand =
-                new SqlCommand("[dbo].[DeleteExistingRecords]", _connection, _transaction))
+            using (SqlCommand sqlCommand = new SqlCommand(DataStoreConstants.StoredProcedureNameConstants.DeleteExistingRecords, sqlConnection, sqlTransaction))
             {
                 sqlCommand.CommandType = CommandType.StoredProcedure;
                 sqlCommand.Parameters.Add("@ukprn", SqlDbType.Int).Value = ukPrn;

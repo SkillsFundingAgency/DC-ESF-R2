@@ -9,29 +9,19 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
 {
     public interface IReferenceDataCache
     {
-        string GetProviderName(
-            int ukPrn,
-            CancellationToken cancellationToken);
+        string GetProviderName(int ukPrn, CancellationToken cancellationToken);
 
         void PopulateContractDeliverableCodeMappings(IEnumerable<string> uncached, CancellationToken cancellationToken);
 
         void PopulateContractDeliverableCodeMappings(IEnumerable<FcsDeliverableCodeMapping> mappings);
 
-        IEnumerable<FcsDeliverableCodeMapping> GetContractDeliverableCodeMapping(
-            IEnumerable<string> deliverableCodes,
-            CancellationToken cancellationToken);
+        IEnumerable<FcsDeliverableCodeMapping> GetContractDeliverableCodeMapping(IEnumerable<string> deliverableCodes, CancellationToken cancellationToken);
 
         void PopulateUlnLookup(IEnumerable<long?> unknownUlns, CancellationToken cancellationToken);
 
-        IEnumerable<long> GetUlnLookup(
-            IEnumerable<long?> searchUlns,
-            CancellationToken cancellationToken);
+        IEnumerable<long> GetUlnLookup(IEnumerable<long?> searchUlns, CancellationToken cancellationToken);
 
-        void PopulateContractAllocations(
-            string conRefNum,
-            int deliverableCode,
-            CancellationToken cancellationToken,
-            int? ukPrn);
+        void PopulateContractAllocations(string conRefNum, int deliverableCode, CancellationToken cancellationToken, int? ukPrn);
 
         ContractAllocationCacheModel GetContractAllocation(
             string conRefNum,
@@ -44,9 +34,9 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
             int ukPrn,
             CancellationToken cancellationToken);
 
-        IList<DeliverableUnitCost> GetDeliverableUnitCosts(
-            string conRefNum,
-            IList<string> deliverableCodes);
+        IList<DeliverableUnitCost> GetDeliverableUnitCosts(string conRefNum, IList<string> deliverableCodes);
+
+        IList<DeliverableUnitCost> GetDeliverableUnitCostsForDeliverableCode(string conRefNum, string deliverableCode);
 
         Task PopulateLarsLearningDeliveries(IEnumerable<string> uncached, CancellationToken cancellationToken);
 

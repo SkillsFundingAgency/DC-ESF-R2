@@ -40,17 +40,11 @@
     </CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AzureStorageKeyValuePersistenceConfig.cs" />
-    <Compile Include="AzureStorageOptions.cs" />
     <Compile Include="ESFConfiguration.cs" />
     <Compile Include="FCSConfiguration.cs" />
     <Compile Include="LoggerOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferenceDataConfig.cs" />
-    <Compile Include="ServiceBusOptions.cs" />
-    <Compile Include="ServiceBusQueueConfig.cs" />
-    <Compile Include="ServiceBusTopicConfig.cs" />
-    <Compile Include="SoftwareLicenceSection.cs" />
     <Compile Include="VersionInfo.cs" />
   </ItemGroup>
   <ItemGroup>
