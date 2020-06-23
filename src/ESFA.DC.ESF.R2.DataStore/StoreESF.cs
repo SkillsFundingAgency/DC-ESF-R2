@@ -3,7 +3,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.BulkCopy.Interfaces;
 using ESFA.DC.ESF.R2.Database.EF;
 using ESFA.DC.ESF.R2.DataStore.Constants;
 using ESFA.DC.ESF.R2.Interfaces.DataStore;
@@ -14,12 +13,12 @@ namespace ESFA.DC.ESF.R2.DataStore
 {
     public class StoreESF : IStoreESF
     {
-        private readonly IBulkInsert _bulkInsert;
+        private readonly IDataStoreQueryExecutionService _dataStoreQueryExecutionService;
         private readonly ILogger _logger;
 
-        public StoreESF(IBulkInsert bulkInsert, ILogger logger)
+        public StoreESF(IDataStoreQueryExecutionService dataStoreQueryExecutionService, ILogger logger)
         {
-            _bulkInsert = bulkInsert;
+            _dataStoreQueryExecutionService = dataStoreQueryExecutionService;
             _logger = logger;
         }
 
@@ -32,7 +31,16 @@ namespace ESFA.DC.ESF.R2.DataStore
         {
             _logger.LogInfo("Persisting ESF Supp Data");
 
-            var suppData = models?.Select(model => new SupplementaryData
+            var suppData = models?.Select(model => BuildModelFromEntity(model, fileId));
+
+            await _dataStoreQueryExecutionService.BulkCopy(DataStoreConstants.TableNameConstants.EsfSuppData, suppData, connection, transaction, cancellationToken);
+
+            _logger.LogInfo("Finished Persisting ESF Supp Data");
+        }
+
+        public SupplementaryData BuildModelFromEntity(SupplementaryDataModel model, int fileId)
+        {
+            return new SupplementaryData
             {
                 ConRefNumber = model.ConRefNumber,
                 DeliverableCode = model.DeliverableCode,
@@ -47,11 +55,7 @@ namespace ESFA.DC.ESF.R2.DataStore
                 LearnAimRef = model.LearnAimRef,
                 SupplementaryDataPanelDate = model.SupplementaryDataPanelDate,
                 SourceFileId = fileId
-            });
-
-            await _bulkInsert.Insert(DataStoreConstants.TableNameConstants.EsfSuppData, suppData, connection, transaction, cancellationToken);
-
-            _logger.LogInfo("Finished Persisting ESF Supp Data");
+            };
         }
     }
 }

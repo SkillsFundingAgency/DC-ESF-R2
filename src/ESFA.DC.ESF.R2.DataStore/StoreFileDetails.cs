@@ -1,7 +1,6 @@
 ﻿using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
-using Dapper;
 using ESFA.DC.ESF.R2.Interfaces.DataStore;
 using ESFA.DC.ESF.R2.Models.Interfaces;
 
@@ -9,6 +8,13 @@ namespace ESFA.DC.ESF.R2.DataStore
 {
     public sealed class StoreFileDetails : IStoreFileDetails
     {
+        private readonly IDataStoreQueryExecutionService _dataStoreQueryExecutionService;
+
+        public StoreFileDetails(IDataStoreQueryExecutionService dataStoreQueryExecutionService)
+        {
+            _dataStoreQueryExecutionService = dataStoreQueryExecutionService;
+        }
+
         public async Task<int> StoreAsync(SqlConnection sqlConnection, ISourceFileModel sourceFile, CancellationToken cancellationToken)
         {
             string insertFileDetails =
@@ -26,14 +32,7 @@ namespace ESFA.DC.ESF.R2.DataStore
                 sourceFile.PreparationDate.ToString("yyyy-MM-dd HH:mm:ss")
             };
 
-            return await ExecuteSqlWithParameterAsync(sqlConnection, parameters, insertFileDetails, cancellationToken);
-        }
-
-        private async Task<int> ExecuteSqlWithParameterAsync(SqlConnection connection, object[] parameters, string sql, CancellationToken cancellationToken)
-        {
-            var commandDefinition = new Dapper.CommandDefinition(sql, parameters, commandTimeout: 600, cancellationToken: cancellationToken);
-
-            return await connection.QuerySingleAsync(commandDefinition);
+            return await _dataStoreQueryExecutionService.ExecuteSqlWithParameterAsync<int>(sqlConnection, parameters, insertFileDetails, cancellationToken);
         }
     }
 }

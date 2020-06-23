@@ -38,6 +38,7 @@
   <ItemGroup>
     <Compile Include="Constants\DataStoreConstants.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\DataStoreQueryExecutionService.cs" />
     <Compile Include="StorageController.cs" />
     <Compile Include="StoreClear.cs" />
     <Compile Include="StoreESFUnitCost.cs" />
