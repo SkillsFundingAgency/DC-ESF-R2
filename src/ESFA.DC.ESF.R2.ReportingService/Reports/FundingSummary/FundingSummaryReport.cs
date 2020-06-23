@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -18,21 +17,26 @@ using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Interfaces.Strategies;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Generation;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.ESF.R2.Models.Reports;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 using ESFA.DC.ESF.R2.Models.Styling;
+using ESFA.DC.ESF.R2.ReportingService.Abstract;
+using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.ESF.R2.ReportingService.Mappers;
 using ESFA.DC.ESF.R2.Utils;
+using ESFA.DC.ExcelService.Interface;
 using ESFA.DC.FileService.Interface;
 using ESFA.DC.ILR.DataService.Models;
 using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 {
-    public sealed class FundingSummaryReport : AbstractReportBuilder, IModelReport
+    public sealed class FundingSummaryReport : AbstractExcelReportService, IModelReport
     {
         private const string NotApplicable = "Not Applicable";
-        private readonly IFileService _storage;
+        private const string _excelExtension = ".xlsx";
+
         private readonly IList<IRowHelper> _rowHelpers;
         private readonly IILRService _ilrService;
         private readonly IReferenceDataService _referenceDataService;
@@ -52,7 +56,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         public FundingSummaryReport(
             IDateTimeProvider dateTimeProvider,
             IValueProvider valueProvider,
-            IFileService storage,
+            IFileService fileService,
+            IExcelFileService excelFileService,
             IILRService ilrService,
             ISupplementaryDataService supplementaryDataService,
             IList<IRowHelper> rowHelpers,
@@ -60,10 +65,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             IExcelStyleProvider excelStyleProvider,
             IVersionInfo versionInfo,
             ILogger logger)
-            : base(dateTimeProvider, valueProvider, Constants.TaskGenerateFundingSummaryReport)
+            : base(dateTimeProvider, valueProvider, fileService, excelFileService, ReportTaskConstants.TaskGenerateFundingSummaryReport)
         {
             _dateTimeProvider = dateTimeProvider;
-            _storage = storage;
             _rowHelpers = rowHelpers;
             _referenceDataService = referenceDataService;
             _excelStyleProvider = excelStyleProvider;
@@ -72,7 +76,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             _supplementaryDataService = supplementaryDataService;
             _ilrService = ilrService;
 
-            ReportFileName = "ESF Round 2 Funding Summary Report";
+            ReportFileName = ReportNameConstants.FundingSummaryReport;
             _fundingSummaryMapper = new FundingSummaryMapper();
             _cachedModelProperties = _fundingSummaryMapper
                 .MemberMaps
@@ -81,11 +85,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 .ToArray();
         }
 
-        public async Task GenerateReport(
+        public async Task<string> GenerateReport(
             IEsfJobContext esfJobContext,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
-            ZipArchive archive,
             CancellationToken cancellationToken)
         {
             var ukPrn = esfJobContext.UkPrn;
@@ -103,8 +106,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
             _logger.LogDebug($"{sourceFiles.Count} esf files found for ukprn {ukPrn} and collection year 20{esfJobContext.CollectionYear.ToString().Substring(0, 2)}.");
 
-            var supplementaryData =
-                await _supplementaryDataService.GetSupplementaryData(collectionYear, sourceFiles, cancellationToken);
+            var supplementaryData = await _supplementaryDataService.GetSupplementaryData(collectionYear, sourceFiles, cancellationToken);
 
             var ilrYearlyFileData = (await _ilrService.GetIlrFileDetails(ukPrn, collectionYear, cancellationToken)).ToList();
             var fm70YearlyData = (await _ilrService.GetYearlyIlrData(ukPrn, esfJobContext.CollectionName, collectionYear, esfJobContext.ReturnPeriod, cancellationToken)).ToList();
@@ -173,31 +175,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 workbook = GetWorkbookReport(workbook, sheet, fundingSummaryHeaderModel, fundingSummaryModels, fundingSummaryFooterModel);
             }
 
-            string externalFileName = GetExternalFilename(ukPrn.ToString(), esfJobContext.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
-            string fileName = GetFilename(ukPrn.ToString(), esfJobContext.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
+            string externalFileName = GetExternalFilename(ukPrn.ToString(), esfJobContext.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue, _excelExtension);
 
-            using (var ms = new MemoryStream())
-            {
-                if (!workbook.Worksheets.Any())
-                {
-                    workbook.Worksheets.Add(SheetType.Worksheet);
-                }
+            await WriteExcelFile(esfJobContext, externalFileName, workbook, cancellationToken);
 
-                workbook.Save(ms, SaveFormat.Xlsx);
-
-                ms.Seek(0, SeekOrigin.Begin);
-
-                using (var stream = await _storage.OpenWriteStreamAsync(
-                    $"{externalFileName}.xlsx",
-                    esfJobContext.BlobContainerName,
-                    cancellationToken))
-                {
-                    await ms.CopyToAsync(stream, 81920, cancellationToken);
-                }
-
-                ms.Seek(0, SeekOrigin.Begin);
-                await WriteZipEntry(archive, $"{fileName}.xlsx", ms, cancellationToken);
-            }
+            return externalFileName;
         }
 
         private void AddImageToReport(Worksheet worksheet)
@@ -234,8 +216,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
             foreach (var model in fileData)
             {
-                var preparationDate = FileNameHelper.GetPreparedDateFromILRFileName(model.FileName);
-                var secondYear = FileNameHelper.GetSecondYearFromReportYear(model.Year);
+                var preparationDate = GetPreparedDateFromILRFileName(model.FileName);
+                var secondYear = GetSecondYearFromReportYear(model.Year);
 
                 ukPrnRow.Add(null);
                 ukPrnRow.Add($"{model.Year}/{secondYear}");
@@ -427,7 +409,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                 return;
             }
 
-            for (int i = Constants.StartYear; i <= endYear; i++)
+            for (int i = ReportingConstants.StartYear; i <= endYear; i++)
             {
                 YearAndDataLengthModel yearAndDataLengthModel = yearAndDataLengthModels.SingleOrDefault(x => x.Year == i);
                 if (yearAndDataLengthModel == null)
@@ -435,8 +417,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
                     continue;
                 }
 
-                var year = i == Constants.StartYear ? i + 1 : i;
-                var startMonthIndex = i == Constants.StartYear ? 8 : 0;
+                var year = i == ReportingConstants.StartYear ? i + 1 : i;
+                var startMonthIndex = i == ReportingConstants.StartYear ? 8 : 0;
                 var length = 12 - startMonthIndex;
                 var yearlyNames = new string[length];
                 Array.Copy(names, startMonthIndex, yearlyNames, 0, length);
@@ -471,7 +453,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             string[] names,
             List<YearAndDataLengthModel> yearAndDataLengthModels)
         {
-            for (var i = Constants.StartYear; i <= endYear; i++)
+            for (var i = ReportingConstants.StartYear; i <= endYear; i++)
             {
                 YearAndDataLengthModel yearAndDataLengthModel = yearAndDataLengthModels.SingleOrDefault(x => x.Year == i);
                 if (yearAndDataLengthModel == null)
@@ -502,19 +484,19 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
         {
             foreach (var fundingSummaryModel in fundingSummaryModels)
             {
-                if (string.IsNullOrEmpty(fundingSummaryModel.Title) || !fundingSummaryModel.Title.Contains(Constants.ContractReferenceNumberTag))
+                if (string.IsNullOrEmpty(fundingSummaryModel.Title) || !fundingSummaryModel.Title.Contains(ReportingConstants.ContractReferenceNumberTag))
                 {
                     continue;
                 }
 
-                fundingSummaryModel.Title = fundingSummaryModel.Title.Replace(Constants.ContractReferenceNumberTag, conRefNumber);
+                fundingSummaryModel.Title = fundingSummaryModel.Title.Replace(ReportingConstants.ContractReferenceNumberTag, conRefNumber);
             }
         }
 
         private int GetFirstFutureColumn()
         {
             // using implicit logic to pair months with their respective columns
-            var reportStartDate = new DateTime(Constants.StartYear + 1, 4, 1);
+            var reportStartDate = new DateTime(ReportingConstants.StartYear + 1, 4, 1);
             var curentDate = _dateTimeProvider.GetNowUtc();
 
             var firstFutureColumn = (((curentDate.Year - reportStartDate.Year) * 12) + (curentDate.Month - reportStartDate.Month)) + 2; // calculate months difference
@@ -540,6 +522,31 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             {
                 sheet.Cells.CreateRange(lastOperatedRow, firstColumn, 1, totalColumns).ApplyStyle(italicCellStyle.Style, italicCellStyle.StyleFlag);
             }
+        }
+
+        private string GetSecondYearFromReportYear(int year)
+        {
+            return year.ToString().Length > 3 ?
+                (Convert.ToInt32(year.ToString().Substring(year.ToString().Length - 2)) + 1).ToString() :
+                string.Empty;
+        }
+
+        private string GetPreparedDateFromILRFileName(string fileName)
+        {
+            if (fileName == null)
+            {
+                return null;
+            }
+
+            var fileNameParts = fileName.Split('-');
+            if (fileNameParts.Length < 6 || fileNameParts[3].Length != 8 || fileNameParts[4].Length != 6)
+            {
+                return string.Empty;
+            }
+
+            var dateString = $"{fileNameParts[3].Substring(0, 4)}/{fileNameParts[3].Substring(4, 2)}/{fileNameParts[3].Substring(6, 2)} " +
+                             $"{fileNameParts[4].Substring(0, 2)}:{fileNameParts[4].Substring(2, 2)}:{fileNameParts[4].Substring(4, 2)}";
+            return Convert.ToDateTime(dateString).ToString("dd/MM/yyyy hh:mm:ss");
         }
     }
 }

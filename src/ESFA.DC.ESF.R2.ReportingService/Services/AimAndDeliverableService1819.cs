@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.ESF.R2.Interfaces.Constants;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports;
-using ESFA.DC.ESF.R2.ReportingService.Comparers;
+using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.ILR.DataService.Interfaces.Services;
 using ESFA.DC.ILR.DataService.Models;
@@ -41,18 +42,14 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
         private readonly IReferenceDataService _referenceDataService;
         private readonly IFm70DataService _fm70DataService;
 
-        private readonly AimAndDeliverableComparer _comparer;
-
         public AimAndDeliverableService1819(
             IFm70DataService fm70DataService,
             IValidLearnerDataService1819 validLearnerDataService,
-            IReferenceDataService referenceDataService,
-            IAimAndDeliverableComparer comparer)
+            IReferenceDataService referenceDataService)
         {
             _fm70DataService = fm70DataService;
             _validLearnerDataService = validLearnerDataService;
             _referenceDataService = referenceDataService;
-            _comparer = comparer as AimAndDeliverableComparer;
         }
 
         public async Task<IEnumerable<AimAndDeliverableModel>> GetAimAndDeliverableModel(
@@ -72,7 +69,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                 (await _fm70DataService.GetLearningDeliveries(ukPrn, false, cancellationToken)).ToList();
 
             var learningDeliveryFams =
-                (await _validLearnerDataService.GetLearningDeliveryFams(ukPrn, Constants.LearningDeliveryFamTypeRES, cancellationToken)).ToList();
+                (await _validLearnerDataService.GetLearningDeliveryFams(ukPrn, ReportingConstants.LearningDeliveryFamTypeRES, cancellationToken)).ToList();
 
             var learnerMonitorings = (await _validLearnerDataService.GetLearnerMonitorings(ukPrn, cancellationToken))
                 .ToDictionary(
@@ -202,8 +199,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                     }
                 }
             }
-
-            reportData.Sort(_comparer);
 
             return reportData;
         }

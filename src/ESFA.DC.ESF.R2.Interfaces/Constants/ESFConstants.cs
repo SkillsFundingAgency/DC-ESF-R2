@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ESFA.DC.ESF.R2.Utils
+namespace ESFA.DC.ESF.R2.Interfaces.Constants
 {
     public class ESFConstants
     {

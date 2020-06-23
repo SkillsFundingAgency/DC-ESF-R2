@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 
 namespace ESFA.DC.ESF.R2.Interfaces.Services
 {
@@ -8,11 +9,11 @@ namespace ESFA.DC.ESF.R2.Interfaces.Services
     {
         Task<SupplementaryDataWrapper> GetFile(
             IEsfJobContext esfJobContext,
-            SourceFileModel sourceFileModel,
+            ISourceFileModel sourceFileModel,
             CancellationToken cancellationToken);
 
         Task<SupplementaryDataWrapper> RunFileValidators(
-            SourceFileModel sourceFileModel,
+            ISourceFileModel sourceFileModel,
             SupplementaryDataWrapper wrapper);
     }
 }

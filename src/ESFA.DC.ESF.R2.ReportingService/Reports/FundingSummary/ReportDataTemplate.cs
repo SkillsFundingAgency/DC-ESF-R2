@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
+using ESFA.DC.ESF.R2.ReportingService.Constants;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 {
@@ -70,8 +71,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             new FundingReportRow { DeliverableCode = "SD01, SD02, SD03, SD04, SD05, SD06, SD07, SD08, SD09, SD10", RowType = RowType.Total, Title = "Total Specification Defined (£)" },
             new FundingReportRow { RowType = RowType.Spacer },
 
-            new FundingReportRow { RowType = RowType.FinalTotal, Title = Constants.ContractReferenceNumberTag + " Total (£)" },
-            new FundingReportRow { RowType = RowType.FinalCumulative, Title = Constants.ContractReferenceNumberTag + " Cumulative (£)" },
+            new FundingReportRow { RowType = RowType.FinalTotal, Title = ReportingConstants.ContractReferenceNumberTag + " Total (£)" },
+            new FundingReportRow { RowType = RowType.FinalCumulative, Title = ReportingConstants.ContractReferenceNumberTag + " Cumulative (£)" },
             new FundingReportRow { RowType = RowType.Spacer }
         };
     }

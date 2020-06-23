@@ -3,6 +3,7 @@ using System.Drawing;
 using Aspose.Cells;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models.Styling;
+using ESFA.DC.ESF.R2.ReportingService.Constants;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Services
 {
@@ -17,7 +18,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             mainTitleStyle.Pattern = BackgroundType.Solid;
             mainTitleStyle.Font.Size = 13;
             mainTitleStyle.Font.IsBold = true;
-            mainTitleStyle.Font.Name = Constants.FundingSummaryReportFont;
+            mainTitleStyle.Font.Name = ReportingConstants.FundingSummaryReportFont;
 
             var mainTitleStyleFlag = new StyleFlag
             {
@@ -31,7 +32,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             notUsedStyle.Pattern = BackgroundType.Solid;
             notUsedStyle.Font.Size = 12;
             notUsedStyle.Font.IsBold = true;
-            notUsedStyle.Font.Name = Constants.FundingSummaryReportFont;
+            notUsedStyle.Font.Name = ReportingConstants.FundingSummaryReportFont;
 
             var notUsedStyleFlag = new StyleFlag
             {
@@ -45,7 +46,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             headerStyle.Pattern = BackgroundType.Solid;
             headerStyle.Font.Size = 11;
             headerStyle.Font.IsBold = true;
-            headerStyle.Font.Name = Constants.FundingSummaryReportFont;
+            headerStyle.Font.Name = ReportingConstants.FundingSummaryReportFont;
             // sectionStyle.SetCustom(Constants.FundingSummaryReportNumberFormat, true);
             ApplyBorderToStyle(headerStyle);
 
@@ -61,7 +62,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             Style subTotalStyle = workbook.CreateStyle();           // 3
             subTotalStyle.Font.Size = 10;
             subTotalStyle.Font.IsBold = true;
-            subTotalStyle.Font.Name = Constants.FundingSummaryReportFont;
+            subTotalStyle.Font.Name = ReportingConstants.FundingSummaryReportFont;
             // subTotalStyle.SetCustom(Constants.FundingSummaryReportNumberFormat, true);
             ApplyBorderToStyle(subTotalStyle);
 
@@ -75,7 +76,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
 
             Style dataRowStyle = workbook.CreateStyle();            // 4
             dataRowStyle.Font.Size = 11;
-            dataRowStyle.Font.Name = Constants.FundingSummaryReportFont;
+            dataRowStyle.Font.Name = ReportingConstants.FundingSummaryReportFont;
             // dataRowStyle.SetCustom(Constants.FundingSummaryReportNumberFormat, true);
             ApplyBorderToStyle(dataRowStyle);
 
@@ -91,7 +92,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             currentYearStyle.Font.Color = Color.Red;
             currentYearStyle.Font.Size = 10;
             currentYearStyle.Font.IsBold = true;
-            currentYearStyle.Font.Name = Constants.FundingSummaryReportFont;
+            currentYearStyle.Font.Name = ReportingConstants.FundingSummaryReportFont;
             // currentYearStyle.SetCustom(Constants.FundingSummaryReportNumberFormat, true);
             ApplyBorderToStyle(currentYearStyle);
 
@@ -108,7 +109,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             grandTotalStyle.Pattern = BackgroundType.Solid;
             grandTotalStyle.Font.Size = 13;
             grandTotalStyle.Font.IsBold = true;
-            grandTotalStyle.Font.Name = Constants.FundingSummaryReportFont;
+            grandTotalStyle.Font.Name = ReportingConstants.FundingSummaryReportFont;
             // grandTotalStyle.SetCustom(Constants.FundingSummaryReportNumberFormat, true);
             ApplyBorderToStyle(grandTotalStyle);
 
@@ -124,7 +125,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             Style headerFooterStyle = workbook.CreateStyle();       // 7
             headerFooterStyle.Font.Size = 10;
             headerFooterStyle.Font.IsBold = true;
-            headerFooterStyle.Font.Name = Constants.FundingSummaryReportFont;
+            headerFooterStyle.Font.Name = ReportingConstants.FundingSummaryReportFont;
 
             var headerFooterStyleFlag = new StyleFlag
             {
@@ -136,7 +137,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             headerFooterCurrentYearStyle.Font.Color = Color.Red;
             headerFooterCurrentYearStyle.Font.Size = 10;
             headerFooterCurrentYearStyle.Font.IsBold = true;
-            headerFooterCurrentYearStyle.Font.Name = Constants.FundingSummaryReportFont;
+            headerFooterCurrentYearStyle.Font.Name = ReportingConstants.FundingSummaryReportFont;
 
             var headerFooterCurrentYearStyleFlag = new StyleFlag
             {

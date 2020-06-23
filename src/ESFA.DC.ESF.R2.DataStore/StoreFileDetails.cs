@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.DataStore;
-using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 
 namespace ESFA.DC.ESF.R2.DataStore
 {
@@ -12,7 +12,7 @@ namespace ESFA.DC.ESF.R2.DataStore
 
         private SqlTransaction _sqlTransaction;
 
-        public async Task<int> StoreAsync(SqlConnection sqlConnection, SqlTransaction sqlTransaction, CancellationToken cancellationToken, SourceFileModel sourceFile)
+        public async Task<int> StoreAsync(SqlConnection sqlConnection, SqlTransaction sqlTransaction, CancellationToken cancellationToken, ISourceFileModel sourceFile)
         {
             _sqlConnection = sqlConnection;
             _sqlTransaction = sqlTransaction;
@@ -21,7 +21,7 @@ namespace ESFA.DC.ESF.R2.DataStore
         }
 
         private async Task<int> StoreAsync(
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             CancellationToken cancellationToken)
         {
             string insertFileDetails =

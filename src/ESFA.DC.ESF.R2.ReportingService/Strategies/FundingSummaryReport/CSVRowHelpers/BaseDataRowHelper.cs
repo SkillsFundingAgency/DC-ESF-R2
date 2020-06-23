@@ -2,6 +2,7 @@
 using System.Linq;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
+using ESFA.DC.ESF.R2.ReportingService.Constants;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRowHelpers
 {
@@ -16,12 +17,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRow
                 .OrderByDescending(sd => sd.CalendarMonth).Select(sd => sd.CalendarMonth).FirstOrDefault();
 
             var yearlyModels = new List<FundingSummaryReportYearlyValueModel>();
-            for (var i = Constants.StartYear; i <= endYear; i++)
+            for (var i = ReportingConstants.StartYear; i <= endYear; i++)
             {
                 yearlyModels.Add(new FundingSummaryReportYearlyValueModel
                 {
                     FundingYear = i,
-                    StartMonth = i == Constants.StartYear ? 9 : 1,
+                    StartMonth = i == ReportingConstants.StartYear ? 9 : 1,
                     EndMonth = 12,
                     Values = new List<decimal>()
                 });

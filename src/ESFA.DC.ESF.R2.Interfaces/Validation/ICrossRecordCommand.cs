@@ -5,6 +5,6 @@ namespace ESFA.DC.ESF.R2.Interfaces.Validation
 {
     public interface ICrossRecordCommand : IValidatorCommand
     {
-        IList<SupplementaryDataModel> AllRecords { get; set; }
+        ICollection<SupplementaryDataModel> AllRecords { get; set; }
     }
 }

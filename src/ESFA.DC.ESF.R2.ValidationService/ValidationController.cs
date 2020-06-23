@@ -7,6 +7,7 @@ using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ValidationService
@@ -37,7 +38,7 @@ namespace ESFA.DC.ESF.R2.ValidationService
 
         public async Task ValidateData(
             SupplementaryDataWrapper wrapper,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             CancellationToken cancellationToken)
         {
             try
@@ -109,7 +110,7 @@ namespace ESFA.DC.ESF.R2.ValidationService
 
         private async Task PrePopulateReferenceDataCache(
             SupplementaryDataWrapper wrapper,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             CancellationToken cancellationToken)
         {
             var allUlns = wrapper.SupplementaryDataModels.Select(m => m.ULN).ToList();
@@ -129,7 +130,7 @@ namespace ESFA.DC.ESF.R2.ValidationService
             await _populationService.PrePopulateValidationErrorMessages(cancellationToken);
         }
 
-        private IList<SupplementaryDataLooseModel> FilterOutInvalidLooseRows(
+        private ICollection<SupplementaryDataLooseModel> FilterOutInvalidLooseRows(
             SupplementaryDataWrapper wrapper)
         {
             return wrapper.SupplementaryDataLooseModels.Where(model => !wrapper.ValidErrorModels.Any(e => e.ConRefNumber == model.ConRefNumber

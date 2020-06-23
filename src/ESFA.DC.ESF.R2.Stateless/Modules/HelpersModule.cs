@@ -10,7 +10,6 @@ namespace ESFA.DC.ESF.R2.Stateless.Modules
     {
         protected override void Load(ContainerBuilder containerBuilder)
         {
-            containerBuilder.RegisterType<FileHelper>().As<IFileHelper>();
             containerBuilder.RegisterType<TaskHelper>().As<ITaskHelper>();
             containerBuilder.RegisterType<PeriodHelper>().As<IPeriodHelper>();
             containerBuilder.RegisterType<FcsCodeMappingHelper>().As<IFcsCodeMappingHelper>();

@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using Autofac;
 using ESFA.DC.ESF.R2.DataAccessLayer.Services;
+using ESFA.DC.ESF.R2.Interfaces.Builders;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.ReportingService.Services;
+using ESFA.DC.ESF.R2.Service.Builders;
 using ESFA.DC.ESF.R2.Service.Services;
 using ESFA.DC.ESF.R2.ValidationService.Commands;
 using ESFA.DC.ESF.R2.ValidationService.Helpers;
@@ -17,6 +19,7 @@ namespace ESFA.DC.ESF.R2.Stateless.Modules
     {
         protected override void Load(ContainerBuilder containerBuilder)
         {
+            containerBuilder.RegisterType<SourceFileModelBuilder>().As<ISourceFileModelBuilder>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<ESFProviderService>().As<IESFProviderService>().InstancePerLifetimeScope();
 
             containerBuilder.RegisterType<ValidationErrorMessageService>().As<IValidationErrorMessageService>().InstancePerLifetimeScope();
@@ -39,6 +42,8 @@ namespace ESFA.DC.ESF.R2.Stateless.Modules
 
             containerBuilder.RegisterType<ESFFundingService>().As<IESFFundingService>();
             containerBuilder.RegisterType<ReturnPeriodLookup>().As<IReturnPeriodLookup>();
+
+            containerBuilder.RegisterType<ZipService>().As<IZipService>();
 
             RegisterCommands(containerBuilder);
         }

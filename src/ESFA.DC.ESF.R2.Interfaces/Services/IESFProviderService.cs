@@ -7,9 +7,6 @@ namespace ESFA.DC.ESF.R2.Interfaces.Services
 {
     public interface IESFProviderService
     {
-        Task<IList<SupplementaryDataLooseModel>> GetESFRecordsFromFile(
-            IEsfJobContext esfJobContext,
-            SourceFileModel sourceFile,
-            CancellationToken cancellationToken);
+        Task<ICollection<SupplementaryDataLooseModel>> GetESFRecordsFromFile(IEsfJobContext esfJobContext, CancellationToken cancellationToken);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 
 namespace ESFA.DC.ESF.R2.Interfaces.Helpers
 {
@@ -8,7 +9,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.Helpers
     {
         Task ExecuteTasks(
             IEsfJobContext esfJobContext,
-            SourceFileModel sourceFileModel,
+            ISourceFileModel sourceFileModel,
             SupplementaryDataWrapper supplementaryDataWrapper,
             CancellationToken cancellationToken);
     }

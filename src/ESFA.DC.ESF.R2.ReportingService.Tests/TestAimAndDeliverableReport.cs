@@ -2,10 +2,13 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.CsvService.Interface;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Reports;
+using ESFA.DC.ESF.R2.ReportingService.Mappers;
 using ESFA.DC.ESF.R2.ReportingService.Reports;
 using ESFA.DC.ESF.R2.ReportingService.Services;
 using ESFA.DC.ESF.R2.ReportingService.Tests.Builders;
@@ -31,26 +34,29 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
 
             var testStream = new MemoryStream();
 
-            var storage = new Mock<IFileService>();
-            storage.Setup(x => x.OpenWriteStreamAsync($"{filename}.csv", It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(testStream);
+            var models = AimAndDeliverableBuilder.BuildAimAndDeliverableModels();
 
             var aimAndDeliverableService1819Mock = new Mock<IAimAndDeliverableService1819>();
             aimAndDeliverableService1819Mock
                 .Setup(m => m.GetAimAndDeliverableModel(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(AimAndDeliverableBuilder.BuildAimAndDeliverableModels());
+                .ReturnsAsync(models);
 
             var aimAndDeliverableService1920Mock = new Mock<IAimAndDeliverableService1920>();
             aimAndDeliverableService1920Mock
                 .Setup(m => m.GetAimAndDeliverableModel(It.IsAny<int>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(AimAndDeliverableBuilder.BuildAimAndDeliverableModels());
+                .ReturnsAsync(models);
+
+            var csvServiceMock = new Mock<ICsvFileService>();
+            csvServiceMock.Setup(x => x.WriteAsync<AimAndDeliverableModel, AimAndDeliverableMapper>(models, $"{filename}.csv", It.IsAny<string>(), It.IsAny<CancellationToken>(), null, null))
+                .Returns(Task.CompletedTask);
 
             var valueProvider = new ValueProvider();
 
             var aimAndDeliverableReport = new AimAndDeliverableReport(
                 dateTimeProviderMock.Object,
-                storage.Object,
+                Mock.Of<IFileService>(),
                 valueProvider,
+                csvServiceMock.Object,
                 aimAndDeliverableService1819Mock.Object,
                 aimAndDeliverableService1920Mock.Object);
 
@@ -62,9 +68,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
 
             SourceFileModel sourceFile = GetEsfSourceFileModel();
 
-            await aimAndDeliverableReport.GenerateReport(esfJobContextMock.Object, sourceFile, null, null, CancellationToken.None);
+            var reportName = await aimAndDeliverableReport.GenerateReport(esfJobContextMock.Object, sourceFile, null, CancellationToken.None);
 
-            storage.Verify(s => s.OpenWriteStreamAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Once);
+            csvServiceMock.VerifyAll();
         }
 
         private SourceFileModel GetEsfSourceFileModel()

@@ -6,6 +6,7 @@ using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Helpers;
 using ESFA.DC.ESF.R2.Interfaces.Strategies;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 
 namespace ESFA.DC.ESF.R2.Service.Helpers
 {
@@ -20,7 +21,7 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
 
         public async Task ExecuteTasks(
             IEsfJobContext esfJobContext,
-            SourceFileModel sourceFileModel,
+            ISourceFileModel sourceFileModel,
             SupplementaryDataWrapper supplementaryDataWrapper,
             CancellationToken cancellationToken)
         {
@@ -37,7 +38,7 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
             IEsfJobContext esfJobContext,
             SupplementaryDataWrapper wrapper,
             string task,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             CancellationToken cancellationToken)
         {
             var orderedHandlers = _taskHandlers.OrderBy(t => t.Order);
