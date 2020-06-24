@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
+using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.ILR.DataService.Interfaces.Services;
 using ESFA.DC.ILR.DataService.Models;
 using ESFA.DC.Logging.Interfaces;
@@ -41,7 +42,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
         public async Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrData(int ukprn, string collectionName, int collectionYear, string collectionReturnCode, CancellationToken cancellationToken)
         {
             IEnumerable<FM70PeriodisedValues> ilrData;
-            if (collectionName == Constants.ILR1819)
+            if (collectionName == ReportingConstants.ILR1819)
             {
                 ilrData = await _esfFundingService.GetLatestFundingDataForProvider(ukprn, collectionYear, collectionName, collectionReturnCode, cancellationToken);
             }
@@ -49,9 +50,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             {
                 var previousYearReturnPeriod = _returnPeriodLookup.GetReturnPeriodForPreviousCollectionYear(collectionReturnCode);
 
-                var fm701819Data = await GetAcademicYearIlrData(ukprn, collectionYear - 1, Constants.ILR1819, previousYearReturnPeriod, cancellationToken);
+                var fm701819Data = await GetAcademicYearIlrData(ukprn, collectionYear - 1, ReportingConstants.ILR1819, previousYearReturnPeriod, cancellationToken);
 
-                var fm701920Data = await GetAcademicYearIlrData(ukprn, collectionYear, Constants.ILR1920, collectionReturnCode, cancellationToken);
+                var fm701920Data = await GetAcademicYearIlrData(ukprn, collectionYear, ReportingConstants.ILR1920, collectionReturnCode, cancellationToken);
 
                 ilrData = fm701819Data.Concat(fm701920Data);
             }
@@ -89,7 +90,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
                 return yearlyFm70Data;
             }
 
-            for (var i = Constants.StartYear; i <= endYear; i++)
+            for (var i = ReportingConstants.StartYear; i <= endYear; i++)
             {
                 yearlyFm70Data.Add(new FM70PeriodisedValuesYearly
                 {

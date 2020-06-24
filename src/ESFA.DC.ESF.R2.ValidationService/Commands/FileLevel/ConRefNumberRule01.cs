@@ -2,12 +2,15 @@
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.ESF.R2.Utils;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
 {
     public class ConRefNumberRule01 : BaseValidationRule, IFileLevelValidator
     {
+        private const string _filenameExtension = @"\.csv";
+
         public ConRefNumberRule01(IValidationErrorMessageService errorMessageService)
             : base(errorMessageService)
         {
@@ -19,9 +22,9 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
 
         public bool RejectFile => true;
 
-        public async Task<bool> IsValid(SourceFileModel sourceFileModel, SupplementaryDataLooseModel model)
+        public async Task<bool> IsValid(ISourceFileModel sourceFileModel, SupplementaryDataLooseModel model)
         {
-            string[] filenameParts = FileNameHelper.SplitFileName(sourceFileModel.FileName);
+            string[] filenameParts = sourceFileModel.FileName.SplitFileName(_filenameExtension);
 
             return filenameParts[2] == model.ConRefNumber;
         }

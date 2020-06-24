@@ -2,9 +2,11 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Helpers;
 using ESFA.DC.ESF.R2.Interfaces.Strategies;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 
 namespace ESFA.DC.ESF.R2.Service.Helpers
 {
@@ -18,25 +20,25 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
         }
 
         public async Task ExecuteTasks(
-            JobContextModel jobContextModel,
-            SourceFileModel sourceFileModel,
+            IEsfJobContext esfJobContext,
+            ISourceFileModel sourceFileModel,
             SupplementaryDataWrapper supplementaryDataWrapper,
             CancellationToken cancellationToken)
         {
-            var tasks = jobContextModel.Tasks;
+            var tasks = esfJobContext.Tasks;
 
             foreach (var task in tasks)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                await HandleTask(jobContextModel, supplementaryDataWrapper, task, sourceFileModel, cancellationToken);
+                await HandleTask(esfJobContext, supplementaryDataWrapper, task, sourceFileModel, cancellationToken);
             }
         }
 
         private async Task HandleTask(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SupplementaryDataWrapper wrapper,
             string task,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             CancellationToken cancellationToken)
         {
             var orderedHandlers = _taskHandlers.OrderBy(t => t.Order);
@@ -47,7 +49,7 @@ namespace ESFA.DC.ESF.R2.Service.Helpers
                     continue;
                 }
 
-                await handler.Execute(jobContextModel, sourceFile, wrapper, cancellationToken);
+                await handler.Execute(esfJobContext, sourceFile, wrapper, cancellationToken);
                 break;
             }
         }

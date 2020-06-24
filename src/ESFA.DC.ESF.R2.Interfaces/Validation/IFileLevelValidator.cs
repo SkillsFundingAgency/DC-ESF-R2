@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 
 namespace ESFA.DC.ESF.R2.Interfaces.Validation
 {
@@ -7,6 +8,6 @@ namespace ESFA.DC.ESF.R2.Interfaces.Validation
     {
         bool RejectFile { get; }
 
-        Task<bool> IsValid(SourceFileModel sourceFileModel, SupplementaryDataLooseModel model);
+        Task<bool> IsValid(ISourceFileModel sourceFileModel, SupplementaryDataLooseModel model);
     }
 }

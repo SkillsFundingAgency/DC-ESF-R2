@@ -21,7 +21,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands
 
         public int Priority => 3;
 
-        public IList<SupplementaryDataModel> AllRecords { get; set; }
+        public ICollection<SupplementaryDataModel> AllRecords { get; set; }
 
         public bool IsValid(SupplementaryDataModel model)
         {

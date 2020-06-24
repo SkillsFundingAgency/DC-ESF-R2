@@ -2,40 +2,37 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.DataStore;
-using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 
 namespace ESFA.DC.ESF.R2.DataStore
 {
     public sealed class StoreFileDetails : IStoreFileDetails
     {
-        private SqlConnection _sqlConnection;
+        private readonly IDataStoreQueryExecutionService _dataStoreQueryExecutionService;
 
-        private SqlTransaction _sqlTransaction;
-
-        public async Task<int> StoreAsync(SqlConnection sqlConnection, SqlTransaction sqlTransaction, CancellationToken cancellationToken, SourceFileModel sourceFile)
+        public StoreFileDetails(IDataStoreQueryExecutionService dataStoreQueryExecutionService)
         {
-            _sqlConnection = sqlConnection;
-            _sqlTransaction = sqlTransaction;
-
-            return await StoreAsync(sourceFile, cancellationToken);
+            _dataStoreQueryExecutionService = dataStoreQueryExecutionService;
         }
 
-        private async Task<int> StoreAsync(
-            SourceFileModel sourceFile,
-            CancellationToken cancellationToken)
+        public async Task<int> StoreAsync(SqlConnection sqlConnection, SqlTransaction sqlTransaction, ISourceFileModel sourceFile, CancellationToken cancellationToken)
         {
             string insertFileDetails =
-                    "INSERT INTO [dbo].[SourceFile] ([ConRefNumber], [UKPRN], [Filename], [DateTime], [FilePreparationDate]) output INSERTED.SourceFileId VALUES ('" +
-                    $"{sourceFile.ConRefNumber}', '{sourceFile.UKPRN}', '{sourceFile.FileName}', " +
-                    $"'{sourceFile.SuppliedDate?.ToString("yyyy-MM-dd HH:mm:ss")}', '{sourceFile.PreparationDate:yyyy-MM-dd HH:mm:ss}')";
+                    "INSERT INTO [dbo].[SourceFile] ([ConRefNumber], [UKPRN], [Filename], [DateTime], [FilePreparationDate]) " +
+                    "output INSERTED.SourceFileId VALUES (@ConRefNumber @UKPRN, @FileName, @SuppliedDate, @PreparationDate)";
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            using (var sqlCommand =
-                new SqlCommand(insertFileDetails, _sqlConnection, _sqlTransaction))
+            var parameters = new object[]
             {
-                return (int)await sqlCommand.ExecuteScalarAsync(cancellationToken);
-            }
+                sourceFile.ConRefNumber,
+                sourceFile.UKPRN,
+                sourceFile.FileName,
+                sourceFile.SuppliedDate?.ToString("yyyy-MM-dd HH:mm:ss"),
+                sourceFile.PreparationDate.ToString("yyyy-MM-dd HH:mm:ss")
+            };
+
+            return await _dataStoreQueryExecutionService.ExecuteSqlWithParameterAsync<int>(sqlConnection, sqlTransaction, parameters, insertFileDetails, cancellationToken);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.ESF.R2.Interfaces.Constants;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
@@ -34,7 +35,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Services
             _cache.PopulateContractDeliverableCodeMappings(deliverableCodes, cancellationToken);
         }
 
-        public void PrePopulateContractAllocations(int ukPrn, IList<SupplementaryDataModel> models, CancellationToken cancellationToken)
+        public void PrePopulateContractAllocations(int ukPrn, ICollection<SupplementaryDataModel> models, CancellationToken cancellationToken)
         {
             foreach (var model in models)
             {

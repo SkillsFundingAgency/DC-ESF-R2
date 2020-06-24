@@ -9,7 +9,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.Validation
     {
         void PrePopulateUlnCache(IList<long?> ulns, CancellationToken cancellationToken);
 
-        void PrePopulateContractAllocations(int ukPrn, IList<SupplementaryDataModel> models, CancellationToken cancellationToken);
+        void PrePopulateContractAllocations(int ukPrn, ICollection<SupplementaryDataModel> models, CancellationToken cancellationToken);
 
         Task PrePopulateContractDeliverableUnitCosts(int ukPrn, CancellationToken cancellationToken);
 

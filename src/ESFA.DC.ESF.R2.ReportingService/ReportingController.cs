@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
+using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
-using ESFA.DC.FileService.Interface;
+using ESFA.DC.ESF.R2.Models.Interfaces;
+using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ReportingService
@@ -16,107 +17,80 @@ namespace ESFA.DC.ESF.R2.ReportingService
     public class ReportingController : IReportingController
     {
         private readonly ILogger _logger;
-        private readonly IFileService _persistenceService;
+        private readonly IZipService _zipService;
 
         private readonly IList<IValidationReport> _validationReports;
         private readonly IList<IModelReport> _esfReports;
 
         public ReportingController(
-            IFileService persistenceService,
+            IZipService zipService,
             ILogger logger,
             IList<IValidationReport> validationReports,
             IList<IModelReport> esfReports)
         {
-            _persistenceService = persistenceService;
+            _zipService = zipService;
             _logger = logger;
             _validationReports = validationReports;
             _esfReports = esfReports;
         }
 
         public async Task FileLevelErrorReport(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SupplementaryDataWrapper wrapper,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             CancellationToken cancellationToken)
         {
-            await ProduceReports(jobContextModel, wrapper, sourceFile, cancellationToken, false);
+            await ProduceReports(esfJobContext, wrapper, sourceFile, cancellationToken, false);
         }
 
         public async Task ProduceReports(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SupplementaryDataWrapper wrapper,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             CancellationToken cancellationToken)
         {
-            await ProduceReports(jobContextModel, wrapper, sourceFile, cancellationToken, true);
+            await ProduceReports(esfJobContext, wrapper, sourceFile, cancellationToken, true);
         }
 
         private async Task ProduceReports(
-            JobContextModel jobContextModel,
+            IEsfJobContext esfJobContext,
             SupplementaryDataWrapper wrapper,
-            SourceFileModel sourceFile,
+            ISourceFileModel sourceFile,
             CancellationToken cancellationToken,
             bool passedFileValidation)
         {
             _logger.LogInfo("ESF Reporting service called");
 
-            var fileName = $"{jobContextModel.UkPrn}/{jobContextModel.JobId}/Reports.zip";
-            using (Stream memoryStream = new MemoryStream())
+            var reportNames = new List<string>();
+
+            try
             {
-                if (await _persistenceService.ExistsAsync(fileName, jobContextModel.BlobContainerName, cancellationToken))
+                if (!string.IsNullOrWhiteSpace(sourceFile?.FileName))
                 {
-                    using (var readStream = await
-                        _persistenceService.OpenReadStreamAsync(
-                            fileName,
-                            jobContextModel.BlobContainerName,
-                            cancellationToken))
+                    foreach (var validationReport in _validationReports)
                     {
-                        await readStream.CopyToAsync(memoryStream);
+                        reportNames.Add(await validationReport.GenerateReport(esfJobContext, sourceFile, wrapper, cancellationToken));
                     }
                 }
 
-                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Update, true))
+                if (passedFileValidation)
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-
-                    try
+                    var reportsToRun = _esfReports.Where(r => esfJobContext.Tasks.Contains(r.TaskName, StringComparer.OrdinalIgnoreCase));
+                    foreach (var report in reportsToRun)
                     {
-                        if (!string.IsNullOrWhiteSpace(sourceFile?.FileName))
-                        {
-                            foreach (var validationReport in _validationReports)
-                            {
-                                await validationReport.GenerateReport(jobContextModel, sourceFile, wrapper, archive, cancellationToken);
-                            }
-                        }
-
-                        if (passedFileValidation)
-                        {
-                            var reportsToRun = _esfReports.Where(r => jobContextModel.Tasks.Contains(r.TaskName, StringComparer.OrdinalIgnoreCase));
-                            foreach (var report in reportsToRun)
-                            {
-                                await report.GenerateReport(jobContextModel, sourceFile, wrapper, archive, cancellationToken);
-                            }
-                        }
+                        reportNames.Add(await report.GenerateReport(esfJobContext, sourceFile, wrapper, cancellationToken));
                     }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex.Message, ex);
-                        throw;
-                    }
-
-                    cancellationToken.ThrowIfCancellationRequested();
-                }
-
-                using (var writeStream = await _persistenceService.OpenWriteStreamAsync(
-                    fileName,
-                    jobContextModel.BlobContainerName,
-                    cancellationToken))
-                {
-                    memoryStream.Position = 0;
-
-                    await memoryStream.CopyToAsync(writeStream);
                 }
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+                throw;
+            }
+
+            var zipFileName = $"{esfJobContext.UkPrn}/{esfJobContext.JobId}{ReportNameConstants.ZipName}";
+
+            await _zipService.CreateZipAsync(zipFileName, reportNames, esfJobContext.BlobContainerName, cancellationToken);
         }
     }
 }

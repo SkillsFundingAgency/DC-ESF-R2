@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Services
@@ -99,7 +100,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
         {
             var yearlySupplementaryData = new List<SupplementaryDataYearlyModel>();
 
-            for (var i = Constants.StartYear; i <= endYear; i++)
+            for (var i = ReportingConstants.StartYear; i <= endYear; i++)
             {
                 yearlySupplementaryData.Add(new SupplementaryDataYearlyModel
                 {

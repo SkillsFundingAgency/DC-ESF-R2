@@ -17,7 +17,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.CrossRecord
 
         public bool IsWarning => false;
 
-        public bool IsValid(IList<SupplementaryDataModel> allRecords, SupplementaryDataModel model)
+        public bool IsValid(ICollection<SupplementaryDataModel> allRecords, SupplementaryDataModel model)
         {
             return allRecords != null && allRecords.Count(
                           m => m.ConRefNumber == model.ConRefNumber &&

@@ -5,6 +5,6 @@ namespace ESFA.DC.ESF.R2.Interfaces.Validation
 {
     public interface ICrossRecordValidator : IBaseValidator
     {
-        bool IsValid(IList<SupplementaryDataModel> allRecords, SupplementaryDataModel model);
+        bool IsValid(ICollection<SupplementaryDataModel> allRecords, SupplementaryDataModel model);
     }
 }

@@ -1,8 +1,9 @@
 ﻿using System;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 
 namespace ESFA.DC.ESF.R2.Models
 {
-    public class SourceFileModel
+    public class SourceFileModel : ISourceFileModel
     {
         public int SourceFileId { get; set; }
 

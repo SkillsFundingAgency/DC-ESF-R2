@@ -3,10 +3,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using CsvHelper;
-using ESFA.DC.ESF.R2.Interfaces.Helpers;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.Service.Services
@@ -14,32 +15,27 @@ namespace ESFA.DC.ESF.R2.Service.Services
     public class FileValidationService : IFileValidationService
     {
         private readonly IList<IFileLevelValidator> _validators;
-
-        private readonly IFileHelper _fileHelper;
-
+        private readonly IESFProviderService _eSFProviderService;
         private readonly ILogger _logger;
 
-        public FileValidationService(
-            IList<IFileLevelValidator> validators,
-            IFileHelper fileHelper,
-            ILogger logger)
+        public FileValidationService(IList<IFileLevelValidator> validators, IESFProviderService eSFProviderService, ILogger logger)
         {
-            _fileHelper = fileHelper;
+            _eSFProviderService = eSFProviderService;
             _validators = validators;
             _logger = logger;
         }
 
         public async Task<SupplementaryDataWrapper> GetFile(
-            JobContextModel jobContextModel,
-            SourceFileModel sourceFileModel,
+            IEsfJobContext esfJobContext,
+            ISourceFileModel sourceFileModel,
             CancellationToken cancellationToken)
         {
             SupplementaryDataWrapper wrapper = new SupplementaryDataWrapper();
-            IList<SupplementaryDataLooseModel> esfRecords = new List<SupplementaryDataLooseModel>();
+            ICollection<SupplementaryDataLooseModel> esfRecords = new List<SupplementaryDataLooseModel>();
             IList<ValidationErrorModel> errors = new List<ValidationErrorModel>();
             try
             {
-                esfRecords = await _fileHelper.GetESFRecords(jobContextModel, sourceFileModel, cancellationToken);
+                esfRecords = await _eSFProviderService.GetESFRecordsFromFile(esfJobContext, cancellationToken);
                 if (esfRecords == null || !esfRecords.Any())
                 {
                     _logger.LogInfo("No ESF records to process");
@@ -63,7 +59,7 @@ namespace ESFA.DC.ESF.R2.Service.Services
         }
 
         public async Task<SupplementaryDataWrapper> RunFileValidators(
-            SourceFileModel sourceFileModel,
+            ISourceFileModel sourceFileModel,
             SupplementaryDataWrapper wrapper)
         {
             foreach (var model in wrapper.SupplementaryDataLooseModels)

@@ -1,13 +1,16 @@
-﻿using ESFA.DC.ESF.R2.Service.Config;
+﻿using System.Collections.Generic;
+using ESFA.DC.ESF.R2.Service.Config;
 using ESFA.DC.FileService.Config;
 using ESFA.DC.ILR.DataService.Models;
+using ESFA.DC.ServiceFabric.Common.Config;
+using ESFA.DC.ServiceFabric.Common.Config.Interface;
 using ESFA.DC.ServiceFabric.Helpers.Interfaces;
 
 namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
 {
-    public sealed class TestConfigurationHelper : IConfigurationHelper
+    public sealed class TestConfigurationHelper : IServiceFabricConfigurationService
     {
-        public T GetSectionValues<T>(string sectionName)
+        public T GetConfigSectionAs<T>(string sectionName)
         {
             switch (sectionName)
             {
@@ -16,21 +19,10 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
                     {
                         ServiceReleaseVersion = "1.2.3.4"
                     };
-                //case "TopicAndTaskSection":
-                //    return (T)GetTopicsAndTasks();
-                case "AzureStorageSection":
+                case "AzureStorageFileServiceConfiguration":
                     return (T)(object)new AzureStorageFileServiceConfiguration
                     {
                         ConnectionString = "AzureBlobConnectionString"
-                    };
-                case "ServiceBusSettings":
-                    return (T)(object)new ServiceBusOptions
-                    {
-                        AuditQueueName = "AuditQueueName",
-                        ServiceBusConnectionString = "Endpoint=sb://xxxx.servicebus.windows.net/;SharedAccessKeyName=xxxx;SharedAccessKey=xxxx",
-                        JobStatusQueueName = "JobStatusQueueName",
-                        TopicName = "TopicName",
-                        SubscriptionName = "DataStore"
                     };
                 case "LoggerSection":
                     return (T)(object)new LoggerOptions
@@ -67,6 +59,28 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
             }
 
             return default(T);
+        }
+
+        public IDictionary<string, string> GetConfigSectionAsDictionary(string sectionName)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public IStatelessServiceConfiguration GetConfigSectionAsStatelessServiceConfiguration()
+        {
+            return new StatelessServiceConfiguration
+            {
+                ServiceBusConnectionString = "Endpoint=sb://xxxx.servicebus.windows.net/;SharedAccessKeyName=xxxx;SharedAccessKey=xxxx",
+                TopicName = "TopicName",
+                SubscriptionName = "DataStore",
+                TopicMaxConcurrentCalls = "1",
+                TopicMaxCallbackTimeSpanMinutes = "1",
+                JobStatusQueueName = "JobStatusQueueName",
+                JobStatusMaxConcurrentCalls = "1",
+                AuditQueueName = "AuditQueueName",
+                AuditMaxConcurrentCalls = "1",
+                LoggerConnectionString = "string"
+            };
         }
     }
 }

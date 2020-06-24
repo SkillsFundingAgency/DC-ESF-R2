@@ -176,13 +176,18 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             }
         }
 
-        public IList<DeliverableUnitCost> GetDeliverableUnitCosts(
-            string conRefNum,
-            IList<string> deliverableCodes)
+        public IList<DeliverableUnitCost> GetDeliverableUnitCosts(string conRefNum, IList<string> deliverableCodes)
         {
             return DeliverableUnitCosts.Where(duc => duc.ConRefNum.CaseInsensitiveEquals(conRefNum)
                                               && deliverableCodes.Any(dc =>
                                                   dc.CaseInsensitiveEquals(duc.DeliverableCode))).ToList();
+        }
+
+        public IList<DeliverableUnitCost> GetDeliverableUnitCostsForDeliverableCode(string conRefNum, string deliverableCode)
+        {
+            return DeliverableUnitCosts
+                .Where(duc => duc.ConRefNum.CaseInsensitiveEquals(conRefNum)
+                && deliverableCode.CaseInsensitiveEquals(duc.DeliverableCode)).ToList();
         }
 
         public async Task PopulateDeliverableUnitCosts(

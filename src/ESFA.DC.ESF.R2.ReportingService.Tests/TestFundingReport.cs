@@ -1,27 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.CsvService.Interface;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
-using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
-using ESFA.DC.ESF.R2.Interfaces.Reports.Strategies;
-using ESFA.DC.ESF.R2.Interfaces.Strategies;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Reports;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
+using ESFA.DC.ESF.R2.ReportingService.Mappers;
 using ESFA.DC.ESF.R2.ReportingService.Reports;
-using ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary;
 using ESFA.DC.ESF.R2.ReportingService.Services;
-using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.CSVRowHelpers;
-using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.Ilr;
-using ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppData;
 using ESFA.DC.FileService.Interface;
 using ESFA.DC.ILR.DataService.Models;
-using ESFA.DC.Logging.Interfaces;
-using FluentAssertions;
 using Moq;
 using Xunit;
 
@@ -38,15 +32,22 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             var dateTime = DateTime.UtcNow;
             var filename = $"10005752/1/ESF-2108 ESF (Round 2) Supplementary Data Funding Report {dateTime:yyyyMMdd-HHmmss}";
 
+            var supplementaryDataWrapper = new SupplementaryDataWrapper()
+            {
+                SupplementaryDataLooseModels = GetSupplementaryDataLooseModels(),
+                SupplementaryDataModels = GetSupplementaryDataModels(),
+                ValidErrorModels = new List<ValidationErrorModel>()
+            };
+
             Mock<IDateTimeProvider> dateTimeProviderMock = new Mock<IDateTimeProvider>();
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(dateTime);
             dateTimeProviderMock.Setup(x => x.ConvertUtcToUk(It.IsAny<DateTime>())).Returns(dateTime);
 
             var testStream = new MemoryStream();
 
-            Mock<IFileService> storage = new Mock<IFileService>();
-            storage.Setup(x => x.OpenWriteStreamAsync($"{filename}.csv", It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(testStream);
+            var csvServiceMock = new Mock<ICsvFileService>();
+            csvServiceMock.Setup(x => x.WriteAsync<FundingReportModel, FundingReportMapper>(It.IsAny<List<FundingReportModel>>(), $"{filename}.csv", It.IsAny<string>(), It.IsAny<CancellationToken>(), null, null))
+                .Returns(Task.CompletedTask);
 
             Mock<IReferenceDataService> referenceDataService = new Mock<IReferenceDataService>();
             referenceDataService.Setup(m => m.GetLarsVersion(It.IsAny<CancellationToken>())).Returns("123456");
@@ -64,40 +65,23 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             var fundigReport = new FundingReport(
                 dateTimeProviderMock.Object,
                 valueProvider,
-                storage.Object,
+                Mock.Of<IFileService>(),
+                csvServiceMock.Object,
                 referenceDataService.Object);
 
             SourceFileModel sourceFile = GetEsfSourceFileModel();
             sourceFile.FileName = sourceFileName;
 
-            JobContextModel jobContextModel = new JobContextModel
-            {
-                UkPrn = 10005752,
-                JobId = 1,
-                BlobContainerName = "TestContainer",
-                CollectionYear = 1819,
-                CollectionName = collectionName
-            };
+            var esfJobContextMock = new Mock<IEsfJobContext>();
+            esfJobContextMock.Setup(x => x.UkPrn).Returns(10005752);
+            esfJobContextMock.Setup(x => x.JobId).Returns(1);
+            esfJobContextMock.Setup(x => x.BlobContainerName).Returns("TestContainer");
+            esfJobContextMock.Setup(x => x.CollectionYear).Returns(1819);
+            esfJobContextMock.Setup(x => x.CollectionName).Returns(collectionName);
 
-            var supplementaryDataWrapper = new SupplementaryDataWrapper()
-            {
-                SupplementaryDataLooseModels = GetSupplementaryDataLooseModels(),
-                SupplementaryDataModels = GetSupplementaryDataModels(),
-                ValidErrorModels = new List<ValidationErrorModel>()
-            };
+            await fundigReport.GenerateReport(esfJobContextMock.Object, sourceFile, supplementaryDataWrapper, CancellationToken.None);
 
-            MemoryStream memoryStream = new MemoryStream();
-            using (memoryStream)
-            {
-                using (var archive = new ZipArchive(memoryStream, ZipArchiveMode.Update, true))
-                {
-                    await fundigReport.GenerateReport(jobContextModel, sourceFile, supplementaryDataWrapper, archive, CancellationToken.None);
-
-                    storage.Verify(s =>
-                        s.OpenWriteStreamAsync($"{filename}.csv", It.IsAny<string>(), It.IsAny<CancellationToken>()));
-                    archive.Entries.Count.Equals(expectedZipEntryCount);
-                }
-            }
+            csvServiceMock.VerifyAll();
         }
 
         private IEnumerable<ILRFileDetails> GetTestFileDetail()

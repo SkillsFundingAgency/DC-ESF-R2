@@ -1,105 +1,87 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using CsvHelper;
+using ESFA.DC.CsvService.Interface;
 using ESFA.DC.DateTimeProvider.Interface;
+using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Interfaces.Services;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.ESF.R2.Models.Reports;
+using ESFA.DC.ESF.R2.ReportingService.Abstract;
+using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.ESF.R2.ReportingService.Mappers;
 using ESFA.DC.FileService.Interface;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Reports
 {
-    public class AimAndDeliverableReport : AbstractReportBuilder, IModelReport
+    public class AimAndDeliverableReport : AbstractCsvReportService<AimAndDeliverableModel, AimAndDeliverableMapper>, IModelReport
     {
-        private readonly IFileService _storage;
+        private const string _reportExtension = ".csv";
+
         private readonly IAimAndDeliverableService1819 _aimAndDeliverableService1819;
         private readonly IAimAndDeliverableService1920 _aimAndDeliverableService1920;
 
         public AimAndDeliverableReport(
             IDateTimeProvider dateTimeProvider,
-            IFileService storage,
+            IFileService fileService,
             IValueProvider valueProvider,
+            ICsvFileService csvFileService,
             IAimAndDeliverableService1819 aimAndDeliverableService1819,
             IAimAndDeliverableService1920 aimAndDeliverableService1920)
-            : base(dateTimeProvider, valueProvider, Constants.TaskGenerateEsfAimAndDeliverableReport)
+            : base(dateTimeProvider, valueProvider, fileService, csvFileService, ReportTaskConstants.TaskGenerateEsfAimAndDeliverableReport)
         {
-            _storage = storage;
             _aimAndDeliverableService1819 = aimAndDeliverableService1819;
             _aimAndDeliverableService1920 = aimAndDeliverableService1920;
 
-            ReportFileName = "ESF Round 2 Aim and Deliverable Report";
+            ReportFileName = ReportNameConstants.AimsAndDeliverableReport;
         }
 
-        public async Task GenerateReport(
-            JobContextModel jobContextModel,
-            SourceFileModel sourceFile,
+        public async Task<string> GenerateReport(
+            IEsfJobContext esfJobContext,
+            ISourceFileModel sourceFile,
             SupplementaryDataWrapper wrapper,
-            ZipArchive archive,
             CancellationToken cancellationToken)
         {
-            var externalFileName = GetExternalFilename(jobContextModel.UkPrn.ToString(), jobContextModel.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
-            var fileName = GetFilename(jobContextModel.UkPrn.ToString(), jobContextModel.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue);
+            var externalFileName = GetExternalFilename(esfJobContext.UkPrn, esfJobContext.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue, _reportExtension);
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            var ukPrn = jobContextModel.UkPrn;
-            string csv = await GetCsv(ukPrn, jobContextModel.CollectionYear, cancellationToken);
-            if (csv != null)
-            {
-                using (var stream = await _storage.OpenWriteStreamAsync(
-                    $"{externalFileName}.csv",
-                    jobContextModel.BlobContainerName,
-                    cancellationToken))
-                {
-                    using (var writer = new StreamWriter(stream, new UTF8Encoding(false, true)))
-                    {
-                        writer.Write(csv);
-                    }
-                }
+            var ukPrn = esfJobContext.UkPrn;
+            var reportModels = await GetModels(ukPrn, esfJobContext.CollectionYear, cancellationToken);
 
-                await WriteZipEntry(archive, $"{fileName}.csv", csv);
-            }
+            await WriteCsv(esfJobContext, externalFileName, reportModels, cancellationToken);
+
+            return externalFileName;
         }
 
-        private async Task<string> GetCsv(int ukPrn, int collectionYear, CancellationToken cancellationToken)
+        private async Task<IEnumerable<AimAndDeliverableModel>> GetModels(int ukPrn, int collectionYear, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            List<AimAndDeliverableModel> reportData;
+            IEnumerable<AimAndDeliverableModel> reportData;
 
             if (collectionYear == 1819)
             {
-                reportData = (await _aimAndDeliverableService1819.GetAimAndDeliverableModel(ukPrn, cancellationToken)).ToList();
+                reportData = await _aimAndDeliverableService1819.GetAimAndDeliverableModel(ukPrn, cancellationToken);
             }
             else
             {
-                reportData = (await _aimAndDeliverableService1920.GetAimAndDeliverableModel(ukPrn, cancellationToken)).ToList();
+                reportData = await _aimAndDeliverableService1920.GetAimAndDeliverableModel(ukPrn, cancellationToken);
             }
 
-            using (var ms = new MemoryStream())
-            {
-                var utF8Encoding = new UTF8Encoding(true, true);
-                using (var textWriter = new StreamWriter(ms, utF8Encoding))
-                {
-                    using (var csvWriter = new CsvWriter(textWriter))
-                    {
-                        WriteCsvRecords<AimAndDeliverableMapper, AimAndDeliverableModel>(csvWriter, reportData);
-
-                        csvWriter.Flush();
-                        textWriter.Flush();
-                        return Encoding.UTF8.GetString(ms.ToArray());
-                    }
-                }
-            }
+            return
+                reportData
+                .OrderBy(x => x.LearnRefNumber)
+                .ThenBy(x => x.ConRefNumber)
+                .ThenBy(x => x.LearnStartDate)
+                .ThenBy(x => x.AimSeqNumber)
+                .ThenBy(x => x.Period)
+                .ThenBy(x => x.DeliverableCode);
         }
     }
 }

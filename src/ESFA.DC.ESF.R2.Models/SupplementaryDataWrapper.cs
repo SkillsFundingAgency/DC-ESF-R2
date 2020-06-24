@@ -11,10 +11,10 @@ namespace ESFA.DC.ESF.R2.Models
             ValidErrorModels = new List<ValidationErrorModel>();
         }
 
-        public IList<SupplementaryDataLooseModel> SupplementaryDataLooseModels { get; set; }
+        public ICollection<SupplementaryDataLooseModel> SupplementaryDataLooseModels { get; set; }
 
-        public IList<SupplementaryDataModel> SupplementaryDataModels { get; set; }
+        public ICollection<SupplementaryDataModel> SupplementaryDataModels { get; set; }
 
-        public IList<ValidationErrorModel> ValidErrorModels { get; set; }
+        public ICollection<ValidationErrorModel> ValidErrorModels { get; set; }
     }
 }
