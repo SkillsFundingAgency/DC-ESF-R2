@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
@@ -52,11 +53,16 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer.Services
             return _referenceDataCache.GetUlnLookup(searchUlns, cancellationToken);
         }
 
-        public IList<DeliverableUnitCost> GetDeliverableUnitCosts(
-            string conRefNum,
-            IList<string> deliverableCodes)
+        public IList<DeliverableUnitCost> GetDeliverableUnitCosts(string conRefNum, IList<string> deliverableCodes)
         {
             return _referenceDataCache.GetDeliverableUnitCosts(conRefNum, deliverableCodes);
+        }
+
+        public decimal? GetDeliverableUnitCostForDeliverableCode(string conRefNum, string deliverableCode)
+        {
+            var deliverable = _referenceDataCache?.GetDeliverableUnitCostsForDeliverableCode(conRefNum, deliverableCode).FirstOrDefault();
+
+            return deliverable?.UnitCost;
         }
 
         public LarsLearningDeliveryModel GetLarsLearningDelivery(string learnAimRef)

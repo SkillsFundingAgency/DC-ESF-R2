@@ -21,9 +21,9 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
 
         IEnumerable<long> GetUlnLookup(IEnumerable<long?> searchUlns, CancellationToken cancellationToken);
 
-        IList<DeliverableUnitCost> GetDeliverableUnitCosts(
-            string conRefNum,
-            IList<string> deliverableCodes);
+        IList<DeliverableUnitCost> GetDeliverableUnitCosts(string conRefNum, IList<string> deliverableCodes);
+
+        decimal? GetDeliverableUnitCostForDeliverableCode(string conRefNum, string deliverableCode);
 
         LarsLearningDeliveryModel GetLarsLearningDelivery(string learnAimRef);
 

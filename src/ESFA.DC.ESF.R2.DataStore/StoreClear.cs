@@ -1,33 +1,30 @@
-﻿using System.Data;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
+using ESFA.DC.ESF.R2.DataStore.Constants;
 using ESFA.DC.ESF.R2.Interfaces.DataStore;
 
 namespace ESFA.DC.ESF.R2.DataStore
 {
     public sealed class StoreClear : IStoreClear
     {
-        private readonly SqlConnection _connection;
-        private readonly SqlTransaction _transaction;
+        private readonly IDataStoreQueryExecutionService _dataStoreQueryExecutionService;
 
-        public StoreClear(SqlConnection connection, SqlTransaction transaction)
+        public StoreClear(IDataStoreQueryExecutionService dataStoreQueryExecutionService)
         {
-            _connection = connection;
-            _transaction = transaction;
+            _dataStoreQueryExecutionService = dataStoreQueryExecutionService;
         }
 
-        public async Task ClearAsync(int ukPrn, string conRefNum, CancellationToken cancellationToken)
+        public async Task ClearAsync(int ukPrn, string conRefNumber, SqlConnection sqlConnection, SqlTransaction sqlTransaction, CancellationToken cancellationToken)
         {
-            using (SqlCommand sqlCommand =
-                new SqlCommand("[dbo].[DeleteExistingRecords]", _connection, _transaction))
-            {
-                sqlCommand.CommandType = CommandType.StoredProcedure;
-                sqlCommand.Parameters.Add("@ukprn", SqlDbType.Int).Value = ukPrn;
-                sqlCommand.Parameters.Add("@conRefNum", SqlDbType.NVarChar).Value = conRefNum;
-                sqlCommand.CommandTimeout = 600;
-                await sqlCommand.ExecuteNonQueryAsync(cancellationToken);
-            }
+            var parameters = new object[] { ukPrn, conRefNumber };
+
+            await _dataStoreQueryExecutionService.ExecuteStoredProcedure(
+                DataStoreConstants.StoredProcedureNameConstants.DeleteExistingRecords,
+                parameters,
+                sqlConnection,
+                sqlTransaction,
+                cancellationToken);
         }
     }
 }

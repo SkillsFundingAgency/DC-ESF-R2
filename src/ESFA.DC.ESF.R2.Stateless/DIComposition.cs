@@ -79,7 +79,7 @@ namespace ESFA.DC.ESF.R2.Stateless
                     .Options;
                 return new ESFR2Context(options);
             }).As<IESFR2Context>();
-            containerBuilder.RegisterInstance(esfConfig).As<ESFConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(esfConfig).As<IESFConfiguration>().SingleInstance();
 
             containerBuilder.Register(c =>
             {
