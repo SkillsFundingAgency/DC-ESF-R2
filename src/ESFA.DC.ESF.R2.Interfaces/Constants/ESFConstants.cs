@@ -2,7 +2,7 @@
 
 namespace ESFA.DC.ESF.R2.Interfaces.Constants
 {
-    public class ESFConstants
+    public static class ESFConstants
     {
         public const int ESFRound2StartConRefNumber = 5000;
 

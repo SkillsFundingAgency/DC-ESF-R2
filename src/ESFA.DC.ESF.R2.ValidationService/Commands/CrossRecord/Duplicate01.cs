@@ -3,6 +3,7 @@ using System.Linq;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.CrossRecord
 {
@@ -13,7 +14,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.CrossRecord
         {
         }
 
-        public override string ErrorName => "Duplicate_01";
+        public override string ErrorName => RulenameConstants.Duplicate_01;
 
         public bool IsWarning => false;
 

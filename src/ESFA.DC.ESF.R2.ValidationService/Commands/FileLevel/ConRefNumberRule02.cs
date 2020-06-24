@@ -4,6 +4,7 @@ using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Interfaces;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
 {
@@ -14,7 +15,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FileLevel
         {
         }
 
-        public override string ErrorName => "ConRefNumber_02";
+        public override string ErrorName => RulenameConstants.ConRefNumber_02;
 
         public bool IsWarning => false;
 

@@ -25,6 +25,13 @@ namespace ESFA.DC.ESF.R2.Utils
             return source?.ToLower().Trim().Contains(data.ToLower().Trim()) ?? false;
         }
 
+        public static string RemoveWhiteSpacesNonAlphaNumericCharacters(this string str)
+        {
+            Regex rgx = new Regex("[^a-zA-Z0-9+-.]");
+            str = rgx.Replace(str, $"");
+            return str.Trim();
+        }
+
         public static string[] SplitFileName(this string fileName, string extension)
         {
             const int lengthOfDateTimePart = 15;

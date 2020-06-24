@@ -1,6 +1,7 @@
 ﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -16,7 +17,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             _referenceDataService = referenceDataService;
         }
 
-        public override string ErrorName => "LearnAimRef_03";
+        public override string ErrorName => RulenameConstants.LearnAimRef_03;
 
         public bool IsWarning => false;
 

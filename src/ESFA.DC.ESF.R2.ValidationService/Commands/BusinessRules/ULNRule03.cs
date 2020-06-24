@@ -1,9 +1,8 @@
-﻿using System;
-using ESFA.DC.DateTimeProvider.Interface;
+﻿using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
-using ESFA.DC.ESF.R2.ValidationService.Helpers;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -22,7 +21,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             _monthYearHelper = monthYearHelper;
         }
 
-        public override string ErrorName => "ULN_03";
+        public override string ErrorName => RulenameConstants.ULN_03;
 
         public bool IsWarning => false;
 
@@ -32,7 +31,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             var twoMonthsAgo = _monthYearHelper.GetFirstOfCalendarMonthDateTime(now.Year, now.Month).AddMonths(-2);
 
             return
-                (model.ULN ?? 0) != 9999999999 ||
+                (model.ULN ?? 0) != ValidationConstants.TemporaryUln ||
                 _monthYearHelper.GetFirstOfCalendarMonthDateTime(model.CalendarYear, model.CalendarMonth) > twoMonthsAgo;
         }
     }

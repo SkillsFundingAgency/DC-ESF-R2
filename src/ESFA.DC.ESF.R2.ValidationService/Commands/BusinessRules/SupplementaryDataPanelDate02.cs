@@ -2,6 +2,7 @@
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -14,7 +15,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
         {
         }
 
-        public override string ErrorName => "SupplementaryDataPanelDate_02";
+        public override string ErrorName => RulenameConstants.SupplementaryDataPanelDate_02;
 
         public bool IsWarning => false;
 

@@ -4,6 +4,7 @@ using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -11,13 +12,13 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
     {
         private readonly List<string> _deliverableCodes = new List<string>
         {
-            Constants.DeliverableCode_NR01,
-            Constants.DeliverableCode_ST01,
-            Constants.DeliverableCode_RQ01,
-            Constants.DeliverableCode_PG01,
-            Constants.DeliverableCode_PG03,
-            Constants.DeliverableCode_PG04,
-            Constants.DeliverableCode_PG05
+            ValidationConstants.DeliverableCode_NR01,
+            ValidationConstants.DeliverableCode_ST01,
+            ValidationConstants.DeliverableCode_RQ01,
+            ValidationConstants.DeliverableCode_PG01,
+            ValidationConstants.DeliverableCode_PG03,
+            ValidationConstants.DeliverableCode_PG04,
+            ValidationConstants.DeliverableCode_PG05
         };
 
         public SupplementaryDataPanelDate03(IValidationErrorMessageService errorMessageService)
@@ -25,7 +26,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
         {
         }
 
-        public override string ErrorName => "SupplementaryDataPanelDate_03";
+        public override string ErrorName => RulenameConstants.SupplementaryDataPanelDate_03;
 
         public bool IsWarning => false;
 

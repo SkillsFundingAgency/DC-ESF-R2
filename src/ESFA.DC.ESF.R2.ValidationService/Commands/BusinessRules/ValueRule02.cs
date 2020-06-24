@@ -2,6 +2,7 @@
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -12,13 +13,13 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
         {
         }
 
-        public override string ErrorName => "Value_02";
+        public override string ErrorName => RulenameConstants.Value_02;
 
         public bool IsWarning => false;
 
         public bool IsValid(SupplementaryDataModel model)
         {
-            return !(model.CostType.CaseInsensitiveEquals(Constants.CostType_UnitCost) || model.CostType.CaseInsensitiveEquals(Constants.CostType_UnitCostDeduction))
+            return !(model.CostType.CaseInsensitiveEquals(ValidationConstants.CostType_UnitCost) || model.CostType.CaseInsensitiveEquals(ValidationConstants.CostType_UnitCostDeduction))
                         || model.Value == null;
         }
     }

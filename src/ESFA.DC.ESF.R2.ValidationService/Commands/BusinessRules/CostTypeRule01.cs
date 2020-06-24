@@ -4,6 +4,7 @@ using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -11,12 +12,12 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
     {
         private readonly IList<string> _validCostTypes = new List<string>
         {
-            Constants.CostType_Grant,
-            Constants.CostType_GrantManagement,
-            Constants.CostType_UnitCost,
-            Constants.CostType_UnitCostDeduction,
-            Constants.CostType_OtherCosts,
-            Constants.CostType_AuthorisedClaims
+            ValidationConstants.CostType_Grant,
+            ValidationConstants.CostType_GrantManagement,
+            ValidationConstants.CostType_UnitCost,
+            ValidationConstants.CostType_UnitCostDeduction,
+            ValidationConstants.CostType_OtherCosts,
+            ValidationConstants.CostType_AuthorisedClaims
         };
 
         public CostTypeRule01(IValidationErrorMessageService errorMessageService)
@@ -24,7 +25,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
         {
         }
 
-        public override string ErrorName => "CostType_01";
+        public override string ErrorName => RulenameConstants.CostType_01;
 
         public bool IsWarning => false;
 

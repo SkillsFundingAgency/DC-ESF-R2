@@ -4,6 +4,7 @@ using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -13,10 +14,10 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
         private readonly List<string> _acceptedGenres = new List<string>
         {
-            Constants.LarsLearningDeliveryGenre_EOQ,
-            Constants.LarsLearningDeliveryGenre_EQQ,
-            Constants.LarsLearningDeliveryGenre_EOU,
-            Constants.LarsLearningDeliveryGenre_IHE
+            ValidationConstants.LarsLearningDeliveryGenre_EOQ,
+            ValidationConstants.LarsLearningDeliveryGenre_EQQ,
+            ValidationConstants.LarsLearningDeliveryGenre_EOU,
+            ValidationConstants.LarsLearningDeliveryGenre_IHE
         };
 
         public LearnAimRef05(
@@ -27,14 +28,14 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             _referenceDataService = referenceDataService;
         }
 
-        public override string ErrorName => "LearnAimRef_05";
+        public override string ErrorName => RulenameConstants.LearnAimRef_05;
 
         public bool IsWarning => false;
 
         public bool IsValid(SupplementaryDataModel model)
         {
             if (string.IsNullOrEmpty(model.LearnAimRef?.Trim())
-                || !(model.DeliverableCode ?? string.Empty).CaseInsensitiveEquals(Constants.DeliverableCode_RQ01))
+                || !(model.DeliverableCode ?? string.Empty).CaseInsensitiveEquals(ValidationConstants.DeliverableCode_RQ01))
             {
                 return true;
             }

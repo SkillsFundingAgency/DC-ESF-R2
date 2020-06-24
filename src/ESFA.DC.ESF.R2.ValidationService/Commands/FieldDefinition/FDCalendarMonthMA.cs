@@ -1,6 +1,7 @@
 ﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition
 {
@@ -11,7 +12,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition
         {
         }
 
-        public override string ErrorName => "FD_CalendarMonth_MA";
+        public override string ErrorName => RulenameConstants.FD_CalendarMonth_MA;
 
         public bool IsWarning => false;
 

@@ -1,6 +1,7 @@
 ﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition
 {
@@ -13,7 +14,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition
         {
         }
 
-        public override string ErrorName => "FD_LearnAimRef_AL";
+        public override string ErrorName => RulenameConstants.FD_LearnAimRef_AL;
 
         public bool IsWarning => false;
 

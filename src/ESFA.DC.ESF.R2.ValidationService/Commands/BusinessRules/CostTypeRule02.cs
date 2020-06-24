@@ -5,6 +5,7 @@ using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -12,8 +13,8 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
     {
         private readonly List<string> _SDCodes = new List<string>
         {
-            Constants.DeliverableCode_SD01,
-            Constants.DeliverableCode_SD02
+            ValidationConstants.DeliverableCode_SD01,
+            ValidationConstants.DeliverableCode_SD02
         };
 
         public CostTypeRule02(IValidationErrorMessageService errorMessageService)
@@ -21,7 +22,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
         {
         }
 
-        public override string ErrorName => "CostType_02";
+        public override string ErrorName => RulenameConstants.CostType_02;
 
         public bool IsWarning => false;
 
@@ -31,18 +32,18 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             var costType = model.CostType?.Trim();
 
             var errorCondition =
-                (deliverableCode.CaseInsensitiveEquals(Constants.DeliverableCode_CG01) && !costType.CaseInsensitiveEquals(Constants.CostType_Grant))
+                (deliverableCode.CaseInsensitiveEquals(ValidationConstants.DeliverableCode_CG01) && !costType.CaseInsensitiveEquals(ValidationConstants.CostType_Grant))
                 ||
-                (deliverableCode.CaseInsensitiveEquals(Constants.DeliverableCode_CG02)
-                    && (!costType.CaseInsensitiveEquals(Constants.CostType_GrantManagement) && !costType.CaseInsensitiveEquals(Constants.CostType_OtherCosts)))
+                (deliverableCode.CaseInsensitiveEquals(ValidationConstants.DeliverableCode_CG02)
+                    && (!costType.CaseInsensitiveEquals(ValidationConstants.CostType_GrantManagement) && !costType.CaseInsensitiveEquals(ValidationConstants.CostType_OtherCosts)))
                 ||
-                (_SDCodes.Any(sd => sd.CaseInsensitiveEquals(deliverableCode)) && !costType.CaseInsensitiveEquals(Constants.CostType_UnitCost))
+                (_SDCodes.Any(sd => sd.CaseInsensitiveEquals(deliverableCode)) && !costType.CaseInsensitiveEquals(ValidationConstants.CostType_UnitCost))
                 ||
                 (ESFConstants.UnitCostDeliverableCodes.Any(ucd => ucd.CaseInsensitiveEquals(deliverableCode)) &&
-                    (!costType.CaseInsensitiveEquals(Constants.CostType_UnitCost) && !costType.CaseInsensitiveEquals(Constants.CostType_UnitCostDeduction)))
+                    (!costType.CaseInsensitiveEquals(ValidationConstants.CostType_UnitCost) && !costType.CaseInsensitiveEquals(ValidationConstants.CostType_UnitCostDeduction)))
                 ||
-                ((deliverableCode.CaseInsensitiveEquals(Constants.DeliverableCode_NR01) || deliverableCode.CaseInsensitiveEquals(Constants.DeliverableCode_RQ01)) &&
-                    !costType.CaseInsensitiveEquals(Constants.CostType_AuthorisedClaims));
+                ((deliverableCode.CaseInsensitiveEquals(ValidationConstants.DeliverableCode_NR01) || deliverableCode.CaseInsensitiveEquals(ValidationConstants.DeliverableCode_RQ01)) &&
+                    !costType.CaseInsensitiveEquals(ValidationConstants.CostType_AuthorisedClaims));
 
             return !errorCondition;
         }

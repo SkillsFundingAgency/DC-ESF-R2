@@ -3,6 +3,7 @@ using System.Linq;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 using ESFA.DC.ESF.R2.ValidationService.Helpers;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
@@ -22,7 +23,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             _monthYearHelper = monthYearHelper;
         }
 
-        public override string ErrorName => "LearnAimRef_04";
+        public override string ErrorName => RulenameConstants.LearnAimRef_04;
 
         public bool IsWarning => false;
 

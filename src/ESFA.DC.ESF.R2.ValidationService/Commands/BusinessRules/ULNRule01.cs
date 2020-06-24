@@ -1,6 +1,7 @@
 ﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -11,13 +12,13 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
         {
         }
 
-        public override string ErrorName => "ULN_01";
+        public override string ErrorName => RulenameConstants.ULN_01;
 
         public bool IsWarning => false;
 
         public bool IsValid(SupplementaryDataModel model)
         {
-            return !(model.ReferenceType == Constants.ReferenceType_LearnRefNumber && model.ULN == null);
+            return !(model.ReferenceType == ValidationConstants.ReferenceType_LearnRefNumber && model.ULN == null);
         }
     }
 }
