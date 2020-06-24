@@ -58,7 +58,7 @@ namespace ESFA.DC.ESF.R2.DataStore
 
                     await _storeClear.ClearAsync(ukPrn, sourceFile.ConRefNumber, connection, transaction, cancellationToken);
 
-                    int fileId = await _storeFileDetails.StoreAsync(connection, sourceFile, cancellationToken);
+                    int fileId = await _storeFileDetails.StoreAsync(connection, transaction, sourceFile, cancellationToken);
 
                     await _storeValidation.StoreAsync(connection, transaction, fileId, wrapper.ValidErrorModels, cancellationToken);
 
@@ -114,7 +114,7 @@ namespace ESFA.DC.ESF.R2.DataStore
 
                     transaction = connection.BeginTransaction();
 
-                    int fileId = await _storeFileDetails.StoreAsync(connection, sourceFile, cancellationToken);
+                    int fileId = await _storeFileDetails.StoreAsync(connection, transaction,  sourceFile, cancellationToken);
 
                     await _storeValidation.StoreAsync(connection, transaction, fileId, wrapper.ValidErrorModels, cancellationToken);
 

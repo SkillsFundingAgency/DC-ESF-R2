@@ -7,6 +7,6 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataStore
 {
     public interface IStoreFileDetails
     {
-        Task<int> StoreAsync(SqlConnection sqlConnection, ISourceFileModel sourceFile, CancellationToken cancellationToken);
+        Task<int> StoreAsync(SqlConnection sqlConnection, SqlTransaction sqlTransaction, ISourceFileModel sourceFile, CancellationToken cancellationToken);
     }
 }

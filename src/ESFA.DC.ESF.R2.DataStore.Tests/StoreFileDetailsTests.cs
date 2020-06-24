@@ -34,9 +34,9 @@ namespace ESFA.DC.ESF.R2.DataStore.Tests
             };
 
             var datastoreQueryMock = new Mock<IDataStoreQueryExecutionService>();
-            datastoreQueryMock.Setup(x => x.ExecuteSqlWithParameterAsync<int>(It.IsAny<SqlConnection>(), parameters, It.IsAny<string>(), cancellationToken)).ReturnsAsync(1);
+            datastoreQueryMock.Setup(x => x.ExecuteSqlWithParameterAsync<int>(It.IsAny<SqlConnection>(), It.IsAny<SqlTransaction>(), parameters, It.IsAny<string>(), cancellationToken)).ReturnsAsync(1);
 
-            var sourceFileId = await NewService(datastoreQueryMock.Object).StoreAsync(connection, sourceFile.Object, cancellationToken);
+            var sourceFileId = await NewService(datastoreQueryMock.Object).StoreAsync(connection, It.IsAny<SqlTransaction>(), sourceFile.Object, cancellationToken);
             Assert.Equal(1, sourceFileId);
 
             datastoreQueryMock.VerifyAll();

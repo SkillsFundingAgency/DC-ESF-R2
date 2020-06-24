@@ -15,7 +15,7 @@ namespace ESFA.DC.ESF.R2.DataStore
             _dataStoreQueryExecutionService = dataStoreQueryExecutionService;
         }
 
-        public async Task<int> StoreAsync(SqlConnection sqlConnection, ISourceFileModel sourceFile, CancellationToken cancellationToken)
+        public async Task<int> StoreAsync(SqlConnection sqlConnection, SqlTransaction sqlTransaction, ISourceFileModel sourceFile, CancellationToken cancellationToken)
         {
             string insertFileDetails =
                     "INSERT INTO [dbo].[SourceFile] ([ConRefNumber], [UKPRN], [Filename], [DateTime], [FilePreparationDate]) " +
@@ -32,7 +32,7 @@ namespace ESFA.DC.ESF.R2.DataStore
                 sourceFile.PreparationDate.ToString("yyyy-MM-dd HH:mm:ss")
             };
 
-            return await _dataStoreQueryExecutionService.ExecuteSqlWithParameterAsync<int>(sqlConnection, parameters, insertFileDetails, cancellationToken);
+            return await _dataStoreQueryExecutionService.ExecuteSqlWithParameterAsync<int>(sqlConnection, sqlTransaction, parameters, insertFileDetails, cancellationToken);
         }
     }
 }
