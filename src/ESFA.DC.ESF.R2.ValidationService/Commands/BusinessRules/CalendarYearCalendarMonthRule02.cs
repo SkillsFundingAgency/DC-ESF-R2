@@ -3,6 +3,7 @@ using System.Threading;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -21,7 +22,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             _mappingHelper = mappingHelper;
         }
 
-        public override string ErrorName => "CalendarYearCalendarMonth_02";
+        public override string ErrorName => RulenameConstants.CalendarYearCalendarMonth_02;
 
         public bool IsWarning => false;
 
@@ -30,7 +31,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             var year = model.CalendarYear ?? 0;
             var month = model.CalendarMonth ?? 0;
 
-            if (year == 0 || month == 0 || month < 1 || month > 12)
+            if (year == 0 || month == 0 || month < ValidationConstants.CalendarMonthMinValue || month > ValidationConstants.CalendarMonthMaxValue)
             {
                 return false;
             }

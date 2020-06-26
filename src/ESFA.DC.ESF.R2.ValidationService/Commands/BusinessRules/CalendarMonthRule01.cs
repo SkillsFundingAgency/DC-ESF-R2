@@ -1,6 +1,7 @@
 ﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -11,13 +12,13 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
         {
         }
 
-        public override string ErrorName => "CalendarMonth_01";
+        public override string ErrorName => RulenameConstants.CalendarMonth_01;
 
         public bool IsWarning => false;
 
         public bool IsValid(SupplementaryDataModel model)
         {
-            return model.CalendarMonth != null && model.CalendarMonth >= 1 && model.CalendarMonth <= 12;
+            return model.CalendarMonth != null && model.CalendarMonth >= ValidationConstants.CalendarMonthMinValue && model.CalendarMonth <= ValidationConstants.CalendarMonthMaxValue;
         }
     }
 }

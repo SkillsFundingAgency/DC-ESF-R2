@@ -3,6 +3,7 @@ using System.Globalization;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition
 {
@@ -13,14 +14,14 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.FieldDefinition
         {
         }
 
-        public override string ErrorName => "FD_SupplementaryDataPanelDate_DT";
+        public override string ErrorName => RulenameConstants.FD_SupplementaryDataPanelDate_DT;
 
         public bool IsWarning => false;
 
         public bool IsValid(SupplementaryDataLooseModel model)
         {
             return string.IsNullOrEmpty(model.SupplementaryDataPanelDate)
-                   || DateTime.TryParseExact(model.SupplementaryDataPanelDate, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
+                   || DateTime.TryParseExact(model.SupplementaryDataPanelDate, ValidationConstants.ShortDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out _);
         }
     }
 }

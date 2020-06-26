@@ -2,6 +2,7 @@
 using System.Linq;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 using ESFA.DC.ILR.DataService.Models;
+using ESFA.DC.ILR.DataService.Utils;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.Ilr
 {
@@ -17,12 +18,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.Ilr
         {
             if (attributeNames == null)
             {
-                return deliverableCode == DeliverableCode;
+                return deliverableCode.CaseInsensitiveEquals(DeliverableCode);
             }
 
             var firstNotSecond = attributeNames.Except(AttributeNames).ToList();
             var secondNotFirst = AttributeNames.Except(attributeNames).ToList();
-            return deliverableCode == DeliverableCode && !firstNotSecond.Any() && !secondNotFirst.Any();
+            return deliverableCode.CaseInsensitiveEquals(DeliverableCode) && !firstNotSecond.Any() && !secondNotFirst.Any();
         }
 
         public void Execute(
@@ -39,7 +40,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.Ilr
             foreach (var year in fm70PeriodisedValuesYearlyModels)
             {
                 var data = year.Fm70PeriodisedValues.Where(d =>
-                    d.DeliverableCode == DeliverableCode && AttributeNames.Contains(d.AttributeName)).ToList();
+                    d.DeliverableCode.CaseInsensitiveEquals(DeliverableCode) && AttributeNames.Contains(d.AttributeName)).ToList();
 
                 var yearData = yearlyData.FirstOrDefault(yd => yd.FundingYear == year.FundingYear);
                 if (yearData == null)

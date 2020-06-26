@@ -4,6 +4,7 @@ using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -11,10 +12,10 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
     {
         private List<string> _validReferenceTypes = new List<string>
         {
-            Constants.ReferenceType_Invoice,
-            Constants.ReferenceType_GrantRecipient,
-            Constants.ReferenceType_LearnRefNumber,
-            Constants.ReferenceType_Other
+            ValidationConstants.ReferenceType_Invoice,
+            ValidationConstants.ReferenceType_GrantRecipient,
+            ValidationConstants.ReferenceType_LearnRefNumber,
+            ValidationConstants.ReferenceType_Other
         };
 
         public ReferenceTypeRule01(IValidationErrorMessageService errorMessageService)
@@ -22,7 +23,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
         {
         }
 
-        public override string ErrorName => "ReferenceType_01";
+        public override string ErrorName => RulenameConstants.ReferenceType_01;
 
         public bool IsWarning => false;
 

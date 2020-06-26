@@ -2,6 +2,7 @@
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.ValidationService.Constants;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 {
@@ -20,7 +21,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             _mappingHelper = mappingHelper;
         }
 
-        public override string ErrorName => "DeliverableCode_02";
+        public override string ErrorName => RulenameConstants.DeliverableCode_02;
 
         public bool IsWarning => false;
 

@@ -5,6 +5,7 @@ using ESFA.DC.ESF.R2.Interfaces.Constants;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
+using ESFA.DC.ILR.DataService.Utils;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppData
 {
@@ -29,10 +30,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppDa
         {
             if (costType != null)
             {
-                return deliverableCode == DeliverableCode && costType == CostType;
+                return deliverableCode.CaseInsensitiveEquals(DeliverableCode) && costType.CaseInsensitiveEquals(CostType);
             }
 
-            return deliverableCode == DeliverableCode;
+            return deliverableCode.CaseInsensitiveEquals(DeliverableCode);
         }
 
         public void Execute(
@@ -51,14 +52,16 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppDa
                 {
                     var deliverableData = year.SupplementaryData.Where(supp => (supp.CalendarMonth >= EsfStartMonth ?
                         supp.CalendarMonth - EsfFirstYearMonthPadding == i : supp.CalendarMonth + EsfSecondYearMonthPadding == i)
-                                           && supp.DeliverableCode == DeliverableCode);
+
+                     && supp.DeliverableCode.CaseInsensitiveEquals(DeliverableCode));
+
                     if (CostType != null)
                     {
                         deliverableData =
-                            deliverableData.Where(supp => supp.CostType.Equals(CostType, StringComparison.OrdinalIgnoreCase));
+                            deliverableData.Where(supp => supp.CostType.CaseInsensitiveEquals(CostType));
                     }
 
-                    if (ESFConstants.UnitCostDeliverableCodes.Contains(DeliverableCode))
+                    if (ESFConstants.UnitCostDeliverableCodes.Any(x => x.CaseInsensitiveEquals(DeliverableCode)))
                     {
                         yearData.Values.Add(GetUnitCostForUnitTypeDeliverables(deliverableData));
                         continue;
@@ -83,7 +86,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.SuppDa
                 return 0M;
             }
 
-            return data.Sum(d => d.CostType?.Equals(ESFConstants.UnitCostDeductionCostType, StringComparison.OrdinalIgnoreCase)
+            return data.Sum(d => d.CostType?.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType)
                                  ?? false ? d.Value.GetValueOrDefault() * -1 : d.Value.GetValueOrDefault());
         }
     }
