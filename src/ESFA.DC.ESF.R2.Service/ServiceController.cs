@@ -15,7 +15,7 @@ namespace ESFA.DC.ESF.R2.Service
 {
     public class ServiceController : IServiceController
     {
-        private const string LicenseResource = "EESFA.DC.ESF.R2.Service.Resources.Aspose.Cells.lic";
+        private const string LicenseResource = "ESFA.DC.ESF.R2.Service.Resources.Aspose.Cells.lic";
 
         private readonly ISourceFileModelBuilder _sourceFileModelBuilder;
         private readonly ITaskHelper _taskHelper;
