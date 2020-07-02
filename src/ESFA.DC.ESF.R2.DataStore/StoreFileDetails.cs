@@ -1,6 +1,7 @@
 ﻿using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
+using Dapper;
 using ESFA.DC.ESF.R2.Interfaces.DataStore;
 using ESFA.DC.ESF.R2.Models.Interfaces;
 
@@ -23,14 +24,12 @@ namespace ESFA.DC.ESF.R2.DataStore
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            var parameters = new object[]
-            {
-                sourceFile.ConRefNumber,
-                sourceFile.UKPRN,
-                sourceFile.FileName,
-                sourceFile.SuppliedDate?.ToString("yyyy-MM-dd HH:mm:ss"),
-                sourceFile.PreparationDate.ToString("yyyy-MM-dd HH:mm:ss")
-            };
+            var parameters = new DynamicParameters();
+            parameters.Add("@ConRefNumber", sourceFile.ConRefNumber);
+            parameters.Add("@UKPRN", sourceFile.UKPRN);
+            parameters.Add("@FileName", sourceFile.FileName);
+            parameters.Add("@SuppliedDate", sourceFile.SuppliedDate?.ToString("yyyy-MM-dd HH:mm:ss"));
+            parameters.Add("@PreparationDate", sourceFile.PreparationDate.ToString("yyyy-MM-dd HH:mm:ss"));
 
             return await _dataStoreQueryExecutionService.ExecuteSqlWithParameterAsync<int>(sqlConnection, sqlTransaction, parameters, insertFileDetails, cancellationToken);
         }
