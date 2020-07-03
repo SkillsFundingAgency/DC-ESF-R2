@@ -1,0 +1,1 @@
+dotnet.exe ef dbcontext scaffold "Server=.\;Database=ILR1819_DataStore;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -c ILR1819ValidLearnerContext --schema Valid --force --output-dir ValidEntities --verbose

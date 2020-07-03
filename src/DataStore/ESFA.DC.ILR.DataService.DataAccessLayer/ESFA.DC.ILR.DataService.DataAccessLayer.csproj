@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CodeAnalysisRuleSet>ESFA.DC.ILR.DataService.DataAccessLayer.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <CodeAnalysisRuleSet>ESFA.DC.ILR.DataService.DataAccessLayer.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ESFA.DC.Logging" Version="0.1.1-beta0001" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.ILR.DataService.ILR1920EF\ESFA.DC.ILR.DataService.ILR1920EF.csproj" />
+    <ProjectReference Include="..\ESFA.DC.ILR.DataService.Interfaces\ESFA.DC.ILR.DataService.Interfaces.csproj" />
+    <ProjectReference Include="..\ESFA.DC.ILR.DataService.Models\ESFA.DC.ILR.DataService.Models.csproj" />
+    <ProjectReference Include="..\ESFA.DC.ILR.DataService.Utils\ESFA.DC.ILR.DataService.Utils.csproj" />
+  </ItemGroup>
+
+</Project>

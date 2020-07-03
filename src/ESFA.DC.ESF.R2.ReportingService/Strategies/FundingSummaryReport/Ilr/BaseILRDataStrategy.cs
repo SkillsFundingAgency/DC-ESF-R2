@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
+using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.ILR.DataService.Models;
-using ESFA.DC.ILR.DataService.Utils;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Strategies.FundingSummaryReport.Ilr
 {
