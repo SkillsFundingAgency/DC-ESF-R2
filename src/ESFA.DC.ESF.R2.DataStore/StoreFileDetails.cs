@@ -20,7 +20,7 @@ namespace ESFA.DC.ESF.R2.DataStore
         {
             string insertFileDetails =
                     "INSERT INTO [dbo].[SourceFile] ([ConRefNumber], [UKPRN], [Filename], [DateTime], [FilePreparationDate]) " +
-                    "output INSERTED.SourceFileId VALUES (@ConRefNumber @UKPRN, @FileName, @SuppliedDate, @PreparationDate)";
+                    "output INSERTED.SourceFileId VALUES (@ConRefNumber, @UKPRN, @FileName, @SuppliedDate, @PreparationDate)";
 
             cancellationToken.ThrowIfCancellationRequested();
 
