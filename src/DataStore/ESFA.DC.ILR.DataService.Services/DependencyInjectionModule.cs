@@ -8,7 +8,6 @@ using ESFA.DC.ILR.DataService.ILR1920EF.Valid;
 using ESFA.DC.ILR.DataService.Interfaces.Repositories;
 using ESFA.DC.ILR.DataService.Interfaces.Services;
 using ESFA.DC.ILR.DataService.Models;
-using ESFA.DC.ILR.DataService.Services.PeriodEnd;
 using Microsoft.EntityFrameworkCore;
 
 namespace ESFA.DC.ILR.DataService.Services
