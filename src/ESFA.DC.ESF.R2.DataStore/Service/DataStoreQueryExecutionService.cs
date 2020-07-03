@@ -18,14 +18,14 @@ namespace ESFA.DC.ESF.R2.DataStore.Service
             _bulkInsert = bulkInsert;
         }
 
-        public async Task<T> ExecuteSqlWithParameterAsync<T>(SqlConnection connection, SqlTransaction transaction, object[] parameters, string sql, CancellationToken cancellationToken)
+        public async Task<T> ExecuteSqlWithParameterAsync<T>(SqlConnection connection, SqlTransaction transaction, DynamicParameters parameters, string sql, CancellationToken cancellationToken)
         {
             var commandDefinition = new CommandDefinition(sql, parameters, commandTimeout: 600, transaction: transaction, cancellationToken: cancellationToken);
 
             return await connection.QuerySingleAsync(commandDefinition);
         }
 
-        public async Task ExecuteStoredProcedure(string sprocName, object[] parameters, SqlConnection connection, SqlTransaction transaction, CancellationToken cancellationToken)
+        public async Task ExecuteStoredProcedure(string sprocName, DynamicParameters parameters, SqlConnection connection, SqlTransaction transaction, CancellationToken cancellationToken)
         {
             var commandDefinition = new CommandDefinition(sprocName, parameters, commandType: CommandType.StoredProcedure, transaction: transaction, commandTimeout: 600, cancellationToken: cancellationToken);
 
