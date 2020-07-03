@@ -22,10 +22,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
 
         public ValidationErrorReport(
             IDateTimeProvider dateTimeProvider,
-            IValueProvider valueProvider,
-            IFileService fileService,
             ICsvFileService csvFileService)
-            : base(dateTimeProvider, valueProvider, fileService, csvFileService, string.Empty)
+            : base(dateTimeProvider, csvFileService, string.Empty)
         {
             ReportFileName = ReportNameConstants.ValidationErrorReport;
         }

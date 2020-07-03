@@ -64,8 +64,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
 
             var fundigReport = new FundingReport(
                 dateTimeProviderMock.Object,
-                valueProvider,
-                Mock.Of<IFileService>(),
                 csvServiceMock.Object,
                 referenceDataService.Object);
 

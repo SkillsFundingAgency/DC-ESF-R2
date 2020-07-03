@@ -24,15 +24,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
         [Trait("Category", "Reports")]
         public async Task TestAimAndDeliverableReportGeneration()
         {
-            var csv = string.Empty;
             var dateTime = DateTime.UtcNow;
             var filename = $"10005752/2/ESF Round 2 Aim and Deliverable Report {dateTime:yyyyMMdd-HHmmss}";
 
             var dateTimeProviderMock = new Mock<IDateTimeProvider>();
             dateTimeProviderMock.Setup(x => x.GetNowUtc()).Returns(dateTime);
             dateTimeProviderMock.Setup(x => x.ConvertUtcToUk(It.IsAny<DateTime>())).Returns(dateTime);
-
-            var testStream = new MemoryStream();
 
             var models = AimAndDeliverableBuilder.BuildAimAndDeliverableModels();
 
@@ -50,12 +47,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             csvServiceMock.Setup(x => x.WriteAsync<AimAndDeliverableModel, AimAndDeliverableMapper>(models, $"{filename}.csv", It.IsAny<string>(), It.IsAny<CancellationToken>(), null, null))
                 .Returns(Task.CompletedTask);
 
-            var valueProvider = new ValueProvider();
-
             var aimAndDeliverableReport = new AimAndDeliverableReport(
                 dateTimeProviderMock.Object,
-                Mock.Of<IFileService>(),
-                valueProvider,
                 csvServiceMock.Object,
                 aimAndDeliverableService1819Mock.Object,
                 aimAndDeliverableService1920Mock.Object);

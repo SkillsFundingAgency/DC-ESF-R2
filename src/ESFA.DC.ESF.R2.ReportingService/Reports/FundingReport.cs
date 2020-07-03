@@ -29,11 +29,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
 
         public FundingReport(
             IDateTimeProvider dateTimeProvider,
-            IValueProvider valueProvider,
-            IFileService fileService,
             ICsvFileService csvFileService,
             IReferenceDataService referenceDataService)
-            : base(dateTimeProvider, valueProvider, fileService, csvFileService, ReportTaskConstants.TaskGenerateFundingReport)
+            : base(dateTimeProvider, csvFileService, ReportTaskConstants.TaskGenerateFundingReport)
         {
             ReportFileName = ReportNameConstants.FundingReport;
 

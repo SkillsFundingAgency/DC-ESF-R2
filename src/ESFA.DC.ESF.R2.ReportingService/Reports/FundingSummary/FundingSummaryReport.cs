@@ -65,7 +65,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             IExcelStyleProvider excelStyleProvider,
             IVersionInfo versionInfo,
             ILogger logger)
-            : base(dateTimeProvider, valueProvider, fileService, excelFileService, ReportTaskConstants.TaskGenerateFundingSummaryReport)
+            : base(dateTimeProvider, valueProvider, excelFileService, ReportTaskConstants.TaskGenerateFundingSummaryReport)
         {
             _dateTimeProvider = dateTimeProvider;
             _rowHelpers = rowHelpers;

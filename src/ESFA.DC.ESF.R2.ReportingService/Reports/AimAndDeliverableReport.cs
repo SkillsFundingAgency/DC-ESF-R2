@@ -21,19 +21,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
 {
     public class AimAndDeliverableReport : AbstractCsvReportService<AimAndDeliverableModel, AimAndDeliverableMapper>, IModelReport
     {
-        private const string _reportExtension = ".csv";
+        private const string ReportExtension = ".csv";
 
         private readonly IAimAndDeliverableService1819 _aimAndDeliverableService1819;
         private readonly IAimAndDeliverableService1920 _aimAndDeliverableService1920;
 
         public AimAndDeliverableReport(
             IDateTimeProvider dateTimeProvider,
-            IFileService fileService,
-            IValueProvider valueProvider,
             ICsvFileService csvFileService,
             IAimAndDeliverableService1819 aimAndDeliverableService1819,
             IAimAndDeliverableService1920 aimAndDeliverableService1920)
-            : base(dateTimeProvider, valueProvider, fileService, csvFileService, ReportTaskConstants.TaskGenerateEsfAimAndDeliverableReport)
+            : base(dateTimeProvider, csvFileService, ReportTaskConstants.TaskGenerateEsfAimAndDeliverableReport)
         {
             _aimAndDeliverableService1819 = aimAndDeliverableService1819;
             _aimAndDeliverableService1920 = aimAndDeliverableService1920;
@@ -47,7 +45,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             SupplementaryDataWrapper wrapper,
             CancellationToken cancellationToken)
         {
-            var externalFileName = GetExternalFilename(esfJobContext.UkPrn, esfJobContext.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue, _reportExtension);
+            var externalFileName = GetExternalFilename(esfJobContext.UkPrn, esfJobContext.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue, ReportExtension);
 
             cancellationToken.ThrowIfCancellationRequested();
 

@@ -17,11 +17,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Abstract
 
         protected AbstractCsvReportService(
             IDateTimeProvider dateTimeProvider,
-            IValueProvider valueProvider,
-            IFileService fileService,
             ICsvFileService csvFileService,
             string taskName)
-             : base(dateTimeProvider, valueProvider, fileService, taskName)
+             : base(dateTimeProvider, taskName)
         {
             _csvFileService = csvFileService;
         }
