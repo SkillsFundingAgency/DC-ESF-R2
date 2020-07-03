@@ -15,15 +15,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.Abstract
         private readonly IJsonSerializationService _jsonSerializationService;
         private readonly IFileService _fileService;
 
-        private readonly Dictionary<Worksheet, int> _currentRow;
-
         protected AbstractJsonReportService(
             IDateTimeProvider dateTimeProvider,
-            IValueProvider valueProvider,
             IFileService fileService,
-            IJsonSerializationService jsonSerializationService,
-            string taskName)
-             : base(dateTimeProvider, valueProvider, fileService, string.Empty)
+            IJsonSerializationService jsonSerializationService)
+             : base(dateTimeProvider, string.Empty)
         {
             _jsonSerializationService = jsonSerializationService;
             _fileService = fileService;

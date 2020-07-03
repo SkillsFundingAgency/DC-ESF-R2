@@ -9,5 +9,7 @@
         public const string AimsAndDeliverableReport = "ESF Round 2 Aim and Deliverable Report";
 
         public const string ZipName = @"/Reports.zip";
+
+        public const string CsvExtension = ".csv";
     }
 }

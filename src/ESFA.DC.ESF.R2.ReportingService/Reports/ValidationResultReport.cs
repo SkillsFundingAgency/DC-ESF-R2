@@ -19,14 +19,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
 {
     public class ValidationResultReport : AbstractJsonReportService, IValidationResultReport
     {
-        private const string _reportExtension = ".json";
+        private const string ReportExtension = ".json";
 
         public ValidationResultReport(
             IDateTimeProvider dateTimeProvider,
-            IValueProvider valueProvider,
             IFileService fileService,
             IJsonSerializationService jsonSerializationService)
-            : base(dateTimeProvider, valueProvider, fileService, jsonSerializationService, string.Empty)
+            : base(dateTimeProvider, fileService, jsonSerializationService)
         {
             ReportFileName = ReportNameConstants.ValidationResultReport;
         }
@@ -39,7 +38,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
         {
             var report = GetValidationReport(wrapper.SupplementaryDataModels, wrapper.ValidErrorModels);
 
-            var externalFilename = GetExternalFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue, _reportExtension);
+            var externalFilename = GetExternalFilename(sourceFile.UKPRN, sourceFile.JobId ?? 0, sourceFile.SuppliedDate ?? DateTime.MinValue, ReportExtension);
 
             await SaveJson(esfJobContext, externalFilename, report, cancellationToken);
 

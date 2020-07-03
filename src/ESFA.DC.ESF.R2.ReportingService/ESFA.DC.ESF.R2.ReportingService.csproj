@@ -40,6 +40,10 @@
     <Compile Include="Abstract\AbstractCsvReportService.cs" />
     <Compile Include="Abstract\AbstractJsonReportService.cs" />
     <Compile Include="Abstract\AbstractReportService.cs" />
+    <Compile Include="AimAndDeliverable\AimAndDeliverableMapper.cs" />
+    <Compile Include="AimAndDeliverable\Interface\IAimAndDeliverableModelBuilder.cs" />
+    <Compile Include="AimAndDeliverable\Model\AimAndDeliverableReportRow.cs" />
+    <Compile Include="AimAndDeliverable\AimAndDeliverableReport.cs" />
     <Compile Include="Constants\ReportTaskConstants.cs" />
     <Compile Include="Constants\ReportingConstants.cs" />
     <Compile Include="Constants\ReportNameConstants.cs" />
@@ -309,5 +313,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
