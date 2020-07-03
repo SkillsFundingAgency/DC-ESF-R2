@@ -23,21 +23,6 @@ namespace ESFA.DC.ILR.DataService.Services.Tests
 
             IEnumerable<FM70PeriodisedValues> values = new List<FM70PeriodisedValues>();
 
-            var repo1516 = new Mock<IFm701516Repository>();
-            repo1516
-                .Setup(m => m.Get1516PeriodisedValues(ukPrn, CancellationToken.None))
-                .ReturnsAsync(values);
-
-            var repo1617 = new Mock<IFm701617Repository>();
-            repo1617
-                .Setup(m => m.Get1617PeriodisedValues(ukPrn, CancellationToken.None))
-                .ReturnsAsync(values);
-
-            var repo1718 = new Mock<IFm701718Repository>();
-            repo1718
-                .Setup(m => m.Get1718PeriodisedValues(ukPrn, CancellationToken.None))
-                .ReturnsAsync(values);
-
             var repo1819 = new Mock<IFm701819Repository>();
             repo1819
                 .Setup(m => m.GetPeriodisedValues(ukPrn, CancellationToken.None))
@@ -48,7 +33,7 @@ namespace ESFA.DC.ILR.DataService.Services.Tests
                 .Setup(m => m.GetPeriodisedValues(ukPrn, CancellationToken.None))
                 .ReturnsAsync(values);
 
-            var dataService = new Fm70DataService(repo1516.Object, repo1617.Object, repo1718.Object, repo1819.Object, repo1920.Object);
+            var dataService = new Fm70DataService(repo1819.Object, repo1920.Object);
 
             var result = await dataService.GetPeriodisedValuesAllYears(ukPrn, CancellationToken.None);
 

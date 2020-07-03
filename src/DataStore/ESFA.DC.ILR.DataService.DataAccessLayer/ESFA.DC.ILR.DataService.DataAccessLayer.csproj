@@ -22,9 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ESFA.DC.ILR.DataService.ILR1516EF\ESFA.DC.ILR.DataService.ILR1516EF.csproj" />
-    <ProjectReference Include="..\ESFA.DC.ILR.DataService.ILR1617EF\ESFA.DC.ILR.DataService.ILR1617EF.csproj" />
-    <ProjectReference Include="..\ESFA.DC.ILR.DataService.ILR1718EF\ESFA.DC.ILR.DataService.ILR1718EF.csproj" />
     <ProjectReference Include="..\ESFA.DC.ILR.DataService.ILR1920EF\ESFA.DC.ILR.DataService.ILR1920EF.csproj" />
     <ProjectReference Include="..\ESFA.DC.ILR.DataService.Interfaces\ESFA.DC.ILR.DataService.Interfaces.csproj" />
     <ProjectReference Include="..\ESFA.DC.ILR.DataService.Models\ESFA.DC.ILR.DataService.Models.csproj" />

@@ -20,8 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ESFA.DC.ILR.DataService.ILR1617EF\ESFA.DC.ILR.DataService.ILR1617EF.csproj" />
-    <ProjectReference Include="..\ESFA.DC.ILR.DataService.ILR1718EF\ESFA.DC.ILR.DataService.ILR1718EF.csproj" />
     <ProjectReference Include="..\ESFA.DC.ILR.DataService.ILR1819EF\ESFA.DC.ILR.DataService.ILR1819EF.csproj" />
     <ProjectReference Include="..\ESFA.DC.ILR.DataService.Models\ESFA.DC.ILR.DataService.Models.csproj" />
   </ItemGroup>
