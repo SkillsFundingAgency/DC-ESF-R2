@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CodeAnalysisRuleSet>ESFA.DC.ILR.DataService.Interfaces.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <CodeAnalysisRuleSet>ESFA.DC.ILR.DataService.Interfaces.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.ILR.DataService.ILR1617EF\ESFA.DC.ILR.DataService.ILR1617EF.csproj" />
+    <ProjectReference Include="..\ESFA.DC.ILR.DataService.ILR1718EF\ESFA.DC.ILR.DataService.ILR1718EF.csproj" />
+    <ProjectReference Include="..\ESFA.DC.ILR.DataService.ILR1819EF\ESFA.DC.ILR.DataService.ILR1819EF.csproj" />
+    <ProjectReference Include="..\ESFA.DC.ILR.DataService.Models\ESFA.DC.ILR.DataService.Models.csproj" />
+  </ItemGroup>
+
+</Project>

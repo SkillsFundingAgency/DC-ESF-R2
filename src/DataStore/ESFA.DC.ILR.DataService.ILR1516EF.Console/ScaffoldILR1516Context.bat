@@ -1,0 +1,1 @@
+dotnet.exe ef dbcontext scaffold "Server=.\;Database=ILR1516_DataStore;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -c ILR1516Context --force --output-dir Entities --verbose

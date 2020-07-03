@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CodeAnalysisRuleSet>ESFA.DC.ILR.DataService.Services.Tests.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <CodeAnalysisRuleSet>ESFA.DC.ILR.DataService.Services.Tests.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.9.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="Moq" Version="4.10.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ESFA.DC.ILR.DataService.DataAccessLayer\ESFA.DC.ILR.DataService.DataAccessLayer.csproj" />
+    <ProjectReference Include="..\ESFA.DC.ILR.DataService.ILR1617EF\ESFA.DC.ILR.DataService.ILR1617EF.csproj" />
+    <ProjectReference Include="..\ESFA.DC.ILR.DataService.ILR1718EF\ESFA.DC.ILR.DataService.ILR1718EF.csproj" />
+    <ProjectReference Include="..\ESFA.DC.ILR.DataService.Interfaces\ESFA.DC.ILR.DataService.Interfaces.csproj" />
+    <ProjectReference Include="..\ESFA.DC.ILR.DataService.Models\ESFA.DC.ILR.DataService.Models.csproj" />
+    <ProjectReference Include="..\ESFA.DC.ILR.DataService.Services\ESFA.DC.ILR.DataService.Services.csproj" />
+  </ItemGroup>
+
+</Project>
