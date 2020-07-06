@@ -47,6 +47,11 @@
     <Compile Include="Constants\ReportTaskConstants.cs" />
     <Compile Include="Constants\ReportingConstants.cs" />
     <Compile Include="Constants\ReportNameConstants.cs" />
+    <Compile Include="FundingSummary\FundingSummaryReportModelBuilder.cs" />
+    <Compile Include="FundingSummary\Model\FundingSummaryFooterModel.cs" />
+    <Compile Include="FundingSummary\Model\FundingSummaryHeaderModel.cs" />
+    <Compile Include="FundingSummary\Model\FundingSummaryIlrHeaderModel.cs" />
+    <Compile Include="FundingSummary\Model\FundingSummaryReportModel.cs" />
     <Compile Include="Mappers\AimAndDeliverableMapper.cs" />
     <Compile Include="Mappers\FundingReportMapper.cs" />
     <Compile Include="Mappers\FundingSummaryFooterMapper.cs" />
