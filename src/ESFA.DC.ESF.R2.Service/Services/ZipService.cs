@@ -30,11 +30,15 @@ namespace ESFA.DC.ESF.R2.Service.Services
             {
                 if (await _fileService.ExistsAsync(zipFileName, container, cancellationToken))
                 {
-                    using (var fileStream = await _fileService.OpenReadStreamAsync(zipFileName, container, cancellationToken))
+                    using (var readFileStream = await _fileService.OpenReadStreamAsync(zipFileName, container, cancellationToken))
                     {
-                        using (var archive = new ZipArchive(fileStream, ZipArchiveMode.Update, true))
+                        using (Stream writeFileStream = new MemoryStream())
                         {
-                            await AddReportsToZip(archive, reportNames, container, cancellationToken);
+                            await readFileStream.CopyToAsync(writeFileStream);
+                            using (var archive = new ZipArchive(writeFileStream, ZipArchiveMode.Update, true))
+                            {
+                                await AddReportsToZip(archive, reportNames, container, cancellationToken);
+                            }
                         }
                     }
                 }
