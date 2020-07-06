@@ -28,22 +28,25 @@ namespace ESFA.DC.ESF.R2.Service.Services
         {
             try
             {
-                if (await _fileService.ExistsAsync(zipFileName, container, cancellationToken))
+                using (Stream zipArchiveStream = new MemoryStream())
                 {
-                    using (var readFileStream = await _fileService.OpenReadStreamAsync(zipFileName, container, cancellationToken))
+                    if (await _fileService.ExistsAsync(zipFileName, container, cancellationToken))
                     {
-                        using (Stream writeFileStream = new MemoryStream())
+                        using (var readFileStream = await _fileService.OpenReadStreamAsync(zipFileName, container, cancellationToken))
                         {
-                            await readFileStream.CopyToAsync(writeFileStream);
-                            await HandleZip(writeFileStream, ZipArchiveMode.Update, reportNames, container, cancellationToken);
+                            await readFileStream.CopyToAsync(zipArchiveStream);
+                            await HandleZip(zipArchiveStream, reportNames, container, cancellationToken);
                         }
                     }
-                }
-                else
-                {
-                    using (var fileStream = await _fileService.OpenWriteStreamAsync(zipFileName, container, cancellationToken))
+                    else
                     {
-                        await HandleZip(fileStream, ZipArchiveMode.Create, reportNames, container, cancellationToken);
+                        await HandleZip(zipArchiveStream, reportNames, container, cancellationToken);
+                    }
+
+                    using (var writeFile = await _fileService.OpenWriteStreamAsync(zipFileName, container, cancellationToken))
+                    {
+                        zipArchiveStream.Position = 0;
+                        await zipArchiveStream.CopyToAsync(writeFile);
                     }
                 }
             }
@@ -54,9 +57,9 @@ namespace ESFA.DC.ESF.R2.Service.Services
             }
         }
 
-        private async Task HandleZip(Stream writeFileStream, ZipArchiveMode zipArchiveMode, IEnumerable<string> reportNames, string container, CancellationToken cancellationToken)
+        private async Task HandleZip(Stream zipArchiveStream, IEnumerable<string> reportNames, string container, CancellationToken cancellationToken)
         {
-            using (var archive = new ZipArchive(writeFileStream, zipArchiveMode, true))
+            using (var archive = new ZipArchive(zipArchiveStream, ZipArchiveMode.Update, true))
             {
                 await AddReportsToZip(archive, reportNames, container, cancellationToken);
             }
@@ -64,9 +67,9 @@ namespace ESFA.DC.ESF.R2.Service.Services
 
         private async Task AddReportsToZip(ZipArchive zipArchive, IEnumerable<string> fileNames, string container, CancellationToken cancellationToken)
         {
-            foreach (var fileName in fileNames.Where(f => !string.IsNullOrWhiteSpace(f)))
+            foreach (var fileName in fileNames.Where(f => !string.IsNullOrWhiteSpace(f) && !zipArchive.Entries.Any(entries => entries.Name == f)))
             {
-                using (var fileStream = await _fileService.OpenWriteStreamAsync(fileName, container, cancellationToken))
+                using (var fileStream = await _fileService.OpenReadStreamAsync(fileName, container, cancellationToken))
                 {
                     await _zipArchiveService.AddEntryToZip(zipArchive, fileStream, FormatFileName(fileName), cancellationToken);
                 }
