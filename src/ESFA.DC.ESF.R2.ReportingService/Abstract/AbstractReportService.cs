@@ -25,6 +25,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Abstract
             return $"{ukPrn}/{jobId}/{ReportFileName} {dateTime:yyyyMMdd-HHmmss}{extension}";
         }
 
+        public string GetExternalFilename(int ukPrn, string reportName, long jobId, DateTime submissionDateTime, string extension)
+        {
+            DateTime dateTime = _dateTimeProvider.ConvertUtcToUk(submissionDateTime);
+            return $"{ukPrn}/{jobId}/{reportName} {dateTime:yyyyMMdd-HHmmss}{extension}";
+        }
+
         public string GetExternalFilename(string ukPrn, long jobId, DateTime submissionDateTime, string extension)
         {
             DateTime dateTime = _dateTimeProvider.ConvertUtcToUk(submissionDateTime);

@@ -6,5 +6,7 @@
         public const string TaskGenerateEsfAimAndDeliverableReport = "TaskGenerateEsfAimAndDeliverableReport";
         public const string TaskGenerateFundingSummaryReport = "TaskGenerateFundingSummaryReport";
         public const string TaskGenerateFundingReport = "TaskGenerateFundingReport";
+
+        public const string TaskGenerateFundingSummaryReport2021 = "TaskGenerateFundingSummaryReport2021";
     }
 }

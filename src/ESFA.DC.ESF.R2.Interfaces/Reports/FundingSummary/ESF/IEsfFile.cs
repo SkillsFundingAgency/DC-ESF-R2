@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace ESFA.DC.ESF.R2.Interfaces.ReferenceData
+namespace ESFA.DC.ESF.R2.Interfaces.FundingSummary.ESF
 {
-    public interface IEsfSuppDataFile
+    public interface IEsfFile
     {
         string FileName { get; }
 
