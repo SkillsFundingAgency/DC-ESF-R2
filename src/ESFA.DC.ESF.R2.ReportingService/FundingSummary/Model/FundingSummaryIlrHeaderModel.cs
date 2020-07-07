@@ -12,6 +12,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 
         public DateTime? IlrFilePrepDate { get; set; }
 
-        public bool CollectionOpen { get; set; }
+        public string CollectionClosedMessage { get; set; }
     }
 }

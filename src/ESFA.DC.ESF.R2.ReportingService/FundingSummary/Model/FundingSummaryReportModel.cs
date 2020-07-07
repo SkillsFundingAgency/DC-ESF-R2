@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using ESFA.DC.ESF.R2.Interfaces.Enum;
+using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.Interface;
 
 namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 {
@@ -11,5 +9,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
         public FundingSummaryHeaderModel Header { get; set; }
 
         public FundingSummaryFooterModel Footer { get; set; }
+
+        public IDictionary<CollectionYear, IFundingCategory> Body { get; set; }
     }
 }
