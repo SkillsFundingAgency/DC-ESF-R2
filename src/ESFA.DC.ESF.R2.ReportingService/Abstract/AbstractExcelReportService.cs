@@ -34,6 +34,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.Abstract
             _valueProvider = valueProvider;
         }
 
+        protected Workbook CreateWorkBook()
+        {
+            return _excelFileService.NewWorkbook();
+        }
+
         protected async Task WriteExcelFile(IEsfJobContext esfJobContext, string fileName, Workbook workbook, CancellationToken cancellationToken)
         {
             await _excelFileService.SaveWorkbookAsync(workbook, fileName, esfJobContext.BlobContainerName, cancellationToken);

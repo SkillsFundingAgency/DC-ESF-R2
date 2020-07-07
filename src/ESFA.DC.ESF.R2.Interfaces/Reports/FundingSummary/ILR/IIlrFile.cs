@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ESFA.DC.ESF.R2.Interfaces.ReferenceData
+namespace ESFA.DC.ESF.R2.Interfaces.FundingSummary.ILR
 {
     public interface IIlrFile
     {

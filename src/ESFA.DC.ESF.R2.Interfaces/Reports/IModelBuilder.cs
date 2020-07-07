@@ -1,7 +1,10 @@
-﻿namespace ESFA.DC.ESF.R2.Interfaces.Reports
+﻿using System.Threading;
+using System.Threading.Tasks;
+
+namespace ESFA.DC.ESF.R2.Interfaces.Reports
 {
-    public interface IModelBuilder<out T>
+    public interface IModelBuilder<T>
     {
-        T Build(IEsfJobContext esfJobContext);
+        Task<T> Build(IEsfJobContext esfJobContext, CancellationToken cancellationToken);
     }
 }

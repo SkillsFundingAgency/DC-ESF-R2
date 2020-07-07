@@ -1,18 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.Enum;
+using ESFA.DC.ESF.R2.Interfaces.FundingSummary.ESF;
+using ESFA.DC.ESF.R2.Interfaces.FundingSummary.ILR;
 using ESFA.DC.ESF.R2.Interfaces.ReferenceData;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
+using ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary;
 using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model;
 using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.Interface;
 
 namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 {
-    public class FundingSummaryReportModelBuilder : IModelBuilder<IDictionary<string, FundingSummaryReportModel>>
+    public class FundingSummaryReportModelBuilder : IModelBuilder<IEnumerable<FundingSummaryReportTab>>
     {
         private readonly CollectionYear _currentCollectionYear = CollectionYear.Year2021;
         private readonly IReadOnlyDictionary<CollectionYear, string> _collectionYearToStringMap = new Dictionary<CollectionYear, string>
@@ -24,46 +29,46 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IVersionInfo _versionInfo;
-        private readonly IReferenceDataRoot _referenceDataRoot;
+        private readonly IFundingSummaryReportDataProvider _fundingSummaryReportDataProvider;
 
-        public FundingSummaryReportModelBuilder(IDateTimeProvider dateTimeProvider, IVersionInfo versionInfo, IReferenceDataRoot referenceDataRoot)
+        public FundingSummaryReportModelBuilder(IDateTimeProvider dateTimeProvider, IVersionInfo versionInfo, IFundingSummaryReportDataProvider fundingSummaryReportDataProvider)
         {
             _dateTimeProvider = dateTimeProvider;
             _versionInfo = versionInfo;
-            _referenceDataRoot = referenceDataRoot;
+            _fundingSummaryReportDataProvider = fundingSummaryReportDataProvider;
         }
 
-        public IDictionary<string, FundingSummaryReportModel> Build(IEsfJobContext esfJobContext)
+        public async Task<IEnumerable<FundingSummaryReportTab>> Build(IEsfJobContext esfJobContext, CancellationToken cancellationToken)
         {
-            var modelDictionary = new Dictionary<string, FundingSummaryReportModel>();
+            var tabs = new List<FundingSummaryReportTab>();
 
-            //// ref data block
-            //// not sure where this comes from yet
-            var orgData = _referenceDataRoot.OrganisationReferenceData;
-            //var esfSuppFiles = new EsfSuppDataFilesStub();
-            //var ilrFiles = new IlrFilesStub();
-            //var referenceDataVersions = new ReferenceDataVersionsStub();
-            //// ref data block end
+            var orgData = await _fundingSummaryReportDataProvider.ProvideOrganisationReferenceDataAsync(esfJobContext.UkPrn, cancellationToken);
+            var referenceDataVersions = await _fundingSummaryReportDataProvider.ProvideReferenceDataVersionsAsync();
+            var esfSuppData = await _fundingSummaryReportDataProvider.ProvideEsfSuppDataAsync(esfJobContext.UkPrn, esfJobContext.CollectionYear, cancellationToken);
+            var ilrData = await _fundingSummaryReportDataProvider.ProvideIlrDataAsync(esfJobContext.UkPrn, esfJobContext.CollectionYear, cancellationToken);
 
-            var footer = BuildFooter(_referenceDataRoot.ReferenceDataVersions);
+            var footer = BuildFooter(referenceDataVersions);
 
             foreach (var conRefNumber in orgData.ConRefNumbers)
             {
-                var esfSuppDataFile = _referenceDataRoot.EsfSuppDataFileForConRefNumbers[conRefNumber];
+                var esfSuppDataFile = esfSuppData[conRefNumber];
 
-                var header = BuildHeader(esfJobContext.UkPrn, conRefNumber, orgData.Name, esfSuppDataFile, _referenceDataRoot.IlrFileForCollectionYear);
+                var header = BuildHeader(esfJobContext.UkPrn, conRefNumber, orgData.Name, esfSuppDataFile.EsfFile, ilrData);
 
-                var model = new FundingSummaryReportModel
+                var body = BuildBody();
+
+                var model = new FundingSummaryReportTab
                 {
+                    TabName = conRefNumber,
                     Header = header,
                     Footer = footer,
-                    Body = BuildBody()
+                    Body = body
                 };
 
-                modelDictionary.Add(conRefNumber, model);
+                tabs.Add(model);
             }
 
-            return modelDictionary;
+            return tabs;
         }
 
         public IDictionary<CollectionYear, IFundingCategory> BuildBody()
@@ -75,8 +80,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             int ukprn,
             string conRefNumber,
             string orgName,
-            IEsfSuppDataFile esfSuppDataFile,
-            IDictionary<CollectionYear, IIlrFile> ilrFiles)
+            IEsfFile esfFile,
+            IDictionary<CollectionYear, IIlrFileData> ilrData)
         {
             return new FundingSummaryHeaderModel
             {
@@ -84,21 +89,21 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 ProviderName = orgName,
                 SecurityClassification = ReportingConstants.Classification,
                 ContractReferenceNumber = conRefNumber,
-                SupplementaryDataFile = esfSuppDataFile?.FileName,
-                LastSupplementaryDataFileUpdate = esfSuppDataFile?.SubmittedDateTime,
-                IlrHeader = BuildIlrHeader(ilrFiles)
+                SupplementaryDataFile = esfFile?.FileName,
+                LastSupplementaryDataFileUpdate = esfFile?.SubmittedDateTime,
+                IlrHeader = BuildIlrHeader(ilrData)
             };
         }
 
-        public IDictionary<CollectionYear, FundingSummaryIlrHeaderModel> BuildIlrHeader(IDictionary<CollectionYear, IIlrFile> ilrFiles)
+        public IDictionary<CollectionYear, FundingSummaryIlrHeaderModel> BuildIlrHeader(IDictionary<CollectionYear, IIlrFileData> ilrData)
         {
-            return ilrFiles?.ToDictionary(
+            return ilrData?.ToDictionary(
                 x => x.Key,
                 x => new FundingSummaryIlrHeaderModel
                 {
-                    IlrFileName = x.Value.FileName,
-                    IlrFileLastUpdated = x.Value.SubmittedDateTime,
-                    IlrFilePrepDate = x.Value.FilePrepDate,
+                    IlrFileName = x.Value.IlrFile.FileName,
+                    IlrFileLastUpdated = x.Value.IlrFile.SubmittedDateTime,
+                    IlrFilePrepDate = x.Value.IlrFile.FilePrepDate,
                     CollectionYear = _collectionYearToStringMap[x.Key],
                     CollectionClosedMessage = x.Key == _currentCollectionYear ? null : ReportingConstants.IlrCollectionClosedMessage
                 });

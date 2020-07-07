@@ -4,12 +4,8 @@ using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.Interface;
 
 namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 {
-    public class FundingSummaryReportModel
+    public class FundingSummaryReportModel : IFundingSummaryReport
     {
-        public FundingSummaryHeaderModel Header { get; set; }
-
-        public FundingSummaryFooterModel Footer { get; set; }
-
-        public IDictionary<CollectionYear, IFundingCategory> Body { get; set; }
+       public IEnumerable<FundingSummaryReportTab> FundingSummaryReportTabs { get; set; }
     }
 }

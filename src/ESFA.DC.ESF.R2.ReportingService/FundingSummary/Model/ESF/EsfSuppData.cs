@@ -1,8 +1,9 @@
 ﻿using System;
+using ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary.ESF;
 
-namespace ESFA.DC.ESF.R2.Models
+namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.ESF
 {
-    public class SupplementaryDataModel
+    public class EsfSuppData : IEsfSuppData
     {
         public string ConRefNumber { get; set; }
 
