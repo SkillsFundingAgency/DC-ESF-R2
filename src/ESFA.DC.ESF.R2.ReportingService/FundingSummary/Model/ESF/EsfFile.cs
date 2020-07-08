@@ -5,8 +5,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.ESF
 {
     public class EsfFile : IEsfFile
     {
-        public string FileName { get; }
+        public string FileName { get; set; }
 
-        public DateTime SubmittedDateTime { get; }
+        public DateTime SubmittedDateTime { get; set; }
     }
 }

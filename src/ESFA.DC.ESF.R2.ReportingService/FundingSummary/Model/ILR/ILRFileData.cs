@@ -4,7 +4,7 @@ using ESFA.DC.ESF.R2.Interfaces.FundingSummary.ILR;
 
 namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.ILR
 {
-    public class ILRFileData : IIlrFileData
+    public class IlrFileData : IIlrFileData
     {
         public CollectionYear CollectionYear { get; set; }
 

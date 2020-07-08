@@ -5,10 +5,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.ILR
 {
     public class IlrFile : IIlrFile
     {
-        public string FileName { get; }
+        public string FileName { get; set; }
 
-        public DateTime SubmittedDateTime { get; }
+        public DateTime SubmittedDateTime { get; set;  }
 
-        public DateTime FilePrepDate { get; }
+        public DateTime FilePrepDate { get; set; }
     }
 }
