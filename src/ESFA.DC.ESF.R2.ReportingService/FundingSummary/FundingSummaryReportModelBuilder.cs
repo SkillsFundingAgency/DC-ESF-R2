@@ -52,10 +52,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             foreach (var conRefNumber in orgData.ConRefNumbers)
             {
                 var esfSuppDataFile = esfSuppData[conRefNumber];
+                var latestEsf = esfSuppDataFile.OrderByDescending(x => x.Key).Select(x => x.Value).FirstOrDefault();
 
-                var header = BuildHeader(esfJobContext.UkPrn, conRefNumber, orgData.Name, esfSuppDataFile.EsfFile, ilrData);
+                var header = BuildHeader(esfJobContext.UkPrn, conRefNumber, orgData.Name, latestEsf.EsfFile, ilrData);
 
-                var body = BuildBody();
+                var body = BuildBody(esfSuppDataFile, ilrData);
 
                 var model = new FundingSummaryReportTab
                 {
@@ -71,8 +72,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return tabs;
         }
 
-        public IDictionary<CollectionYear, IFundingCategory> BuildBody()
+        public IDictionary<CollectionYear, IFundingCategory> BuildBody(IDictionary<CollectionYear, IEsfFileData> esfSuppDataFile, IDictionary<CollectionYear, IIlrFileData> ilryaFile)
         {
+
+
             return new Dictionary<CollectionYear, IFundingCategory>();
         }
 
