@@ -217,13 +217,19 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 FileName = "ESF-SUPPDATA-2"
             };
 
-            var esfFiles = new Dictionary<string, IEsfFileData>
+            var esfFiles = new Dictionary<string, IDictionary<CollectionYear, IEsfFileData>>
             {
                 {
-                    "ConRef1", new EsfFileData { CollectionYear = CollectionYear.Year2021, EsfFile = esfFile1 }
+                    "ConRef1", new Dictionary<CollectionYear, IEsfFileData>
+                    {
+                        { CollectionYear.Year2021, new EsfFileData { CollectionYear = CollectionYear.Year2021, EsfFile = esfFile1 } }
+                    }
                 },
                 {
-                    "ConRef2", new EsfFileData { CollectionYear = CollectionYear.Year1920, EsfFile = esfFile2 }
+                    "ConRef2", new Dictionary<CollectionYear, IEsfFileData>
+                    {
+                        { CollectionYear.Year1920, new EsfFileData { CollectionYear = CollectionYear.Year1920, EsfFile = esfFile2 } }
+                    }
                 }
             };
 
