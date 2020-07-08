@@ -12,7 +12,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary
     {
         Task<IOrganisationReferenceData> ProvideOrganisationReferenceDataAsync(int ukprn, CancellationToken cancellationToken);
 
-        Task<IReferenceDataVersions> ProvideReferenceDataVersionsAsync();
+        Task<IReferenceDataVersions> ProvideReferenceDataVersionsAsync(CancellationToken cancellationToken);
 
         Task<IDictionary<string, IEsfFileData>> ProvideEsfSuppDataAsync(int ukprn, int collectionYear, CancellationToken cancellationToken);
 

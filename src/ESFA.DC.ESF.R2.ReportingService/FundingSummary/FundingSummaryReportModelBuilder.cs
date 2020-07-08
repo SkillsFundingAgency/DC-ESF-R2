@@ -43,7 +43,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             var tabs = new List<FundingSummaryReportTab>();
 
             var orgData = await _fundingSummaryReportDataProvider.ProvideOrganisationReferenceDataAsync(esfJobContext.UkPrn, cancellationToken);
-            var referenceDataVersions = await _fundingSummaryReportDataProvider.ProvideReferenceDataVersionsAsync();
+            var referenceDataVersions = await _fundingSummaryReportDataProvider.ProvideReferenceDataVersionsAsync(cancellationToken);
             var esfSuppData = await _fundingSummaryReportDataProvider.ProvideEsfSuppDataAsync(esfJobContext.UkPrn, esfJobContext.CollectionYear, cancellationToken);
             var ilrData = await _fundingSummaryReportDataProvider.ProvideIlrDataAsync(esfJobContext.UkPrn, esfJobContext.CollectionYear, cancellationToken);
 
