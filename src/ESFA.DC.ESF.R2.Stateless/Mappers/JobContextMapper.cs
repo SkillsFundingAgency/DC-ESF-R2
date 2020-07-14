@@ -11,6 +11,8 @@ namespace ESFA.DC.ESF.R2.Stateless.Mappers
     {
         public static IEsfJobContext MapJobContextToModel(IJobContextMessage message)
         {
+            var collectionYear = message.KeyValuePairs[JobContextMessageKey.CollectionYear].ToString();
+
             return new EsfJobContext
             {
                 JobId = message.JobId,
@@ -24,7 +26,9 @@ namespace ESFA.DC.ESF.R2.Stateless.Mappers
                 IlrReferenceDataKey = message.KeyValuePairs.ContainsKey(JobContextMessageKey.IlrReferenceData)
                     ? message.KeyValuePairs[JobContextMessageKey.IlrReferenceData].ToString()
                     : null,
-                CollectionName = message.KeyValuePairs[JobContextMessageKey.CollectionName].ToString()
+                CollectionName = message.KeyValuePairs[JobContextMessageKey.CollectionName].ToString(),
+                StartCollectionYearAbbreviation = collectionYear.Substring(0, 2),
+                EndCollectionYearAbbreviation = collectionYear.Substring(2)
             };
         }
     }

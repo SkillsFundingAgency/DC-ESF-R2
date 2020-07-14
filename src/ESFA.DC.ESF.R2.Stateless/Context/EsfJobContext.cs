@@ -27,5 +27,9 @@ namespace ESFA.DC.ESF.R2.Stateless.Context
         public string IlrReferenceDataKey { get; set; }
 
         public string CollectionName { get; set; }
+
+        public string StartCollectionYearAbbreviation { get; set; }
+
+        public string EndCollectionYearAbbreviation { get; set; }
     }
 }

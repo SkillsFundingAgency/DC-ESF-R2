@@ -23,6 +23,10 @@ namespace ESFA.DC.ESF.R2.Interfaces
 
         int CollectionYear { get; }
 
+        string StartCollectionYearAbbreviation { get; }
+
+        string EndCollectionYearAbbreviation { get; }
+
         string IlrReferenceDataKey { get; }
 
         string CollectionName { get; }

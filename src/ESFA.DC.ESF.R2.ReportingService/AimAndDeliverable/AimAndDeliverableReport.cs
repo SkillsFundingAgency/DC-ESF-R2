@@ -32,9 +32,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
             var externalFileName = GetExternalFilename(esfJobContext.UkPrn, esfJobContext.JobId, sourceFile?.SuppliedDate ?? DateTime.MinValue, ReportNameConstants.CsvExtension);
 
             // TODO :get data
-
-            var reportModels = _aimAndDeliverableModelBuilder.Build();
-
+            var reportModels = _aimAndDeliverableModelBuilder.Build(null, null, null, null, null, null, null);
             await WriteCsv(esfJobContext, externalFileName, reportModels, cancellationToken);
 
             return externalFileName;
