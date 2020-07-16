@@ -6,8 +6,8 @@ namespace ESFA.DC.ESF.R2.Interfaces.FundingSummary.ILR
     {
         string FileName { get; }
 
-        DateTime SubmittedDateTime { get; }
+        DateTime? SubmittedDateTime { get; }
 
-        DateTime FilePrepDate { get; }
+        DateTime? FilePrepDate { get; }
     }
 }

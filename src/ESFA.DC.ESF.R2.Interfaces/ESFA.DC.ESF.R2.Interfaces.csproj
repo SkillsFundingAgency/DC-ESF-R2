@@ -42,6 +42,7 @@
     <Compile Include="Config\IReferenceDataConfig.cs" />
     <Compile Include="Config\IVersionInfo.cs" />
     <Compile Include="Constants\AcademicYearConstants.cs" />
+    <Compile Include="Constants\DeliverableCodeConstants.cs" />
     <Compile Include="Constants\ESFConstants.cs" />
     <Compile Include="Controllers\IReportingController.cs" />
     <Compile Include="Controllers\IServiceController.cs" />
@@ -81,7 +82,7 @@
     <Compile Include="Reports\FundingSummary\IFundingSummaryReportDataProvider.cs" />
     <Compile Include="Reports\FundingSummary\ILR\IIlrFile.cs" />
     <Compile Include="Reports\FundingSummary\ILR\IILRFileData.cs" />
-    <Compile Include="Reports\FundingSummary\ILR\IPeriodisedValue.cs" />
+    <Compile Include="Reports\FundingSummary\IPeriodisedValue.cs" />
     <Compile Include="Reports\FundingSummary\IRenderService.cs" />
     <Compile Include="Reports\IModelBuilder.cs" />
     <Compile Include="Reports\AimAndDeliverable\IAimAndDeliverableDataProvider.cs" />
