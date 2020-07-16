@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ESFA.DC.ESF.R2.Interfaces.Constants;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
@@ -12,13 +13,13 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
     {
         private readonly List<string> _deliverableCodes = new List<string>
         {
-            ValidationConstants.DeliverableCode_NR01,
-            ValidationConstants.DeliverableCode_ST01,
-            ValidationConstants.DeliverableCode_RQ01,
-            ValidationConstants.DeliverableCode_PG01,
-            ValidationConstants.DeliverableCode_PG03,
-            ValidationConstants.DeliverableCode_PG04,
-            ValidationConstants.DeliverableCode_PG05
+            DeliverableCodeConstants.DeliverableCode_NR01,
+            DeliverableCodeConstants.DeliverableCode_ST01,
+            DeliverableCodeConstants.DeliverableCode_RQ01,
+            DeliverableCodeConstants.DeliverableCode_PG01,
+            DeliverableCodeConstants.DeliverableCode_PG03,
+            DeliverableCodeConstants.DeliverableCode_PG04,
+            DeliverableCodeConstants.DeliverableCode_PG05
         };
 
         public SupplementaryDataPanelDate03(IValidationErrorMessageService errorMessageService)

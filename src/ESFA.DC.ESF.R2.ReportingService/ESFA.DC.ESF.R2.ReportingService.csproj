@@ -48,25 +48,27 @@
     <Compile Include="Constants\ReportingConstants.cs" />
     <Compile Include="Constants\ReportNameConstants.cs" />
     <Compile Include="FundingSummary\FundingSummaryReport.cs" />
+    <Compile Include="Constants\FundingSummaryReportConstants.cs" />
     <Compile Include="FundingSummary\FundingSummaryReportModelBuilder.cs" />
     <Compile Include="FundingSummary\FundingSummaryReportRenderService.cs" />
-    <Compile Include="FundingSummary\Model\ESF\EsfFile.cs" />
-    <Compile Include="FundingSummary\Model\ESF\EsfFileData.cs" />
-    <Compile Include="FundingSummary\Model\ESF\EsfSuppData.cs" />
-    <Compile Include="FundingSummary\Model\FundingSummaryFooterModel.cs" />
-    <Compile Include="FundingSummary\Model\FundingSummaryHeaderModel.cs" />
-    <Compile Include="FundingSummary\Model\FundingSummaryIlrHeaderModel.cs" />
+    <Compile Include="FundingSummary\Model\FundingSummaryReportTabTotal.cs" />
+    <Compile Include="FundingSummary\Model\NonRegulatedLearning.cs" />
+    <Compile Include="FundingSummary\Model\Progression.cs" />
+    <Compile Include="FundingSummary\Model\RegulatedLearning.cs" />
+    <Compile Include="FundingSummary\Model\SpecificationDefined.cs" />
+    <Compile Include="FundingSummary\Model\FundingSummaryModel.cs" />
     <Compile Include="FundingSummary\Model\FundingSummaryReportTab.cs" />
-    <Compile Include="FundingSummary\Model\FundingSummaryReportModel.cs" />
-    <Compile Include="FundingSummary\Model\ILR\IlrFile.cs" />
-    <Compile Include="FundingSummary\Model\ILR\IlrFileData.cs" />
-    <Compile Include="FundingSummary\Model\ILR\PeriodisedValue.cs" />
+    <Compile Include="FundingSummary\Model\CommunityGrant.cs" />
+    <Compile Include="FundingSummary\Model\LearnerAssessmentPlan.cs" />
+    <Compile Include="FundingSummary\Model\PeriodisedReportValue.cs" />
+    <Compile Include="FundingSummary\Model\PeriodisedValue.cs" />
     <Compile Include="FundingSummary\Model\Interface\IFundingCategory.cs" />
     <Compile Include="FundingSummary\Model\Interface\IFundingSubCategory.cs" />
     <Compile Include="FundingSummary\Model\Interface\IFundingSummaryReport.cs" />
     <Compile Include="FundingSummary\Model\Interface\IFundingSummaryReportRow.cs" />
     <Compile Include="FundingSummary\Model\Interface\IFundLine.cs" />
     <Compile Include="FundingSummary\Model\Interface\IFundLineGroup.cs" />
+    <Compile Include="FundingSummary\Model\GroupHeader.cs" />
     <Compile Include="Mappers\AimAndDeliverableMapper.cs" />
     <Compile Include="Mappers\FundingReportMapper.cs" />
     <Compile Include="Mappers\FundingSummaryFooterMapper.cs" />
@@ -147,6 +149,10 @@
     <ProjectReference Include="..\DataStore\ESFA.DC.ILR.DataService.Services\ESFA.DC.ILR.DataService.Services.csproj">
       <Project>{45e4f1c4-dad5-46aa-a208-7826ecf09235}</Project>
       <Name>ESFA.DC.ILR.DataService.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DataStore\ESFA.DC.ILR.DataService.Utils\ESFA.DC.ILR.DataService.Utils.csproj">
+      <Project>{33703e95-b938-4e14-8d26-3d28b30f61a9}</Project>
+      <Name>ESFA.DC.ILR.DataService.Utils</Name>
     </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.FundingData.Database.EF\ESFA.DC.ESF.FundingData.Database.EF.csproj">
       <Project>{F77DCDD9-9268-4500-9597-8D39CABA07BE}</Project>

@@ -6,6 +6,6 @@ namespace ESFA.DC.ESF.R2.Interfaces.FundingSummary.ESF
     {
         string FileName { get; }
 
-        DateTime SubmittedDateTime { get; }
+        DateTime? SubmittedDateTime { get; }
     }
 }
