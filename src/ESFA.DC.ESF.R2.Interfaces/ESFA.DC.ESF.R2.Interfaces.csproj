@@ -63,6 +63,7 @@
     <Compile Include="DataStore\IStoreFileDetails.cs" />
     <Compile Include="DataStore\IStoreValidation.cs" />
     <Compile Include="Builders\ISourceFileModelBuilder.cs" />
+    <Compile Include="Enum\CollectionYear.cs" />
     <Compile Include="Data\AimAndDeliverable\IAimAndDeliverableReportDataProvider.cs" />
     <Compile Include="Helpers\IPeriodHelper.cs" />
     <Compile Include="Helpers\ITaskHelper.cs" />
@@ -70,7 +71,17 @@
     <Compile Include="IEsfJobContext.cs" />
     <Compile Include="PersistenceStorageKeys.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReferenceData\IIlrFile.cs" />
+    <Compile Include="ReferenceData\IEsfSuppDataFile.cs" />
+    <Compile Include="ReferenceData\IOrganisationReferenceData.cs" />
+    <Compile Include="ReferenceData\IReferenceDataVersions.cs" />
+    <Compile Include="ReferenceData\IReferenceDataRoot.cs" />
+    <Compile Include="Reports\IModelBuilder.cs" />
+    <Compile Include="Reports\AimAndDeliverable\DataProvider\1920\IIlrDataProvider.cs" />
+    <Compile Include="Reports\AimAndDeliverable\DataProvider\2021\IIlrDataProvider.cs" />
     <Compile Include="Reports\AimAndDeliverable\IAimAndDeliverableDataProvider.cs" />
+    <Compile Include="Reports\AimAndDeliverable\IFcsDataProvider.cs" />
+    <Compile Include="Reports\AimAndDeliverable\ILarsDataProvider.cs" />
     <Compile Include="Reports\IModelReport.cs" />
     <Compile Include="Reports\IValidationReport.cs" />
     <Compile Include="Reports\IValidationResultReport.cs" />
@@ -143,8 +154,8 @@
     <Reference Include="CsvHelper, Version=12.0.0.0, Culture=neutral, PublicKeyToken=8c4959082be5c823, processorArchitecture=MSIL">
       <HintPath>..\packages\CsvHelper.12.1.3\lib\net45\CsvHelper.dll</HintPath>
     </Reference>
-    <Reference Include="Dapper, Version=1.50.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapper.1.50.5\lib\net451\Dapper.dll</HintPath>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.0.35\lib\net461\Dapper.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>

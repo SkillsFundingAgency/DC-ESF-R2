@@ -42,13 +42,19 @@ namespace ESFA.DC.ESF.R2.Service.Builders
                 UKPRN = fileNameParts[1],
                 FileName = fileName,
                 PreparationDate = preparationDateTime,
+                SuppliedDate = esfJobContext.SubmissionDateTimeUtc,
                 JobId = jobId
             };
         }
 
         public ISourceFileModel BuildDefault(IEsfJobContext esfJobContext)
         {
-            return new SourceFileModel();
+            return new SourceFileModel
+            {
+                UKPRN = esfJobContext.UkPrn.ToString(),
+                SuppliedDate = esfJobContext.SubmissionDateTimeUtc,
+                JobId = esfJobContext.JobId
+            };
         }
 
         private string GetPreparedDateFromFileName(string fileName)

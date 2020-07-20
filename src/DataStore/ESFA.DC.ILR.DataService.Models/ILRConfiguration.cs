@@ -11,5 +11,7 @@
         public string ILR1819ConnectionString { get; set; }
 
         public string ILR1920ConnectionString { get; set; }
+
+        public string ILR2021ConnectionString { get; set; }
     }
 }

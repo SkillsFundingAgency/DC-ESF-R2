@@ -22,7 +22,7 @@ namespace ESFA.DC.ESF.R2.DataStore.Service
         {
             var commandDefinition = new CommandDefinition(sql, parameters, commandTimeout: 600, transaction: transaction, cancellationToken: cancellationToken);
 
-            return await connection.QuerySingleAsync(commandDefinition);
+            return await connection.QuerySingleAsync<T>(commandDefinition);
         }
 
         public async Task ExecuteStoredProcedure(string sprocName, DynamicParameters parameters, SqlConnection connection, SqlTransaction transaction, CancellationToken cancellationToken)

@@ -40,6 +40,7 @@
     <Compile Include="Abstract\AbstractCsvReportService.cs" />
     <Compile Include="Abstract\AbstractJsonReportService.cs" />
     <Compile Include="Abstract\AbstractReportService.cs" />
+    <Compile Include="AimAndDeliverable\AimAndDeliverableDataProvider.cs" />
     <Compile Include="AimAndDeliverable\AimAndDeliverableMapper.cs" />
     <Compile Include="AimAndDeliverable\AimAndDeliverableModelBuilder.cs" />
     <Compile Include="AimAndDeliverable\Interface\IAimAndDeliverableModelBuilder.cs" />
@@ -48,6 +49,16 @@
     <Compile Include="Constants\ReportTaskConstants.cs" />
     <Compile Include="Constants\ReportingConstants.cs" />
     <Compile Include="Constants\ReportNameConstants.cs" />
+    <Compile Include="FundingSummary\FundingSummaryReportModelBuilder.cs" />
+    <Compile Include="FundingSummary\Model\FundingSummaryFooterModel.cs" />
+    <Compile Include="FundingSummary\Model\FundingSummaryHeaderModel.cs" />
+    <Compile Include="FundingSummary\Model\FundingSummaryIlrHeaderModel.cs" />
+    <Compile Include="FundingSummary\Model\FundingSummaryReportModel.cs" />
+    <Compile Include="FundingSummary\Model\Interface\IFundingCategory.cs" />
+    <Compile Include="FundingSummary\Model\Interface\IFundingSubCategory.cs" />
+    <Compile Include="FundingSummary\Model\Interface\IFundingSummaryReportRow.cs" />
+    <Compile Include="FundingSummary\Model\Interface\IFundLine.cs" />
+    <Compile Include="FundingSummary\Model\Interface\IFundLineGroup.cs" />
     <Compile Include="Mappers\AimAndDeliverableMapper.cs" />
     <Compile Include="Mappers\FundingReportMapper.cs" />
     <Compile Include="Mappers\FundingSummaryFooterMapper.cs" />
