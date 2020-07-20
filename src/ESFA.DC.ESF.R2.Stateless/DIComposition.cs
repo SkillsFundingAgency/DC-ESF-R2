@@ -65,6 +65,7 @@ namespace ESFA.DC.ESF.R2.Stateless
         private static void RegisterPersistence(ContainerBuilder containerBuilder, IServiceFabricConfigurationService serviceFabricConfigurationService)
         {
             var ilrConfig = serviceFabricConfigurationService.GetConfigSectionAs<ILRConfiguration>("ILRSection");
+            containerBuilder.RegisterInstance(ilrConfig).As<ILRConfiguration>().SingleInstance();
             containerBuilder.RegisterModule(new DependencyInjectionModule
             {
                 Configuration = ilrConfig
@@ -93,6 +94,7 @@ namespace ESFA.DC.ESF.R2.Stateless
             }).As<IESFFundingDataContext>();
 
             var fcsConfig = serviceFabricConfigurationService.GetConfigSectionAs<FCSConfiguration>("FCSSection");
+            containerBuilder.RegisterInstance(fcsConfig).As<IFCSConfiguration>().SingleInstance();
 
             containerBuilder.Register(c =>
                 {

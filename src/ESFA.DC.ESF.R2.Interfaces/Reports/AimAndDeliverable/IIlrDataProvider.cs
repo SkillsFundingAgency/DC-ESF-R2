@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Models.AimAndDeliverable;
 
-namespace ESFA.DC.ESF.R2.Interfaces.Reports.AimAndDeliverable.DataProvider._1920
+namespace ESFA.DC.ESF.R2.Interfaces.Reports.AimAndDeliverable
 {
     public interface IIlrDataProvider
     {

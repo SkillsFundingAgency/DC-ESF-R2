@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
-using ESFA.DC.ESF.R2.Interfaces.Reports.AimAndDeliverable.DataProvider._2021;
+using ESFA.DC.ESF.R2.Interfaces.Reports.AimAndDeliverable;
 using ESFA.DC.ESF.R2.Models.AimAndDeliverable;
 
 namespace ESFA.DC.ESF.R2._2021.Data.AimAndDeliverable.Ilr

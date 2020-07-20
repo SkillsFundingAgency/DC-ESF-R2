@@ -104,6 +104,14 @@
       <Project>{F77DCDD9-9268-4500-9597-8D39CABA07BE}</Project>
       <Name>ESFA.DC.ESF.FundingData.Database.EF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.1920.Data\ESFA.DC.ESF.R2.1920.Data.csproj">
+      <Project>{B7F4F49A-3F29-42CA-B42A-ED865F2E9D9A}</Project>
+      <Name>ESFA.DC.ESF.R2.1920.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.2021.Data\ESFA.DC.ESF.R2.2021.Data.csproj">
+      <Project>{35fdfb2a-66c5-496a-8dda-b9e307597af4}</Project>
+      <Name>ESFA.DC.ESF.R2.2021.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.DataAccessLayer\ESFA.DC.ESF.R2.DataAccessLayer.csproj">
       <Project>{e113d0a4-8cf5-46bf-a181-8c3bb92f785c}</Project>
       <Name>ESFA.DC.ESF.R2.DataAccessLayer</Name>
@@ -115,6 +123,10 @@
     <ProjectReference Include="..\ESFA.DC.ESF.R2.DataStore\ESFA.DC.ESF.R2.DataStore.csproj">
       <Project>{d32c4bfc-7222-4c67-9301-45268ff5ce45}</Project>
       <Name>ESFA.DC.ESF.R2.DataStore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.Data\ESFA.DC.ESF.R2.Data.csproj">
+      <Project>{933E235B-E022-4AAB-B7D0-A7981EF99074}</Project>
+      <Name>ESFA.DC.ESF.R2.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Interfaces\ESFA.DC.ESF.R2.Interfaces.csproj">
       <Project>{3eb1948d-7f0f-446f-a8b3-c3ab19531fe6}</Project>

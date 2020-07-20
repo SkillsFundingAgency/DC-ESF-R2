@@ -76,9 +76,8 @@
     <Compile Include="ReferenceData\IOrganisationReferenceData.cs" />
     <Compile Include="ReferenceData\IReferenceDataVersions.cs" />
     <Compile Include="ReferenceData\IReferenceDataRoot.cs" />
+    <Compile Include="Reports\AimAndDeliverable\IIlrDataProvider.cs" />
     <Compile Include="Reports\IModelBuilder.cs" />
-    <Compile Include="Reports\AimAndDeliverable\DataProvider\1920\IIlrDataProvider.cs" />
-    <Compile Include="Reports\AimAndDeliverable\DataProvider\2021\IIlrDataProvider.cs" />
     <Compile Include="Reports\AimAndDeliverable\IAimAndDeliverableDataProvider.cs" />
     <Compile Include="Reports\AimAndDeliverable\IFcsDataProvider.cs" />
     <Compile Include="Reports\AimAndDeliverable\ILarsDataProvider.cs" />
