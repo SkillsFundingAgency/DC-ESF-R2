@@ -225,6 +225,7 @@
     <Compile Include="AimAndDeliverable\AimAndDeliverableModelBuilderTests.cs" />
     <Compile Include="Builders\AimAndDeliverableBuilder.cs" />
     <Compile Include="Builders\SupplementaryDataModelBuilder.cs" />
+    <Compile Include="FundingSummary\FundingSummaryReportModelBuilderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestAimAndDeliverableReport.cs" />
     <Compile Include="TestFundingReport.cs" />

@@ -4,6 +4,7 @@ using System.Threading;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ValidationService.Helpers
@@ -30,7 +31,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Helpers
             var codeMappings = _cache.GetContractDeliverableCodeMapping(new List<string> { deliverableCode }, cancellationToken);
 
             var fcsDeliverableCodeString = codeMappings
-                .Where(cm => cm.ExternalDeliverableCode == deliverableCode)
+                .Where(cm => cm.ExternalDeliverableCode.CaseInsensitiveEquals(deliverableCode))
                 .Select(cm => cm.FcsDeliverableCode).FirstOrDefault();
             if (string.IsNullOrEmpty(fcsDeliverableCodeString))
             {

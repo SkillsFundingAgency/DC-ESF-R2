@@ -62,6 +62,7 @@
     <Compile Include="DataStore\IStoreFileDetails.cs" />
     <Compile Include="DataStore\IStoreValidation.cs" />
     <Compile Include="Builders\ISourceFileModelBuilder.cs" />
+    <Compile Include="Enum\CollectionYear.cs" />
     <Compile Include="Data\AimAndDeliverable\IAimAndDeliverableReportDataProvider.cs" />
     <Compile Include="Helpers\IPeriodHelper.cs" />
     <Compile Include="Helpers\ITaskHelper.cs" />
@@ -69,6 +70,12 @@
     <Compile Include="IEsfJobContext.cs" />
     <Compile Include="PersistenceStorageKeys.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReferenceData\IIlrFile.cs" />
+    <Compile Include="ReferenceData\IEsfSuppDataFile.cs" />
+    <Compile Include="ReferenceData\IOrganisationReferenceData.cs" />
+    <Compile Include="ReferenceData\IReferenceDataVersions.cs" />
+    <Compile Include="ReferenceData\IReferenceDataRoot.cs" />
+    <Compile Include="Reports\IModelBuilder.cs" />
     <Compile Include="Reports\AimAndDeliverable\DataProvider\1920\IIlrDataProvider.cs" />
     <Compile Include="Reports\AimAndDeliverable\DataProvider\2021\IIlrDataProvider.cs" />
     <Compile Include="Reports\AimAndDeliverable\IAimAndDeliverableDataProvider.cs" />

@@ -19,8 +19,8 @@ namespace ESFA.DC.ESF.R2.DataStore
         public async Task ClearAsync(int ukPrn, string conRefNumber, SqlConnection sqlConnection, SqlTransaction sqlTransaction, CancellationToken cancellationToken)
         {
             var parameters = new DynamicParameters();
-            parameters.Add("@ukPrn", ukPrn);
-            parameters.Add("@conRefNumber", conRefNumber);
+            parameters.Add("@ukprn", ukPrn);
+            parameters.Add("@conRefNum", conRefNumber);
 
             await _dataStoreQueryExecutionService.ExecuteStoredProcedure(
                 DataStoreConstants.StoredProcedureNameConstants.DeleteExistingRecords,
