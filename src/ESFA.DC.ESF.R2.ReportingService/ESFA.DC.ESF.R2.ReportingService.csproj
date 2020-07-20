@@ -40,6 +40,7 @@
     <Compile Include="Abstract\AbstractCsvReportService.cs" />
     <Compile Include="Abstract\AbstractJsonReportService.cs" />
     <Compile Include="Abstract\AbstractReportService.cs" />
+    <Compile Include="AimAndDeliverable\AimAndDeliverableDataProvider.cs" />
     <Compile Include="AimAndDeliverable\AimAndDeliverableMapper.cs" />
     <Compile Include="AimAndDeliverable\AimAndDeliverableModelBuilder.cs" />
     <Compile Include="AimAndDeliverable\Interface\IAimAndDeliverableModelBuilder.cs" />
