@@ -17,9 +17,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Constants
 
         // Non Regulated Learning
         public const string Header_NonRegulatedLearning = "Non Regulated Learning";
-        public const string Deliverable_ILR_NR01_Start = "ILR NR01 Regulated Learning - Start Funding (£)";
-        public const string Deliverable_ILR_NR01_Ach = "ILR NR01 Regulated Learning - Achievement Funding (£)";
-        public const string Deliverable_ESF_NR01 = "SUPPDATA NR01 Regulated Learning Authorised Claims (£)";
+        public const string Deliverable_ILR_NR01_Start = "ILR NR01 Non Regulated Learning - Start Funding (£)";
+        public const string Deliverable_ILR_NR01_Ach = "ILR NR01 Non Regulated Learning - Achievement Funding (£)";
+        public const string Deliverable_ESF_NR01 = "SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)";
 
         // Progression and Sustained Progression
         public const string Header_Progression = "Progression and Sustained Progression";
