@@ -23,7 +23,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
         {
             ConRefNumber = conRefNumber;
             DeliverableCode = deliverableCode;
-            attributeName = AttributeName;
+            AttributeName = attributeName;
             April = april;
             May = may;
             June = june;

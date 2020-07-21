@@ -133,7 +133,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
             return new LearnerAssessmentPlan
             {
-                GroupHeader = BuildFundingHeader(FundingSummaryReportConstants.Header_CommunityGrant, headers),
+                GroupHeader = BuildFundingHeader(FundingSummaryReportConstants.Header_LearnerAssessment, headers),
                 IlrST01 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_ST01, ilrST01),
                 EsfST01 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_ST01, esfST01),
             };
@@ -164,7 +164,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
             return new NonRegulatedLearning
             {
-                GroupHeader = BuildFundingHeader(FundingSummaryReportConstants.Header_RegulatedLearning, headers),
+                GroupHeader = BuildFundingHeader(FundingSummaryReportConstants.Header_NonRegulatedLearning, headers),
                 IlrNR01StartFunding = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_NR01_Start, ilrNR01Start),
                 IlrNR01AchFunding = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_NR01_Ach, ilrNR01Ach),
                 EsfNR01AuthClaims = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_NR01, esfNR01),
@@ -220,7 +220,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return new SpecificationDefined
             {
                 GroupHeader = BuildFundingHeader(FundingSummaryReportConstants.Header_SpecificationDefined, headers),
-                EsfSD01 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_SD01, sd02),
+                EsfSD01 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_SD01, sd01),
                 EsfSD02 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_SD02, sd02),
             };
         }
