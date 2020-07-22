@@ -30,6 +30,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
         {
             _aimAndDeliverableModelBuilder = aimAndDeliverableModelBuilder;
             _aimAndDeliverableDataProvider = aimAndDeliverableDataProvider;
+            ReportFileName = ReportNameConstants.AimsAndDeliverableReport;
         }
 
         public async Task<string> GenerateReport(IEsfJobContext esfJobContext, ISourceFileModel sourceFile, SupplementaryDataWrapper wrapper, CancellationToken cancellationToken)
