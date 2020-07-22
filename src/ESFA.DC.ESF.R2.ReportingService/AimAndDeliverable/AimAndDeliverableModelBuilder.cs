@@ -75,11 +75,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
 
                 var larsLearningDelivery = larsLearningDeliveryLookup.GetValueOrDefault(learningDelivery.LearnAimRef);
 
-                var learningDeliverableKey = new ESFLearningDeliveryDeliverableKey(learningDelivery.LearnRefNumber, learningDelivery.AimSeqNumber);
+                var learningDeliverableKey = new ESFLearningDeliveryDeliverableKey(learningDelivery.LearnRefNumber, learningDelivery.AimSeqNumber, learningDelivery.DeliverableCode);
 
                 var deliverablePeriodsForLearningDelivery = learningDeliverablePeriodLookup.GetValueOrDefault(learningDeliverableKey);
 
                 var deliverablePeriodRowCreated = false;
+
+                var deliverableName = fcsDeliverableCodeNameLookup.GetValueOrDefault(learningDelivery.DeliverableCode);
 
                 if (deliverablePeriodsForLearningDelivery != null && deliverablePeriodsForLearningDelivery.Any())
                 {
@@ -89,19 +91,18 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
                     {
                         foreach (var deliverablePeriod in deliverablePeriodsToBeDisplayed)
                         {
-                            var deliverableName = fcsDeliverableCodeNameLookup.GetValueOrDefault(deliverablePeriod.DeliverableCode);
                             var reportMonth = periodMonthLookup.GetValueOrDefault(deliverablePeriod.Period);
 
                             deliverablePeriodRowCreated = true;
 
-                            yield return BuildRow(learningDelivery, dpOutcome, esfDpOutcome, larsLearningDelivery, deliverablePeriod, deliverableName, reportMonth);
+                            yield return BuildRow(learningDelivery, dpOutcome, esfDpOutcome, larsLearningDelivery, deliverableName, deliverablePeriod, reportMonth);
                         }
                     }
                 }
 
                 if (!deliverablePeriodRowCreated)
                 {
-                    yield return BuildRow(learningDelivery, dpOutcome, esfDpOutcome, larsLearningDelivery);
+                    yield return BuildRow(learningDelivery, dpOutcome, esfDpOutcome, larsLearningDelivery, deliverableName);
                 }
             }
         }
@@ -142,7 +143,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
 
         public IDictionary<ESFLearningDeliveryDeliverableKey, ICollection<ESFLearningDeliveryDeliverablePeriod>> BuildEsfLearningDeliveryDeliverableLookup(ICollection<ESFLearningDeliveryDeliverablePeriod> esfLearningDeliveryDeliverablePeriods)
             => esfLearningDeliveryDeliverablePeriods
-                .GroupBy(dp => new ESFLearningDeliveryDeliverableKey(dp.LearnRefNumber, dp.AimSequenceNumber), ESFLearningDeliveryDeliverableKey.Comparer)
+                .GroupBy(dp => new ESFLearningDeliveryDeliverableKey(dp.LearnRefNumber, dp.AimSequenceNumber, dp.DeliverableCode), ESFLearningDeliveryDeliverableKey.Comparer)
                 .ToDictionary(g => g.Key, g => g.ToList() as ICollection<ESFLearningDeliveryDeliverablePeriod>, ESFLearningDeliveryDeliverableKey.Comparer);
 
         public DPOutcomeKey BuildDpOutcomeKeyForLearningDelivery(LearningDelivery learningDelivery)
@@ -180,8 +181,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
             DPOutcome dpOutcome,
             ESFDPOutcome esfDpOutcome,
             LARSLearningDelivery larsLearningDelivery,
+            string deliverableName,
             ESFLearningDeliveryDeliverablePeriod deliverablePeriod = null,
-            string deliverableName = null,
             string reportMonth = null)
             => new AimAndDeliverableReportRow()
             {

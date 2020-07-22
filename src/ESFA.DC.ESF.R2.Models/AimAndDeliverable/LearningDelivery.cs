@@ -81,5 +81,8 @@ namespace ESFA.DC.ESF.R2.Models.AimAndDeliverable
         public string EligibleProgressionOutcomeType { get; set; }
 
         public long? EligibleProgressionOutcomeCode { get; set; }
+
+        // ESF Learning Delivery Deliverable
+        public string DeliverableCode { get; set; }
     }
 }

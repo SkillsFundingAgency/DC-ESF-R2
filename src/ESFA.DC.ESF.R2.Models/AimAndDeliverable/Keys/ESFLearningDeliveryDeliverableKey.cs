@@ -4,21 +4,25 @@ namespace ESFA.DC.ESF.R2.Models.AimAndDeliverable.Keys
 {
     public struct ESFLearningDeliveryDeliverableKey
     {
-        public ESFLearningDeliveryDeliverableKey(string learnRefNumber, int aimSequenceNumber)
+        public ESFLearningDeliveryDeliverableKey(string learnRefNumber, int aimSequenceNumber, string deliverableCode)
         {
             LearnRefNumber = learnRefNumber;
             AimSequenceNumber = aimSequenceNumber;
+            DeliverableCode = deliverableCode;
         }
 
         public string LearnRefNumber { get; }
 
         public int AimSequenceNumber { get; }
 
+        public string DeliverableCode { get; }
+
         public static IEqualityComparer<ESFLearningDeliveryDeliverableKey> Comparer { get; } = new EqualityComparer();
 
         public override int GetHashCode() =>
             (AimSequenceNumber,
-                LearnRefNumber?.ToUpper()).GetHashCode();
+                LearnRefNumber?.ToUpper(),
+                DeliverableCode?.ToUpper()).GetHashCode();
 
         private class EqualityComparer : IEqualityComparer<ESFLearningDeliveryDeliverableKey>
         {

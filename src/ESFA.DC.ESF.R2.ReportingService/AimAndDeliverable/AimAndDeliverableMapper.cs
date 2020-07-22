@@ -15,7 +15,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
             Map(m => m.LearningDelivery.GivenNames).Index(i++).Name("Given names");
             Map(m => m.LearningDelivery.AimSeqNumber).Index(i++).Name("Aim sequence number");
             Map(m => m.LearningDelivery.ConRefNumber).Index(i++).Name("Contract reference number");
-            Map(m => m.DeliverablePeriod.DeliverableCode).Index(i++).Name("Deliverable code");
+            Map(m => m.LearningDelivery.DeliverableCode).Index(i++).Name("Deliverable code");
             Map(m => m.DeliverableName).Index(i++).Name("Deliverable name");
             Map(m => m.LearningDelivery.LearnAimRef).Index(i++).Name("Learning aim reference");
             Map(m => m.DeliverablePeriod.DeliverableUnitCost).Index(i++).Name("Unit cost(£)");
