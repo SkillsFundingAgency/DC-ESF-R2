@@ -33,12 +33,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
                 esfDpOutcomes,
                 larsLearningDeliveries,
                 fcsDeliverableCodeMappings)
-                .OrderBy(x => x.LearningDelivery.LearnRefNumber)
-                .ThenBy(x => x.LearningDelivery.ConRefNumber)
-                .ThenBy(x => x.LearningDelivery.LearnStartDate)
-                .ThenBy(x => x.LearningDelivery.AimSeqNumber)
-                .ThenBy(x => x.DeliverablePeriod.Period)
-                .ThenBy(x => x.DeliverablePeriod.DeliverableCode);
+                .OrderBy(x => x.LearningDelivery?.LearnRefNumber)
+                .ThenBy(x => x.LearningDelivery?.ConRefNumber)
+                .ThenBy(x => x.LearningDelivery?.LearnStartDate)
+                .ThenBy(x => x.LearningDelivery?.AimSeqNumber)
+                .ThenBy(x => x.DeliverablePeriod?.Period)
+                .ThenBy(x => x.DeliverablePeriod?.DeliverableCode);
         }
 
         public IEnumerable<AimAndDeliverableReportRow> BuildReportRows(

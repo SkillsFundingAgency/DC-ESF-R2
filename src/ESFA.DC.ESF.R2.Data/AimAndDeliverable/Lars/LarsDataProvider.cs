@@ -37,7 +37,7 @@ namespace ESFA.DC.ESF.R2.Data.AimAndDeliverable.Lars
         {
             using (var connection = _sqlConnectionFunc())
             {
-                var learnAimRefs = _jsonSerializationService.Serialize(learningDeliveries.Select(ld => ld.LearnAimRef)).Distinct();
+                var learnAimRefs = _jsonSerializationService.Serialize(learningDeliveries.Select(ld => ld.LearnAimRef).Distinct());
 
                 var commandDefinition = new CommandDefinition(sql, new { learnAimRefs }, cancellationToken: cancellationToken);
 

@@ -33,8 +33,8 @@ namespace ESFA.DC.ESF.R2._2021.Data.AimAndDeliverable.Ilr
                                                              WHERE RowNumber = 1
 	                                                     )
 
-                                                    ,CTE_ProviderSpecDeliveryMonitoring AS(SELECT UKPRN, LearnRefNumber, AimSeqNumber, A as ProviderSpecLearnerMonitoring_A, B as ProviderSpecLearnerMonitoring_B,
-                                                                C as ProviderSpecLearnerMonitoring_C, D as ProviderSpecLearnerMonitoring_D
+                                                    ,CTE_ProviderSpecDeliveryMonitoring AS(SELECT UKPRN, LearnRefNumber, AimSeqNumber, A as ProviderSpecDeliveryMonitoring_A, B as ProviderSpecDeliveryMonitoring_B,
+                                                                C as ProviderSpecDeliveryMonitoring_C, D as ProviderSpecDeliveryMonitoring_D
                                                     FROM   (SELECT[UKPRN]
                                                           ,[LearnRefNumber]
                                                           , AimSeqNumber
@@ -68,10 +68,10 @@ namespace ESFA.DC.ESF.R2._2021.Data.AimAndDeliverable.Ilr
                                                         LD.PartnerUKPRN,
                                                         LD.SWSupAimId,
                                                         LDFAM.LearnDelFAMCode AS LearningDeliveryFAM_RES,
-                                                        PSDM.ProviderSpecLearnerMonitoring_A,
-                                                        PSDM.ProviderSpecLearnerMonitoring_B,
-                                                        PSDM.ProviderSpecLearnerMonitoring_C,
-                                                        PSDM.ProviderSpecLearnerMonitoring_D,
+                                                        PSDM.ProviderSpecDeliveryMonitoring_A,
+                                                        PSDM.ProviderSpecDeliveryMonitoring_B,
+                                                        PSDM.ProviderSpecDeliveryMonitoring_C,
+                                                        PSDM.ProviderSpecDeliveryMonitoring_D,
                                                         ESFLD.ApplicWeightFundRate,
                                                         ESFLD.AimValue,
                                                         ESFLD.AdjustedAreaCostFactor,
@@ -117,7 +117,7 @@ namespace ESFA.DC.ESF.R2._2021.Data.AimAndDeliverable.Ilr
                                                         AND LD.fundmodel = 70";
 
 
-        private readonly string dpoutcomeSql = @"SELECT  [LearnRefNumber], [OutType], [OutCode], [OutStartDate], [OutEndDate], [OutCollDate] FROM [Valid].[DPOutcome] where UKPRN = @ukprn";
+        private readonly string dpoutcomeSql = @"SELECT  [LearnRefNumber], [OutType] AS OutcomeType, [OutCode] AS OutcomeCode, [OutStartDate] AS OutcomeStartDate, [OutEndDate], [OutCollDate] FROM [Valid].[DPOutcome] where UKPRN = @ukprn";
 
         private readonly string learningDeliveryDeliverablePeriodSql = @"SELECT LDD.LearnRefNumber, LDD.AimSeqNumber, LDD.DeliverableCode, LDD.DeliverableUnitCost,
                                                                             LDDP.Period, LDDP.DeliverableVolume, LDDP.ReportingVolume, LDDP.StartEarnings, LDDP.AchievementEarnings, LDDP.AdditionalProgCostEarnings, LDDP.ProgressionEarnings,
@@ -129,9 +129,9 @@ namespace ESFA.DC.ESF.R2._2021.Data.AimAndDeliverable.Ilr
 	                                                                            AND LDD.LearnRefNumber = LDDP.LearnRefNumber
 	                                                                            AND LDD.AimSeqNumber = LDDP.AimSeqNumber
 	                                                                            AND LDD.DeliverableCode = LDDP.DeliverableCode
-                                                                            WHERE UKPRN = @ukprn";
+                                                                            WHERE LDD.UKPRN = @ukprn";
 
-        private readonly string esfdpoutcomeSql = "SELECT [LearnRefNumber], [OutCode], [OutType], [OutStartDate], [OutcomeDateForProgression] FROM [Rulebase].[ESF_DPOutcome] WHERE UKPRN = @ukprn";
+        private readonly string esfdpoutcomeSql = "SELECT [LearnRefNumber], [OutCode] AS OutcomeCode, [OutType] AS OutcomeType, [OutStartDate] AS OutcomeStartDate, [OutcomeDateForProgression] AS OutDateForProgression FROM [Rulebase].[ESF_DPOutcome] WHERE UKPRN = @ukprn";
 
         public IlrDataProvider(Func<SqlConnection> sqlConnectionFunc)
         {

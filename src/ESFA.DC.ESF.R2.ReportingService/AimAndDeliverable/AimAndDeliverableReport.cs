@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.CsvService.Interface;
@@ -25,7 +26,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
             ICsvFileService csvFileService,
             IAimAndDeliverableModelBuilder aimAndDeliverableModelBuilder,
             IAimAndDeliverableDataProvider aimAndDeliverableDataProvider)
-            : base(dateTimeProvider, csvFileService, ReportNameConstants.AimsAndDeliverableReport + 2)
+            : base(dateTimeProvider, csvFileService, ReportTaskConstants.TaskGenerateEsfAimAndDeliverableReport)
         {
             _aimAndDeliverableModelBuilder = aimAndDeliverableModelBuilder;
             _aimAndDeliverableDataProvider = aimAndDeliverableDataProvider;
@@ -46,6 +47,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
             var larsLearningDeliveries = await _aimAndDeliverableDataProvider.GetLarsLearningDeliveriesAsync(learningDeliveries.Result, cancellationToken);
 
             var reportModels = _aimAndDeliverableModelBuilder.Build(esfJobContext, learningDeliveries.Result, dpOutcomes.Result, deliverablePeriods.Result, esfDpOutcomes.Result, larsLearningDeliveries, fcsDeliverableCodeMappings.Result);
+
             await WriteCsv(esfJobContext, externalFileName, reportModels, cancellationToken);
 
             return externalFileName;

@@ -11,7 +11,7 @@ using ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Interface;
 using ESFA.DC.ESF.R2.ReportingService.Reports;
 using ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary;
 using ESFA.DC.Serialization.Interfaces;
-using AimAndDeliverableReport = ESFA.DC.ESF.R2.ReportingService.Reports.AimAndDeliverableReport;
+using AimAndDeliverableReport = ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.AimAndDeliverableReport;
 
 namespace ESFA.DC.ESF.R2.Stateless.Modules
 {
