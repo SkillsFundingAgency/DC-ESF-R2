@@ -81,8 +81,8 @@ namespace ESFA.DC.ESF.R2._1920.Data.AimAndDeliverable.Ilr
                                                         ESFLD.EligibleProgressionOutomeStartDate,
                                                         ESFLD.EligibleProgressionOutcomeType,
                                                         ESFLD.EligibleProgressionOutcomeCode
-                                                      FROM [Valid].[LearningDelivery] LD (NOLOCK)
-                                                      INNER JOIN[Valid].[Learner] L (NOLOCK)
+                                                      FROM [Valid].[LearningDelivery] LD
+                                                      INNER JOIN[Valid].[Learner] L
                                                           ON LD.UKPRN = L.UKPRN
 
                                                           AND LD.LearnRefNumber = L.LearnRefNumber
