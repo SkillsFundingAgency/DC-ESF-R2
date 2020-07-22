@@ -79,20 +79,27 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
 
                 var deliverablePeriodsForLearningDelivery = learningDeliverablePeriodLookup.GetValueOrDefault(learningDeliverableKey);
 
+                var deliverablePeriodRowCreated = false;
+
                 if (deliverablePeriodsForLearningDelivery != null && deliverablePeriodsForLearningDelivery.Any())
                 {
-                    foreach (var deliverablePeriod in deliverablePeriods)
-                    {
-                        var deliverableName = fcsDeliverableCodeNameLookup.GetValueOrDefault(deliverablePeriod.DeliverableCode);
-                        var reportMonth = periodMonthLookup.GetValueOrDefault(deliverablePeriod.Period);
+                    var deliverablePeriodsToBeDisplayed = deliverablePeriodsForLearningDelivery.Where(DisplayOnReport).ToList();
 
-                        if (DisplayOnReport(deliverablePeriod))
+                    if (deliverablePeriodsToBeDisplayed.Any())
+                    {
+                        foreach (var deliverablePeriod in deliverablePeriodsToBeDisplayed)
                         {
+                            var deliverableName = fcsDeliverableCodeNameLookup.GetValueOrDefault(deliverablePeriod.DeliverableCode);
+                            var reportMonth = periodMonthLookup.GetValueOrDefault(deliverablePeriod.Period);
+
+                            deliverablePeriodRowCreated = true;
+
                             yield return BuildRow(learningDelivery, dpOutcome, esfDpOutcome, larsLearningDelivery, deliverablePeriod, deliverableName, reportMonth);
                         }
                     }
                 }
-                else
+
+                if (!deliverablePeriodRowCreated)
                 {
                     yield return BuildRow(learningDelivery, dpOutcome, esfDpOutcome, larsLearningDelivery);
                 }
