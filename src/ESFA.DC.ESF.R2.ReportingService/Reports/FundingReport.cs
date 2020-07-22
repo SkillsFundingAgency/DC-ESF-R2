@@ -44,7 +44,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             SupplementaryDataWrapper wrapper,
             CancellationToken cancellationToken)
         {
-            var reportModels = GetModels(wrapper);
+            var reportModels = BuildModels(wrapper);
 
             ReportFileName = $"{sourceFile.ConRefNumber} " + ReportFileName;
             string externalFileName = GetExternalFilename(esfJobContext.UkPrn, esfJobContext.JobId, sourceFile.SuppliedDate ?? DateTime.MinValue, _reportExtension);
@@ -54,14 +54,15 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             return externalFileName;
         }
 
-        private ICollection<FundingReportModel> GetModels(SupplementaryDataWrapper wrapper)
+        public ICollection<FundingReportModel> BuildModels(SupplementaryDataWrapper wrapper)
         {
             var fundingModels = new List<FundingReportModel>();
 
             foreach (var model in wrapper.SupplementaryDataModels)
             {
                 if (wrapper.ValidErrorModels.Any(vm =>
-                    vm.ConRefNumber.CaseInsensitiveEquals(model.ConRefNumber)
+                    vm.IsWarning == false
+                    && vm.ConRefNumber.CaseInsensitiveEquals(model.ConRefNumber)
                     && vm.DeliverableCode.CaseInsensitiveEquals(model.DeliverableCode)
                     && vm.CostType.CaseInsensitiveEquals(model.CostType)
                     && vm.CalendarYear.CaseInsensitiveEquals(model.CalendarYear.ToString())

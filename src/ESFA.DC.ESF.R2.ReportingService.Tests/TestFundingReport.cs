@@ -16,6 +16,7 @@ using ESFA.DC.ESF.R2.ReportingService.Reports;
 using ESFA.DC.ESF.R2.ReportingService.Services;
 using ESFA.DC.FileService.Interface;
 using ESFA.DC.ILR.DataService.Models;
+using FluentAssertions;
 using Moq;
 using Xunit;
 
@@ -27,7 +28,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
         [Trait("Category", "Reports")]
         [InlineData("SUPPDATA-10005752-ESF-2108-20180909-090911.CSV", "ESF1819", 1)]
         [InlineData("ILR-10005752-1819-20181004-152148-02.XML", "ILR1819", 0)]
-        private async Task TestFundingReportGeneration(string sourceFileName, string collectionName, int expectedZipEntryCount)
+        public async Task TestFundingReportGeneration(string sourceFileName, string collectionName, int expectedZipEntryCount)
         {
             var dateTime = DateTime.UtcNow;
             var filename = $"10005752/1/ESF-2108 ESF (Round 2) Supplementary Data Funding Report {dateTime:yyyyMMdd-HHmmss}";
@@ -80,6 +81,85 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             await fundigReport.GenerateReport(esfJobContextMock.Object, sourceFile, supplementaryDataWrapper, CancellationToken.None);
 
             csvServiceMock.VerifyAll();
+        }
+
+        [Fact]
+        public void BuildModels_Counts()
+        {
+            var wrapper = new SupplementaryDataWrapper();
+
+            wrapper.SupplementaryDataModels = new List<SupplementaryDataModel>
+            {
+                new SupplementaryDataModel()
+                {
+                    CalendarMonth = 7,
+                    CalendarYear = 2019,
+                    ConRefNumber = "ABC123",
+                    CostType = "CType1",
+                    DeliverableCode = "DCode",
+                    LearnAimRef = "XYZ1234",
+                    ProviderSpecifiedReference = "A",
+                    Reference = "TestReference",
+                    SupplementaryDataPanelDate = new DateTime(2019, 7, 1),
+                    ULN = 12345678,
+                    Value = 100
+                },
+                new SupplementaryDataModel()
+                {
+                    CalendarMonth = 7,
+                    CalendarYear = 2019,
+                    ConRefNumber = "ABC123",
+                    CostType = "CType2",
+                    DeliverableCode = "DCode",
+                    LearnAimRef = "XYZ1234",
+                    ProviderSpecifiedReference = "A",
+                    Reference = "TestReference",
+                    SupplementaryDataPanelDate = new DateTime(2019, 7, 1),
+                    ULN = 12345678,
+                    Value = 100
+                }
+            };
+
+            wrapper.ValidErrorModels = new List<ValidationErrorModel>
+            {
+                new ValidationErrorModel()
+                {
+                    IsWarning = true,
+                    CalendarMonth = "7",
+                    CalendarYear = "2019",
+                    ConRefNumber = "ABC123",
+                    CostType = "CType1",
+                    DeliverableCode = "DCode",
+                    LearnAimRef = "XYZ1234",
+                    ProviderSpecifiedReference = "A",
+                    Reference = "TestReference",
+                    SupplementaryDataPanelDate = "01/07/2019",
+                    ULN = "12345678",
+                    Value = "100"
+                },
+                new ValidationErrorModel()
+                {
+                    IsWarning = false,
+                    CalendarMonth = "7",
+                    CalendarYear = "2019",
+                    ConRefNumber = "ABC123",
+                    CostType = "CType2",
+                    DeliverableCode = "DCode",
+                    LearnAimRef = "XYZ1234",
+                    ProviderSpecifiedReference = "A",
+                    Reference = "TestReference",
+                    SupplementaryDataPanelDate = "01/07/2019",
+                    ULN = "12345678",
+                    Value = "100"
+                }
+            };
+
+            var reportModels = new FundingReport(
+                Mock.Of<IDateTimeProvider>(),
+                Mock.Of<ICsvFileService>(),
+                Mock.Of<IReferenceDataService>()).BuildModels(wrapper);
+
+            reportModels.Should().HaveCount(1);
         }
 
         private IEnumerable<ILRFileDetails> GetTestFileDetail()
