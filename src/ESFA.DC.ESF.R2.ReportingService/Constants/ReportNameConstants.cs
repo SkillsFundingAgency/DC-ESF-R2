@@ -7,6 +7,7 @@
         public const string FundingSummaryReport = "ESF Round 2 Funding Summary Report";
         public const string FundingReport = "ESF (Round 2) Supplementary Data Funding Report";
         public const string AimsAndDeliverableReport = "ESF Round 2 Aim and Deliverable Report";
+        public const string AimsAndDeliverableReportLegacy = "ESF Round 2 Aim and Deliverable Report Legacy";
 
         public const string ZipName = @"/Reports.zip";
 

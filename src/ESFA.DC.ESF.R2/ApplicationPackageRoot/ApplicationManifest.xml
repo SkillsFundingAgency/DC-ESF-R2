@@ -17,6 +17,7 @@
     <Parameter Name="ILR1718ConnectionString" DefaultValue="" />
     <Parameter Name="ILR1819ConnectionString" DefaultValue="" />
     <Parameter Name="ILR1920ConnectionString" DefaultValue="" />
+    <Parameter Name="ILR2021ConnectionString" DefaultValue="" />
     <Parameter Name="ESFR2ConnectionString" DefaultValue="" />
     <Parameter Name="ESFFundingConnectionString" DefaultValue="" />
     <Parameter Name="FCSConnectionString" DefaultValue="" />
@@ -67,6 +68,7 @@
             <Parameter Name="ILR1718ConnectionString" Value="[ILR1718ConnectionString]" />
             <Parameter Name="ILR1819ConnectionString" Value="[ILR1819ConnectionString]" />
             <Parameter Name="ILR1920ConnectionString" Value="[ILR1920ConnectionString]" />
+            <Parameter Name="ILR2021ConnectionString" Value="[ILR2021ConnectionString]" />
           </Section>
           <Section Name="ESFSection">
             <Parameter Name="ESFR2ConnectionString" Value="[ESFR2ConnectionString]" />

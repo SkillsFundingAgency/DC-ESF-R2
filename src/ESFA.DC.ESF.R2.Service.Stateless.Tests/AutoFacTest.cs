@@ -3,9 +3,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
+using ESFA.DC.ESF.R2.Interfaces.Reports.AimAndDeliverable;
 using ESFA.DC.ESF.R2.Stateless;
 using ESFA.DC.JobContextManager.Interface;
 using ESFA.DC.JobContextManager.Model;
+using Moq;
 using Xunit;
 
 namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
@@ -24,6 +26,7 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
             IContainer c;
             try
             {
+                RegisterYearSpecificServices(containerBuilder);
                 c = containerBuilder.Build();
 
                 using (var lifeTime = c.BeginLifetimeScope())
@@ -40,6 +43,11 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+        private void RegisterYearSpecificServices(ContainerBuilder containerBuilder)
+        {
+            containerBuilder.RegisterInstance(Mock.Of<IIlrDataProvider>()).As<IIlrDataProvider>();
         }
     }
 }

@@ -222,6 +222,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AimAndDeliverable\AimAndDeliverableModelBuilderTests.cs" />
     <Compile Include="Builders\AimAndDeliverableBuilder.cs" />
     <Compile Include="Builders\SupplementaryDataModelBuilder.cs" />
     <Compile Include="FundingSummary\FundingSummaryReportModelBuilderTests.cs" />
@@ -281,6 +282,7 @@
       <Name>ESFA.DC.ESF.R2.Utils</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
