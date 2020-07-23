@@ -35,7 +35,9 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
                         ILR1516ConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;",
                         ILR1617ConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;",
                         ILR1718ConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;",
-                        ILR1819ConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;"
+                        ILR1819ConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;",
+                        ILR1920ConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;",
+                        ILR2021ConnectionString = "Server=.;Database=myDataBase;User Id=myUsername;Password = myPassword;"
                     };
                 case "ESFSection":
                     return (T)(object)new ESFConfiguration
