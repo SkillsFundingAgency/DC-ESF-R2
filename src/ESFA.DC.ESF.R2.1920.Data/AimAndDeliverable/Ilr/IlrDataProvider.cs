@@ -26,7 +26,7 @@ namespace ESFA.DC.ESF.R2._1920.Data.AimAndDeliverable.Ilr
 
                                                     , CTE_LearningDeliveryFAM AS(
                                                       SELECT* FROM (
-                                                         SELECT[UKPRN], [LearnRefNumber], [AimSeqNumber],[LearnDelFAMType],[LearnDelFAMCode], CAST((ROW_NUMBER() OVER(PARTITION BY [LearnRefNumber], [AimSeqNumber] ORDER BY [LearnDelFAMCode] ))AS VARCHAR) AS RowNumber
+                                                         SELECT[UKPRN], [LearnRefNumber], [AimSeqNumber],[LearnDelFAMType],[LearnDelFAMCode], ROW_NUMBER() OVER(PARTITION BY [LearnRefNumber], [AimSeqNumber] ORDER BY [LearnDelFAMCode]) AS RowNumber
 
                                                         FROM[Valid].[LearningDeliveryFAM]
                                                             WHERE UKPRN = @ukprn and LearnDelFAMType = 'RES') as S
@@ -101,7 +101,7 @@ namespace ESFA.DC.ESF.R2._1920.Data.AimAndDeliverable.Ilr
                                                         ON LD.UKPRN = ESFLD.UKPRN
                                                         AND LD.LearnRefNumber = ESFLD.LearnRefNumber
                                                         AND LD.AimSeqNumber = ESFLD.AimSeqNumber
-                                                   LEFT Join Rulebase.ESF_LearningDeliveryDeliverable ESFLDD (nolock)
+                                                   LEFT Join Rulebase.ESF_LearningDeliveryDeliverable ESFLDD
 													on ESFLD.UKPRN = ESFLDD.UKPRN
 													and ESFLD.LearnRefNumber = ESFLDD.LearnRefNumber
 													and ESFLD.AimSeqNumber = ESFLDD.AimSeqNumber

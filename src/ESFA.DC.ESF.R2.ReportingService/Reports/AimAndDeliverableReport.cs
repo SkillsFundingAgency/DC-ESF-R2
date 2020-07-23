@@ -31,12 +31,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports
             ICsvFileService csvFileService,
             IAimAndDeliverableService1819 aimAndDeliverableService1819,
             IAimAndDeliverableService1920 aimAndDeliverableService1920)
-            : base(dateTimeProvider, csvFileService, ReportTaskConstants.TaskGenerateEsfAimAndDeliverableReport)
+            : base(dateTimeProvider, csvFileService, ReportTaskConstants.TaskGenerateEsfAimAndDeliverableReportLegacy)
         {
             _aimAndDeliverableService1819 = aimAndDeliverableService1819;
             _aimAndDeliverableService1920 = aimAndDeliverableService1920;
 
-            ReportFileName = ReportNameConstants.AimsAndDeliverableReport;
+            ReportFileName = ReportNameConstants.AimsAndDeliverableReportLegacy;
         }
 
         public async Task<string> GenerateReport(

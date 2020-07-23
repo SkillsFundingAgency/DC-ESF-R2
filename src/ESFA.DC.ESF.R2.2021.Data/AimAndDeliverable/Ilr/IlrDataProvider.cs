@@ -26,7 +26,7 @@ namespace ESFA.DC.ESF.R2._2021.Data.AimAndDeliverable.Ilr
 
                                                     , CTE_LearningDeliveryFAM AS(
                                                       SELECT* FROM (
-                                                         SELECT[UKPRN], [LearnRefNumber], [AimSeqNumber],[LearnDelFAMType],[LearnDelFAMCode], CAST((ROW_NUMBER() OVER(PARTITION BY [LearnRefNumber], [AimSeqNumber] ORDER BY [LearnDelFAMCode] ))AS VARCHAR) AS RowNumber
+                                                         SELECT[UKPRN], [LearnRefNumber], [AimSeqNumber],[LearnDelFAMType],[LearnDelFAMCode], ROW_NUMBER() OVER(PARTITION BY [LearnRefNumber], [AimSeqNumber] ORDER BY [LearnDelFAMCode]) AS RowNumber
 
                                                         FROM[Valid].[LearningDeliveryFAM]
                                                             WHERE UKPRN = @ukprn and LearnDelFAMType = 'RES') as S
@@ -80,38 +80,30 @@ namespace ESFA.DC.ESF.R2._2021.Data.AimAndDeliverable.Ilr
                                                         ESFLD.LatestPossibleStartDate,
                                                         ESFLD.EligibleProgressionOutomeStartDate,
                                                         ESFLD.EligibleProgressionOutcomeType,
-                                                        ESFLD.EligibleProgressionOutcomeCode
+                                                        ESFLD.EligibleProgressionOutcomeCode,
+                                                        ESFLDD.DeliverableCode
                                                       FROM [Valid].[LearningDelivery] LD
                                                       INNER JOIN[Valid].[Learner] L
                                                           ON LD.UKPRN = L.UKPRN
-
                                                           AND LD.LearnRefNumber = L.LearnRefNumber
                                                       LEFT JOIN CTE_ProviderSpecLearnerMonitoring PSLM
-
                                                             ON L.UKPRN = PSLM.UKPRN
-
                                                             AND L.LearnRefNumber = PSLM.LearnRefNumber
                                                      LEFT JOIN CTE_LearningDeliveryFAM LDFAM
-
                                                         ON LD.UKPRN = LDFAM.UKPRN
-
                                                         AND LD.LearnRefNumber = LDFAM.LearnRefNumber
-
                                                         AND LD.AimSeqNumber = LDFAM.AimSeqNumber
                                                     LEFT JOIN CTE_ProviderSpecDeliveryMonitoring PSDM
-
                                                             ON LD.UKPRN = PSLM.UKPRN
-
                                                             AND LD.LearnRefNumber = PSDM.LearnRefNumber
-
                                                             AND LD.AimSeqNumber = PSDM.AimSeqNumber
                                                     LEFT JOIN Rulebase.ESF_LearningDelivery ESFLD
-
                                                         ON LD.UKPRN = ESFLD.UKPRN
-
                                                         AND LD.LearnRefNumber = ESFLD.LearnRefNumber
-
                                                         AND LD.AimSeqNumber = ESFLD.AimSeqNumber
+                                                   LEFT Join Rulebase.ESF_LearningDeliveryDeliverable ESFLDD													on ESFLD.UKPRN = ESFLDD.UKPRN
+													and ESFLD.LearnRefNumber = ESFLDD.LearnRefNumber
+													and ESFLD.AimSeqNumber = ESFLDD.AimSeqNumber
                                                       WHERE
                                                         L.UKPRN = @ukprn
                                                         AND LD.fundmodel = 70";
@@ -119,7 +111,8 @@ namespace ESFA.DC.ESF.R2._2021.Data.AimAndDeliverable.Ilr
 
         private readonly string dpoutcomeSql = @"SELECT  [LearnRefNumber], [OutType] AS OutcomeType, [OutCode] AS OutcomeCode, [OutStartDate] AS OutcomeStartDate, [OutEndDate], [OutCollDate] FROM [Valid].[DPOutcome] where UKPRN = @ukprn";
 
-        private readonly string learningDeliveryDeliverablePeriodSql = @"SELECT LDD.LearnRefNumber, LDD.AimSeqNumber, LDD.DeliverableCode, LDD.DeliverableUnitCost,
+        private readonly string learningDeliveryDeliverablePeriodSql = @"SELECT LDD.LearnRefNumber, LDD.AimSeqNumber AS AimSequenceNumber,
+                                                                                LDD.DeliverableCode, LDD.DeliverableUnitCost,
                                                                             LDDP.Period, LDDP.DeliverableVolume, LDDP.ReportingVolume, LDDP.StartEarnings, LDDP.AchievementEarnings, LDDP.AdditionalProgCostEarnings, LDDP.ProgressionEarnings,
                                                                             LDDP.StartEarnings + LDDP.AchievementEarnings + LDDP.AdditionalProgCostEarnings + LDDP.ProgressionEarnings AS TotalEarnings 
                                                                             FROM 

@@ -12,6 +12,7 @@ using ESFA.DC.ESF.R2.ReportingService.Reports;
 using ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary;
 using ESFA.DC.Serialization.Interfaces;
 using AimAndDeliverableReport = ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.AimAndDeliverableReport;
+using AimAndDeliverableReportLegacy = ESFA.DC.ESF.R2.ReportingService.Reports.AimAndDeliverableReport;
 
 namespace ESFA.DC.ESF.R2.Stateless.Modules
 {
@@ -25,7 +26,6 @@ namespace ESFA.DC.ESF.R2.Stateless.Modules
                 .As<IList<IValidationReport>>();
             containerBuilder.RegisterType<FundingReport>().As<IModelReport>().InstancePerLifetimeScope();
             containerBuilder.RegisterType<FundingSummaryReport>().As<IModelReport>().InstancePerLifetimeScope();
-            containerBuilder.RegisterType<AimAndDeliverableReport>().As<IModelReport>().InstancePerLifetimeScope();
             containerBuilder.Register(c => new List<IModelReport>(c.Resolve<IEnumerable<IModelReport>>()))
                 .As<IList<IModelReport>>();
 
@@ -34,6 +34,9 @@ namespace ESFA.DC.ESF.R2.Stateless.Modules
 
         private void RegisterAimAndDeliverableReport(ContainerBuilder builder)
         {
+            builder.RegisterType<AimAndDeliverableReportLegacy>().As<IModelReport>().InstancePerLifetimeScope();
+            builder.RegisterType<AimAndDeliverableReport>().As<IModelReport>().InstancePerLifetimeScope();
+
             builder.RegisterType<AimAndDeliverableModelBuilder>().As<IAimAndDeliverableModelBuilder>();
             builder.RegisterType<AimAndDeliverableDataProvider>().As<IAimAndDeliverableDataProvider>();
 
