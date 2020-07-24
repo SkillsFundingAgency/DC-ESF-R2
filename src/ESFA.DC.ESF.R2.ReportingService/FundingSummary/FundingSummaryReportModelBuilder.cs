@@ -72,14 +72,14 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
             var collectionYear = Convert.ToInt32($"20{esfJobContext.CollectionYear.ToString().Substring(0, 2)}");
 
-            var sourceFiles = await _dataProvider.GetImportFiles(esfJobContext.UkPrn.ToString(), cancellationToken);
+            var sourceFiles = await _dataProvider.GetImportFilesAsync(esfJobContext.UkPrn, cancellationToken);
 
             _logger.LogDebug($"{sourceFiles.Count} esf files found for ukprn {ukPrn} and collection year 20{esfJobContext.CollectionYear.ToString().Substring(0, 2)}.");
 
-            var supplementaryData = await _dataProvider.GetSupplementaryData(collectionYear, sourceFiles, cancellationToken);
+            var supplementaryData = await _dataProvider.GetSupplementaryDataAsync(collectionYear, sourceFiles, cancellationToken);
 
-            var ilrYearlyFileData = await _dataProvider.GetIlrFileDetails(ukPrn, collectionYear, cancellationToken);
-            var fm70YearlyData = await _dataProvider.GetYearlyIlrData(ukPrn, esfJobContext.CollectionName, collectionYear, esfJobContext.ReturnPeriod, cancellationToken);
+            var ilrYearlyFileData = await _dataProvider.GetIlrFileDetailsAsync(ukPrn, collectionYear, cancellationToken);
+            var fm70YearlyData = await _dataProvider.GetYearlyIlrDataAsync(ukPrn, esfJobContext.CollectionName, collectionYear, esfJobContext.ReturnPeriod, cancellationToken);
 
             var periodisedEsf = PeriodiseEsfSuppData(supplementaryData);
             var periodisedILR = PeriodiseIlr(fm70YearlyData.SelectMany(x => x.Fm70PeriodisedValues));

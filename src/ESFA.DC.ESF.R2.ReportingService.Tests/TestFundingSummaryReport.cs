@@ -83,9 +83,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
                 });
 
             Mock<IReferenceDataService> referenceDataService = new Mock<IReferenceDataService>();
-            referenceDataService.Setup(m => m.GetLarsVersion(It.IsAny<CancellationToken>())).Returns("123456");
-            referenceDataService.Setup(m => m.GetOrganisationVersion(It.IsAny<CancellationToken>())).Returns("234567");
-            referenceDataService.Setup(m => m.GetPostcodeVersion(It.IsAny<CancellationToken>())).Returns("345678");
+            referenceDataService.Setup(m => m.GetLarsVersion(It.IsAny<CancellationToken>())).ReturnsAsync("123456");
+            referenceDataService.Setup(m => m.GetOrganisationVersion(It.IsAny<CancellationToken>())).ReturnsAsync("234567");
+            referenceDataService.Setup(m => m.GetPostcodeVersion(It.IsAny<CancellationToken>())).ReturnsAsync("345678");
             referenceDataService.Setup(m => m.GetProviderName(It.IsAny<int>(), It.IsAny<CancellationToken>())).Returns("Foo College");
             referenceDataService.Setup(m =>
                     m.GetDeliverableUnitCosts(It.IsAny<string>(), It.IsAny<IList<string>>()))
@@ -187,9 +187,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
             };
 
             Mock<IReferenceDataService> referenceDataService = new Mock<IReferenceDataService>();
-            referenceDataService.Setup(m => m.GetLarsVersion(It.IsAny<CancellationToken>())).Returns("Version 3.0.0 : 08 December 2018 08:21:34:970");
-            referenceDataService.Setup(m => m.GetOrganisationVersion(It.IsAny<CancellationToken>())).Returns("Version 1.0.0 : 04 April 2019 09:56:25:653");
-            referenceDataService.Setup(m => m.GetPostcodeVersion(It.IsAny<CancellationToken>())).Returns("Version 2.0.0 : 09 March 2019 08:32:09:230");
+            referenceDataService.Setup(m => m.GetLarsVersion(It.IsAny<CancellationToken>())).ReturnsAsync("Version 3.0.0 : 08 December 2018 08:21:34:970");
+            referenceDataService.Setup(m => m.GetOrganisationVersion(It.IsAny<CancellationToken>())).ReturnsAsync("Version 1.0.0 : 04 April 2019 09:56:25:653");
+            referenceDataService.Setup(m => m.GetPostcodeVersion(It.IsAny<CancellationToken>())).ReturnsAsync("Version 2.0.0 : 09 March 2019 08:32:09:230");
             referenceDataService.Setup(m => m.GetProviderName(It.IsAny<int>(), It.IsAny<CancellationToken>())).Returns("Test Data College");
             referenceDataService.Setup(m =>
                     m.GetDeliverableUnitCosts(It.IsAny<string>(), It.IsAny<IList<string>>()))

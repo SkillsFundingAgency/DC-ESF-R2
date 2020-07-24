@@ -11,11 +11,11 @@ namespace ESFA.DC.ESF.R2.Interfaces.DataAccessLayer
     {
         int CurrentPeriod { get; set; }
 
-        string GetPostcodeVersion(CancellationToken cancellationToken);
+        Task<string> GetPostcodeVersion(CancellationToken cancellationToken);
 
-        string GetLarsVersion(CancellationToken cancellationToken);
+        Task<string> GetLarsVersion(CancellationToken cancellationToken);
 
-        string GetOrganisationVersion(CancellationToken cancellationToken);
+        Task<string> GetOrganisationVersion(CancellationToken cancellationToken);
 
         string GetProviderName(int ukPrn, CancellationToken cancellationToken);
 

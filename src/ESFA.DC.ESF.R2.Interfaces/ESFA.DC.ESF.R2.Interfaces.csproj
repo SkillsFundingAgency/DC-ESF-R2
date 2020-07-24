@@ -149,7 +149,7 @@
       <Name>ESFA.DC.ESF.R2.Database.EF</Name>
     </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Models\ESFA.DC.ESF.R2.Models.csproj">
-      <Project>{5e5aac56-e3d6-4a45-9028-d8a992e422b0}</Project>
+      <Project>{D442AA8D-E165-4AF4-B8B8-9C25BCE17258}</Project>
       <Name>ESFA.DC.ESF.R2.Models</Name>
     </ProjectReference>
   </ItemGroup>

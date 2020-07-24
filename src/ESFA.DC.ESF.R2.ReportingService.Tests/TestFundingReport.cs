@@ -51,9 +51,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
                 .Returns(Task.CompletedTask);
 
             Mock<IReferenceDataService> referenceDataService = new Mock<IReferenceDataService>();
-            referenceDataService.Setup(m => m.GetLarsVersion(It.IsAny<CancellationToken>())).Returns("123456");
-            referenceDataService.Setup(m => m.GetOrganisationVersion(It.IsAny<CancellationToken>())).Returns("234567");
-            referenceDataService.Setup(m => m.GetPostcodeVersion(It.IsAny<CancellationToken>())).Returns("345678");
+            referenceDataService.Setup(m => m.GetLarsVersion(It.IsAny<CancellationToken>())).ReturnsAsync("123456");
+            referenceDataService.Setup(m => m.GetOrganisationVersion(It.IsAny<CancellationToken>())).ReturnsAsync("234567");
+            referenceDataService.Setup(m => m.GetPostcodeVersion(It.IsAny<CancellationToken>())).ReturnsAsync("345678");
             referenceDataService.Setup(m => m.GetProviderName(It.IsAny<int>(), It.IsAny<CancellationToken>())).Returns("Foo College");
             referenceDataService.Setup(m =>
                     m.GetDeliverableUnitCosts(It.IsAny<string>(), It.IsAny<IList<string>>()))

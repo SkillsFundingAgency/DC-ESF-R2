@@ -145,7 +145,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
 
                 ReplaceConRefNumInTitle(fundingSummaryModels, conRefNumber);
 
-                FundingSummaryFooterModel fundingSummaryFooterModel = PopulateReportFooter(cancellationToken);
+                FundingSummaryFooterModel fundingSummaryFooterModel = await PopulateReportFooter(cancellationToken);
 
                 FundingSummaryModel rowOfData = fundingSummaryModels.FirstOrDefault(x => x.DeliverableCode == "ST01" && x.YearlyValues.Any());
                 var yearAndDataLengthModels = new List<YearAndDataLengthModel>();
@@ -250,7 +250,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             return header;
         }
 
-        private FundingSummaryFooterModel PopulateReportFooter(CancellationToken cancellationToken)
+        private async Task<FundingSummaryFooterModel> PopulateReportFooter(CancellationToken cancellationToken)
         {
             var dateTimeNowUtc = _dateTimeProvider.GetNowUtc();
             var dateTimeNowUk = _dateTimeProvider.ConvertUtcToUk(dateTimeNowUtc);
@@ -258,9 +258,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             return new FundingSummaryFooterModel
             {
                 ReportGeneratedAt = dateTimeNowUk.ToString("HH:mm:ss") + " on " + dateTimeNowUk.ToString("dd/MM/yyyy"),
-                LarsData = _referenceDataService.GetLarsVersion(cancellationToken),
-                OrganisationData = _referenceDataService.GetOrganisationVersion(cancellationToken),
-                PostcodeData = _referenceDataService.GetPostcodeVersion(cancellationToken),
+                LarsData = await _referenceDataService.GetLarsVersion(cancellationToken),
+                OrganisationData = await _referenceDataService.GetOrganisationVersion(cancellationToken),
+                PostcodeData = await _referenceDataService.GetPostcodeVersion(cancellationToken),
                 ApplicationVersion = _versionInfo.ServiceReleaseVersion
             };
         }

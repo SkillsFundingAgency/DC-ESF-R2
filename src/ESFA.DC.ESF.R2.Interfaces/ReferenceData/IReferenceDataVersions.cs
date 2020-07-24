@@ -2,10 +2,10 @@
 {
     public interface IReferenceDataVersions
     {
-        string LarsVersion { get; set; }
+        string LarsVersion { get; }
 
-        string PostcodeVersion { get; set; }
+        string PostcodeVersion { get; }
 
-        string OrganisationVersion { get; set; }
+        string OrganisationVersion { get; }
     }
 }
