@@ -74,7 +74,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferenceData\IOrganisationReferenceData.cs" />
     <Compile Include="ReferenceData\IReferenceDataVersions.cs" />
-    <Compile Include="ReferenceData\IReferenceDataRoot.cs" />
     <Compile Include="Reports\AimAndDeliverable\IIlrDataProvider.cs" />
     <Compile Include="Reports\FundingSummary\ESF\IEsfFile.cs" />
     <Compile Include="Reports\FundingSummary\ESF\IEsfFileData.cs" />

@@ -270,7 +270,7 @@
       <Name>ESFA.DC.ESF.R2.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Models\ESFA.DC.ESF.R2.Models.csproj">
-      <Project>{5E5AAC56-E3D6-4A45-9028-D8A992E422B0}</Project>
+      <Project>{D442AA8D-E165-4AF4-B8B8-9C25BCE17258}</Project>
       <Name>ESFA.DC.ESF.R2.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.ReportingService\ESFA.DC.ESF.R2.ReportingService.csproj">
