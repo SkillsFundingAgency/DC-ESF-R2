@@ -4,28 +4,37 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.ESF.R2.DataAccessLayer.Models;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
-using ESFA.DC.ESF.R2.Interfaces.ReferenceData;
 using ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary;
+using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.FundingSummary;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.ILR.DataService.Models;
 
-namespace ESFA.DC.ESF.R2.DataAccessLayer.Providers
+namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 {
     public class FundingSummaryReportDataProvider : IFundingSummaryReportDataProvider
     {
         private readonly IReferenceDataService _referenceDataService;
+        private readonly ISupplementaryDataService _supplementaryDataService;
 
         public FundingSummaryReportDataProvider(
-            IReferenceDataService referenceDataService)
+            IReferenceDataService referenceDataService,
+            ISupplementaryDataService supplementaryDataService)
         {
             _referenceDataService = referenceDataService;
+            _supplementaryDataService = supplementaryDataService;
         }
 
         public async Task<IOrganisationReferenceData> ProvideOrganisationReferenceDataAsync(int ukprn, CancellationToken cancellationToken)
         {
-            return new OrganisationReferenceData();
+            return new OrganisationReferenceData
+            {
+                ConRefNumbers = await _referenceDataService.GetContractAllocationsForUkprn(ukprn, cancellationToken) ?? new List<string>(),
+                Name = _referenceDataService.GetProviderName(ukprn, cancellationToken),
+                Ukprn = ukprn
+            };
         }
 
         public async Task<IReferenceDataVersions> ProvideReferenceDataVersionsAsync(CancellationToken cancellationToken)
@@ -45,7 +54,9 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer.Providers
 
         public async Task<IDictionary<string, IEnumerable<SupplementaryDataYearlyModel>>> GetSupplementaryDataAsync(int endYear, IEnumerable<SourceFileModel> sourceFiles, CancellationToken cancellationToken)
         {
-            return new Dictionary<string, IEnumerable<SupplementaryDataYearlyModel>>();
+            var suppData = await _supplementaryDataService.GetSupplementaryData(endYear, sourceFiles, cancellationToken);
+
+            return suppData;
         }
 
         public async Task<IEnumerable<ILRFileDetails>> GetIlrFileDetailsAsync(int ukPrn, int collectionYear, CancellationToken cancellationToken)

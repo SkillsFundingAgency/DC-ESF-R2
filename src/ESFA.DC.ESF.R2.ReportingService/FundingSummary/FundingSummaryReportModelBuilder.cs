@@ -7,12 +7,12 @@ using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.Constants;
-using ESFA.DC.ESF.R2.Interfaces.ReferenceData;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
-using ESFA.DC.ESF.R2.ReportingService.Constants;
+using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Constants;
 using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model;
 using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.ILR.DataService.Models;
@@ -53,7 +53,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
         public async Task<IEnumerable<FundingSummaryReportTab>> Build(IEsfJobContext esfJobContext, CancellationToken cancellationToken)
         {
             var ukPrn = esfJobContext.UkPrn;
-            IEnumerable<string> conRefNumbers = new List<string>();
+            IEnumerable<string> conRefNumbers;
             var dateTimeNowUtc = _dateTimeProvider.GetNowUtc();
             var dateTimeNowUk = _dateTimeProvider.ConvertUtcToUk(dateTimeNowUtc);
             var reportGenerationTime = dateTimeNowUk.ToString("HH:mm:ss") + " on " + dateTimeNowUk.ToString("dd/MM/yyyy");
@@ -63,11 +63,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
             if (!orgData.ConRefNumbers.Any())
             {
-                conRefNumbers = new List<string> { NotApplicable };
+                conRefNumbers = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { NotApplicable };
             }
             else
             {
-                conRefNumbers = orgData.ConRefNumbers;
+                conRefNumbers = new HashSet<string>(orgData.ConRefNumbers, StringComparer.OrdinalIgnoreCase);
             }
 
             var collectionYear = Convert.ToInt32($"20{esfJobContext.CollectionYear.ToString().Substring(0, 2)}");
@@ -81,19 +81,21 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             var ilrYearlyFileData = await _dataProvider.GetIlrFileDetailsAsync(ukPrn, collectionYear, cancellationToken);
             var fm70YearlyData = await _dataProvider.GetYearlyIlrDataAsync(ukPrn, esfJobContext.CollectionName, collectionYear, esfJobContext.ReturnPeriod, cancellationToken);
 
-            var periodisedEsf = PeriodiseEsfSuppData(supplementaryData);
-            var periodisedILR = PeriodiseIlr(fm70YearlyData.SelectMany(x => x.Fm70PeriodisedValues));
+            var periodisedEsf = PeriodiseEsfSuppData(conRefNumbers, supplementaryData);
+            var periodisedILR = PeriodiseIlr(conRefNumbers, fm70YearlyData.SelectMany(x => x.Fm70PeriodisedValues));
 
             var fundingSummaryTabs = new List<FundingSummaryReportTab>();
 
             foreach (var conRefNumber in conRefNumbers)
             {
+                var baseModels = BuildBaseModels(collectionYear);
+
                 var file = sourceFiles.FirstOrDefault(sf => sf.ConRefNumber.CaseInsensitiveEquals(conRefNumber));
 
                 FundingSummaryHeaderModel fundingSummaryHeaderModel = PopulateReportHeader(file, ilrYearlyFileData, ukPrn, orgData.Name, conRefNumber, cancellationToken);
                 FundingSummaryFooterModel fundingSummaryFooterModel = PopulateReportFooter(referenceDataVersions, reportGenerationTime, cancellationToken);
 
-                var fundingSummaryModels = PopulateReportData(periodisedEsf[conRefNumber], periodisedILR[conRefNumber]);
+                var fundingSummaryModels = PopulateReportData(baseModels, periodisedEsf.GetValueOrDefault(conRefNumber), periodisedILR.GetValueOrDefault(conRefNumber));
 
                 fundingSummaryTabs.Add(new FundingSummaryReportTab
                 {
@@ -108,28 +110,28 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
         }
 
         public IEnumerable<FundingSummaryModel> PopulateReportData(
+            IEnumerable<FundingSummaryModel> models,
             IDictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>> periodisedEsf,
             IDictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>> periodisedILR)
         {
-            var model = periodisedEsf.Select(x => new FundingSummaryModel
+            foreach (var model in models)
             {
-                Year = x.Key,
-                LearnerAssessmentPlans = BuildLearnerAssessmentPlans(x.Key, x.Value, periodisedILR[x.Key]),
-                RegulatedLearnings = BuildRegulatedLearning(x.Key, x.Value, periodisedILR[x.Key]),
-                NonRegulatedLearnings = BuildNonRegulatedLearning(x.Key, x.Value, periodisedILR[x.Key]),
-                Progressions = BuildProgressions(x.Key, x.Value, periodisedILR[x.Key]),
-                CommunityGrants = BuildCommunityGrants(x.Key, x.Value),
-                SpecificationDefineds = BuildSpecificationDefined(x.Key, x.Value),
-            });
+                model.LearnerAssessmentPlans = BuildLearnerAssessmentPlans(model.Year, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
+                model.RegulatedLearnings = BuildRegulatedLearning(model.Year, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
+                model.NonRegulatedLearnings = BuildNonRegulatedLearning(model.Year, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
+                model.Progressions = BuildProgressions(model.Year, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
+                model.CommunityGrants = BuildCommunityGrants(model.Year, periodisedEsf.GetValueOrDefault(model.Year));
+                model.SpecificationDefineds = BuildSpecificationDefined(model.Year, periodisedEsf.GetValueOrDefault(model.Year));
+            }
 
-            return model;
+            return models;
         }
 
         public LearnerAssessmentPlan BuildLearnerAssessmentPlans(int year, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues, IDictionary<string, IEnumerable<PeriodisedValue>> ilrValues)
         {
-            var headers = FundingSummaryReportConstants.GroupHeaderDictionary[year];
-            var ilrST01 = ilrValues[DeliverableCodeConstants.DeliverableCode_ST01].Where(x => _ilrAttributeSet.Contains(x.AttributeName));
-            var esfST01 = esfValues[DeliverableCodeConstants.DeliverableCode_ST01];
+            var headers = FundingSummaryReportConstants.GroupHeaderDictionary.GetValueOrDefault(year);
+            var ilrST01 = ilrValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_ST01)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
+            var esfST01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_ST01);
 
             return new LearnerAssessmentPlan
             {
@@ -141,10 +143,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
         public RegulatedLearning BuildRegulatedLearning(int year, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues, IDictionary<string, IEnumerable<PeriodisedValue>> ilrValues)
         {
-            var headers = FundingSummaryReportConstants.GroupHeaderDictionary[year];
-            var ilrRQ01Start = ilrValues[DeliverableCodeConstants.DeliverableCode_RQ01].Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.IlrStartEarningsAttribute));
-            var ilrRQ01Ach = ilrValues[DeliverableCodeConstants.DeliverableCode_RQ01].Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.IlrAchievementEarningsAttribute));
-            var esfRQ01 = esfValues[DeliverableCodeConstants.DeliverableCode_RQ01].Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.EsfReferenceTypeAuthorisedClaims));
+            var headers = FundingSummaryReportConstants.GroupHeaderDictionary.GetValueOrDefault(year);
+            var ilrRQ01Start = ilrValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_RQ01)?.Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.IlrStartEarningsAttribute));
+            var ilrRQ01Ach = ilrValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_RQ01)?.Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.IlrAchievementEarningsAttribute));
+            var esfRQ01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_RQ01)?.Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.EsfReferenceTypeAuthorisedClaims));
 
             return new RegulatedLearning
             {
@@ -157,10 +159,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
         public NonRegulatedLearning BuildNonRegulatedLearning(int year, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues, IDictionary<string, IEnumerable<PeriodisedValue>> ilrValues)
         {
-            var headers = FundingSummaryReportConstants.GroupHeaderDictionary[year];
-            var ilrNR01Start = ilrValues[DeliverableCodeConstants.DeliverableCode_NR01].Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.IlrStartEarningsAttribute));
-            var ilrNR01Ach = ilrValues[DeliverableCodeConstants.DeliverableCode_NR01].Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.IlrAchievementEarningsAttribute));
-            var esfNR01 = esfValues[DeliverableCodeConstants.DeliverableCode_NR01].Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.EsfReferenceTypeAuthorisedClaims));
+            var headers = FundingSummaryReportConstants.GroupHeaderDictionary.GetValueOrDefault(year);
+            var ilrNR01Start = ilrValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_NR01)?.Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.IlrStartEarningsAttribute));
+            var ilrNR01Ach = ilrValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_NR01)?.Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.IlrAchievementEarningsAttribute));
+            var esfNR01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_NR01)?.Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.EsfReferenceTypeAuthorisedClaims));
 
             return new NonRegulatedLearning
             {
@@ -173,15 +175,15 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
         public Progression BuildProgressions(int year, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues, IDictionary<string, IEnumerable<PeriodisedValue>> ilrValues)
         {
-            var headers = FundingSummaryReportConstants.GroupHeaderDictionary[year];
-            var ilrPG01 = esfValues[DeliverableCodeConstants.DeliverableCode_PG01].Where(x => _ilrAttributeSet.Contains(x.AttributeName));
-            var esfPG01 = esfValues[DeliverableCodeConstants.DeliverableCode_PG01];
-            var ilrPG03 = esfValues[DeliverableCodeConstants.DeliverableCode_PG03].Where(x => _ilrAttributeSet.Contains(x.AttributeName));
-            var esfPG03 = esfValues[DeliverableCodeConstants.DeliverableCode_PG03];
-            var ilrPG04 = esfValues[DeliverableCodeConstants.DeliverableCode_PG04].Where(x => _ilrAttributeSet.Contains(x.AttributeName));
-            var esfPG04 = esfValues[DeliverableCodeConstants.DeliverableCode_PG04];
-            var ilrPG05 = esfValues[DeliverableCodeConstants.DeliverableCode_PG05].Where(x => _ilrAttributeSet.Contains(x.AttributeName));
-            var esfPG05 = esfValues[DeliverableCodeConstants.DeliverableCode_PG05];
+            var headers = FundingSummaryReportConstants.GroupHeaderDictionary.GetValueOrDefault(year);
+            var ilrPG01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG01)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
+            var esfPG01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG01);
+            var ilrPG03 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG03)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
+            var esfPG03 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG03);
+            var ilrPG04 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG04)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
+            var esfPG04 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG04);
+            var ilrPG05 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG05)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
+            var esfPG05 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG05);
 
             return new Progression
             {
@@ -199,9 +201,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
         public CommunityGrant BuildCommunityGrants(int year, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues)
         {
-            var headers = FundingSummaryReportConstants.GroupHeaderDictionary[year];
-            var cg01 = esfValues[DeliverableCodeConstants.DeliverableCode_CG01];
-            var cg02 = esfValues[DeliverableCodeConstants.DeliverableCode_CG02];
+            var headers = FundingSummaryReportConstants.GroupHeaderDictionary.GetValueOrDefault(year);
+            var cg01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_CG01);
+            var cg02 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_CG02);
 
             return new CommunityGrant
             {
@@ -213,9 +215,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
         public SpecificationDefined BuildSpecificationDefined(int year, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues)
         {
-            var headers = FundingSummaryReportConstants.GroupHeaderDictionary[year];
-            var sd01 = esfValues[DeliverableCodeConstants.DeliverableCode_SD01];
-            var sd02 = esfValues[DeliverableCodeConstants.DeliverableCode_SD02];
+            var headers = FundingSummaryReportConstants.GroupHeaderDictionary.GetValueOrDefault(year);
+            var sd01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_SD01);
+            var sd02 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_SD02);
 
             return new SpecificationDefined
             {
@@ -228,19 +230,19 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
         public PeriodisedReportValue BuildPeriodisedReportValue(string title, IEnumerable<PeriodisedValue> periodisedValues)
         {
             return new PeriodisedReportValue(
-                title,
-                periodisedValues?.Sum(x => x.April),
-                periodisedValues?.Sum(x => x.May),
-                periodisedValues?.Sum(x => x.June),
-                periodisedValues?.Sum(x => x.July),
-                periodisedValues?.Sum(x => x.August),
-                periodisedValues?.Sum(x => x.September),
-                periodisedValues?.Sum(x => x.October),
-                periodisedValues?.Sum(x => x.Novemeber),
-                periodisedValues?.Sum(x => x.December),
-                periodisedValues?.Sum(x => x.January),
-                periodisedValues?.Sum(x => x.February),
-                periodisedValues?.Sum(x => x.March));
+                    title,
+                    periodisedValues?.Sum(x => x.August) ?? 0m,
+                    periodisedValues?.Sum(x => x.September) ?? 0m,
+                    periodisedValues?.Sum(x => x.October) ?? 0m,
+                    periodisedValues?.Sum(x => x.Novemeber) ?? 0m,
+                    periodisedValues?.Sum(x => x.December) ?? 0m,
+                    periodisedValues?.Sum(x => x.January) ?? 0m,
+                    periodisedValues?.Sum(x => x.February) ?? 0m,
+                    periodisedValues?.Sum(x => x.March) ?? 0m,
+                    periodisedValues?.Sum(x => x.April) ?? 0m,
+                    periodisedValues?.Sum(x => x.May) ?? 0m,
+                    periodisedValues?.Sum(x => x.June) ?? 0m,
+                    periodisedValues?.Sum(x => x.July) ?? 0m);
         }
 
         private GroupHeader BuildFundingHeader(string headerTitle, string[] headers)
@@ -261,12 +263,14 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 headers[11]);
         }
 
-        private IDictionary<string, Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>> PeriodiseIlr(IEnumerable<FM70PeriodisedValues> fm70Data)
+        private IDictionary<string, Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>> PeriodiseIlr(IEnumerable<string> conRefNumbers, IEnumerable<FM70PeriodisedValues> fm70Data)
         {
             var conRefDictionary = new Dictionary<string, Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>>();
 
-            var t = fm70Data
-                .GroupBy(x => x.ConRefNumber)
+            var groupedData = fm70Data?.GroupBy(x => x.ConRefNumber);
+
+            var t = fm70Data?
+                .GroupBy(x => conRefNumbers.Contains(x.ConRefNumber) ? x.ConRefNumber : NotApplicable)
                 .ToDictionary(
                 cr => cr.Key,
                 crv => crv.Select(x => x)
@@ -280,7 +284,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                         dcv => MapIlrPeriodisedValues(crv.Key, dcv.Key, dcv.ToList()),
                         StringComparer.OrdinalIgnoreCase)));
 
-            return conRefDictionary;
+            return t;
         }
 
         private IEnumerable<PeriodisedValue> MapIlrPeriodisedValues(string conRef, string deliverableCode, IEnumerable<FM70PeriodisedValues> fm70Data)
@@ -289,6 +293,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 conRef,
                 deliverableCode,
                 x.AttributeName,
+                x.Period1 ?? 0,
+                x.Period2 ?? 0,
+                x.Period3 ?? 0,
                 x.Period4 ?? 0,
                 x.Period5 ?? 0,
                 x.Period6 ?? 0,
@@ -297,29 +304,43 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 x.Period9 ?? 0,
                 x.Period10 ?? 0,
                 x.Period11 ?? 0,
-                x.Period12 ?? 0,
-                x.Period1 ?? 0,
-                x.Period2 ?? 0,
-                x.Period3 ?? 0));
+                x.Period12 ?? 0));
         }
 
-        private IDictionary<string, Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>> PeriodiseEsfSuppData(IDictionary<string, IEnumerable<SupplementaryDataYearlyModel>> supplementaryData)
+        private IDictionary<string, Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>> PeriodiseEsfSuppData(IEnumerable<string> conRefNumbers, IDictionary<string, IEnumerable<SupplementaryDataYearlyModel>> supplementaryData)
         {
             var conRefDictionary = new Dictionary<string, Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>>();
 
             foreach (var conRef in supplementaryData)
             {
-                conRefDictionary.Add(
-                    conRef.Key,
-                    conRef.Value
-                    .ToDictionary(
-                    key => key.FundingYear,
-                    value => value.SupplementaryData.ToList()
-                    .GroupBy(dc => dc.DeliverableCode)
-                    .ToDictionary(
-                        d => d.Key,
-                        p => MapEsfPeriodisedValues(conRef.Key, p.Key, p.ToList()),
-                        StringComparer.OrdinalIgnoreCase)));
+                if (conRefNumbers.Contains(conRef.Key))
+                {
+                    conRefDictionary.Add(
+                        conRef.Key,
+                        conRef.Value
+                        .ToDictionary(
+                        key => key.FundingYear,
+                        value => value.SupplementaryData.ToList()
+                        .GroupBy(dc => dc.DeliverableCode)
+                        .ToDictionary(
+                            d => d.Key,
+                            p => MapEsfPeriodisedValues(conRef.Key, p.Key, p.ToList()),
+                            StringComparer.OrdinalIgnoreCase)));
+                }
+                else
+                {
+                    conRefDictionary.Add(
+                        NotApplicable,
+                        conRef.Value
+                        .ToDictionary(
+                        key => key.FundingYear,
+                        value => value.SupplementaryData.ToList()
+                        .GroupBy(dc => dc.DeliverableCode)
+                        .ToDictionary(
+                            d => d.Key,
+                            p => MapEsfPeriodisedValues(conRef.Key, p.Key, p.ToList()),
+                            StringComparer.OrdinalIgnoreCase)));
+                }
             }
 
             return conRefDictionary;
@@ -331,10 +352,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 conRef,
                 deliverableCode,
                 x.ReferenceType,
-                x.CalendarMonth == 4 ? x.Value : 0,
-                x.CalendarMonth == 5 ? x.Value : 0,
-                x.CalendarMonth == 6 ? x.Value : 0,
-                x.CalendarMonth == 7 ? x.Value : 0,
                 x.CalendarMonth == 8 ? x.Value : 0,
                 x.CalendarMonth == 9 ? x.Value : 0,
                 x.CalendarMonth == 10 ? x.Value : 0,
@@ -342,7 +359,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 x.CalendarMonth == 12 ? x.Value : 0,
                 x.CalendarMonth == 1 ? x.Value : 0,
                 x.CalendarMonth == 2 ? x.Value : 0,
-                x.CalendarMonth == 3 ? x.Value : 0));
+                x.CalendarMonth == 3 ? x.Value : 0,
+                x.CalendarMonth == 4 ? x.Value : 0,
+                x.CalendarMonth == 5 ? x.Value : 0,
+                x.CalendarMonth == 6 ? x.Value : 0,
+                x.CalendarMonth == 7 ? x.Value : 0));
         }
 
         private FundingSummaryHeaderModel PopulateReportHeader(
@@ -435,6 +456,21 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             var dateString = $"{fileNameParts[3].Substring(0, 4)}/{fileNameParts[3].Substring(4, 2)}/{fileNameParts[3].Substring(6, 2)} " +
                              $"{fileNameParts[4].Substring(0, 2)}:{fileNameParts[4].Substring(2, 2)}:{fileNameParts[4].Substring(4, 2)}";
             return Convert.ToDateTime(dateString).ToString("dd/MM/yyyy hh:mm:ss");
+        }
+
+        private List<FundingSummaryModel> BuildBaseModels(int collectionYear)
+        {
+            var year = FundingSummaryReportConstants.ReportBaseYear;
+
+            var models = new List<FundingSummaryModel>();
+
+            while (year <= collectionYear)
+            {
+                models.Add(new FundingSummaryModel { Year = year });
+                year++;
+            }
+
+            return models;
         }
     }
 }

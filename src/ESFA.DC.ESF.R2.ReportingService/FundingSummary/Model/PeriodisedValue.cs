@@ -8,10 +8,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
             string conRefNumber,
             string deliverableCode,
             string attributeName,
-            decimal? april,
-            decimal? may,
-            decimal? june,
-            decimal? july,
             decimal? august,
             decimal? september,
             decimal? october,
@@ -19,7 +15,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
             decimal? december,
             decimal? january,
             decimal? february,
-            decimal? march)
+            decimal? march,
+            decimal? april,
+            decimal? may,
+            decimal? june,
+            decimal? july)
         {
             ConRefNumber = conRefNumber;
             DeliverableCode = deliverableCode;

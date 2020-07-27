@@ -52,18 +52,18 @@
         {
             return new PeriodisedReportValue(
                 "Total (£)",
-                Sum(LearnerAssessmentPlans.Totals.April, CommunityGrants.Totals.April, SpecificationDefineds.Totals.April, RegulatedLearnings.Totals.April, NonRegulatedLearnings.Totals.April, Progressions.Totals.April),
-                Sum(LearnerAssessmentPlans.Totals.May, CommunityGrants.Totals.May, SpecificationDefineds.Totals.May, RegulatedLearnings.Totals.May, NonRegulatedLearnings.Totals.May, Progressions.Totals.May),
-                Sum(LearnerAssessmentPlans.Totals.June, CommunityGrants.Totals.June, SpecificationDefineds.Totals.June, RegulatedLearnings.Totals.June, NonRegulatedLearnings.Totals.June, Progressions.Totals.June),
-                Sum(LearnerAssessmentPlans.Totals.July, CommunityGrants.Totals.July, SpecificationDefineds.Totals.July, RegulatedLearnings.Totals.July, NonRegulatedLearnings.Totals.July, Progressions.Totals.July),
-                Sum(LearnerAssessmentPlans.Totals.August, CommunityGrants.Totals.August, SpecificationDefineds.Totals.August, RegulatedLearnings.Totals.August, NonRegulatedLearnings.Totals.August, Progressions.Totals.August),
-                Sum(LearnerAssessmentPlans.Totals.September, CommunityGrants.Totals.September, SpecificationDefineds.Totals.September, RegulatedLearnings.Totals.September, NonRegulatedLearnings.Totals.September, Progressions.Totals.September),
-                Sum(LearnerAssessmentPlans.Totals.October, CommunityGrants.Totals.October, SpecificationDefineds.Totals.October, RegulatedLearnings.Totals.October, NonRegulatedLearnings.Totals.October, Progressions.Totals.October),
-                Sum(LearnerAssessmentPlans.Totals.November, CommunityGrants.Totals.November, SpecificationDefineds.Totals.November, RegulatedLearnings.Totals.November, NonRegulatedLearnings.Totals.November, Progressions.Totals.November),
-                Sum(LearnerAssessmentPlans.Totals.December, CommunityGrants.Totals.December, SpecificationDefineds.Totals.December, RegulatedLearnings.Totals.December, NonRegulatedLearnings.Totals.December, Progressions.Totals.December),
-                Sum(LearnerAssessmentPlans.Totals.January, CommunityGrants.Totals.January, SpecificationDefineds.Totals.January, RegulatedLearnings.Totals.January, NonRegulatedLearnings.Totals.January, Progressions.Totals.January),
-                Sum(LearnerAssessmentPlans.Totals.February, CommunityGrants.Totals.February, SpecificationDefineds.Totals.February, RegulatedLearnings.Totals.February, NonRegulatedLearnings.Totals.February, Progressions.Totals.February),
-                Sum(LearnerAssessmentPlans.Totals.March, CommunityGrants.Totals.March, SpecificationDefineds.Totals.March, RegulatedLearnings.Totals.March, NonRegulatedLearnings.Totals.March, Progressions.Totals.March));
+                Sum(LearnerAssessmentPlans?.Totals.April, CommunityGrants?.Totals.April, SpecificationDefineds?.Totals.April, RegulatedLearnings?.Totals.April, NonRegulatedLearnings?.Totals.April, Progressions?.Totals.April),
+                Sum(LearnerAssessmentPlans?.Totals.May, CommunityGrants?.Totals.May, SpecificationDefineds?.Totals.May, RegulatedLearnings?.Totals.May, NonRegulatedLearnings?.Totals.May, Progressions?.Totals.May),
+                Sum(LearnerAssessmentPlans?.Totals.June, CommunityGrants?.Totals.June, SpecificationDefineds?.Totals.June, RegulatedLearnings?.Totals.June, NonRegulatedLearnings?.Totals.June, Progressions?.Totals.June),
+                Sum(LearnerAssessmentPlans?.Totals.July, CommunityGrants?.Totals.July, SpecificationDefineds?.Totals.July, RegulatedLearnings?.Totals.July, NonRegulatedLearnings?.Totals.July, Progressions?.Totals.July),
+                Sum(LearnerAssessmentPlans?.Totals.August, CommunityGrants?.Totals.August, SpecificationDefineds?.Totals.August, RegulatedLearnings?.Totals.August, NonRegulatedLearnings?.Totals.August, Progressions?.Totals.August),
+                Sum(LearnerAssessmentPlans?.Totals.September, CommunityGrants?.Totals.September, SpecificationDefineds?.Totals.September, RegulatedLearnings?.Totals.September, NonRegulatedLearnings?.Totals.September, Progressions?.Totals.September),
+                Sum(LearnerAssessmentPlans?.Totals.October, CommunityGrants?.Totals.October, SpecificationDefineds?.Totals.October, RegulatedLearnings?.Totals.October, NonRegulatedLearnings?.Totals.October, Progressions?.Totals.October),
+                Sum(LearnerAssessmentPlans?.Totals.November, CommunityGrants?.Totals.November, SpecificationDefineds?.Totals.November, RegulatedLearnings?.Totals.November, NonRegulatedLearnings?.Totals.November, Progressions?.Totals.November),
+                Sum(LearnerAssessmentPlans?.Totals.December, CommunityGrants?.Totals.December, SpecificationDefineds?.Totals.December, RegulatedLearnings?.Totals.December, NonRegulatedLearnings?.Totals.December, Progressions?.Totals.December),
+                Sum(LearnerAssessmentPlans?.Totals.January, CommunityGrants?.Totals.January, SpecificationDefineds?.Totals.January, RegulatedLearnings?.Totals.January, NonRegulatedLearnings?.Totals.January, Progressions?.Totals.January),
+                Sum(LearnerAssessmentPlans?.Totals.February, CommunityGrants?.Totals.February, SpecificationDefineds?.Totals.February, RegulatedLearnings?.Totals.February, NonRegulatedLearnings?.Totals.February, Progressions?.Totals.February),
+                Sum(LearnerAssessmentPlans?.Totals.March, CommunityGrants?.Totals.March, SpecificationDefineds?.Totals.March, RegulatedLearnings?.Totals.March, NonRegulatedLearnings?.Totals.March, Progressions?.Totals.March));
         }
 
         private PeriodisedReportValue BuildCumulativeMonthlyTotals()

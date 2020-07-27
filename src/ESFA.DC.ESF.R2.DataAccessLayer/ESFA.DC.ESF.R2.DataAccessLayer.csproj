@@ -40,10 +40,7 @@
     <Compile Include="FCSRepository.cs" />
     <Compile Include="Mappers\SourceFileModelMapper.cs" />
     <Compile Include="Mappers\SupplementaryDataModelMapper.cs" />
-    <Compile Include="Models\OrganisationReferenceData.cs" />
-    <Compile Include="Models\ReferenceDataVersions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\FundingSummaryReportDataProvider.cs" />
     <Compile Include="ReferenceDataCache.cs" />
     <Compile Include="ReferenceDataRepository.cs" />
     <Compile Include="Services\ReferenceDataService.cs" />

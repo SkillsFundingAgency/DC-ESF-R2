@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.ESF.R2.Interfaces.ReferenceData;
 using ESFA.DC.ESF.R2.Models;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.ILR.DataService.Models;
 
 namespace ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary

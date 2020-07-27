@@ -6,10 +6,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
     {
         public PeriodisedReportValue(
             string title,
-            decimal? april,
-            decimal? may,
-            decimal? june,
-            decimal? july,
             decimal? august,
             decimal? september,
             decimal? october,
@@ -17,7 +13,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
             decimal? december,
             decimal? january,
             decimal? february,
-            decimal? march)
+            decimal? march,
+            decimal? april,
+            decimal? may,
+            decimal? june,
+            decimal? july)
         {
             Title = title;
             April = april;

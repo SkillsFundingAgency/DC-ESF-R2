@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Config;
-using ESFA.DC.ESF.R2.Interfaces.ReferenceData;
 using ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary;
 using ESFA.DC.ESF.R2.Models;
-using ESFA.DC.ESF.R2.ReportingService.Constants;
+using ESFA.DC.ESF.R2.Models.FundingSummary;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.ESF.R2.ReportingService.FundingSummary;
 using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model;
 using ESFA.DC.ILR.DataService.Models;
@@ -368,10 +368,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
         [Fact]
         public void PopulateReportData()
         {
+            var baseModels = new List<FundingSummaryModel>
+            {
+                new FundingSummaryModel { Year = 2020 },
+                new FundingSummaryModel { Year = 2019 },
+                new FundingSummaryModel { Year = 2018 }
+            };
+
             var esfValues = EsfValuesDictionary();
             var ilrValues = IlrValuesDictionary();
 
-            var models = NewBuilder().PopulateReportData(esfValues, ilrValues);
+            var models = NewBuilder().PopulateReportData(baseModels, esfValues, ilrValues);
             var expectedModels = new List<FundingSummaryModel>
             {
                 new FundingSummaryModel
@@ -379,22 +386,47 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     Year = 2020,
                     LearnerAssessmentPlans = new LearnerAssessmentPlan
                     {
-                        GroupHeader = new GroupHeader(
-                            "Learner Assessment and Plan",
-                            "August 2020",
-                            "September 2020",
-                            "October 2020",
-                            "November 2020",
-                            "December 2020",
-                            "January 2021",
-                            "February 2021",
-                            "March 2021",
-                            "April 2021",
-                            "May 2021",
-                            "June 2021",
-                            "July 2021"),
+                        GroupHeader = Year2020GroupHeader("Learner Assessment and Plan"),
                         IlrST01 = new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
                         EsfST01 = new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                    },
+                    RegulatedLearnings = new RegulatedLearning
+                    {
+                        GroupHeader = Year2020GroupHeader("Regulated Learning"),
+                        IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                        IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                        EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                    },
+                    NonRegulatedLearnings = new NonRegulatedLearning
+                    {
+                        GroupHeader = Year2020GroupHeader("Non Regulated Learning"),
+                        IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                        IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                        EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                    },
+                    CommunityGrants = new CommunityGrant
+                    {
+                        GroupHeader = Year2020GroupHeader("Community Grant"),
+                        EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                        EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                    },
+                    SpecificationDefineds = new SpecificationDefined
+                    {
+                        GroupHeader = Year2020GroupHeader("Specification Defined"),
+                        EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                        EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                    },
+                    Progressions = new Progression
+                    {
+                        GroupHeader = Year2020GroupHeader("Progression and Sustained Progression"),
+                        IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                        EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                        IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                        EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                        IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                        EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                        IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                        EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
                     }
                 },
                 new FundingSummaryModel
@@ -402,54 +434,385 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     Year = 2019,
                     LearnerAssessmentPlans = new LearnerAssessmentPlan
                     {
-                        GroupHeader = new GroupHeader(
-                            "Learner Assessment and Plan",
-                            "August 2020",
-                            "September 2020",
-                            "October 2020",
-                            "November 2020",
-                            "December 2020",
-                            "January 2021",
-                            "February 2021",
-                            "March 2021",
-                            "April 2021",
-                            "May 2021",
-                            "June 2021",
-                            "July 2021"),
+                        GroupHeader = Year2019GroupHeader("Learner Assessment and Plan"),
                         IlrST01 = new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
                         EsfST01 = new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m)
+                    },
+                    RegulatedLearnings = new RegulatedLearning
+                    {
+                        GroupHeader = Year2019GroupHeader("Regulated Learning"),
+                        IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                        IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                        EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                    },
+                    NonRegulatedLearnings = new NonRegulatedLearning
+                    {
+                        GroupHeader = Year2019GroupHeader("Non Regulated Learning"),
+                        IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                        IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                        EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                    },
+                    CommunityGrants = new CommunityGrant
+                    {
+                        GroupHeader = Year2019GroupHeader("Community Grant"),
+                        EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                        EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                    },
+                    SpecificationDefineds = new SpecificationDefined
+                    {
+                        GroupHeader = Year2019GroupHeader("Specification Defined"),
+                        EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                        EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                    },
+                    Progressions = new Progression
+                    {
+                        GroupHeader = Year2019GroupHeader("Progression and Sustained Progression"),
+                        IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                        EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                        IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                        EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                        IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                        EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                        IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                        EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
                     }
                 },
                 new FundingSummaryModel
                 {
-                    Year = 20118,
+                    Year = 2018,
                     LearnerAssessmentPlans = new LearnerAssessmentPlan
                     {
-                        GroupHeader = new GroupHeader(
-                            "Learner Assessment and Plan",
-                            "August 2020",
-                            "September 2020",
-                            "October 2020",
-                            "November 2020",
-                            "December 2020",
-                            "January 2021",
-                            "February 2021",
-                            "March 2021",
-                            "April 2021",
-                            "May 2021",
-                            "June 2021",
-                            "July 2021"),
+                        GroupHeader = Year2018GroupHeader("Learner Assessment and Plan"),
                         IlrST01 = new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m),
                         EsfST01 = new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                    },
+                    RegulatedLearnings = new RegulatedLearning
+                    {
+                        GroupHeader = Year2018GroupHeader("Regulated Learning"),
+                        IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                        IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                        EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                    },
+                    NonRegulatedLearnings = new NonRegulatedLearning
+                    {
+                        GroupHeader = Year2018GroupHeader("Non Regulated Learning"),
+                        IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                        IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                        EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                    },
+                    CommunityGrants = new CommunityGrant
+                    {
+                        GroupHeader = Year2018GroupHeader("Community Grant"),
+                        EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                        EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                    },
+                    SpecificationDefineds = new SpecificationDefined
+                    {
+                        GroupHeader = Year2018GroupHeader("Specification Defined"),
+                        EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                        EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                    },
+                    Progressions = new Progression
+                    {
+                        GroupHeader = Year2018GroupHeader("Progression and Sustained Progression"),
+                        IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                        EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                        IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                        EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                        IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                        EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                        IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                        EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
                     }
                 }
             };
 
-            expectedModels.Should().BeEquivalentTo(models);
+            models.Should().BeEquivalentTo(expectedModels);
         }
 
         [Fact]
-        public async Task Build()
+        public void PopulateReportData1920()
+        {
+            var baseModels = new List<FundingSummaryModel>
+            {
+                new FundingSummaryModel { Year = 2019 },
+                new FundingSummaryModel { Year = 2018 }
+            };
+
+            var esfValues = EsfValuesDictionary();
+            var ilrValues = IlrValuesDictionary();
+
+            var models = NewBuilder().PopulateReportData(baseModels, esfValues, ilrValues);
+            var expectedModels = new List<FundingSummaryModel>
+            {
+                new FundingSummaryModel
+                {
+                    Year = 2019,
+                    LearnerAssessmentPlans = new LearnerAssessmentPlan
+                    {
+                        GroupHeader = Year2019GroupHeader("Learner Assessment and Plan"),
+                        IlrST01 = new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
+                        EsfST01 = new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m)
+                    },
+                    RegulatedLearnings = new RegulatedLearning
+                    {
+                        GroupHeader = Year2019GroupHeader("Regulated Learning"),
+                        IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                        IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                        EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                    },
+                    NonRegulatedLearnings = new NonRegulatedLearning
+                    {
+                        GroupHeader = Year2019GroupHeader("Non Regulated Learning"),
+                        IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                        IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                        EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                    },
+                    CommunityGrants = new CommunityGrant
+                    {
+                        GroupHeader = Year2019GroupHeader("Community Grant"),
+                        EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                        EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                    },
+                    SpecificationDefineds = new SpecificationDefined
+                    {
+                        GroupHeader = Year2019GroupHeader("Specification Defined"),
+                        EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                        EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                    },
+                    Progressions = new Progression
+                    {
+                        GroupHeader = Year2019GroupHeader("Progression and Sustained Progression"),
+                        IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                        EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                        IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                        EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                        IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                        EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                        IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                        EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                    }
+                },
+                new FundingSummaryModel
+                {
+                    Year = 2018,
+                    LearnerAssessmentPlans = new LearnerAssessmentPlan
+                    {
+                        GroupHeader = Year2018GroupHeader("Learner Assessment and Plan"),
+                        IlrST01 = new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m),
+                        EsfST01 = new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                    },
+                    RegulatedLearnings = new RegulatedLearning
+                    {
+                        GroupHeader = Year2018GroupHeader("Regulated Learning"),
+                        IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                        IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                        EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                    },
+                    NonRegulatedLearnings = new NonRegulatedLearning
+                    {
+                        GroupHeader = Year2018GroupHeader("Non Regulated Learning"),
+                        IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                        IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                        EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                    },
+                    CommunityGrants = new CommunityGrant
+                    {
+                        GroupHeader = Year2018GroupHeader("Community Grant"),
+                        EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                        EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                    },
+                    SpecificationDefineds = new SpecificationDefined
+                    {
+                        GroupHeader = Year2018GroupHeader("Specification Defined"),
+                        EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                        EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                    },
+                    Progressions = new Progression
+                    {
+                        GroupHeader = Year2018GroupHeader("Progression and Sustained Progression"),
+                        IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                        EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                        IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                        EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                        IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                        EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                        IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                        EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                    }
+                }
+            };
+
+            models.Should().BeEquivalentTo(expectedModels);
+        }
+
+        [Fact]
+        public void PopulateReportData_NoData()
+        {
+            var baseModels = new List<FundingSummaryModel>
+            {
+                new FundingSummaryModel { Year = 2020 },
+                new FundingSummaryModel { Year = 2019 },
+                new FundingSummaryModel { Year = 2018 }
+            };
+
+            var esfValues = EsfValuesDictionary();
+            var ilrValues = IlrValuesDictionary();
+
+            var models = NewBuilder().PopulateReportData(baseModels, esfValues, ilrValues);
+            var expectedModels = new List<FundingSummaryModel>
+            {
+                new FundingSummaryModel
+                {
+                    Year = 2020,
+                    LearnerAssessmentPlans = new LearnerAssessmentPlan
+                    {
+                        GroupHeader = Year2020GroupHeader("Learner Assessment and Plan"),
+                        IlrST01 = new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
+                        EsfST01 = new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                    },
+                    RegulatedLearnings = new RegulatedLearning
+                    {
+                        GroupHeader = Year2020GroupHeader("Regulated Learning"),
+                        IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                        IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                        EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                    },
+                    NonRegulatedLearnings = new NonRegulatedLearning
+                    {
+                        GroupHeader = Year2020GroupHeader("Non Regulated Learning"),
+                        IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                        IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                        EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                    },
+                    CommunityGrants = new CommunityGrant
+                    {
+                        GroupHeader = Year2020GroupHeader("Community Grant"),
+                        EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                        EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                    },
+                    SpecificationDefineds = new SpecificationDefined
+                    {
+                        GroupHeader = Year2020GroupHeader("Specification Defined"),
+                        EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                        EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                    },
+                    Progressions = new Progression
+                    {
+                        GroupHeader = Year2020GroupHeader("Progression and Sustained Progression"),
+                        IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                        EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                        IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                        EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                        IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                        EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                        IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                        EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                    }
+                },
+                new FundingSummaryModel
+                {
+                    Year = 2019,
+                    LearnerAssessmentPlans = new LearnerAssessmentPlan
+                    {
+                        GroupHeader = Year2019GroupHeader("Learner Assessment and Plan"),
+                        IlrST01 = new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
+                        EsfST01 = new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m)
+                    },
+                    RegulatedLearnings = new RegulatedLearning
+                    {
+                        GroupHeader = Year2019GroupHeader("Regulated Learning"),
+                        IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                        IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                        EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                    },
+                    NonRegulatedLearnings = new NonRegulatedLearning
+                    {
+                        GroupHeader = Year2019GroupHeader("Non Regulated Learning"),
+                        IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                        IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                        EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                    },
+                    CommunityGrants = new CommunityGrant
+                    {
+                        GroupHeader = Year2019GroupHeader("Community Grant"),
+                        EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                        EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                    },
+                    SpecificationDefineds = new SpecificationDefined
+                    {
+                        GroupHeader = Year2019GroupHeader("Specification Defined"),
+                        EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                        EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                    },
+                    Progressions = new Progression
+                    {
+                        GroupHeader = Year2019GroupHeader("Progression and Sustained Progression"),
+                        IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                        EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                        IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                        EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                        IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                        EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                        IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                        EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                    }
+                },
+                new FundingSummaryModel
+                {
+                    Year = 2018,
+                    LearnerAssessmentPlans = new LearnerAssessmentPlan
+                    {
+                        GroupHeader = Year2018GroupHeader("Learner Assessment and Plan"),
+                        IlrST01 = new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m),
+                        EsfST01 = new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                    },
+                    RegulatedLearnings = new RegulatedLearning
+                    {
+                        GroupHeader = Year2018GroupHeader("Regulated Learning"),
+                        IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                        IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                        EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                    },
+                    NonRegulatedLearnings = new NonRegulatedLearning
+                    {
+                        GroupHeader = Year2018GroupHeader("Non Regulated Learning"),
+                        IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                        IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                        EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                    },
+                    CommunityGrants = new CommunityGrant
+                    {
+                        GroupHeader = Year2018GroupHeader("Community Grant"),
+                        EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                        EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                    },
+                    SpecificationDefineds = new SpecificationDefined
+                    {
+                        GroupHeader = Year2018GroupHeader("Specification Defined"),
+                        EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                        EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                    },
+                    Progressions = new Progression
+                    {
+                        GroupHeader = Year2018GroupHeader("Progression and Sustained Progression"),
+                        IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                        EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                        IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                        EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                        IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                        EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                        IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                        EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                    }
+                }
+            };
+
+            models.Should().BeEquivalentTo(expectedModels);
+        }
+
+        [Fact]
+        public async Task Build_NotApplicable()
         {
             var esfJobContext = new Mock<IEsfJobContext>();
             var cancellationToken = CancellationToken.None;
@@ -477,23 +840,721 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             var versionInfo = new Mock<IVersionInfo>();
             versionInfo.Setup(x => x.ServiceReleaseVersion).Returns("1.0.0");
 
-            var referenceDataVersions = new Mock<IReferenceDataVersions>();
-            var orgRefData = new Mock<IOrganisationReferenceData>();
-            var suppData = new Mock<IDictionary<string, IEnumerable<SupplementaryDataYearlyModel>>>();
-            var ilrFileDetails = new Mock<IEnumerable<ILRFileDetails>>();
-            var ilrPeriodisedValues = new Mock<IEnumerable<FM70PeriodisedValuesYearly>>();
+            var referenceDataVersions = new ReferenceDataVersions
+            {
+                LarsVersion = "LARS",
+                OrganisationVersion = "ORG",
+                PostcodeVersion = "POSTCODE",
+            };
+            var orgRefData = new OrganisationReferenceData
+            {
+                ConRefNumbers = new List<string>(),
+                Name = "OrgName",
+                Ukprn = ukprn
+            };
+
+            var suppData = new Dictionary<string, IEnumerable<SupplementaryDataYearlyModel>>
+            {
+                {
+                    "NotAMatch", new List<SupplementaryDataYearlyModel>
+                    {
+                        new SupplementaryDataYearlyModel
+                        {
+                            FundingYear = 2020,
+                            SupplementaryData = new List<SupplementaryDataModel>
+                            {
+                                new SupplementaryDataModel
+                                {
+                                    DeliverableCode = "ST01",
+                                    Value = 1m,
+                                    ConRefNumber = "NotAMatch",
+                                    CalendarYear = 2020,
+                                    CalendarMonth = 8,
+                                },
+                                new SupplementaryDataModel
+                                {
+                                    DeliverableCode = "ST01",
+                                    Value = 2m,
+                                    ConRefNumber = "NotAMatch",
+                                    CalendarYear = 2020,
+                                    CalendarMonth = 9,
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            var ilrFileDetails = new List<ILRFileDetails>();
+            var ilrPeriodisedValues = new List<FM70PeriodisedValuesYearly>();
 
             var dataProvider = new Mock<IFundingSummaryReportDataProvider>();
-            dataProvider.Setup(x => x.ProvideReferenceDataVersionsAsync(cancellationToken)).ReturnsAsync(referenceDataVersions.Object);
-            dataProvider.Setup(x => x.ProvideOrganisationReferenceDataAsync(ukprn, cancellationToken)).ReturnsAsync(orgRefData.Object);
+            dataProvider.Setup(x => x.ProvideReferenceDataVersionsAsync(cancellationToken)).ReturnsAsync(referenceDataVersions);
+            dataProvider.Setup(x => x.ProvideOrganisationReferenceDataAsync(ukprn, cancellationToken)).ReturnsAsync(orgRefData);
             dataProvider.Setup(x => x.GetImportFilesAsync(ukprn, cancellationToken)).ReturnsAsync(esfSourceFiles);
-            dataProvider.Setup(x => x.GetSupplementaryDataAsync(collectionYear, esfSourceFiles, cancellationToken)).ReturnsAsync(suppData.Object);
-            dataProvider.Setup(x => x.GetIlrFileDetailsAsync(ukprn, collectionYear, cancellationToken)).ReturnsAsync(ilrFileDetails.Object);
-            dataProvider.Setup(x => x.GetYearlyIlrDataAsync(ukprn, collectionName, collectionYear, returnPeriod, cancellationToken)).ReturnsAsync(ilrPeriodisedValues.Object);
+            dataProvider.Setup(x => x.GetSupplementaryDataAsync(collectionYear, esfSourceFiles, cancellationToken)).ReturnsAsync(suppData);
+            dataProvider.Setup(x => x.GetIlrFileDetailsAsync(ukprn, collectionYear, cancellationToken)).ReturnsAsync(ilrFileDetails);
+            dataProvider.Setup(x => x.GetYearlyIlrDataAsync(ukprn, collectionName, collectionYear, returnPeriod, cancellationToken)).ReturnsAsync(ilrPeriodisedValues);
 
-            var expectedTabs = new List<FundingSummaryReportTab>();
+            var expectedTabs = new List<FundingSummaryReportTab>
+            {
+                new FundingSummaryReportTab
+                {
+                    TabName = "Not Applicable",
+                    Header = new Models.Reports.FundingSummaryReport.FundingSummaryHeaderModel
+                    {
+                        ContractReferenceNumber = new string[] { "Not Applicable",  null, null, "ILR File :" },
+                        ProviderName = "OrgName",
+                        SecurityClassification = new string[] { "OFFICIAL-SENSITIVE",  null, null, null },
+                        Ukprn = new string[] { "12345678", null, null },
+                        SupplementaryDataFile = new string[] { null,  null, null, "Last ILR File Update :" },
+                        LastSupplementaryDataFileUpdate = new string[] { null, null, null, "File Preparation Date :" }
+                    },
+                    Footer = new Models.Reports.FundingSummaryReport.FundingSummaryFooterModel
+                    {
+                        LarsData = "LARS",
+                        OrganisationData = "ORG",
+                        PostcodeData = "POSTCODE",
+                        ReportGeneratedAt = reportDateTime.ToString("HH:mm:ss") + " on " + reportDateTime.ToString("dd/MM/yyyy"),
+                        ApplicationVersion = "1.0.0"
+                    },
+                    Body = new List<FundingSummaryModel>
+                    {
+                        new FundingSummaryModel
+                        {
+                            Year = 2020,
+                            LearnerAssessmentPlans = new LearnerAssessmentPlan
+                            {
+                                GroupHeader = Year2020GroupHeader("Learner Assessment and Plan"),
+                                IlrST01 = ZeroFundedPeriodisedValues("ILR ST01 Learner Assessment and Plan (£)"),
+                                EsfST01 = new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 2m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m)
+                            },
+                            RegulatedLearnings = new RegulatedLearning
+                            {
+                                GroupHeader = Year2020GroupHeader("Regulated Learning"),
+                                IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                                IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                                EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                            },
+                            NonRegulatedLearnings = new NonRegulatedLearning
+                            {
+                                GroupHeader = Year2020GroupHeader("Non Regulated Learning"),
+                                IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                                IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                                EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                            },
+                            CommunityGrants = new CommunityGrant
+                            {
+                                GroupHeader = Year2020GroupHeader("Community Grant"),
+                                EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                                EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                            },
+                            SpecificationDefineds = new SpecificationDefined
+                            {
+                                GroupHeader = Year2020GroupHeader("Specification Defined"),
+                                EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                                EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                            },
+                            Progressions = new Progression
+                            {
+                                GroupHeader = Year2020GroupHeader("Progression and Sustained Progression"),
+                                IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                                EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                                IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                                EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                                IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                                EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                                IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                                EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                            }
+                        },
+                        new FundingSummaryModel
+                        {
+                            Year = 2019,
+                            LearnerAssessmentPlans = new LearnerAssessmentPlan
+                            {
+                                GroupHeader = Year2019GroupHeader("Learner Assessment and Plan"),
+                                IlrST01 = ZeroFundedPeriodisedValues("ILR ST01 Learner Assessment and Plan (£)"),
+                                EsfST01 = ZeroFundedPeriodisedValues("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)")
+                            },
+                            RegulatedLearnings = new RegulatedLearning
+                            {
+                                GroupHeader = Year2019GroupHeader("Regulated Learning"),
+                                IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                                IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                                EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                            },
+                            NonRegulatedLearnings = new NonRegulatedLearning
+                            {
+                                GroupHeader = Year2019GroupHeader("Non Regulated Learning"),
+                                IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                                IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                                EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                            },
+                            CommunityGrants = new CommunityGrant
+                            {
+                                GroupHeader = Year2019GroupHeader("Community Grant"),
+                                EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                                EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                            },
+                            SpecificationDefineds = new SpecificationDefined
+                            {
+                                GroupHeader = Year2019GroupHeader("Specification Defined"),
+                                EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                                EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                            },
+                            Progressions = new Progression
+                            {
+                                GroupHeader = Year2019GroupHeader("Progression and Sustained Progression"),
+                                IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                                EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                                IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                                EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                                IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                                EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                                IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                                EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                            }
+                        },
+                        new FundingSummaryModel
+                        {
+                            Year = 2018,
+                            LearnerAssessmentPlans = new LearnerAssessmentPlan
+                            {
+                                GroupHeader = Year2018GroupHeader("Learner Assessment and Plan"),
+                                IlrST01 = ZeroFundedPeriodisedValues("ILR ST01 Learner Assessment and Plan (£)"),
+                                EsfST01 = ZeroFundedPeriodisedValues("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)")
+                            },
+                            RegulatedLearnings = new RegulatedLearning
+                            {
+                                GroupHeader = Year2018GroupHeader("Regulated Learning"),
+                                IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                                IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                                EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                            },
+                            NonRegulatedLearnings = new NonRegulatedLearning
+                            {
+                                GroupHeader = Year2018GroupHeader("Non Regulated Learning"),
+                                IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                                IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                                EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                            },
+                            CommunityGrants = new CommunityGrant
+                            {
+                                GroupHeader = Year2018GroupHeader("Community Grant"),
+                                EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                                EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                            },
+                            SpecificationDefineds = new SpecificationDefined
+                            {
+                                GroupHeader = Year2018GroupHeader("Specification Defined"),
+                                EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                                EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                            },
+                            Progressions = new Progression
+                            {
+                                GroupHeader = Year2018GroupHeader("Progression and Sustained Progression"),
+                                IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                                EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                                IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                                EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                                IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                                EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                                IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                                EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                            }
+                        }
+                    }
+                }
+            };
 
             var reportTabs = await NewBuilder(dateTimeProvider.Object, dataProvider.Object, versionInfo.Object).Build(esfJobContext.Object, cancellationToken);
+
+            reportTabs.Should().BeEquivalentTo(expectedTabs);
+        }
+
+        [Fact]
+        public async Task Build_MultipleContracts()
+        {
+            var esfJobContext = new Mock<IEsfJobContext>();
+            var cancellationToken = CancellationToken.None;
+            var reportDateTime = new DateTime(2020, 8, 1);
+            var ukprn = 12345678;
+            var collectionYear = 2020;
+            var collectionName = "ESF";
+            var returnPeriod = "R01";
+            var conRefNumbers = new List<string> { "ConRef1", "ConRef2" };
+
+            var esfSourceFile = new SourceFileModel();
+            var esfSourceFiles = new List<SourceFileModel> { esfSourceFile };
+            var esfValues = EsfValuesDictionary();
+
+            var ilrValues = IlrValuesDictionary();
+
+            esfJobContext.Setup(x => x.UkPrn).Returns(ukprn);
+            esfJobContext.Setup(x => x.CollectionYear).Returns(collectionYear);
+            esfJobContext.Setup(x => x.CollectionName).Returns(collectionName);
+            esfJobContext.Setup(x => x.ReturnPeriod).Returns(returnPeriod);
+
+            var dateTimeProvider = new Mock<IDateTimeProvider>();
+            dateTimeProvider.Setup(x => x.GetNowUtc()).Returns(reportDateTime);
+            dateTimeProvider.Setup(x => x.ConvertUtcToUk(It.IsAny<DateTime>())).Returns(reportDateTime);
+
+            var versionInfo = new Mock<IVersionInfo>();
+            versionInfo.Setup(x => x.ServiceReleaseVersion).Returns("1.0.0");
+
+            var referenceDataVersions = new ReferenceDataVersions
+            {
+                LarsVersion = "LARS",
+                OrganisationVersion = "ORG",
+                PostcodeVersion = "POSTCODE",
+            };
+            var orgRefData = new OrganisationReferenceData
+            {
+                ConRefNumbers = conRefNumbers,
+                Name = "OrgName",
+                Ukprn = ukprn
+            };
+
+            var suppData = new Dictionary<string, IEnumerable<SupplementaryDataYearlyModel>>
+            {
+                {
+                    "ConRef1", new List<SupplementaryDataYearlyModel>
+                    {
+                        new SupplementaryDataYearlyModel
+                        {
+                            FundingYear = 2020,
+                            SupplementaryData = new List<SupplementaryDataModel>
+                            {
+                                new SupplementaryDataModel
+                                {
+                                    DeliverableCode = "ST01",
+                                    Value = 1m,
+                                    ConRefNumber = "ConRef1",
+                                    CalendarYear = 2020,
+                                    CalendarMonth = 8,
+                                },
+                                new SupplementaryDataModel
+                                {
+                                    DeliverableCode = "ST01",
+                                    Value = 2m,
+                                    ConRefNumber = "ConRef1",
+                                    CalendarYear = 2020,
+                                    CalendarMonth = 9,
+                                },
+                            }
+                        }
+                    }
+                },
+                {
+                    "ConRef2", new List<SupplementaryDataYearlyModel>
+                    {
+                        new SupplementaryDataYearlyModel
+                        {
+                            FundingYear = 2019,
+                            SupplementaryData = new List<SupplementaryDataModel>
+                            {
+                                new SupplementaryDataModel
+                                {
+                                    DeliverableCode = "ST01",
+                                    Value = 1m,
+                                    ConRefNumber = "ConRef2",
+                                    CalendarYear = 2019,
+                                    CalendarMonth = 11,
+                                },
+                                new SupplementaryDataModel
+                                {
+                                    DeliverableCode = "ST01",
+                                    Value = 2m,
+                                    ConRefNumber = "ConRef2",
+                                    CalendarYear = 2019,
+                                    CalendarMonth = 12,
+                                },
+                            }
+                        }
+                    }
+                }
+            };
+            var ilrFileDetails = new List<ILRFileDetails>();
+            var ilrPeriodisedValues = new List<FM70PeriodisedValuesYearly>
+            {
+                new FM70PeriodisedValuesYearly
+                {
+                    FundingYear = 2020,
+                    Fm70PeriodisedValues = new List<FM70PeriodisedValues>
+                    {
+                        new FM70PeriodisedValues
+                        {
+                            AttributeName = "StartEarnings",
+                            ConRefNumber = "ConRef1",
+                            DeliverableCode = "ST01",
+                            FundingYear = 2020,
+                            Period1 = 10m,
+                            Period2 = 20m,
+                        },
+                        new FM70PeriodisedValues
+                        {
+                            AttributeName = "StartEarnings",
+                            ConRefNumber = "ConRef2",
+                            DeliverableCode = "ST01",
+                            FundingYear = 2020,
+                            Period1 = 10m,
+                            Period2 = 20m,
+                        }
+                    }
+                }
+            };
+
+            var dataProvider = new Mock<IFundingSummaryReportDataProvider>();
+            dataProvider.Setup(x => x.ProvideReferenceDataVersionsAsync(cancellationToken)).ReturnsAsync(referenceDataVersions);
+            dataProvider.Setup(x => x.ProvideOrganisationReferenceDataAsync(ukprn, cancellationToken)).ReturnsAsync(orgRefData);
+            dataProvider.Setup(x => x.GetImportFilesAsync(ukprn, cancellationToken)).ReturnsAsync(esfSourceFiles);
+            dataProvider.Setup(x => x.GetSupplementaryDataAsync(collectionYear, esfSourceFiles, cancellationToken)).ReturnsAsync(suppData);
+            dataProvider.Setup(x => x.GetIlrFileDetailsAsync(ukprn, collectionYear, cancellationToken)).ReturnsAsync(ilrFileDetails);
+            dataProvider.Setup(x => x.GetYearlyIlrDataAsync(ukprn, collectionName, collectionYear, returnPeriod, cancellationToken)).ReturnsAsync(ilrPeriodisedValues);
+
+            var expectedTabs = new List<FundingSummaryReportTab>
+            {
+                new FundingSummaryReportTab
+                {
+                    TabName = "ConRef1",
+                    Header = new Models.Reports.FundingSummaryReport.FundingSummaryHeaderModel
+                    {
+                        ContractReferenceNumber = new string[] { "ConRef1",  null, null, "ILR File :" },
+                        ProviderName = "OrgName",
+                        SecurityClassification = new string[] { "OFFICIAL-SENSITIVE",  null, null, null },
+                        Ukprn = new string[] { "12345678", null, null },
+                        SupplementaryDataFile = new string[] { null,  null, null, "Last ILR File Update :" },
+                        LastSupplementaryDataFileUpdate = new string[] { null, null, null, "File Preparation Date :" }
+                    },
+                    Footer = new Models.Reports.FundingSummaryReport.FundingSummaryFooterModel
+                    {
+                        LarsData = "LARS",
+                        OrganisationData = "ORG",
+                        PostcodeData = "POSTCODE",
+                        ReportGeneratedAt = reportDateTime.ToString("HH:mm:ss") + " on " + reportDateTime.ToString("dd/MM/yyyy"),
+                        ApplicationVersion = "1.0.0"
+                    },
+                    Body = new List<FundingSummaryModel>
+                    {
+                        new FundingSummaryModel
+                        {
+                            Year = 2020,
+                            LearnerAssessmentPlans = new LearnerAssessmentPlan
+                            {
+                                GroupHeader = Year2020GroupHeader("Learner Assessment and Plan"),
+                                IlrST01 = new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 10m, 20m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m),
+                                EsfST01 = new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 2m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m)
+                            },
+                            RegulatedLearnings = new RegulatedLearning
+                            {
+                                GroupHeader = Year2020GroupHeader("Regulated Learning"),
+                                IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                                IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                                EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                            },
+                            NonRegulatedLearnings = new NonRegulatedLearning
+                            {
+                                GroupHeader = Year2020GroupHeader("Non Regulated Learning"),
+                                IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                                IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                                EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                            },
+                            CommunityGrants = new CommunityGrant
+                            {
+                                GroupHeader = Year2020GroupHeader("Community Grant"),
+                                EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                                EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                            },
+                            SpecificationDefineds = new SpecificationDefined
+                            {
+                                GroupHeader = Year2020GroupHeader("Specification Defined"),
+                                EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                                EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                            },
+                            Progressions = new Progression
+                            {
+                                GroupHeader = Year2020GroupHeader("Progression and Sustained Progression"),
+                                IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                                EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                                IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                                EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                                IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                                EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                                IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                                EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                            }
+                        },
+                        new FundingSummaryModel
+                        {
+                            Year = 2019,
+                            LearnerAssessmentPlans = new LearnerAssessmentPlan
+                            {
+                                GroupHeader = Year2019GroupHeader("Learner Assessment and Plan"),
+                                IlrST01 = ZeroFundedPeriodisedValues("ILR ST01 Learner Assessment and Plan (£)"),
+                                EsfST01 = ZeroFundedPeriodisedValues("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)")
+                            },
+                            RegulatedLearnings = new RegulatedLearning
+                            {
+                                GroupHeader = Year2019GroupHeader("Regulated Learning"),
+                                IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                                IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                                EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                            },
+                            NonRegulatedLearnings = new NonRegulatedLearning
+                            {
+                                GroupHeader = Year2019GroupHeader("Non Regulated Learning"),
+                                IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                                IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                                EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                            },
+                            CommunityGrants = new CommunityGrant
+                            {
+                                GroupHeader = Year2019GroupHeader("Community Grant"),
+                                EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                                EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                            },
+                            SpecificationDefineds = new SpecificationDefined
+                            {
+                                GroupHeader = Year2019GroupHeader("Specification Defined"),
+                                EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                                EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                            },
+                            Progressions = new Progression
+                            {
+                                GroupHeader = Year2019GroupHeader("Progression and Sustained Progression"),
+                                IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                                EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                                IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                                EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                                IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                                EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                                IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                                EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                            }
+                        },
+                        new FundingSummaryModel
+                        {
+                            Year = 2018,
+                            LearnerAssessmentPlans = new LearnerAssessmentPlan
+                            {
+                                GroupHeader = Year2018GroupHeader("Learner Assessment and Plan"),
+                                IlrST01 = ZeroFundedPeriodisedValues("ILR ST01 Learner Assessment and Plan (£)"),
+                                EsfST01 = ZeroFundedPeriodisedValues("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)")
+                            },
+                            RegulatedLearnings = new RegulatedLearning
+                            {
+                                GroupHeader = Year2018GroupHeader("Regulated Learning"),
+                                IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                                IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                                EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                            },
+                            NonRegulatedLearnings = new NonRegulatedLearning
+                            {
+                                GroupHeader = Year2018GroupHeader("Non Regulated Learning"),
+                                IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                                IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                                EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                            },
+                            CommunityGrants = new CommunityGrant
+                            {
+                                GroupHeader = Year2018GroupHeader("Community Grant"),
+                                EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                                EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                            },
+                            SpecificationDefineds = new SpecificationDefined
+                            {
+                                GroupHeader = Year2018GroupHeader("Specification Defined"),
+                                EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                                EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                            },
+                            Progressions = new Progression
+                            {
+                                GroupHeader = Year2018GroupHeader("Progression and Sustained Progression"),
+                                IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                                EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                                IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                                EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                                IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                                EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                                IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                                EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                            }
+                        }
+                    }
+                },
+                new FundingSummaryReportTab
+                {
+                    TabName = "ConRef2",
+                    Header = new Models.Reports.FundingSummaryReport.FundingSummaryHeaderModel
+                    {
+                        ContractReferenceNumber = new string[] { "ConRef2",  null, null, "ILR File :" },
+                        ProviderName = "OrgName",
+                        SecurityClassification = new string[] { "OFFICIAL-SENSITIVE",  null, null, null },
+                        Ukprn = new string[] { "12345678", null, null },
+                        SupplementaryDataFile = new string[] { null,  null, null, "Last ILR File Update :" },
+                        LastSupplementaryDataFileUpdate = new string[] { null, null, null, "File Preparation Date :" }
+                    },
+                    Footer = new Models.Reports.FundingSummaryReport.FundingSummaryFooterModel
+                    {
+                        LarsData = "LARS",
+                        OrganisationData = "ORG",
+                        PostcodeData = "POSTCODE",
+                        ReportGeneratedAt = reportDateTime.ToString("HH:mm:ss") + " on " + reportDateTime.ToString("dd/MM/yyyy"),
+                        ApplicationVersion = "1.0.0"
+                    },
+                    Body = new List<FundingSummaryModel>
+                    {
+                        new FundingSummaryModel
+                        {
+                            Year = 2020,
+                            LearnerAssessmentPlans = new LearnerAssessmentPlan
+                            {
+                                GroupHeader = Year2020GroupHeader("Learner Assessment and Plan"),
+                                IlrST01 = new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 10m, 20m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m),
+                                EsfST01 = ZeroFundedPeriodisedValues("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)")
+                            },
+                            RegulatedLearnings = new RegulatedLearning
+                            {
+                                GroupHeader = Year2020GroupHeader("Regulated Learning"),
+                                IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                                IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                                EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                            },
+                            NonRegulatedLearnings = new NonRegulatedLearning
+                            {
+                                GroupHeader = Year2020GroupHeader("Non Regulated Learning"),
+                                IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                                IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                                EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                            },
+                            CommunityGrants = new CommunityGrant
+                            {
+                                GroupHeader = Year2020GroupHeader("Community Grant"),
+                                EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                                EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                            },
+                            SpecificationDefineds = new SpecificationDefined
+                            {
+                                GroupHeader = Year2020GroupHeader("Specification Defined"),
+                                EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                                EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                            },
+                            Progressions = new Progression
+                            {
+                                GroupHeader = Year2020GroupHeader("Progression and Sustained Progression"),
+                                IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                                EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                                IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                                EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                                IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                                EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                                IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                                EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                            }
+                        },
+                        new FundingSummaryModel
+                        {
+                            Year = 2019,
+                            LearnerAssessmentPlans = new LearnerAssessmentPlan
+                            {
+                                GroupHeader = Year2019GroupHeader("Learner Assessment and Plan"),
+                                IlrST01 = ZeroFundedPeriodisedValues("ILR ST01 Learner Assessment and Plan (£)"),
+                                EsfST01 = new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 0m, 0m, 0m, 1m, 2m, 0m, 0m, 0m, 0m, 0m, 0m, 0m)
+                            },
+                            RegulatedLearnings = new RegulatedLearning
+                            {
+                                GroupHeader = Year2019GroupHeader("Regulated Learning"),
+                                IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                                IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                                EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                            },
+                            NonRegulatedLearnings = new NonRegulatedLearning
+                            {
+                                GroupHeader = Year2019GroupHeader("Non Regulated Learning"),
+                                IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                                IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                                EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                            },
+                            CommunityGrants = new CommunityGrant
+                            {
+                                GroupHeader = Year2019GroupHeader("Community Grant"),
+                                EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                                EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                            },
+                            SpecificationDefineds = new SpecificationDefined
+                            {
+                                GroupHeader = Year2019GroupHeader("Specification Defined"),
+                                EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                                EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                            },
+                            Progressions = new Progression
+                            {
+                                GroupHeader = Year2019GroupHeader("Progression and Sustained Progression"),
+                                IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                                EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                                IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                                EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                                IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                                EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                                IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                                EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                            }
+                        },
+                        new FundingSummaryModel
+                        {
+                            Year = 2018,
+                            LearnerAssessmentPlans = new LearnerAssessmentPlan
+                            {
+                                GroupHeader = Year2018GroupHeader("Learner Assessment and Plan"),
+                                IlrST01 = ZeroFundedPeriodisedValues("ILR ST01 Learner Assessment and Plan (£)"),
+                                EsfST01 = ZeroFundedPeriodisedValues("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)")
+                            },
+                            RegulatedLearnings = new RegulatedLearning
+                            {
+                                GroupHeader = Year2018GroupHeader("Regulated Learning"),
+                                IlrRQ01AchFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                                IlrRQ01StartFunding = ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                                EsfRQ01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                            },
+                            NonRegulatedLearnings = new NonRegulatedLearning
+                            {
+                                GroupHeader = Year2018GroupHeader("Non Regulated Learning"),
+                                IlrNR01AchFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Achievement Funding (£)"),
+                                IlrNR01StartFunding = ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Learning - Start Funding (£)"),
+                                EsfNR01AuthClaims = ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)")
+                            },
+                            CommunityGrants = new CommunityGrant
+                            {
+                                GroupHeader = Year2018GroupHeader("Community Grant"),
+                                EsfCG01 = ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                                EsfCG02 = ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)"),
+                            },
+                            SpecificationDefineds = new SpecificationDefined
+                            {
+                                GroupHeader = Year2018GroupHeader("Specification Defined"),
+                                EsfSD01 = ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                                EsfSD02 = ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                            },
+                            Progressions = new Progression
+                            {
+                                GroupHeader = Year2018GroupHeader("Progression and Sustained Progression"),
+                                IlrPG01 = ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                                EsfPG01 = ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                                IlrPG03 = ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                                EsfPG03 = ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                                IlrPG04 = ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                                EsfPG04 = ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                                IlrPG05 = ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                                EsfPG05 = ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                            }
+                        }
+                    }
+                }
+            };
+
+            var reportTabs = await NewBuilder(dateTimeProvider.Object, dataProvider.Object, versionInfo.Object).Build(esfJobContext.Object, cancellationToken);
+
+            reportTabs.Should().BeEquivalentTo(expectedTabs);
         }
 
         private IDictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>> EsfValuesDictionary()
@@ -555,6 +1616,53 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 }
             };
         }
+
+        private GroupHeader Year2020GroupHeader(string title) => new GroupHeader(
+            title,
+            "August 2020",
+            "September 2020",
+            "October 2020",
+            "November 2020",
+            "December 2020",
+            "January 2021",
+            "February 2021",
+            "March 2021",
+            "April 2021",
+            "May 2021",
+            "June 2021",
+            "July 2021");
+
+        private GroupHeader Year2019GroupHeader(string title) => new GroupHeader(
+            title,
+            "August 2019",
+            "September 2019",
+            "October 2019",
+            "November 2019",
+            "December 2019",
+            "January 2020",
+            "February 2020",
+            "March 2020",
+            "April 2020",
+            "May 2020",
+            "June 2020",
+            "July 2020");
+
+        private GroupHeader Year2018GroupHeader(string title) => new GroupHeader(
+            title,
+            "August 2018",
+            "September 2018",
+            "October 2018",
+            "November 2018",
+            "December 2018",
+            "January 2019",
+            "February 2019",
+            "March 2019",
+            "April 2019",
+            "May 2019",
+            "June 2019",
+            "July 2019");
+
+        private PeriodisedReportValue ZeroFundedPeriodisedValues(string title) => new PeriodisedReportValue(title, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m);
 
         private FundingSummaryReportModelBuilder NewBuilder(
             IDateTimeProvider dateTimeProvider = null,

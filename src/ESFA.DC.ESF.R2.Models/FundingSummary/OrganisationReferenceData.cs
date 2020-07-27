@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using ESFA.DC.ESF.R2.Interfaces.ReferenceData;
+using ESFA.DC.ESF.R2.Models.Interfaces;
 
-namespace ESFA.DC.ESF.R2.DataAccessLayer.Models
+namespace ESFA.DC.ESF.R2.Models.FundingSummary
 {
     public class OrganisationReferenceData : IOrganisationReferenceData
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ESFA.DC.ESF.R2.Interfaces.ReferenceData
+namespace ESFA.DC.ESF.R2.Models.Interfaces
 {
     public interface IOrganisationReferenceData
     {

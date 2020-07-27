@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ESFA.DC.ESF.R2.ReportingService.Constants
+namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Constants
 {
     public static class FundingSummaryReportConstants
     {
@@ -48,6 +48,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Constants
         public const string IlrAAdditionalProgCostEarningsAttribute = "AdditionalProgCostEarnings";
         public const string IlrProgressionEarningsAttribute = "ProgressionEarnings";
         public const string EsfReferenceTypeAuthorisedClaims = "Authorised Claims";
+
+        public const int ReportBaseYear = 2018;
 
         public static IDictionary<int, string[]> GroupHeaderDictionary = new Dictionary<int, string[]>
         {

@@ -50,7 +50,8 @@
     <Compile Include="Constants\ReportingConstants.cs" />
     <Compile Include="Constants\ReportNameConstants.cs" />
     <Compile Include="FundingSummary\FundingSummaryReport.cs" />
-    <Compile Include="Constants\FundingSummaryReportConstants.cs" />
+    <Compile Include="FundingSummary\Constants\FundingSummaryReportConstants.cs" />
+    <Compile Include="FundingSummary\FundingSummaryReportDataProvider.cs" />
     <Compile Include="FundingSummary\FundingSummaryReportModelBuilder.cs" />
     <Compile Include="FundingSummary\FundingSummaryReportRenderService.cs" />
     <Compile Include="FundingSummary\Model\FundingSummaryReportTabTotal.cs" />
