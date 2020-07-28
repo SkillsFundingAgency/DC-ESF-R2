@@ -42,6 +42,7 @@
         public const string R13 = "R13";
         public const string R14 = "R14";
 
+        public const string LongDateFormat = "dd/MM/yyyy HH:mm";
         public const string ShortDateFormat = "dd/MM/yyyy";
         public const string TimeFormat = "HH:mm:ss";
 

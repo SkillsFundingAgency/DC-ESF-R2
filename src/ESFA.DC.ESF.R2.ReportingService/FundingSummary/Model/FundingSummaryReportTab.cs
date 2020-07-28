@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
+﻿using System.Collections.Generic;
 
 namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 {
@@ -9,9 +6,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
     {
         public string TabName { get; set; }
 
-        public FundingSummaryHeaderModel Header { get; set; }
+        public FundingSummaryReportHeaderModel Header { get; set; }
 
-        public FundingSummaryFooterModel Footer { get; set; }
+        public FundingSummaryReportFooterModel Footer { get; set; }
 
         public IEnumerable<FundingSummaryModel> Body { get; set; }
 

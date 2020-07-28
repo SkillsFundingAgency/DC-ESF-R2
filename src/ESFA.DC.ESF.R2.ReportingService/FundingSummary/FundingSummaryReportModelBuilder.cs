@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,13 +12,12 @@ using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Interfaces;
-using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
+using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Constants;
 using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model;
 using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.ILR.DataService.Models;
 using ESFA.DC.Logging.Interfaces;
-using FundingSummaryModel = ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.FundingSummaryModel;
 
 namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 {
@@ -31,6 +31,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             FundingSummaryReportConstants.IlrAchievementEarningsAttribute,
             FundingSummaryReportConstants.IlrAAdditionalProgCostEarningsAttribute,
             FundingSummaryReportConstants.IlrProgressionEarningsAttribute
+        };
+
+        private readonly IDictionary<int, string> _academicYearMapper = new Dictionary<int, string>
+        {
+            { 2018, ReportingConstants.IlrHeader1819 },
+            { 2019, ReportingConstants.IlrHeader1920 },
+            { 2020, ReportingConstants.IlrHeader2021 }
         };
 
         private readonly IFundingSummaryReportDataProvider _dataProvider;
@@ -70,11 +77,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 conRefNumbers = new HashSet<string>(orgData.ConRefNumbers, StringComparer.OrdinalIgnoreCase);
             }
 
-            var collectionYear = Convert.ToInt32($"20{esfJobContext.CollectionYear.ToString().Substring(0, 2)}");
+            var collectionYearString = string.Concat("20", esfJobContext.StartCollectionYearAbbreviation);
+            var collectionYear = int.Parse(collectionYearString);
 
             var sourceFiles = await _dataProvider.GetImportFilesAsync(esfJobContext.UkPrn, cancellationToken);
 
-            _logger.LogDebug($"{sourceFiles.Count} esf files found for ukprn {ukPrn} and collection year 20{esfJobContext.CollectionYear.ToString().Substring(0, 2)}.");
+            _logger.LogDebug($"{sourceFiles.Count} esf files found for ukprn {ukPrn} and collection year {collectionYearString}.");
 
             var supplementaryData = await _dataProvider.GetSupplementaryDataAsync(collectionYear, sourceFiles, cancellationToken);
 
@@ -86,22 +94,23 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
             var fundingSummaryTabs = new List<FundingSummaryReportTab>();
 
+            var footer = PopulateReportFooter(referenceDataVersions, reportGenerationTime);
+
             foreach (var conRefNumber in conRefNumbers)
             {
                 var baseModels = BuildBaseModels(collectionYear);
 
                 var file = sourceFiles.FirstOrDefault(sf => sf.ConRefNumber.CaseInsensitiveEquals(conRefNumber));
 
-                FundingSummaryHeaderModel fundingSummaryHeaderModel = PopulateReportHeader(file, ilrYearlyFileData, ukPrn, orgData.Name, conRefNumber, cancellationToken);
-                FundingSummaryFooterModel fundingSummaryFooterModel = PopulateReportFooter(referenceDataVersions, reportGenerationTime, cancellationToken);
+                var header = PopulateReportHeader(file, ilrYearlyFileData, ukPrn, orgData.Name, conRefNumber, collectionYear);
 
                 var fundingSummaryModels = PopulateReportData(baseModels, periodisedEsf.GetValueOrDefault(conRefNumber), periodisedILR.GetValueOrDefault(conRefNumber));
 
                 fundingSummaryTabs.Add(new FundingSummaryReportTab
                 {
                     TabName = conRefNumber,
-                    Header = fundingSummaryHeaderModel,
-                    Footer = fundingSummaryFooterModel,
+                    Header = header,
+                    Footer = footer,
                     Body = fundingSummaryModels
                 });
             }
@@ -245,6 +254,54 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                     periodisedValues?.Sum(x => x.July) ?? 0m);
         }
 
+        public FundingSummaryReportHeaderModel PopulateReportHeader(
+          SourceFileModel sourceFile,
+          IEnumerable<ILRFileDetails> ilrFileData,
+          int ukPrn,
+          string providerName,
+          string conRefNumber,
+          int collectionYear)
+        {
+            var ilrFileDetailModels = BuildBaseIlrFileDetailModels(collectionYear);
+
+            foreach (var model in ilrFileDetailModels)
+            {
+                var ilrData = ilrFileData.Where(x => x.Year == model.Year).FirstOrDefault();
+
+                if (ilrData != null)
+                {
+                    model.IlrFile = !string.IsNullOrWhiteSpace(ilrData?.FileName) ? Path.GetFileName(ilrData?.FileName) : null;
+                    model.FilePrepDate = ilrData?.FilePreparationDate?.ToString(ReportingConstants.ShortDateFormat);
+                    model.LastIlrFileUpdate = ilrData?.LastSubmission?.ToString(ReportingConstants.LongDateFormat);
+                }
+            }
+
+            var header = new FundingSummaryReportHeaderModel
+            {
+                Ukprn = ukPrn.ToString(),
+                ProviderName = providerName,
+                ContractReferenceNumber = conRefNumber,
+                SecurityClassification = ReportingConstants.Classification,
+                SupplementaryDataFile = !string.IsNullOrWhiteSpace(sourceFile?.FileName) ? Path.GetFileName(sourceFile?.FileName) : null,
+                LastSupplementaryDataFileUpdate = sourceFile?.SuppliedDate?.ToString(ReportingConstants.LongDateFormat),
+                IlrFileDetails = ilrFileDetailModels
+            };
+
+            return header;
+        }
+
+        public FundingSummaryReportFooterModel PopulateReportFooter(IReferenceDataVersions referenceDataVersions, string reportGeneration)
+        {
+            return new FundingSummaryReportFooterModel
+            {
+                ReportGeneratedAt = reportGeneration,
+                LarsData = referenceDataVersions.LarsVersion,
+                OrganisationData = referenceDataVersions.OrganisationVersion,
+                PostcodeData = referenceDataVersions.PostcodeVersion,
+                ApplicationVersion = _versionInfo.ServiceReleaseVersion
+            };
+        }
+
         private GroupHeader BuildFundingHeader(string headerTitle, string[] headers)
         {
             return new GroupHeader(
@@ -265,11 +322,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
         private IDictionary<string, Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>> PeriodiseIlr(IEnumerable<string> conRefNumbers, IEnumerable<FM70PeriodisedValues> fm70Data)
         {
-            var conRefDictionary = new Dictionary<string, Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>>();
-
-            var groupedData = fm70Data?.GroupBy(x => x.ConRefNumber);
-
-            var t = fm70Data?
+            return fm70Data?
                 .GroupBy(x => conRefNumbers.Contains(x.ConRefNumber) ? x.ConRefNumber : NotApplicable)
                 .ToDictionary(
                 cr => cr.Key,
@@ -283,8 +336,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                         dc => dc.Key,
                         dcv => MapIlrPeriodisedValues(crv.Key, dcv.Key, dcv.ToList()),
                         StringComparer.OrdinalIgnoreCase)));
-
-            return t;
         }
 
         private IEnumerable<PeriodisedValue> MapIlrPeriodisedValues(string conRef, string deliverableCode, IEnumerable<FM70PeriodisedValues> fm70Data)
@@ -366,73 +417,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 x.CalendarMonth == 7 ? x.Value : 0));
         }
 
-        private FundingSummaryHeaderModel PopulateReportHeader(
-            SourceFileModel sourceFile,
-            IEnumerable<ILRFileDetails> fileData,
-            int ukPrn,
-            string providerName,
-            string conRefNumber,
-            CancellationToken cancellationToken)
-        {
-            var ukPrnRow =
-                new List<string> { ukPrn.ToString(), null, null };
-            var contractReferenceNumberRow =
-                new List<string> { conRefNumber, null, null, "ILR File :" };
-            var supplementaryDataFileRow =
-                new List<string> { sourceFile?.FileName?.Contains("/") ?? false ? sourceFile.FileName.Substring(sourceFile.FileName.IndexOf("/", StringComparison.Ordinal) + 1) : sourceFile?.FileName, null, null, "Last ILR File Update :" };
-            var lastSupplementaryDataFileUpdateRow =
-                new List<string> { sourceFile?.SuppliedDate?.ToString("dd/MM/yyyy hh:mm:ss"), null, null, "File Preparation Date :" };
-            var securityClassificationRow =
-                new List<string> { "OFFICIAL-SENSITIVE", null, null, null };
-
-            foreach (var model in fileData)
-            {
-                var preparationDate = GetPreparedDateFromILRFileName(model.FileName);
-                var secondYear = GetSecondYearFromReportYear(model.Year);
-
-                ukPrnRow.Add(null);
-                ukPrnRow.Add($"{model.Year}/{secondYear}");
-                contractReferenceNumberRow.Add(model.FileName?.Substring(model.FileName.Contains("/") ? model.FileName.IndexOf("/", StringComparison.Ordinal) + 1 : 0));
-                contractReferenceNumberRow.Add(null);
-                supplementaryDataFileRow.Add(preparationDate);
-                supplementaryDataFileRow.Add(null);
-                lastSupplementaryDataFileUpdateRow.Add(model.FilePreparationDate?.ToString("dd/MM/yyyy hh:mm:ss"));
-                lastSupplementaryDataFileUpdateRow.Add(null);
-
-                if (model.Equals(fileData.Last()))
-                {
-                    continue;
-                }
-
-                securityClassificationRow.Add("(most recent closed collection for year)");
-                securityClassificationRow.Add(null);
-            }
-
-            var header = new FundingSummaryHeaderModel
-            {
-                ProviderName = providerName,
-                Ukprn = ukPrnRow.ToArray(),
-                ContractReferenceNumber = contractReferenceNumberRow.ToArray(),
-                SupplementaryDataFile = supplementaryDataFileRow.ToArray(),
-                LastSupplementaryDataFileUpdate = lastSupplementaryDataFileUpdateRow.ToArray(),
-                SecurityClassification = securityClassificationRow.ToArray()
-            };
-
-            return header;
-        }
-
-        private FundingSummaryFooterModel PopulateReportFooter(IReferenceDataVersions referenceDataVersions, string reportGeneration, CancellationToken cancellationToken)
-        {
-            return new FundingSummaryFooterModel
-            {
-                ReportGeneratedAt = reportGeneration,
-                LarsData = referenceDataVersions.LarsVersion,
-                OrganisationData = referenceDataVersions.OrganisationVersion,
-                PostcodeData = referenceDataVersions.PostcodeVersion,
-                ApplicationVersion = _versionInfo.ServiceReleaseVersion
-            };
-        }
-
         private string GetSecondYearFromReportYear(int year)
         {
             return year.ToString().Length > 3 ?
@@ -467,6 +451,28 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             while (year <= collectionYear)
             {
                 models.Add(new FundingSummaryModel { Year = year });
+                year++;
+            }
+
+            return models;
+        }
+
+        private List<IlrFileDetail> BuildBaseIlrFileDetailModels(int collectionYear)
+        {
+            var year = FundingSummaryReportConstants.ReportBaseYear;
+
+            var models = new List<IlrFileDetail>();
+
+            while (year <= collectionYear)
+            {
+                models.Add(
+                    new IlrFileDetail
+                    {
+                        Year = year,
+                        AcademicYear = _academicYearMapper.GetValueOrDefault(year),
+                        MostRecent = year != collectionYear ? ReportingConstants.IlrCollectionClosedMessage : null
+                    });
+
                 year++;
             }
 

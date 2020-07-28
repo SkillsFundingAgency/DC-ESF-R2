@@ -812,6 +812,292 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
         }
 
         [Fact]
+        public void PopulateReportHeader()
+        {
+            var esfFile = new SourceFileModel
+            {
+                ConRefNumber = "ConRef",
+                FileName = @"12345678\EsfFile.csv",
+                PreparationDate = new DateTime(2020, 8, 1),
+                SuppliedDate = new DateTime(2020, 8, 1),
+                UKPRN = "12345678"
+            };
+
+            var ilrFileDetails = new List<ILRFileDetails>
+            {
+                new ILRFileDetails
+                {
+                    FileName = "File1.xml",
+                    FilePreparationDate = new DateTime(2020, 8, 1),
+                    LastSubmission = new DateTime(2020, 8, 1),
+                    Year = 2020
+                },
+                new ILRFileDetails
+                {
+                    FileName = "File2.xml",
+                    FilePreparationDate = new DateTime(2019, 8, 1),
+                    LastSubmission = new DateTime(2019, 8, 1),
+                    Year = 2019
+                },
+                new ILRFileDetails
+                {
+                    FileName = "File3.xml",
+                    FilePreparationDate = new DateTime(2018, 8, 1),
+                    LastSubmission = new DateTime(2018, 8, 1),
+                    Year = 2018
+                }
+            };
+
+            var expectedHeader = new FundingSummaryReportHeaderModel
+            {
+                ContractReferenceNumber = "ConRef",
+                ProviderName = "OrgName",
+                SecurityClassification = "OFFICIAL-SENSITIVE",
+                Ukprn = "12345678",
+                LastSupplementaryDataFileUpdate = "01/08/2020 00:00",
+                SupplementaryDataFile = "EsfFile.csv",
+                IlrFileDetails = new List<IlrFileDetail>
+                {
+                    new IlrFileDetail
+                    {
+                        IlrFile = "File1.xml",
+                        FilePrepDate = "01/08/2020",
+                        LastIlrFileUpdate = "01/08/2020 00:00",
+                        Year = 2020,
+                        AcademicYear = "2020/21"
+                    },
+                    new IlrFileDetail
+                    {
+                        IlrFile = "File2.xml",
+                        FilePrepDate = "01/08/2019",
+                        LastIlrFileUpdate = "01/08/2019 00:00",
+                        Year = 2019,
+                        AcademicYear = "2019/20",
+                        MostRecent = "(most recent closed collection for year)"
+                    },
+                    new IlrFileDetail
+                    {
+                        IlrFile = "File3.xml",
+                        FilePrepDate = "01/08/2018",
+                        LastIlrFileUpdate = "01/08/2018 00:00",
+                        Year = 2018,
+                        AcademicYear = "2018/19",
+                        MostRecent = "(most recent closed collection for year)"
+                    }
+                }
+            };
+
+            NewBuilder().PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020)
+                .Should().BeEquivalentTo(expectedHeader);
+        }
+
+        [Fact]
+        public void PopulateReportHeader_1920()
+        {
+            var esfFile = new SourceFileModel
+            {
+                ConRefNumber = "ConRef",
+                FileName = @"12345678\EsfFile.csv",
+                PreparationDate = new DateTime(2019, 8, 1),
+                SuppliedDate = new DateTime(2019, 8, 1),
+                UKPRN = "12345678"
+            };
+
+            var ilrFileDetails = new List<ILRFileDetails>
+            {
+                new ILRFileDetails
+                {
+                    FileName = "File1.xml",
+                    FilePreparationDate = new DateTime(2019, 8, 1),
+                    LastSubmission = new DateTime(2019, 8, 1),
+                    Year = 2019
+                },
+                new ILRFileDetails
+                {
+                    FileName = "File2.xml",
+                    FilePreparationDate = new DateTime(2018, 8, 1),
+                    LastSubmission = new DateTime(2018, 8, 1),
+                    Year = 2018
+                }
+            };
+
+            var expectedHeader = new FundingSummaryReportHeaderModel
+            {
+                ContractReferenceNumber = "ConRef",
+                ProviderName = "OrgName",
+                SecurityClassification = "OFFICIAL-SENSITIVE",
+                Ukprn = "12345678",
+                LastSupplementaryDataFileUpdate = "01/08/2019 00:00",
+                SupplementaryDataFile = "EsfFile.csv",
+                IlrFileDetails = new List<IlrFileDetail>
+                {
+                    new IlrFileDetail
+                    {
+                        IlrFile = "File1.xml",
+                        FilePrepDate = "01/08/2019",
+                        LastIlrFileUpdate = "01/08/2019 00:00",
+                        Year = 2019,
+                        AcademicYear = "2019/20",
+                    },
+                    new IlrFileDetail
+                    {
+                        IlrFile = "File2.xml",
+                        FilePrepDate = "01/08/2018",
+                        LastIlrFileUpdate = "01/08/2018 00:00",
+                        Year = 2018,
+                        AcademicYear = "2018/19",
+                        MostRecent = "(most recent closed collection for year)"
+                    }
+                }
+            };
+
+            NewBuilder().PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2019)
+                .Should().BeEquivalentTo(expectedHeader);
+        }
+
+        [Fact]
+        public void PopulateReportHeader_NoPReviousIlr()
+        {
+            var esfFile = new SourceFileModel
+            {
+                ConRefNumber = "ConRef",
+                FileName = @"12345678\EsfFile.csv",
+                PreparationDate = new DateTime(2020, 8, 1),
+                SuppliedDate = new DateTime(2020, 8, 1),
+                UKPRN = "12345678"
+            };
+
+            var ilrFileDetails = new List<ILRFileDetails>();
+
+            var expectedHeader = new FundingSummaryReportHeaderModel
+            {
+                ContractReferenceNumber = "ConRef",
+                ProviderName = "OrgName",
+                SecurityClassification = "OFFICIAL-SENSITIVE",
+                Ukprn = "12345678",
+                LastSupplementaryDataFileUpdate = "01/08/2020 00:00",
+                SupplementaryDataFile = "EsfFile.csv",
+                IlrFileDetails = new List<IlrFileDetail>
+                {
+                    new IlrFileDetail
+                    {
+                        Year = 2020,
+                        AcademicYear = "2020/21"
+                    },
+                    new IlrFileDetail
+                    {
+                        Year = 2019,
+                        AcademicYear = "2019/20",
+                        MostRecent = "(most recent closed collection for year)"
+                    },
+                    new IlrFileDetail
+                    {
+                        Year = 2018,
+                        AcademicYear = "2018/19",
+                        MostRecent = "(most recent closed collection for year)"
+                    }
+                }
+            };
+
+            NewBuilder().PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020)
+                .Should().BeEquivalentTo(expectedHeader);
+        }
+
+        [Fact]
+        public void PopulateReportHeader_NoEsf()
+        {
+            var ilrFileDetails = new List<ILRFileDetails>
+            {
+                new ILRFileDetails
+                {
+                    FileName = "File1.xml",
+                    FilePreparationDate = new DateTime(2020, 8, 1),
+                    LastSubmission = new DateTime(2020, 8, 1),
+                    Year = 2020
+                },
+                new ILRFileDetails
+                {
+                    FileName = "File2.xml",
+                    FilePreparationDate = new DateTime(2019, 8, 1),
+                    LastSubmission = new DateTime(2019, 8, 1),
+                    Year = 2019
+                },
+                new ILRFileDetails
+                {
+                    FileName = "File3.xml",
+                    FilePreparationDate = new DateTime(2018, 8, 1),
+                    LastSubmission = new DateTime(2018, 8, 1),
+                    Year = 2018
+                }
+            };
+
+            var expectedHeader = new FundingSummaryReportHeaderModel
+            {
+                ContractReferenceNumber = "Not Applicable",
+                ProviderName = "OrgName",
+                SecurityClassification = "OFFICIAL-SENSITIVE",
+                Ukprn = "12345678",
+                IlrFileDetails = new List<IlrFileDetail>
+                {
+                    new IlrFileDetail
+                    {
+                        IlrFile = "File1.xml",
+                        FilePrepDate = "01/08/2020",
+                        LastIlrFileUpdate = "01/08/2020 00:00",
+                        Year = 2020,
+                        AcademicYear = "2020/21"
+                    },
+                    new IlrFileDetail
+                    {
+                        IlrFile = "File2.xml",
+                        FilePrepDate = "01/08/2019",
+                        LastIlrFileUpdate = "01/08/2019 00:00",
+                        Year = 2019,
+                        AcademicYear = "2019/20",
+                        MostRecent = "(most recent closed collection for year)"
+                    },
+                    new IlrFileDetail
+                    {
+                        IlrFile = "File3.xml",
+                        FilePrepDate = "01/08/2018",
+                        LastIlrFileUpdate = "01/08/2018 00:00",
+                        Year = 2018,
+                        AcademicYear = "2018/19",
+                        MostRecent = "(most recent closed collection for year)"
+                    }
+                }
+            };
+
+            NewBuilder().PopulateReportHeader(null, ilrFileDetails, 12345678, "OrgName", "Not Applicable", 2020)
+                .Should().BeEquivalentTo(expectedHeader);
+        }
+
+        [Fact]
+        public void PopulateReportFooter()
+        {
+            var referenceDataVersions = new ReferenceDataVersions
+            {
+                LarsVersion = "LARS",
+                OrganisationVersion = "ORG",
+                PostcodeVersion = "POSTCODE",
+            };
+
+            var versionInfo = new Mock<IVersionInfo>();
+            versionInfo.Setup(x => x.ServiceReleaseVersion).Returns("1.0.0");
+
+            var expectedFooter = new FundingSummaryReportFooterModel
+            {
+                LarsData = "LARS",
+                OrganisationData = "ORG",
+                PostcodeData = "POSTCODE",
+                ReportGeneratedAt = "01/02/2020",
+                ApplicationVersion = "1.0.0"
+            };
+
+            NewBuilder(versionInfo: versionInfo.Object).PopulateReportFooter(referenceDataVersions, "01/02/2020").Should().BeEquivalentTo(expectedFooter);
+        }
+
+        [Fact]
         public async Task Build_NotApplicable()
         {
             var esfJobContext = new Mock<IEsfJobContext>();
@@ -832,6 +1118,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             esfJobContext.Setup(x => x.CollectionYear).Returns(collectionYear);
             esfJobContext.Setup(x => x.CollectionName).Returns(collectionName);
             esfJobContext.Setup(x => x.ReturnPeriod).Returns(returnPeriod);
+            esfJobContext.Setup(x => x.StartCollectionYearAbbreviation).Returns("20");
 
             var dateTimeProvider = new Mock<IDateTimeProvider>();
             dateTimeProvider.Setup(x => x.GetNowUtc()).Returns(reportDateTime);
@@ -884,7 +1171,31 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     }
                 }
             };
-            var ilrFileDetails = new List<ILRFileDetails>();
+
+            var ilrFileDetails = new List<ILRFileDetails>
+            {
+                new ILRFileDetails
+                {
+                    FileName = "File1.xml",
+                    FilePreparationDate = new DateTime(2020, 8, 1),
+                    LastSubmission = new DateTime(2020, 8, 1),
+                    Year = 2020
+                },
+                new ILRFileDetails
+                {
+                    FileName = "File2.xml",
+                    FilePreparationDate = new DateTime(2019, 8, 1),
+                    LastSubmission = new DateTime(2019, 8, 1),
+                    Year = 2019
+                },
+                new ILRFileDetails
+                {
+                    FileName = "File3.xml",
+                    FilePreparationDate = new DateTime(2018, 8, 1),
+                    LastSubmission = new DateTime(2018, 8, 1),
+                    Year = 2018
+                }
+            };
             var ilrPeriodisedValues = new List<FM70PeriodisedValuesYearly>();
 
             var dataProvider = new Mock<IFundingSummaryReportDataProvider>();
@@ -900,16 +1211,43 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 new FundingSummaryReportTab
                 {
                     TabName = "Not Applicable",
-                    Header = new Models.Reports.FundingSummaryReport.FundingSummaryHeaderModel
+                    Header = new FundingSummaryReportHeaderModel
                     {
-                        ContractReferenceNumber = new string[] { "Not Applicable",  null, null, "ILR File :" },
+                        ContractReferenceNumber = "Not Applicable",
                         ProviderName = "OrgName",
-                        SecurityClassification = new string[] { "OFFICIAL-SENSITIVE",  null, null, null },
-                        Ukprn = new string[] { "12345678", null, null },
-                        SupplementaryDataFile = new string[] { null,  null, null, "Last ILR File Update :" },
-                        LastSupplementaryDataFileUpdate = new string[] { null, null, null, "File Preparation Date :" }
+                        SecurityClassification = "OFFICIAL-SENSITIVE",
+                        Ukprn = "12345678",
+                        IlrFileDetails = new List<IlrFileDetail>
+                        {
+                            new IlrFileDetail
+                            {
+                                IlrFile = "File1.xml",
+                                FilePrepDate = "01/08/2020",
+                                LastIlrFileUpdate = "01/08/2020 00:00",
+                                Year = 2020,
+                                AcademicYear = "2020/21"
+                            },
+                            new IlrFileDetail
+                            {
+                                IlrFile = "File2.xml",
+                                FilePrepDate = "01/08/2019",
+                                LastIlrFileUpdate = "01/08/2019 00:00",
+                                Year = 2019,
+                                AcademicYear = "2019/20",
+                                MostRecent = "(most recent closed collection for year)"
+                            },
+                            new IlrFileDetail
+                            {
+                                IlrFile = "File3.xml",
+                                FilePrepDate = "01/08/2018",
+                                LastIlrFileUpdate = "01/08/2018 00:00",
+                                Year = 2018,
+                                AcademicYear = "2018/19",
+                                MostRecent = "(most recent closed collection for year)"
+                            }
+                        }
                     },
-                    Footer = new Models.Reports.FundingSummaryReport.FundingSummaryFooterModel
+                    Footer = new FundingSummaryReportFooterModel
                     {
                         LarsData = "LARS",
                         OrganisationData = "ORG",
@@ -1094,6 +1432,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             esfJobContext.Setup(x => x.CollectionYear).Returns(collectionYear);
             esfJobContext.Setup(x => x.CollectionName).Returns(collectionName);
             esfJobContext.Setup(x => x.ReturnPeriod).Returns(returnPeriod);
+            esfJobContext.Setup(x => x.StartCollectionYearAbbreviation).Returns("20");
 
             var dateTimeProvider = new Mock<IDateTimeProvider>();
             dateTimeProvider.Setup(x => x.GetNowUtc()).Returns(reportDateTime);
@@ -1174,7 +1513,31 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     }
                 }
             };
-            var ilrFileDetails = new List<ILRFileDetails>();
+
+            var ilrFileDetails = new List<ILRFileDetails>
+            {
+                new ILRFileDetails
+                {
+                    FileName = "File1.xml",
+                    FilePreparationDate = new DateTime(2020, 8, 1),
+                    LastSubmission = new DateTime(2020, 8, 1),
+                    Year = 2020
+                },
+                new ILRFileDetails
+                {
+                    FileName = "File2.xml",
+                    FilePreparationDate = new DateTime(2019, 8, 1),
+                    LastSubmission = new DateTime(2019, 8, 1),
+                    Year = 2019
+                },
+                new ILRFileDetails
+                {
+                    FileName = "File3.xml",
+                    FilePreparationDate = new DateTime(2018, 8, 1),
+                    LastSubmission = new DateTime(2018, 8, 1),
+                    Year = 2018
+                }
+            };
             var ilrPeriodisedValues = new List<FM70PeriodisedValuesYearly>
             {
                 new FM70PeriodisedValuesYearly
@@ -1217,16 +1580,43 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 new FundingSummaryReportTab
                 {
                     TabName = "ConRef1",
-                    Header = new Models.Reports.FundingSummaryReport.FundingSummaryHeaderModel
+                    Header = new FundingSummaryReportHeaderModel
                     {
-                        ContractReferenceNumber = new string[] { "ConRef1",  null, null, "ILR File :" },
+                        ContractReferenceNumber = "ConRef1",
                         ProviderName = "OrgName",
-                        SecurityClassification = new string[] { "OFFICIAL-SENSITIVE",  null, null, null },
-                        Ukprn = new string[] { "12345678", null, null },
-                        SupplementaryDataFile = new string[] { null,  null, null, "Last ILR File Update :" },
-                        LastSupplementaryDataFileUpdate = new string[] { null, null, null, "File Preparation Date :" }
+                        SecurityClassification = "OFFICIAL-SENSITIVE",
+                        Ukprn = "12345678",
+                        IlrFileDetails = new List<IlrFileDetail>
+                        {
+                            new IlrFileDetail
+                            {
+                                IlrFile = "File1.xml",
+                                FilePrepDate = "01/08/2020",
+                                LastIlrFileUpdate = "01/08/2020 00:00",
+                                Year = 2020,
+                                AcademicYear = "2020/21"
+                            },
+                            new IlrFileDetail
+                            {
+                                IlrFile = "File2.xml",
+                                FilePrepDate = "01/08/2019",
+                                LastIlrFileUpdate = "01/08/2019 00:00",
+                                Year = 2019,
+                                AcademicYear = "2019/20",
+                                MostRecent = "(most recent closed collection for year)"
+                            },
+                            new IlrFileDetail
+                            {
+                                IlrFile = "File3.xml",
+                                FilePrepDate = "01/08/2018",
+                                LastIlrFileUpdate = "01/08/2018 00:00",
+                                Year = 2018,
+                                AcademicYear = "2018/19",
+                                MostRecent = "(most recent closed collection for year)"
+                            }
+                        }
                     },
-                    Footer = new Models.Reports.FundingSummaryReport.FundingSummaryFooterModel
+                    Footer = new FundingSummaryReportFooterModel
                     {
                         LarsData = "LARS",
                         OrganisationData = "ORG",
@@ -1385,16 +1775,43 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 new FundingSummaryReportTab
                 {
                     TabName = "ConRef2",
-                    Header = new Models.Reports.FundingSummaryReport.FundingSummaryHeaderModel
+                    Header = new FundingSummaryReportHeaderModel
                     {
-                        ContractReferenceNumber = new string[] { "ConRef2",  null, null, "ILR File :" },
+                        ContractReferenceNumber = "ConRef2",
                         ProviderName = "OrgName",
-                        SecurityClassification = new string[] { "OFFICIAL-SENSITIVE",  null, null, null },
-                        Ukprn = new string[] { "12345678", null, null },
-                        SupplementaryDataFile = new string[] { null,  null, null, "Last ILR File Update :" },
-                        LastSupplementaryDataFileUpdate = new string[] { null, null, null, "File Preparation Date :" }
+                        SecurityClassification = "OFFICIAL-SENSITIVE",
+                        Ukprn = "12345678",
+                        IlrFileDetails = new List<IlrFileDetail>
+                        {
+                            new IlrFileDetail
+                            {
+                                IlrFile = "File1.xml",
+                                FilePrepDate = "01/08/2020",
+                                LastIlrFileUpdate = "01/08/2020 00:00",
+                                Year = 2020,
+                                AcademicYear = "2020/21"
+                            },
+                            new IlrFileDetail
+                            {
+                                IlrFile = "File2.xml",
+                                FilePrepDate = "01/08/2019",
+                                LastIlrFileUpdate = "01/08/2019 00:00",
+                                Year = 2019,
+                                AcademicYear = "2019/20",
+                                MostRecent = "(most recent closed collection for year)"
+                            },
+                            new IlrFileDetail
+                            {
+                                IlrFile = "File3.xml",
+                                FilePrepDate = "01/08/2018",
+                                LastIlrFileUpdate = "01/08/2018 00:00",
+                                Year = 2018,
+                                AcademicYear = "2018/19",
+                                MostRecent = "(most recent closed collection for year)"
+                            }
+                        }
                     },
-                    Footer = new Models.Reports.FundingSummaryReport.FundingSummaryFooterModel
+                    Footer = new FundingSummaryReportFooterModel
                     {
                         LarsData = "LARS",
                         OrganisationData = "ORG",

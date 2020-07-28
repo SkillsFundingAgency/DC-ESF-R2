@@ -54,6 +54,9 @@
     <Compile Include="FundingSummary\FundingSummaryReportDataProvider.cs" />
     <Compile Include="FundingSummary\FundingSummaryReportModelBuilder.cs" />
     <Compile Include="FundingSummary\FundingSummaryReportRenderService.cs" />
+    <Compile Include="FundingSummary\Model\FundingSummaryReportFooterModel.cs" />
+    <Compile Include="FundingSummary\Model\IlrFileDetail.cs" />
+    <Compile Include="FundingSummary\Model\FundingSummaryReportHeaderModel.cs" />
     <Compile Include="FundingSummary\Model\FundingSummaryReportTabTotal.cs" />
     <Compile Include="FundingSummary\Model\NonRegulatedLearning.cs" />
     <Compile Include="FundingSummary\Model\Progression.cs" />
