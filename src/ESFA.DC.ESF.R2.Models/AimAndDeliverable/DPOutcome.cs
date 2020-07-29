@@ -16,6 +16,6 @@ namespace ESFA.DC.ESF.R2.Models.AimAndDeliverable
 
         public DateTime? OutEndDate { get; set; }
 
-        public DateTime OutCollDate { get; set; }
+        public DateTime? OutCollDate { get; set; }
     }
 }

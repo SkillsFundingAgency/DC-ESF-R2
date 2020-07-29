@@ -7,11 +7,14 @@ using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Constants;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.Reports.AimAndDeliverable;
+using ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Abstract;
 using ESFA.DC.ESF.R2.Stateless.Mappers;
 using ESFA.DC.ILR.DataService.Models;
 using ESFA.DC.JobContextManager.Interface;
 using ESFA.DC.JobContextManager.Model;
 using ESFA.DC.Logging.Interfaces;
+using AimAndDeliverable1920Mapper = ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Mapper._1920;
+using AimAndDeliverable2021Mapper = ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Mapper._2021;
 using Ilr1920DataProvider = ESFA.DC.ESF.R2._1920.Data.AimAndDeliverable.Ilr;
 using Ilr2021DataProvider = ESFA.DC.ESF.R2._2021.Data.AimAndDeliverable.Ilr;
 
@@ -66,6 +69,8 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
 
                     return new Ilr1920DataProvider.IlrDataProvider(IlrSqlFunc);
                 }).As<IIlrDataProvider>();
+
+                container.RegisterType<AimAndDeliverable1920Mapper.AimAndDeliverableMapper>().As<AbstractAimAndDeliverableMapper>();
             }
             else if (esfJobContext.CollectionYear == AcademicYearConstants.Year2021)
             {
@@ -77,6 +82,8 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
 
                     return new Ilr2021DataProvider.IlrDataProvider(IlrSqlFunc);
                 }).As<IIlrDataProvider>();
+
+                container.RegisterType<AimAndDeliverable2021Mapper.AimAndDeliverableMapper>().As<AbstractAimAndDeliverableMapper>();
             }
         }
     }
