@@ -15,7 +15,7 @@ namespace ESFA.DC.ESF.R2.Data.AimAndDeliverable.Fcs
     {
         private readonly Func<SqlConnection> _sqlConnectionFunc;
 
-        private readonly string fcssql = @"SELECT [ExternalDeliverableCode], [DeliverableName] 
+        private readonly string fcssql = @"SELECT [ExternalDeliverableCode], [DeliverableName] , [Round2DeliverableName]
                                             FROM [dbo].[ContractDeliverableCodeMapping]
                                               WHERE FundingStreamPeriodCode = 'ESF1420'";
 

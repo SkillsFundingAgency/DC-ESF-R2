@@ -6,5 +6,7 @@
         public string ExternalDeliverableCode { get; set; }
 
         public string DeliverableName { get; set; }
+
+        public string Round2DeliverableName { get; set; }
     }
 }

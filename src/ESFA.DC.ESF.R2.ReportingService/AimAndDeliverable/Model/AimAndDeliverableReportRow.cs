@@ -14,7 +14,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Model
 
         public DPOutcome DPOutcome { get; set; }
 
-        public string DeliverableName { get; set; }
+        public FCSDeliverableCodeMapping FcsDeliverableCodeMapping { get; set; }
 
         public string ReportMonth { get; set; }
     }

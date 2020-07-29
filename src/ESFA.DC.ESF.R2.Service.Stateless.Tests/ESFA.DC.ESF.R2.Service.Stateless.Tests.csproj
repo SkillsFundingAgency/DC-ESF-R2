@@ -364,6 +364,10 @@
       <Project>{3EB1948D-7F0F-446F-A8B3-C3AB19531FE6}</Project>
       <Name>ESFA.DC.ESF.R2.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.ReportingService\ESFA.DC.ESF.R2.ReportingService.csproj">
+      <Project>{DE38A36B-C220-4227-B10C-35E24C44EDCE}</Project>
+      <Name>ESFA.DC.ESF.R2.ReportingService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Service.Config\ESFA.DC.ESF.R2.Service.Config.csproj">
       <Project>{5cdfb079-a857-42cf-95f8-f6af0fe0c179}</Project>
       <Name>ESFA.DC.ESF.R2.Service.Config</Name>

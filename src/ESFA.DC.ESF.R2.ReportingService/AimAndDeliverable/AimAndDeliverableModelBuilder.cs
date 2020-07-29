@@ -129,8 +129,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
                 [12] = $"Jul-{end}",
             };
 
-        public IDictionary<string, string> BuildFcsDeliverableCodeNameLookup(ICollection<FCSDeliverableCodeMapping> fcsDeliverableCodeMappings)
-            => fcsDeliverableCodeMappings.ToDictionary(m => m.ExternalDeliverableCode, m => m.DeliverableName, StringComparer.OrdinalIgnoreCase);
+        public IDictionary<string, FCSDeliverableCodeMapping> BuildFcsDeliverableCodeNameLookup(ICollection<FCSDeliverableCodeMapping> fcsDeliverableCodeMappings)
+            => fcsDeliverableCodeMappings.ToDictionary(m => m.ExternalDeliverableCode, m => m, StringComparer.OrdinalIgnoreCase);
 
         public IDictionary<string, LARSLearningDelivery> BuildLarsLearningDeliveryLookup(ICollection<LARSLearningDelivery> larsLearningDeliveries)
             => larsLearningDeliveries.ToDictionary(ld => ld.LearnAimRef, ld => ld, StringComparer.OrdinalIgnoreCase);
@@ -181,7 +181,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
             DPOutcome dpOutcome,
             ESFDPOutcome esfDpOutcome,
             LARSLearningDelivery larsLearningDelivery,
-            string deliverableName,
+            FCSDeliverableCodeMapping fcsDeliverableCodeMapping,
             ESFLearningDeliveryDeliverablePeriod deliverablePeriod = null,
             string reportMonth = null)
             => new AimAndDeliverableReportRow()
@@ -191,7 +191,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
                 ESFDPOutcome = esfDpOutcome,
                 LarsLearningDelivery = larsLearningDelivery,
                 DeliverablePeriod = deliverablePeriod,
-                DeliverableName = deliverableName,
+                FcsDeliverableCodeMapping = fcsDeliverableCodeMapping,
                 ReportMonth = reportMonth,
             };
     }
