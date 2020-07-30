@@ -2,11 +2,11 @@
 using System.Data.SqlClient;
 using System.Threading;
 using System.Threading.Tasks;
-using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.DataStore;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Interfaces;
+using ESFA.DC.ESF.R2.Service.Config.Interfaces;
 using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.DataStore

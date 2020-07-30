@@ -40,18 +40,19 @@
     </CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IESFConfiguration.cs" />
+    <Compile Include="Interfaces\IFCSConfiguration.cs" />
+    <Compile Include="Interfaces\IILRConfiguration.cs" />
+    <Compile Include="Interfaces\ILoggerOptions.cs" />
+    <Compile Include="Interfaces\IReferenceDataConfig.cs" />
+    <Compile Include="Interfaces\IVersionInfo.cs" />
     <Compile Include="ESFConfiguration.cs" />
     <Compile Include="FCSConfiguration.cs" />
+    <Compile Include="ILRConfiguration.cs" />
     <Compile Include="LoggerOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReferenceDataConfig.cs" />
     <Compile Include="VersionInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ESFA.DC.ESF.R2.Interfaces\ESFA.DC.ESF.R2.Interfaces.csproj">
-      <Project>{3eb1948d-7f0f-446f-a8b3-c3ab19531fe6}</Project>
-      <Name>ESFA.DC.ESF.R2.Interfaces</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

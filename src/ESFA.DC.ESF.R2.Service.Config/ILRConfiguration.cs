@@ -1,6 +1,8 @@
-﻿namespace ESFA.DC.ILR.DataService.Models
+﻿using ESFA.DC.ESF.R2.Service.Config.Interfaces;
+
+namespace ESFA.DC.ESF.R2.Service.Config
 {
-    public class ILRConfiguration
+    public class ILRConfiguration : IILRConfiguration
     {
         public string ILR1516ConnectionString { get; set; }
 

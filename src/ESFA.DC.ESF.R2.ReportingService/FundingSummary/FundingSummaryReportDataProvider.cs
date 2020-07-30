@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
@@ -10,6 +8,7 @@ using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.FundingSummary;
 using ESFA.DC.ESF.R2.Models.Interfaces;
+using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.ILR.DataService.Models;
 
 namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
@@ -18,13 +17,16 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
     {
         private readonly IReferenceDataService _referenceDataService;
         private readonly ISupplementaryDataService _supplementaryDataService;
+        private readonly IIlrDataProvider _ilrDataProvider;
 
         public FundingSummaryReportDataProvider(
             IReferenceDataService referenceDataService,
-            ISupplementaryDataService supplementaryDataService)
+            ISupplementaryDataService supplementaryDataService,
+            IIlrDataProvider ilrDataProvider)
         {
             _referenceDataService = referenceDataService;
             _supplementaryDataService = supplementaryDataService;
+            _ilrDataProvider = ilrDataProvider;
         }
 
         public async Task<IOrganisationReferenceData> ProvideOrganisationReferenceDataAsync(int ukprn, CancellationToken cancellationToken)
@@ -49,7 +51,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
         public async Task<IList<SourceFileModel>> GetImportFilesAsync(int ukPrn, CancellationToken cancellationToken)
         {
-            return new List<SourceFileModel>();
+            var importFiles = await _supplementaryDataService.GetImportFiles(ukPrn.ToString(), cancellationToken);
+
+            return importFiles;
         }
 
         public async Task<IDictionary<string, IEnumerable<SupplementaryDataYearlyModel>>> GetSupplementaryDataAsync(int endYear, IEnumerable<SourceFileModel> sourceFiles, CancellationToken cancellationToken)
@@ -59,14 +63,54 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return suppData;
         }
 
-        public async Task<IEnumerable<ILRFileDetails>> GetIlrFileDetailsAsync(int ukPrn, int collectionYear, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ILRFileDetails>> GetIlrFileDetailsAsync(int ukprn, int collectionYear, CancellationToken cancellationToken)
         {
-            return new List<ILRFileDetails>();
+            var ilrFileDetails = await _ilrDataProvider.GetIlrFileDetailsAsync(ukprn, cancellationToken);
+
+            return ilrFileDetails;
         }
 
         public async Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrDataAsync(int ukprn, string collectionName, int collectionYear, string collectionReturnCode, CancellationToken cancellationToken)
         {
-            return new List<FM70PeriodisedValuesYearly>();
+            var ilrData = await _ilrDataProvider.GetIlrPeriodisedValuesAsync(ukprn, collectionReturnCode, cancellationToken);
+
+            var fm70YearlyData = GroupFm70DataIntoYears(collectionYear, ilrData);
+
+            return fm70YearlyData;
+        }
+
+        private IEnumerable<FM70PeriodisedValuesYearly> GroupFm70DataIntoYears(int endYear, IEnumerable<FM70PeriodisedValues> fm70Data)
+        {
+            var yearlyFm70Data = new List<FM70PeriodisedValuesYearly>();
+            if (fm70Data == null)
+            {
+                return yearlyFm70Data;
+            }
+
+            for (var i = ReportingConstants.StartYear; i <= endYear; i++)
+            {
+                yearlyFm70Data.Add(new FM70PeriodisedValuesYearly
+                {
+                    FundingYear = i,
+                    Fm70PeriodisedValues = new List<FM70PeriodisedValues>()
+                });
+            }
+
+            var fm70DataModels = fm70Data.ToList();
+
+            if (!fm70DataModels.Any())
+            {
+                return yearlyFm70Data;
+            }
+
+            foreach (var yearlyModel in yearlyFm70Data)
+            {
+                yearlyModel.Fm70PeriodisedValues = fm70DataModels
+                    .Where(sd => sd.FundingYear == yearlyModel.FundingYear)
+                    .ToList();
+            }
+
+            return yearlyFm70Data;
         }
     }
 }

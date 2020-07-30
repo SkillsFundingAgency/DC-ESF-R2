@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+using ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.FundingSummary;
@@ -65,6 +66,41 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
         }
 
         [Fact]
+        public async Task GetImportFilesAsync()
+        {
+            var cancellationToken = CancellationToken.None;
+
+            var esfSourceFIles = new List<SourceFileModel>
+            {
+                new SourceFileModel { SourceFileId = 1, ConRefNumber = "ConRef1" },
+                new SourceFileModel { SourceFileId = 2, ConRefNumber = "ConRef1" },
+                new SourceFileModel { SourceFileId = 3, ConRefNumber = "ConRef2" },
+            };
+
+            var suppDataDataServiceMock = new Mock<ISupplementaryDataService>();
+            suppDataDataServiceMock.Setup(x => x.GetImportFiles("12345678", cancellationToken)).ReturnsAsync(esfSourceFIles);
+
+            var files = await NewProvider(supplementaryDataService: suppDataDataServiceMock.Object).GetImportFilesAsync(12345678, cancellationToken);
+
+            files.Should().BeEquivalentTo(esfSourceFIles);
+        }
+
+        [Fact]
+        public async Task GetImportFilesAsync_UkprnMismatch()
+        {
+            var cancellationToken = CancellationToken.None;
+
+            var esfSourceFIles = new List<SourceFileModel>();
+
+            var suppDataDataServiceMock = new Mock<ISupplementaryDataService>();
+            suppDataDataServiceMock.Setup(x => x.GetImportFiles("12345678", cancellationToken)).ReturnsAsync(esfSourceFIles);
+
+            var files = await NewProvider(supplementaryDataService: suppDataDataServiceMock.Object).GetImportFilesAsync(12345678, cancellationToken);
+
+            files.Should().BeEquivalentTo(esfSourceFIles);
+        }
+
+        [Fact]
         public async Task GetSupplementaryDataAsync()
         {
             int endYear = 2020;
@@ -102,11 +138,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             refDataVersions.Should().BeEquivalentTo(suppData);
         }
 
-        private FundingSummaryReportDataProvider NewProvider(IReferenceDataService referenceDataService = null, ISupplementaryDataService supplementaryDataService = null)
+        private FundingSummaryReportDataProvider NewProvider(IReferenceDataService referenceDataService = null, ISupplementaryDataService supplementaryDataService = null, IIlrDataProvider ilrDataProvider = null)
         {
             return new FundingSummaryReportDataProvider(
                 referenceDataService ?? Mock.Of<IReferenceDataService>(),
-                supplementaryDataService ?? Mock.Of<ISupplementaryDataService>());
+                supplementaryDataService ?? Mock.Of<ISupplementaryDataService>(),
+                ilrDataProvider ?? Mock.Of<IIlrDataProvider>());
         }
     }
 }

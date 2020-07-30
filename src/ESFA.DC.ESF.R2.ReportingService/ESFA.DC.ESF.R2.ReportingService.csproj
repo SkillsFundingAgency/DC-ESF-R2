@@ -54,6 +54,7 @@
     <Compile Include="FundingSummary\FundingSummaryReportDataProvider.cs" />
     <Compile Include="FundingSummary\FundingSummaryReportModelBuilder.cs" />
     <Compile Include="FundingSummary\FundingSummaryReportRenderService.cs" />
+    <Compile Include="FundingSummary\Interface\IFundingSummaryReportModelBuilder.cs" />
     <Compile Include="FundingSummary\Model\FundingSummaryReportFooterModel.cs" />
     <Compile Include="FundingSummary\Model\IlrFileDetail.cs" />
     <Compile Include="FundingSummary\Model\FundingSummaryReportHeaderModel.cs" />
@@ -175,6 +176,10 @@
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Models\ESFA.DC.ESF.R2.Models.csproj">
       <Project>{D442AA8D-E165-4AF4-B8B8-9C25BCE17258}</Project>
       <Name>ESFA.DC.ESF.R2.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.Service.Config\ESFA.DC.ESF.R2.Service.Config.csproj">
+      <Project>{5CDFB079-A857-42CF-95F8-F6AF0FE0C179}</Project>
+      <Name>ESFA.DC.ESF.R2.Service.Config</Name>
     </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Utils\ESFA.DC.ESF.R2.Utils.csproj">
       <Project>{C5001A71-FFDD-4868-9EE4-412E3205F284}</Project>

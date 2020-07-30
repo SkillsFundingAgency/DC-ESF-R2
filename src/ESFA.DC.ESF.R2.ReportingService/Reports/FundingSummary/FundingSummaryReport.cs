@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using Aspose.Cells;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces;
-using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
@@ -24,6 +23,7 @@ using ESFA.DC.ESF.R2.Models.Styling;
 using ESFA.DC.ESF.R2.ReportingService.Abstract;
 using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.ESF.R2.ReportingService.Mappers;
+using ESFA.DC.ESF.R2.Service.Config.Interfaces;
 using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.ExcelService.Interface;
 using ESFA.DC.FileService.Interface;
@@ -65,7 +65,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Reports.FundingSummary
             IExcelStyleProvider excelStyleProvider,
             IVersionInfo versionInfo,
             ILogger logger)
-            : base(dateTimeProvider, valueProvider, excelFileService, ReportTaskConstants.TaskGenerateFundingSummaryReport)
+            : base(dateTimeProvider, valueProvider, excelFileService, ReportTaskConstants.TaskGenerateFundingSummaryReportLegacy)
         {
             _dateTimeProvider = dateTimeProvider;
             _rowHelpers = rowHelpers;

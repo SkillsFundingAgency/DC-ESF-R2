@@ -8,7 +8,7 @@ using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.ESF.R2.ReportingService.Abstract;
 using ESFA.DC.ESF.R2.ReportingService.Constants;
-using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.Interface;
+using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Interface;
 using ESFA.DC.ExcelService.Interface;
 using ESFA.DC.Logging.Interfaces;
 
@@ -16,21 +16,20 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 {
     public sealed class FundingSummaryReport : AbstractReportService, IModelReport
     {
-        private const string NotApplicable = "Not Applicable";
         private const string _excelExtension = ".xlsx";
 
-        private readonly IModelBuilder<IFundingSummaryReport> _modelBuilder;
+        private readonly IFundingSummaryReportModelBuilder _modelBuilder;
         private readonly IRenderService _renderService;
         private readonly IExcelFileService _excelFileService;
         private readonly ILogger _logger;
 
         public FundingSummaryReport(
-            IModelBuilder<IFundingSummaryReport> modelBuilder,
+            IFundingSummaryReportModelBuilder modelBuilder,
             IRenderService renderService,
             IDateTimeProvider dateTimeProvider,
             IExcelFileService excelFileService,
             ILogger logger)
-            : base(dateTimeProvider, ReportTaskConstants.TaskGenerateFundingSummaryReport2021)
+            : base(dateTimeProvider, ReportTaskConstants.TaskGenerateFundingSummaryReport)
         {
             _modelBuilder = modelBuilder;
             _renderService = renderService;
@@ -54,7 +53,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             {
                 workbook.Worksheets.Clear();
 
-                foreach (var tab in fundingSummaryReportModels.FundingSummaryReportTabs)
+                foreach (var tab in fundingSummaryReportModels)
                 {
                     var worksheet = _excelFileService.GetWorksheetFromWorkbook(workbook, tab.TabName);
 

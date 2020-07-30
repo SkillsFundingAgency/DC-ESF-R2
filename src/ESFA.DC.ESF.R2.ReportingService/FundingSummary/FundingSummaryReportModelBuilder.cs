@@ -6,22 +6,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces;
-using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.Constants;
-using ESFA.DC.ESF.R2.Interfaces.Reports;
 using ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Constants;
+using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Interface;
 using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model;
+using ESFA.DC.ESF.R2.Service.Config.Interfaces;
 using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.ILR.DataService.Models;
 using ESFA.DC.Logging.Interfaces;
 
 namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 {
-    public class FundingSummaryReportModelBuilder : IModelBuilder<IEnumerable<FundingSummaryReportTab>>
+    public class FundingSummaryReportModelBuilder : IFundingSummaryReportModelBuilder
     {
         private const string NotApplicable = "Not Applicable";
 
@@ -63,7 +63,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             IEnumerable<string> conRefNumbers;
             var dateTimeNowUtc = _dateTimeProvider.GetNowUtc();
             var dateTimeNowUk = _dateTimeProvider.ConvertUtcToUk(dateTimeNowUtc);
-            var reportGenerationTime = dateTimeNowUk.ToString("HH:mm:ss") + " on " + dateTimeNowUk.ToString("dd/MM/yyyy");
+            var reportGenerationTime = dateTimeNowUk.ToString(ReportingConstants.TimeFormat) + " on " + dateTimeNowUk.ToString(ReportingConstants.ShortDateFormat);
 
             var referenceDataVersions = await _dataProvider.ProvideReferenceDataVersionsAsync(cancellationToken);
             var orgData = await _dataProvider.ProvideOrganisationReferenceDataAsync(ukPrn, cancellationToken);
@@ -80,11 +80,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             var collectionYearString = string.Concat("20", esfJobContext.StartCollectionYearAbbreviation);
             var collectionYear = int.Parse(collectionYearString);
 
-            var sourceFiles = await _dataProvider.GetImportFilesAsync(esfJobContext.UkPrn, cancellationToken);
+            var esfSourceFiles = await _dataProvider.GetImportFilesAsync(esfJobContext.UkPrn, cancellationToken);
 
-            _logger.LogDebug($"{sourceFiles.Count} esf files found for ukprn {ukPrn} and collection year {collectionYearString}.");
+            _logger.LogDebug($"{esfSourceFiles.Count} esf files found for ukprn {ukPrn} and collection year {collectionYearString}.");
 
-            var supplementaryData = await _dataProvider.GetSupplementaryDataAsync(collectionYear, sourceFiles, cancellationToken);
+            var supplementaryData = await _dataProvider.GetSupplementaryDataAsync(collectionYear, esfSourceFiles, cancellationToken);
 
             var ilrYearlyFileData = await _dataProvider.GetIlrFileDetailsAsync(ukPrn, collectionYear, cancellationToken);
             var fm70YearlyData = await _dataProvider.GetYearlyIlrDataAsync(ukPrn, esfJobContext.CollectionName, collectionYear, esfJobContext.ReturnPeriod, cancellationToken);
@@ -100,7 +100,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             {
                 var baseModels = BuildBaseModels(collectionYear);
 
-                var file = sourceFiles.FirstOrDefault(sf => sf.ConRefNumber.CaseInsensitiveEquals(conRefNumber));
+                var file = esfSourceFiles.FirstOrDefault(sf => sf.ConRefNumber.CaseInsensitiveEquals(conRefNumber));
 
                 var header = PopulateReportHeader(file, ilrYearlyFileData, ukPrn, orgData.Name, conRefNumber, collectionYear);
 
