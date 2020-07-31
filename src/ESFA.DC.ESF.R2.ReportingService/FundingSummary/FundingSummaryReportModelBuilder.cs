@@ -87,7 +87,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             var supplementaryData = await _dataProvider.GetSupplementaryDataAsync(collectionYear, esfSourceFiles, cancellationToken);
 
             var ilrYearlyFileData = await _dataProvider.GetIlrFileDetailsAsync(ukPrn, collectionYear, cancellationToken);
-            var fm70YearlyData = await _dataProvider.GetYearlyIlrDataAsync(ukPrn, esfJobContext.CollectionName, collectionYear, esfJobContext.ReturnPeriod, cancellationToken);
+            var fm70YearlyData = await _dataProvider.GetYearlyIlrDataAsync(ukPrn, esfJobContext.ReturnPeriod, cancellationToken);
 
             var periodisedEsf = PeriodiseEsfSuppData(conRefNumbers, supplementaryData);
             var periodisedILR = PeriodiseIlr(conRefNumbers, fm70YearlyData.SelectMany(x => x.Fm70PeriodisedValues));

@@ -1203,7 +1203,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             dataProvider.Setup(x => x.GetImportFilesAsync(ukprn, cancellationToken)).ReturnsAsync(esfSourceFiles);
             dataProvider.Setup(x => x.GetSupplementaryDataAsync(collectionYear, esfSourceFiles, cancellationToken)).ReturnsAsync(suppData);
             dataProvider.Setup(x => x.GetIlrFileDetailsAsync(ukprn, collectionYear, cancellationToken)).ReturnsAsync(ilrFileDetails);
-            dataProvider.Setup(x => x.GetYearlyIlrDataAsync(ukprn, collectionName, collectionYear, returnPeriod, cancellationToken)).ReturnsAsync(ilrPeriodisedValues);
+            dataProvider.Setup(x => x.GetYearlyIlrDataAsync(ukprn, returnPeriod, cancellationToken)).ReturnsAsync(ilrPeriodisedValues);
 
             var expectedTabs = new List<FundingSummaryReportTab>
             {
@@ -1572,7 +1572,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             dataProvider.Setup(x => x.GetImportFilesAsync(ukprn, cancellationToken)).ReturnsAsync(esfSourceFiles);
             dataProvider.Setup(x => x.GetSupplementaryDataAsync(collectionYear, esfSourceFiles, cancellationToken)).ReturnsAsync(suppData);
             dataProvider.Setup(x => x.GetIlrFileDetailsAsync(ukprn, collectionYear, cancellationToken)).ReturnsAsync(ilrFileDetails);
-            dataProvider.Setup(x => x.GetYearlyIlrDataAsync(ukprn, collectionName, collectionYear, returnPeriod, cancellationToken)).ReturnsAsync(ilrPeriodisedValues);
+            dataProvider.Setup(x => x.GetYearlyIlrDataAsync(ukprn, returnPeriod, cancellationToken)).ReturnsAsync(ilrPeriodisedValues);
 
             var expectedTabs = new List<FundingSummaryReportTab>
             {

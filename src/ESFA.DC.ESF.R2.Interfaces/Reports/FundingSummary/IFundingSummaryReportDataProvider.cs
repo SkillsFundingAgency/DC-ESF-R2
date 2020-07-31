@@ -19,6 +19,6 @@ namespace ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary
 
         Task<IEnumerable<ILRFileDetails>> GetIlrFileDetailsAsync(int ukPrn, int collectionYear, CancellationToken cancellationToken);
 
-        Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrDataAsync(int ukprn, string collectionName, int collectionYear, string collectionReturnCode, CancellationToken cancellationToken);
+        Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrDataAsync(int ukprn, string collectionReturnCode, CancellationToken cancellationToken);
     }
 }

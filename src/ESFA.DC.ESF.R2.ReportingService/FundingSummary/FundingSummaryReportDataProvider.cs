@@ -70,47 +70,24 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return ilrFileDetails;
         }
 
-        public async Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrDataAsync(int ukprn, string collectionName, int collectionYear, string collectionReturnCode, CancellationToken cancellationToken)
+        public async Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrDataAsync(int ukprn, string collectionReturnCode, CancellationToken cancellationToken)
         {
             var ilrData = await _ilrDataProvider.GetIlrPeriodisedValuesAsync(ukprn, collectionReturnCode, cancellationToken);
 
-            var fm70YearlyData = GroupFm70DataIntoYears(collectionYear, ilrData);
+            var fm70YearlyData = GroupFm70DataIntoYears(ilrData);
 
             return fm70YearlyData;
         }
 
-        private IEnumerable<FM70PeriodisedValuesYearly> GroupFm70DataIntoYears(int endYear, IEnumerable<FM70PeriodisedValues> fm70Data)
+        private IEnumerable<FM70PeriodisedValuesYearly> GroupFm70DataIntoYears(IEnumerable<FM70PeriodisedValues> fm70Data)
         {
-            var yearlyFm70Data = new List<FM70PeriodisedValuesYearly>();
-            if (fm70Data == null)
-            {
-                return yearlyFm70Data;
-            }
-
-            for (var i = ReportingConstants.StartYear; i <= endYear; i++)
-            {
-                yearlyFm70Data.Add(new FM70PeriodisedValuesYearly
+            return fm70Data?
+                .GroupBy(x => x.FundingYear)
+                .Select(x => new FM70PeriodisedValuesYearly
                 {
-                    FundingYear = i,
-                    Fm70PeriodisedValues = new List<FM70PeriodisedValues>()
-                });
-            }
-
-            var fm70DataModels = fm70Data.ToList();
-
-            if (!fm70DataModels.Any())
-            {
-                return yearlyFm70Data;
-            }
-
-            foreach (var yearlyModel in yearlyFm70Data)
-            {
-                yearlyModel.Fm70PeriodisedValues = fm70DataModels
-                    .Where(sd => sd.FundingYear == yearlyModel.FundingYear)
-                    .ToList();
-            }
-
-            return yearlyFm70Data;
+                    FundingYear = x.Key,
+                    Fm70PeriodisedValues = x.Select(pv => pv).ToList()
+                }) ?? Enumerable.Empty<FM70PeriodisedValuesYearly>();
         }
     }
 }

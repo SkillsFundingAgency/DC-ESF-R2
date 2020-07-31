@@ -10,6 +10,7 @@ using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.FundingSummary;
 using ESFA.DC.ESF.R2.ReportingService.FundingSummary;
+using ESFA.DC.ILR.DataService.Models;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -136,6 +137,92 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             var refDataVersions = await NewProvider(supplementaryDataService: suppDataDataServiceMock.Object).GetSupplementaryDataAsync(endYear, sourceFiles, cancellationToken);
 
             refDataVersions.Should().BeEquivalentTo(suppData);
+        }
+
+        [Fact]
+        public async Task GetIlrFileDetailsAsync()
+        {
+            var ukprn = 12345678;
+            var collectionYear = 2020;
+            var cancellationToken = CancellationToken.None;
+
+            var expectedFileDetails = new List<ILRFileDetails>
+            {
+                new ILRFileDetails
+                {
+                    Year = 2020,
+                    FileName = "File1.xml",
+                },
+                new ILRFileDetails
+                {
+                    Year = 2019,
+                    FileName = "File1.xml",
+                },
+                new ILRFileDetails
+                {
+                    Year = 2018,
+                    FileName = "File1.xml",
+                }
+            };
+
+            var ilrDataProviderMock = new Mock<IIlrDataProvider>();
+            ilrDataProviderMock.Setup(x => x.GetIlrFileDetailsAsync(ukprn, cancellationToken)).ReturnsAsync(expectedFileDetails);
+
+            var ilrFileDetails = await NewProvider(ilrDataProvider: ilrDataProviderMock.Object).GetIlrFileDetailsAsync(ukprn, collectionYear, cancellationToken);
+
+            ilrFileDetails.Should().BeEquivalentTo(expectedFileDetails);
+        }
+
+        [Fact]
+        public async Task GetYearlyIlrDataAsync()
+        {
+            var ukprn = 12345678;
+            var collectionReturnCode = "R01";
+            var cancellationToken = CancellationToken.None;
+
+            var periodisedValues = new List<FM70PeriodisedValues>
+            {
+                 new FM70PeriodisedValues { FundingYear = 2020 },
+                 new FM70PeriodisedValues { FundingYear = 2020 },
+                 new FM70PeriodisedValues { FundingYear = 2019 },
+                 new FM70PeriodisedValues { FundingYear = 2018 }
+            };
+
+            var expectedModels = new List<FM70PeriodisedValuesYearly>
+            {
+                new FM70PeriodisedValuesYearly
+                {
+                    FundingYear = 2020,
+                    Fm70PeriodisedValues = new List<FM70PeriodisedValues>
+                    {
+                        new FM70PeriodisedValues { FundingYear = 2020 },
+                        new FM70PeriodisedValues { FundingYear = 2020 }
+                    }
+                },
+                new FM70PeriodisedValuesYearly
+                {
+                    FundingYear = 2019,
+                    Fm70PeriodisedValues = new List<FM70PeriodisedValues>
+                    {
+                        new FM70PeriodisedValues { FundingYear = 2019 }
+                    }
+                },
+                new FM70PeriodisedValuesYearly
+                {
+                    FundingYear = 2018,
+                    Fm70PeriodisedValues = new List<FM70PeriodisedValues>
+                    {
+                        new FM70PeriodisedValues { FundingYear = 2018 }
+                    }
+                }
+            };
+
+            var ilrDataProviderMock = new Mock<IIlrDataProvider>();
+            ilrDataProviderMock.Setup(x => x.GetIlrPeriodisedValuesAsync(ukprn, collectionReturnCode, cancellationToken)).ReturnsAsync(periodisedValues);
+
+            var ilrModels = await NewProvider(ilrDataProvider: ilrDataProviderMock.Object).GetYearlyIlrDataAsync(ukprn, collectionReturnCode, cancellationToken);
+
+            ilrModels.Should().BeEquivalentTo(expectedModels);
         }
 
         private FundingSummaryReportDataProvider NewProvider(IReferenceDataService referenceDataService = null, ISupplementaryDataService supplementaryDataService = null, IIlrDataProvider ilrDataProvider = null)
