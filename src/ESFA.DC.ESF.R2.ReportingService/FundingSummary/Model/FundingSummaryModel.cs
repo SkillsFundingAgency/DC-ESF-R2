@@ -1,4 +1,6 @@
-﻿namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
+﻿using System.Linq;
+
+namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 {
     public class FundingSummaryModel
     {
@@ -20,33 +22,7 @@
 
         public PeriodisedReportValue CumulativeMonthlyTotals => BuildCumulativeMonthlyTotals();
 
-        private decimal Sum(
-            decimal? value1,
-            decimal? value2 = null,
-            decimal? value3 = null,
-            decimal? value4 = null,
-            decimal? value5 = null,
-            decimal? value6 = null,
-            decimal? value7 = null,
-            decimal? value8 = null,
-            decimal? value9 = null,
-            decimal? value10 = null,
-            decimal? value11 = null,
-            decimal ? value12 = null)
-        {
-            return value1 ?? 0 +
-                (value2 ?? 0) +
-                (value3 ?? 0) +
-                (value4 ?? 0) +
-                (value5 ?? 0) +
-                (value6 ?? 0) +
-                (value7 ?? 0) +
-                (value8 ?? 0) +
-                (value9 ?? 0) +
-                (value10 ?? 0) +
-                (value11 ?? 0) +
-                (value12 ?? 0);
-        }
+        private decimal Sum(params decimal?[] values) => values.Where(x => x.HasValue).Sum(x => x.Value);
 
         private PeriodisedReportValue BuildMonthlyTotals()
         {

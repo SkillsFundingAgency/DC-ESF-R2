@@ -4,10 +4,6 @@
     {
         public GroupHeader(
             string title,
-            string headerApril,
-            string headerMay,
-            string headerJune,
-            string headerJuly,
             string headerAugust,
             string headerSeptember,
             string headerOctober,
@@ -15,7 +11,11 @@
             string headerDecember,
             string headerJanuary,
             string headerFebruary,
-            string headerMarch)
+            string headerMarch,
+            string headerApril,
+            string headerMay,
+            string headerJune,
+            string headerJuly)
         {
             Title = title;
             HeaderApril = headerApril;

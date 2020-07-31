@@ -143,7 +143,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
         public async Task GetIlrFileDetailsAsync()
         {
             var ukprn = 12345678;
-            var collectionYear = 2020;
+            var collectionYears = new List<int> { 2020, 2019, 2018 };
             var cancellationToken = CancellationToken.None;
 
             var expectedFileDetails = new List<ILRFileDetails>
@@ -166,9 +166,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             };
 
             var ilrDataProviderMock = new Mock<IIlrDataProvider>();
-            ilrDataProviderMock.Setup(x => x.GetIlrFileDetailsAsync(ukprn, cancellationToken)).ReturnsAsync(expectedFileDetails);
+            ilrDataProviderMock.Setup(x => x.GetIlrFileDetailsAsync(ukprn, collectionYears, cancellationToken)).ReturnsAsync(expectedFileDetails);
 
-            var ilrFileDetails = await NewProvider(ilrDataProvider: ilrDataProviderMock.Object).GetIlrFileDetailsAsync(ukprn, collectionYear, cancellationToken);
+            var ilrFileDetails = await NewProvider(ilrDataProvider: ilrDataProviderMock.Object).GetIlrFileDetailsAsync(ukprn, collectionYears, cancellationToken);
 
             ilrFileDetails.Should().BeEquivalentTo(expectedFileDetails);
         }
@@ -178,6 +178,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
         {
             var ukprn = 12345678;
             var collectionReturnCode = "R01";
+            var collectionYear = 2020;
             var cancellationToken = CancellationToken.None;
 
             var periodisedValues = new List<FM70PeriodisedValues>
@@ -217,10 +218,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 }
             };
 
-            var ilrDataProviderMock = new Mock<IIlrDataProvider>();
-            ilrDataProviderMock.Setup(x => x.GetIlrPeriodisedValuesAsync(ukprn, collectionReturnCode, cancellationToken)).ReturnsAsync(periodisedValues);
+            var yearToCollectionDictionary = new Dictionary<int, string>
+            {
+                { 2018, "ILR1819" },
+                { 2019, "ILR1920" },
+                { 2020, "ILR2021" }
+            };
 
-            var ilrModels = await NewProvider(ilrDataProvider: ilrDataProviderMock.Object).GetYearlyIlrDataAsync(ukprn, collectionReturnCode, cancellationToken);
+            var ilrDataProviderMock = new Mock<IIlrDataProvider>();
+            ilrDataProviderMock.Setup(x => x.GetIlrPeriodisedValuesAsync(ukprn, collectionYear, collectionReturnCode, yearToCollectionDictionary, cancellationToken)).ReturnsAsync(periodisedValues);
+
+            var ilrModels = await NewProvider(ilrDataProvider: ilrDataProviderMock.Object).GetYearlyIlrDataAsync(ukprn, collectionYear, collectionReturnCode, yearToCollectionDictionary, cancellationToken);
 
             ilrModels.Should().BeEquivalentTo(expectedModels);
         }

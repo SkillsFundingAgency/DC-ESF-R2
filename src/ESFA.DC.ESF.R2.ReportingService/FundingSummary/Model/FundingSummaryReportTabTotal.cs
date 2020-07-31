@@ -5,7 +5,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 {
     public class FundingSummaryReportTabTotal
     {
-        public FundingSummaryReportTabTotal(IEnumerable<FundingSummaryModel> body)
+        public FundingSummaryReportTabTotal(ICollection<FundingSummaryModel> body)
         {
             IlrST01 = body.Sum(x => x.LearnerAssessmentPlans.IlrST01.Total);
             EsfST01 = body.Sum(x => x.LearnerAssessmentPlans.EsfST01.Total);

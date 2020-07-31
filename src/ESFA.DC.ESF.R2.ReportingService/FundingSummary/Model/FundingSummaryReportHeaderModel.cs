@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 {
@@ -20,6 +16,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 
         public string SecurityClassification { get; set; }
 
-        public IEnumerable<IlrFileDetail> IlrFileDetails { get; set; }
+        public ICollection<IlrFileDetail> IlrFileDetails { get; set; }
     }
 }

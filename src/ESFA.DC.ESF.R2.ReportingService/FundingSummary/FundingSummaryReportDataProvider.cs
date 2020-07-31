@@ -8,7 +8,6 @@ using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.FundingSummary;
 using ESFA.DC.ESF.R2.Models.Interfaces;
-using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.ILR.DataService.Models;
 
 namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
@@ -63,16 +62,16 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return suppData;
         }
 
-        public async Task<IEnumerable<ILRFileDetails>> GetIlrFileDetailsAsync(int ukprn, int collectionYear, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ILRFileDetails>> GetIlrFileDetailsAsync(int ukprn, IEnumerable<int> ilrYears, CancellationToken cancellationToken)
         {
-            var ilrFileDetails = await _ilrDataProvider.GetIlrFileDetailsAsync(ukprn, cancellationToken);
+            var ilrFileDetails = await _ilrDataProvider.GetIlrFileDetailsAsync(ukprn, ilrYears, cancellationToken);
 
             return ilrFileDetails;
         }
 
-        public async Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrDataAsync(int ukprn, string collectionReturnCode, CancellationToken cancellationToken)
+        public async Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrDataAsync(int ukprn, int collectionYear, string collectionReturnCode, IDictionary<int, string> ilrYearsToCollectionDictionary, CancellationToken cancellationToken)
         {
-            var ilrData = await _ilrDataProvider.GetIlrPeriodisedValuesAsync(ukprn, collectionReturnCode, cancellationToken);
+            var ilrData = await _ilrDataProvider.GetIlrPeriodisedValuesAsync(ukprn, collectionYear, collectionReturnCode, ilrYearsToCollectionDictionary, cancellationToken);
 
             var fm70YearlyData = GroupFm70DataIntoYears(ilrData);
 

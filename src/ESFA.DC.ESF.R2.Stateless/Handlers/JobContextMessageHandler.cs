@@ -8,6 +8,7 @@ using Autofac;
 using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Constants;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
+using ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Abstract;
 using ESFA.DC.ESF.R2.Service.Config.Interfaces;
@@ -18,11 +19,12 @@ using ESFA.DC.Logging.Interfaces;
 using AimAndDeliverable1920Mapper = ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Mapper._1920.AimAndDeliverableMapper;
 using AimAndDeliverable2021Mapper = ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Mapper._2021.AimAndDeliverableMapper;
 using Ilr1920AimAndDeliverableDataProvider = ESFA.DC.ESF.R2._1920.Data.AimAndDeliverable.Ilr;
-using Ilr1920FundingSummaryDataProvider = ESFA.DC.ESF.R2._1920.Data.FundingSummary.Ilr;
 using Ilr2021AimAndDeliverableDataProvider = ESFA.DC.ESF.R2._2021.Data.AimAndDeliverable.Ilr;
-using Ilr2021FundingSummaryDataProvider = ESFA.DC.ESF.R2._2021.Data.FundingSummary.Ilr;
 using IlrAimAndDeliverableDataProviderInterface = ESFA.DC.ESF.R2.Interfaces.Reports.AimAndDeliverable.IIlrDataProvider;
+using IlrFundingSummaryDataProvider = ESFA.DC.ESF.R2.Data.FundingSummary.Ilr.IlrDataProvider;
 using IlrFundingSummaryDataProviderInterface = ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary.IIlrDataProvider;
+using IlrFundingSummaryYear1920Configuration = ESFA.DC.ESF.R2._1920.Data.FundingSummary.FundingSummaryYearConfiguration;
+using IlrFundingSummaryYear2021Configuration = ESFA.DC.ESF.R2._2021.Data.FundingSummary.FundingSummaryYearConfiguration;
 
 namespace ESFA.DC.ESF.R2.Stateless.Handlers
 {
@@ -95,8 +97,9 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
                         { AcademicYearConstants.Year2018, Ilr1819SqlFunc }
                     };
 
-                    return new Ilr1920FundingSummaryDataProvider.IlrDataProvider(connectionDictionary, EsfSqlFunc, returnPeriodLookup);
+                    return new IlrFundingSummaryDataProvider(connectionDictionary, EsfSqlFunc, returnPeriodLookup);
                 }).As<IlrFundingSummaryDataProviderInterface>();
+                container.RegisterType<IlrFundingSummaryYear1920Configuration>().As<IFundingSummaryYearConfiguration>();
             }
             else if (esfJobContext.CollectionYear == AcademicYearConstants.Year2021)
             {
@@ -129,8 +132,9 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
                         { AcademicYearConstants.Year2018, Ilr1819SqlFunc }
                     };
 
-                    return new Ilr2021FundingSummaryDataProvider.IlrDataProvider(connectionDictionary, EsfSqlFunc, returnPeriodLookup);
+                    return new IlrFundingSummaryDataProvider(connectionDictionary, EsfSqlFunc, returnPeriodLookup);
                 }).As<IlrFundingSummaryDataProviderInterface>();
+                container.RegisterType<IlrFundingSummaryYear2021Configuration>().As<IFundingSummaryYearConfiguration>();
             }
         }
     }

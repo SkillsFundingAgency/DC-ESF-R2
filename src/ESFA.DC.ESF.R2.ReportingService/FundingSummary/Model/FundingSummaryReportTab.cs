@@ -10,7 +10,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 
         public FundingSummaryReportFooterModel Footer { get; set; }
 
-        public IEnumerable<FundingSummaryModel> Body { get; set; }
+        public ICollection<FundingSummaryModel> Body { get; set; }
 
         public FundingSummaryReportTabTotal FundingSummaryReportTabTotals => BuildTabTotals();
 

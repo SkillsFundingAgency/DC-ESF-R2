@@ -5,12 +5,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.ILR.DataService.Models;
-using ESFA.DC.ESF.R2.Interfaces.Constants;
 using ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
 using Dapper;
 
-namespace ESFA.DC.ESF.R2._1920.Data.FundingSummary.Ilr
+namespace ESFA.DC.ESF.R2.Data.FundingSummary.Ilr
 {
     public class IlrDataProvider : IIlrDataProvider
     {
@@ -65,27 +64,42 @@ namespace ESFA.DC.ESF.R2._1920.Data.FundingSummary.Ilr
             _returnPeriodLookup = returnPeriodLookup;
         }
 
-        public async Task<ICollection<ILRFileDetails>> GetIlrFileDetailsAsync(int ukprn, CancellationToken cancellationToken)
+        public async Task<ICollection<ILRFileDetails>> GetIlrFileDetailsAsync(int ukprn, IEnumerable<int> ilrYears, CancellationToken cancellationToken)
         {
+            var taskList = new List<Task<ILRFileDetails>>();
             var fileDetails = new List<ILRFileDetails>();
 
-            var fileDetail1920 = await RetrieveIlrFileDetails(ukprn, AcademicYearConstants.Year2019);
-            var fileDetail1819 = await RetrieveIlrFileDetails(ukprn, AcademicYearConstants.Year2018);
+            taskList.AddRange(ilrYears.Select(x => RetrieveIlrFileDetails(ukprn, x)));
 
-            if (fileDetail1920 != null) { fileDetails.Add(fileDetail1920); }
-            if (fileDetail1819 != null) { fileDetails.Add(fileDetail1819); }
+            var taskResults = await Task.WhenAll(taskList);
+
+            fileDetails.AddRange(taskResults ?? Array.Empty<ILRFileDetails>());
 
             return fileDetails;
         }
 
-        public async Task<ICollection<FM70PeriodisedValues>> GetIlrPeriodisedValuesAsync(int ukprn, string returnPeriod, CancellationToken cancellationToken)
+        public async Task<ICollection<FM70PeriodisedValues>> GetIlrPeriodisedValuesAsync(int ukprn, int currentYear, string returnPeriod, IDictionary<int, string> ilrYearsToCollectionDictionary, CancellationToken cancellationToken)
         {
+            var taskList = new List<Task<IEnumerable<FM70PeriodisedValues>>>();
             var periodisedValues = new List<FM70PeriodisedValues>();
 
             var previousYearReturnPeriod = _returnPeriodLookup.GetReturnPeriodForPreviousCollectionYear(returnPeriod);
 
-            periodisedValues.AddRange(await GetAcademicYearIlrData(ukprn, AcademicYearConstants.Year2018, IlrConstants.ILR1819Collection, previousYearReturnPeriod, cancellationToken));
-            periodisedValues.AddRange(await GetAcademicYearIlrData(ukprn, AcademicYearConstants.Year2019, IlrConstants.ILR1920Collection, returnPeriod, cancellationToken));
+            foreach (var year in ilrYearsToCollectionDictionary)
+            {
+                if (year.Key == currentYear)
+                {
+                    taskList.Add(GetAcademicYearIlrData(ukprn, year.Key, year.Value, returnPeriod, cancellationToken));
+                }
+                else
+                {
+                    taskList.Add(GetAcademicYearIlrData(ukprn, year.Key, year.Value, previousYearReturnPeriod, cancellationToken));
+                }
+            }
+
+            var taskResults = await Task.WhenAll(taskList);
+
+            periodisedValues.AddRange((taskResults?.SelectMany(x => x)) ?? Enumerable.Empty<FM70PeriodisedValues>());
 
             return periodisedValues;
         }

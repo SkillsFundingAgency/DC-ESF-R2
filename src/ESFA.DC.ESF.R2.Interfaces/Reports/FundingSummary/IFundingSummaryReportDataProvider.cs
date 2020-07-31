@@ -17,8 +17,8 @@ namespace ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary
 
         Task<IDictionary<string, IEnumerable<SupplementaryDataYearlyModel>>> GetSupplementaryDataAsync(int endYear, IEnumerable<SourceFileModel> sourceFiles, CancellationToken cancellationToken);
 
-        Task<IEnumerable<ILRFileDetails>> GetIlrFileDetailsAsync(int ukPrn, int collectionYear, CancellationToken cancellationToken);
+        Task<IEnumerable<ILRFileDetails>> GetIlrFileDetailsAsync(int ukPrn, IEnumerable<int> ilrYears, CancellationToken cancellationToken);
 
-        Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrDataAsync(int ukprn, string collectionReturnCode, CancellationToken cancellationToken);
+        Task<IEnumerable<FM70PeriodisedValuesYearly>> GetYearlyIlrDataAsync(int ukprn, int collectionYear, string collectionReturnCode, IDictionary<int, string> ilrYearsToCollectionDictionary, CancellationToken cancellationToken);
     }
 }

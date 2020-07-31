@@ -50,6 +50,7 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
             containerBuilder.RegisterInstance(Mock.Of<AbstractAimAndDeliverableMapper>()).As<AbstractAimAndDeliverableMapper>();
             containerBuilder.RegisterInstance(Mock.Of<Interfaces.Reports.AimAndDeliverable.IIlrDataProvider>()).As<Interfaces.Reports.AimAndDeliverable.IIlrDataProvider>();
             containerBuilder.RegisterInstance(Mock.Of<Interfaces.Reports.FundingSummary.IIlrDataProvider>()).As<Interfaces.Reports.FundingSummary.IIlrDataProvider>();
+            containerBuilder.RegisterInstance(Mock.Of<Interfaces.Reports.FundingSummary.IFundingSummaryYearConfiguration>()).As<Interfaces.Reports.FundingSummary.IFundingSummaryYearConfiguration>();
         }
     }
 }

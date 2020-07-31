@@ -38,8 +38,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
         [Fact]
         public void BuildSpecificationDefined()
         {
-            var year = 2020;
-
             IDictionary<string, IEnumerable<PeriodisedValue>> esfValues = new Dictionary<string, IEnumerable<PeriodisedValue>>
             {
                 {
@@ -59,32 +57,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
 
             var expectedValue = new SpecificationDefined
             {
-                GroupHeader = new GroupHeader(
-                    "Specification Defined",
-                    "August 2020",
-                    "September 2020",
-                    "October 2020",
-                    "November 2020",
-                    "December 2020",
-                    "January 2021",
-                    "February 2021",
-                    "March 2021",
-                    "April 2021",
-                    "May 2021",
-                    "June 2021",
-                    "July 2021"),
+                GroupHeader = Year2020GroupHeader("Specification Defined"),
                 EsfSD01 = new PeriodisedReportValue("SUPPDATA SD01 Progression Within Work (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
                 EsfSD02 = new PeriodisedReportValue("SUPPDATA SD02 LEP Agreed Delivery Plan (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
             };
 
-            NewBuilder().BuildSpecificationDefined(year, esfValues).Should().BeEquivalentTo(expectedValue);
+            NewBuilder().BuildSpecificationDefined(HeaderStringArray(), esfValues).Should().BeEquivalentTo(expectedValue);
         }
 
         [Fact]
         public void BuildCommunityGrants()
         {
-            var year = 2020;
-
             IDictionary<string, IEnumerable<PeriodisedValue>> esfValues = new Dictionary<string, IEnumerable<PeriodisedValue>>
             {
                 {
@@ -103,32 +86,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
 
             var expectedValue = new CommunityGrant
             {
-                GroupHeader = new GroupHeader(
-                    "Community Grant",
-                    "August 2020",
-                    "September 2020",
-                    "October 2020",
-                    "November 2020",
-                    "December 2020",
-                    "January 2021",
-                    "February 2021",
-                    "March 2021",
-                    "April 2021",
-                    "May 2021",
-                    "June 2021",
-                    "July 2021"),
+                GroupHeader = Year2020GroupHeader("Community Grant"),
                 EsfCG01 = new PeriodisedReportValue("SUPPDATA CG01 Community Grant Payment (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
                 EsfCG02 = new PeriodisedReportValue("SUPPDATA CG02 Community Grant Management Cost (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
             };
 
-            NewBuilder().BuildCommunityGrants(year, esfValues).Should().BeEquivalentTo(expectedValue);
+            NewBuilder().BuildCommunityGrants(HeaderStringArray(), esfValues).Should().BeEquivalentTo(expectedValue);
         }
 
         [Fact]
         public void BuildNonRegulatedLearning()
         {
-            var year = 2020;
-
             IDictionary<string, IEnumerable<PeriodisedValue>> esfValues = new Dictionary<string, IEnumerable<PeriodisedValue>>
             {
                 {
@@ -152,33 +120,18 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
 
             var expectedValue = new NonRegulatedLearning
             {
-                GroupHeader = new GroupHeader(
-                    "Non Regulated Learning",
-                    "August 2020",
-                    "September 2020",
-                    "October 2020",
-                    "November 2020",
-                    "December 2020",
-                    "January 2021",
-                    "February 2021",
-                    "March 2021",
-                    "April 2021",
-                    "May 2021",
-                    "June 2021",
-                    "July 2021"),
+                GroupHeader = Year2020GroupHeader("Non Regulated Learning"),
                 IlrNR01StartFunding = new PeriodisedReportValue("ILR NR01 Non Regulated Learning - Start Funding (£)", 1m, 1m, 1m, 0m, 0m, 1m, 0m, 1m, 1m, 1m, 1m, 1m),
                 IlrNR01AchFunding = new PeriodisedReportValue("ILR NR01 Non Regulated Learning - Achievement Funding (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m),
                 EsfNR01AuthClaims = new PeriodisedReportValue("SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
             };
 
-            NewBuilder().BuildNonRegulatedLearning(year, esfValues, ilrValues).Should().BeEquivalentTo(expectedValue);
+            NewBuilder().BuildNonRegulatedLearning(HeaderStringArray(), esfValues, ilrValues).Should().BeEquivalentTo(expectedValue);
         }
 
         [Fact]
         public void BuildRegulatedLearning()
         {
-            var year = 2020;
-
             IDictionary<string, IEnumerable<PeriodisedValue>> esfValues = new Dictionary<string, IEnumerable<PeriodisedValue>>
             {
                 {
@@ -202,32 +155,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
 
             var expectedValue = new RegulatedLearning
             {
-                GroupHeader = new GroupHeader(
-                    "Regulated Learning",
-                    "August 2020",
-                    "September 2020",
-                    "October 2020",
-                    "November 2020",
-                    "December 2020",
-                    "January 2021",
-                    "February 2021",
-                    "March 2021",
-                    "April 2021",
-                    "May 2021",
-                    "June 2021",
-                    "July 2021"),
+                GroupHeader = Year2020GroupHeader("Regulated Learning"),
                 IlrRQ01StartFunding = new PeriodisedReportValue("ILR RQ01 Regulated Learning - Start Funding (£)", 1m, 1m, 1m, 0m, 0m, 1m, 0m, 1m, 1m, 1m, 1m, 1m),
                 IlrRQ01AchFunding = new PeriodisedReportValue("ILR RQ01 Regulated Learning - Achievement Funding (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m),
                 EsfRQ01AuthClaims = new PeriodisedReportValue("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
             };
 
-            NewBuilder().BuildRegulatedLearning(year, esfValues, ilrValues).Should().BeEquivalentTo(expectedValue);
+            NewBuilder().BuildRegulatedLearning(HeaderStringArray(), esfValues, ilrValues).Should().BeEquivalentTo(expectedValue);
         }
 
         public void BuildProgressions()
         {
-            var year = 2020;
-
             IDictionary<string, IEnumerable<PeriodisedValue>> esfValues = new Dictionary<string, IEnumerable<PeriodisedValue>>
             {
                 {
@@ -288,20 +226,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
 
             var expectedValue = new Progression
             {
-                GroupHeader = new GroupHeader(
-                    "Progression and Sustained Progression",
-                    "August 2020",
-                    "September 2020",
-                    "October 2020",
-                    "November 2020",
-                    "December 2020",
-                    "January 2021",
-                    "February 2021",
-                    "March 2021",
-                    "April 2021",
-                    "May 2021",
-                    "June 2021",
-                    "July 2021"),
+                GroupHeader = Year2020GroupHeader("Progression and Sustained Progression"),
                 IlrPG01 = new PeriodisedReportValue("ILR PG01 Progression Paid Employment(£)", 2m, 2m, 2m, 1m, 0m, 1m, 1m, 2m, 2m, 2m, 2m, 2m),
                 EsfPG01 = new PeriodisedReportValue("SUPPDATA PG01 Progression Paid Employment Adjustments (£)", 2m, 2m, 2m, 0m, 0m, 2m, 2m, 2m, 0m, 2m, 0m, 2m),
                 IlrPG03 = new PeriodisedReportValue("ILR PG03 Progression Education (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m),
@@ -312,14 +237,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 EsfPG05 = new PeriodisedReportValue("SUPPDATA PG05 Progression Traineeship Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
             };
 
-            NewBuilder().BuildProgressions(year, esfValues, ilrValues).Should().BeEquivalentTo(expectedValue);
+            NewBuilder().BuildProgressions(HeaderStringArray(), esfValues, ilrValues).Should().BeEquivalentTo(expectedValue);
         }
 
         [Fact]
         public void BuildLearnerAssessmentPlans()
         {
-            var year = 2020;
-
             IDictionary<string, IEnumerable<PeriodisedValue>> esfValues = new Dictionary<string, IEnumerable<PeriodisedValue>>
             {
                 {
@@ -343,25 +266,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
 
             var expectedValue = new LearnerAssessmentPlan
             {
-                GroupHeader = new GroupHeader(
-                    "Learner Assessment and Plan",
-                    "August 2020",
-                    "September 2020",
-                    "October 2020",
-                    "November 2020",
-                    "December 2020",
-                    "January 2021",
-                    "February 2021",
-                    "March 2021",
-                    "April 2021",
-                    "May 2021",
-                    "June 2021",
-                    "July 2021"),
+                GroupHeader = Year2020GroupHeader("Learner Assessment and Plan"),
                 IlrST01 = new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
                 EsfST01 = new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
             };
 
-            NewBuilder().BuildLearnerAssessmentPlans(year, esfValues, ilrValues).Should().BeEquivalentTo(expectedValue);
+            var result = NewBuilder().BuildLearnerAssessmentPlans(HeaderStringArray(), esfValues, ilrValues);
+            result.Should().BeEquivalentTo(expectedValue);
         }
 
         [Fact]
@@ -377,7 +288,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             var esfValues = EsfValuesDictionary();
             var ilrValues = IlrValuesDictionary();
 
-            var models = NewBuilder().PopulateReportData(baseModels, esfValues, ilrValues);
+            var models = NewBuilder().PopulateReportData(HeaderDictionary(), baseModels, esfValues, ilrValues);
             var expectedModels = new List<FundingSummaryModel>
             {
                 new FundingSummaryModel
@@ -541,7 +452,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             var esfValues = EsfValuesDictionary();
             var ilrValues = IlrValuesDictionary();
 
-            var models = NewBuilder().PopulateReportData(baseModels, esfValues, ilrValues);
+            var models = NewBuilder().PopulateReportData(HeaderDictionary(), baseModels, esfValues, ilrValues);
             var expectedModels = new List<FundingSummaryModel>
             {
                 new FundingSummaryModel
@@ -658,7 +569,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             var esfValues = EsfValuesDictionary();
             var ilrValues = IlrValuesDictionary();
 
-            var models = NewBuilder().PopulateReportData(baseModels, esfValues, ilrValues);
+            var models = NewBuilder().PopulateReportData(HeaderDictionary(), baseModels, esfValues, ilrValues);
             var expectedModels = new List<FundingSummaryModel>
             {
                 new FundingSummaryModel
@@ -886,7 +797,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 }
             };
 
-            NewBuilder().PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020)
+            var yearToAcademicYearDictionary = new Dictionary<int, string>
+            {
+                { 2018, "2018/19" },
+                { 2019, "2019/20" },
+                { 2020, "2020/21" }
+            };
+
+            var fundingConfig = new Mock<IFundingSummaryYearConfiguration>();
+            fundingConfig.Setup(x => x.YearToAcademicYearDictionary()).Returns(yearToAcademicYearDictionary);
+
+            NewBuilder(fundingConfig: fundingConfig.Object).PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020, 2018)
                 .Should().BeEquivalentTo(expectedHeader);
         }
 
@@ -950,7 +871,16 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 }
             };
 
-            NewBuilder().PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2019)
+            var yearToAcademicYearDictionary = new Dictionary<int, string>
+            {
+                { 2018, "2018/19" },
+                { 2019, "2019/20" }
+            };
+
+            var fundingConfig = new Mock<IFundingSummaryYearConfiguration>();
+            fundingConfig.Setup(x => x.YearToAcademicYearDictionary()).Returns(yearToAcademicYearDictionary);
+
+            NewBuilder(fundingConfig: fundingConfig.Object).PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2019, 2018)
                 .Should().BeEquivalentTo(expectedHeader);
         }
 
@@ -998,7 +928,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 }
             };
 
-            NewBuilder().PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020)
+            var yearToAcademicYearDictionary = new Dictionary<int, string>
+            {
+                { 2018, "2018/19" },
+                { 2019, "2019/20" },
+                { 2020, "2020/21" }
+            };
+
+            var fundingConfig = new Mock<IFundingSummaryYearConfiguration>();
+            fundingConfig.Setup(x => x.YearToAcademicYearDictionary()).Returns(yearToAcademicYearDictionary);
+
+            NewBuilder(fundingConfig: fundingConfig.Object).PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020, 2018)
                 .Should().BeEquivalentTo(expectedHeader);
         }
 
@@ -1067,7 +1007,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 }
             };
 
-            NewBuilder().PopulateReportHeader(null, ilrFileDetails, 12345678, "OrgName", "Not Applicable", 2020)
+            var yearToAcademicYearDictionary = new Dictionary<int, string>
+            {
+                { 2018, "2018/19" },
+                { 2019, "2019/20" },
+                { 2020, "2020/21" }
+            };
+
+            var fundingConfig = new Mock<IFundingSummaryYearConfiguration>();
+            fundingConfig.Setup(x => x.YearToAcademicYearDictionary()).Returns(yearToAcademicYearDictionary);
+
+            NewBuilder(fundingConfig: fundingConfig.Object).PopulateReportHeader(null, ilrFileDetails, 12345678, "OrgName", "Not Applicable", 2020, 2018)
                 .Should().BeEquivalentTo(expectedHeader);
         }
 
@@ -1197,13 +1147,33 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             };
             var ilrPeriodisedValues = new List<FM70PeriodisedValuesYearly>();
 
+            var yearToCollectionDictionary = new Dictionary<int, string>
+            {
+                { 2018, "ILR1819" },
+                { 2019, "ILR1920" },
+                { 2020, "ILR2021" }
+            };
+
+            var yearToAcademicYearDictionary = new Dictionary<int, string>
+            {
+                { 2018, "2018/19" },
+                { 2019, "2019/20" },
+                { 2020, "2020/21" }
+            };
+
+            var fundingConfig = new Mock<IFundingSummaryYearConfiguration>();
+            fundingConfig.Setup(x => x.BaseIlrYear).Returns(2018);
+            fundingConfig.Setup(x => x.YearToCollectionDictionary()).Returns(yearToCollectionDictionary);
+            fundingConfig.Setup(x => x.YearToAcademicYearDictionary()).Returns(yearToAcademicYearDictionary);
+            fundingConfig.Setup(x => x.PeriodisedValuesHeaderDictionary(collectionYear)).Returns(HeaderDictionary());
+
             var dataProvider = new Mock<IFundingSummaryReportDataProvider>();
             dataProvider.Setup(x => x.ProvideReferenceDataVersionsAsync(cancellationToken)).ReturnsAsync(referenceDataVersions);
             dataProvider.Setup(x => x.ProvideOrganisationReferenceDataAsync(ukprn, cancellationToken)).ReturnsAsync(orgRefData);
             dataProvider.Setup(x => x.GetImportFilesAsync(ukprn, cancellationToken)).ReturnsAsync(esfSourceFiles);
             dataProvider.Setup(x => x.GetSupplementaryDataAsync(collectionYear, esfSourceFiles, cancellationToken)).ReturnsAsync(suppData);
-            dataProvider.Setup(x => x.GetIlrFileDetailsAsync(ukprn, collectionYear, cancellationToken)).ReturnsAsync(ilrFileDetails);
-            dataProvider.Setup(x => x.GetYearlyIlrDataAsync(ukprn, returnPeriod, cancellationToken)).ReturnsAsync(ilrPeriodisedValues);
+            dataProvider.Setup(x => x.GetIlrFileDetailsAsync(ukprn, new List<int> { 2020, 2019, 2018 }, cancellationToken)).ReturnsAsync(ilrFileDetails);
+            dataProvider.Setup(x => x.GetYearlyIlrDataAsync(ukprn, collectionYear, returnPeriod, yearToCollectionDictionary, cancellationToken)).ReturnsAsync(ilrPeriodisedValues);
 
             var expectedTabs = new List<FundingSummaryReportTab>
             {
@@ -1404,7 +1374,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 }
             };
 
-            var reportTabs = await NewBuilder(dateTimeProvider.Object, dataProvider.Object, versionInfo.Object).Build(esfJobContext.Object, cancellationToken);
+            var reportTabs = await NewBuilder(dateTimeProvider.Object, dataProvider.Object, fundingConfig.Object, versionInfo.Object).Build(esfJobContext.Object, cancellationToken);
 
             reportTabs.Should().BeEquivalentTo(expectedTabs);
         }
@@ -1566,13 +1536,33 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 }
             };
 
+            var yearToCollectionDictionary = new Dictionary<int, string>
+            {
+                { 2018, "ILR1819" },
+                { 2019, "ILR1920" },
+                { 2020, "ILR2021" }
+            };
+
+            var yearToAcademicYearDictionary = new Dictionary<int, string>
+            {
+                { 2018, "2018/19" },
+                { 2019, "2019/20" },
+                { 2020, "2020/21" }
+            };
+
+            var fundingConfig = new Mock<IFundingSummaryYearConfiguration>();
+            fundingConfig.Setup(x => x.BaseIlrYear).Returns(2018);
+            fundingConfig.Setup(x => x.YearToCollectionDictionary()).Returns(yearToCollectionDictionary);
+            fundingConfig.Setup(x => x.YearToAcademicYearDictionary()).Returns(yearToAcademicYearDictionary);
+            fundingConfig.Setup(x => x.PeriodisedValuesHeaderDictionary(collectionYear)).Returns(HeaderDictionary());
+
             var dataProvider = new Mock<IFundingSummaryReportDataProvider>();
             dataProvider.Setup(x => x.ProvideReferenceDataVersionsAsync(cancellationToken)).ReturnsAsync(referenceDataVersions);
             dataProvider.Setup(x => x.ProvideOrganisationReferenceDataAsync(ukprn, cancellationToken)).ReturnsAsync(orgRefData);
             dataProvider.Setup(x => x.GetImportFilesAsync(ukprn, cancellationToken)).ReturnsAsync(esfSourceFiles);
             dataProvider.Setup(x => x.GetSupplementaryDataAsync(collectionYear, esfSourceFiles, cancellationToken)).ReturnsAsync(suppData);
-            dataProvider.Setup(x => x.GetIlrFileDetailsAsync(ukprn, collectionYear, cancellationToken)).ReturnsAsync(ilrFileDetails);
-            dataProvider.Setup(x => x.GetYearlyIlrDataAsync(ukprn, returnPeriod, cancellationToken)).ReturnsAsync(ilrPeriodisedValues);
+            dataProvider.Setup(x => x.GetIlrFileDetailsAsync(ukprn, new List<int> { 2020, 2019, 2018 }, cancellationToken)).ReturnsAsync(ilrFileDetails);
+            dataProvider.Setup(x => x.GetYearlyIlrDataAsync(ukprn, collectionYear, returnPeriod, yearToCollectionDictionary, cancellationToken)).ReturnsAsync(ilrPeriodisedValues);
 
             var expectedTabs = new List<FundingSummaryReportTab>
             {
@@ -1968,7 +1958,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 }
             };
 
-            var reportTabs = await NewBuilder(dateTimeProvider.Object, dataProvider.Object, versionInfo.Object).Build(esfJobContext.Object, cancellationToken);
+            var reportTabs = await NewBuilder(dateTimeProvider.Object, dataProvider.Object, fundingConfig.Object, versionInfo.Object).Build(esfJobContext.Object, cancellationToken);
 
             reportTabs.Should().BeEquivalentTo(expectedTabs);
         }
@@ -2033,6 +2023,22 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             };
         }
 
+        private string[] HeaderStringArray() => new string[]
+        {
+            "August 2020",
+            "September 2020",
+            "October 2020",
+            "November 2020",
+            "December 2020",
+            "January 2021",
+            "February 2021",
+            "March 2021",
+            "April 2021",
+            "May 2021",
+            "June 2021",
+            "July 2021"
+        };
+
         private GroupHeader Year2020GroupHeader(string title) => new GroupHeader(
             title,
             "August 2020",
@@ -2078,14 +2084,73 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             "June 2019",
             "July 2019");
 
+        private IDictionary<int, string[]> HeaderDictionary()
+        {
+            return new Dictionary<int, string[]>
+            {
+                {
+                    2020, new string[]
+                    {
+                        "August 2020",
+                        "September 2020",
+                        "October 2020",
+                        "November 2020",
+                        "December 2020",
+                        "January 2021",
+                        "February 2021",
+                        "March 2021",
+                        "April 2021",
+                        "May 2021",
+                        "June 2021",
+                        "July 2021"
+                    }
+                },
+                {
+                    2019, new string[]
+                    {
+                        "August 2019",
+                        "September 2019",
+                        "October 2019",
+                        "November 2019",
+                        "December 2019",
+                        "January 2020",
+                        "February 2020",
+                        "March 2020",
+                        "April 2020",
+                        "May 2020",
+                        "June 2020",
+                        "July 2020"
+                    }
+                },
+                {
+                    2018, new string[]
+                    {
+                        "August 2018",
+                        "September 2018",
+                        "October 2018",
+                        "November 2018",
+                        "December 2018",
+                        "January 2019",
+                        "February 2019",
+                        "March 2019",
+                        "April 2019",
+                        "May 2019",
+                        "June 2019",
+                        "July 2019"
+                    }
+                }
+            };
+        }
+
         private PeriodisedReportValue ZeroFundedPeriodisedValues(string title) => new PeriodisedReportValue(title, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m);
 
         private FundingSummaryReportModelBuilder NewBuilder(
             IDateTimeProvider dateTimeProvider = null,
             IFundingSummaryReportDataProvider dataProvider = null,
+            IFundingSummaryYearConfiguration fundingConfig = null,
             IVersionInfo versionInfo = null)
         {
-            return new FundingSummaryReportModelBuilder(dateTimeProvider, dataProvider, versionInfo, Mock.Of<ILogger>());
+            return new FundingSummaryReportModelBuilder(dateTimeProvider, dataProvider, fundingConfig, versionInfo, Mock.Of<ILogger>());
         }
     }
 }
