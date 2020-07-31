@@ -24,9 +24,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Abstract
             _csvFileService = csvFileService;
         }
 
-        public async Task WriteCsv(IEsfJobContext esfJobContext, string fileName, IEnumerable<TModel> models, CancellationToken cancellationToken)
+        public async Task WriteCsv(IEsfJobContext esfJobContext, string fileName, IEnumerable<TModel> models, CancellationToken cancellationToken, TClassMap classMap = null)
         {
-            await _csvFileService.WriteAsync<TModel, TClassMap>(models, fileName, esfJobContext.BlobContainerName, cancellationToken);
+            await _csvFileService.WriteAsync<TModel, TClassMap>(models, fileName, esfJobContext.BlobContainerName, cancellationToken, classMap: classMap);
         }
     }
 }

@@ -9,11 +9,14 @@ using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Constants;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
 using ESFA.DC.ESF.R2.Interfaces.Reports.Services;
+using ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Abstract;
 using ESFA.DC.ESF.R2.Service.Config.Interfaces;
 using ESFA.DC.ESF.R2.Stateless.Mappers;
 using ESFA.DC.JobContextManager.Interface;
 using ESFA.DC.JobContextManager.Model;
 using ESFA.DC.Logging.Interfaces;
+using AimAndDeliverable1920Mapper = ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Mapper._1920.AimAndDeliverableMapper;
+using AimAndDeliverable2021Mapper = ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Mapper._2021.AimAndDeliverableMapper;
 using Ilr1920AimAndDeliverableDataProvider = ESFA.DC.ESF.R2._1920.Data.AimAndDeliverable.Ilr;
 using Ilr1920FundingSummaryDataProvider = ESFA.DC.ESF.R2._1920.Data.FundingSummary.Ilr;
 using Ilr2021AimAndDeliverableDataProvider = ESFA.DC.ESF.R2._2021.Data.AimAndDeliverable.Ilr;
@@ -73,7 +76,9 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
                     return new Ilr1920AimAndDeliverableDataProvider.IlrDataProvider(IlrSqlFunc);
                 }).As<IlrAimAndDeliverableDataProviderInterface>();
 
-                container.Register(c =>
+                container.RegisterType<AimAndDeliverable1920Mapper>().As<AbstractAimAndDeliverableMapper>();
+
+            container.Register(c =>
                 {
                     var ilrConfig = c.Resolve<IILRConfiguration>();
                     var esfConfig = c.Resolve<IESFConfiguration>();
@@ -103,6 +108,7 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
 
                     return new Ilr2021AimAndDeliverableDataProvider.IlrDataProvider(IlrSqlFunc);
                 }).As<IlrAimAndDeliverableDataProviderInterface>();
+                container.RegisterType<AimAndDeliverable2021Mapper>().As<AbstractAimAndDeliverableMapper>();
 
                 container.Register(c =>
                 {

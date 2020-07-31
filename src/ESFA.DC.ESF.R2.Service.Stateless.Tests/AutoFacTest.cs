@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
 using ESFA.DC.ESF.R2.Interfaces.Controllers;
+using ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Abstract;
 using ESFA.DC.ESF.R2.Stateless;
 using ESFA.DC.JobContextManager.Interface;
 using ESFA.DC.JobContextManager.Model;
@@ -46,6 +47,7 @@ namespace ESFA.DC.ESF.R2.Service.Stateless.Tests
 
         private void RegisterYearSpecificServices(ContainerBuilder containerBuilder)
         {
+            containerBuilder.RegisterInstance(Mock.Of<AbstractAimAndDeliverableMapper>()).As<AbstractAimAndDeliverableMapper>();
             containerBuilder.RegisterInstance(Mock.Of<Interfaces.Reports.AimAndDeliverable.IIlrDataProvider>()).As<Interfaces.Reports.AimAndDeliverable.IIlrDataProvider>();
             containerBuilder.RegisterInstance(Mock.Of<Interfaces.Reports.FundingSummary.IIlrDataProvider>()).As<Interfaces.Reports.FundingSummary.IIlrDataProvider>();
         }

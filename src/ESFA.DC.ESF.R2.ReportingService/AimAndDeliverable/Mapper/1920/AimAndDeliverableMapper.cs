@@ -1,10 +1,8 @@
-﻿using CsvHelper.Configuration;
-using ESFA.DC.ESF.R2.Interfaces;
-using ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Model;
+﻿using ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Abstract;
 
-namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
+namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Mapper._1920
 {
-    public class AimAndDeliverableMapper : ClassMap<AimAndDeliverableReportRow>, IClassMapper
+    public class AimAndDeliverableMapper : AbstractAimAndDeliverableMapper
     {
         public AimAndDeliverableMapper()
         {
@@ -16,7 +14,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
             Map(m => m.LearningDelivery.AimSeqNumber).Index(i++).Name("Aim sequence number");
             Map(m => m.LearningDelivery.ConRefNumber).Index(i++).Name("Contract reference number");
             Map(m => m.LearningDelivery.DeliverableCode).Index(i++).Name("Deliverable code");
-            Map(m => m.DeliverableName).Index(i++).Name("Deliverable name");
+            Map(m => m.FcsDeliverableCodeMapping.DeliverableName).Index(i++).Name("Deliverable name");
             Map(m => m.LearningDelivery.LearnAimRef).Index(i++).Name("Learning aim reference");
             Map(m => m.DeliverablePeriod.DeliverableUnitCost).Index(i++).Name("Unit cost(£)");
             Map(m => m.LearningDelivery.ApplicWeightFundRate).Index(i++).Name("Funding rate - LARS plus ESOL hours(£)");
