@@ -8,12 +8,12 @@ namespace ESFA.DC.ESF.R2.Data.FundingSummary
     {
         public int BaseIlrYear => 2018;
 
-        public Dictionary<int, string> BaseYearToAcademicYearDictionary = new Dictionary<int, string>
+        public Dictionary<int, string> BaseYearToAcademicYearDictionary() => new Dictionary<int, string>
         {
             { AcademicYearConstants.Year2018, AcademicYearConstants.CalendarYear1819 }
         };
 
-        public Dictionary<int, string> BaseYearToCollectionDictionary = new Dictionary<int, string>
+        public Dictionary<int, string> BaseYearToCollectionDictionary() => new Dictionary<int, string>
         {
             { AcademicYearConstants.Year2018, AcademicYearConstants.CollectionILR1819 }
         };

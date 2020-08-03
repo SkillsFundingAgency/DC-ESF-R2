@@ -9,7 +9,7 @@ namespace ESFA.DC.ESF.R2._2021.Data.FundingSummary
     {
         public IDictionary<int, string> YearToAcademicYearDictionary()
         {
-            var dictionary = BaseYearToAcademicYearDictionary;
+            var dictionary = BaseYearToAcademicYearDictionary();
 
             dictionary.Add(AcademicYearConstants.Year2019, AcademicYearConstants.CalendarYear1920);
             dictionary.Add(AcademicYearConstants.Year2020, AcademicYearConstants.CalendarYear2021);
@@ -19,7 +19,7 @@ namespace ESFA.DC.ESF.R2._2021.Data.FundingSummary
 
         public IDictionary<int, string> YearToCollectionDictionary()
         {
-            var dictionary = BaseYearToCollectionDictionary;
+            var dictionary = BaseYearToCollectionDictionary();
 
             dictionary.Add(AcademicYearConstants.Year2019, AcademicYearConstants.CollectionILR1920);
             dictionary.Add(AcademicYearConstants.Year2020, AcademicYearConstants.CollectionILR2021);

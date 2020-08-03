@@ -126,9 +126,9 @@ namespace ESFA.DC.ESF.R2.Data.FundingSummary.Ilr
         {
             using (var connection = _ilrSqlConnectionFunc[year]())
             {
-                var result = await connection.QuerySingleAsync<ILRFileDetails>(IlrfileDetailsSql, new { ukprn });
+                var result = await connection.QueryAsync<ILRFileDetails>(IlrfileDetailsSql, new { ukprn });
 
-                return result;
+                return result.FirstOrDefault();
             }
         }
 

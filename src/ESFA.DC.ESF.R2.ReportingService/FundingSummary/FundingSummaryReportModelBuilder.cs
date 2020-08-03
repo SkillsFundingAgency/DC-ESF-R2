@@ -264,7 +264,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
             foreach (var model in ilrFileDetailModels)
             {
-                var ilrData = ilrFileData.Where(x => x.Year == model.Year).FirstOrDefault();
+                var ilrData = ilrFileData?.Where(x => x?.Year == model.Year).FirstOrDefault();
 
                 if (ilrData != null)
                 {
