@@ -73,7 +73,6 @@
     <Compile Include="Reports\FundingSummary\IFundingSummaryYearConfiguration.cs" />
     <Compile Include="Reports\FundingSummary\IIlrDataProvider.cs" />
     <Compile Include="Reports\FundingSummary\IPeriodisedValue.cs" />
-    <Compile Include="Reports\FundingSummary\IRenderService.cs" />
     <Compile Include="Reports\AimAndDeliverable\IAimAndDeliverableDataProvider.cs" />
     <Compile Include="Reports\AimAndDeliverable\IFcsDataProvider.cs" />
     <Compile Include="Reports\AimAndDeliverable\ILarsDataProvider.cs" />

@@ -4,6 +4,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Constants
 {
     public static class FundingSummaryReportConstants
     {
+        public const string BodyTitle = "European Social Fund 2014-2020 (round 2)";
+
         // Learner Assessment Plan
         public const string Header_LearnerAssessment = "Learner Assessment and Plan";
         public const string Deliverable_ILR_ST01 = "ILR ST01 Learner Assessment and Plan (£)";

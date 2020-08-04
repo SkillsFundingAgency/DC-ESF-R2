@@ -6,6 +6,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
     {
         public int Year { get; set; }
 
+        public string AcademicYear { get; set; }
+
         public LearnerAssessmentPlan LearnerAssessmentPlans { get; set; }
 
         public RegulatedLearning RegulatedLearnings { get; set; }

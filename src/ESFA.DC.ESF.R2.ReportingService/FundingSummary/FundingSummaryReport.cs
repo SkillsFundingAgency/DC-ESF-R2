@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces;
 using ESFA.DC.ESF.R2.Interfaces.Reports;
-using ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Interfaces;
 using ESFA.DC.ESF.R2.ReportingService.Abstract;
@@ -19,13 +18,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
         private const string _excelExtension = ".xlsx";
 
         private readonly IFundingSummaryReportModelBuilder _modelBuilder;
-        private readonly IRenderService _renderService;
+        private readonly IFundingSummaryReportRenderService _renderService;
         private readonly IExcelFileService _excelFileService;
         private readonly ILogger _logger;
 
         public FundingSummaryReport(
             IFundingSummaryReportModelBuilder modelBuilder,
-            IRenderService renderService,
+            IFundingSummaryReportRenderService renderService,
             IDateTimeProvider dateTimeProvider,
             IExcelFileService excelFileService,
             ILogger logger)

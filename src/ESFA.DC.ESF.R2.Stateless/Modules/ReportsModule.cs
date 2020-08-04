@@ -69,7 +69,7 @@ namespace ESFA.DC.ESF.R2.Stateless.Modules
         {
             builder.RegisterType<FundingSummaryReportLegacy>().As<IModelReport>().InstancePerLifetimeScope();
             builder.RegisterType<FundingSummaryReport>().As<IModelReport>().InstancePerLifetimeScope();
-            builder.RegisterType<FundingSummaryReportRenderService>().As<IRenderService>().InstancePerLifetimeScope();
+            builder.RegisterType<FundingSummaryReportRenderService>().As<IFundingSummaryReportRenderService>().InstancePerLifetimeScope();
 
             builder.RegisterType<FundingSummaryReportModelBuilder>().As<IFundingSummaryReportModelBuilder>();
             builder.RegisterType<FundingSummaryReportDataProvider>().As<IFundingSummaryReportDataProvider>();

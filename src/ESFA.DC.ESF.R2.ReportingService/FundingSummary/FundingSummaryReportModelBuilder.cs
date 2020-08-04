@@ -14,6 +14,7 @@ using ESFA.DC.ESF.R2.ReportingService.Constants;
 using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Constants;
 using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Interface;
 using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model;
+using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.Interface;
 using ESFA.DC.ESF.R2.Service.Config.Interfaces;
 using ESFA.DC.ESF.R2.Utils;
 using ESFA.DC.ILR.DataService.Models;
@@ -53,7 +54,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             _yearConfiguration = yearConfiguration;
         }
 
-        public async Task<IEnumerable<FundingSummaryReportTab>> Build(IEsfJobContext esfJobContext, CancellationToken cancellationToken)
+        public async Task<ICollection<IFundingSummaryReportTab>> Build(IEsfJobContext esfJobContext, CancellationToken cancellationToken)
         {
             var baseIlrYear = _yearConfiguration.BaseIlrYear;
 
@@ -92,22 +93,25 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             var periodisedEsf = PeriodiseEsfSuppData(conRefNumbers, supplementaryData);
             var periodisedILR = PeriodiseIlr(conRefNumbers, fm70YearlyData.SelectMany(x => x.Fm70PeriodisedValues));
 
-            var fundingSummaryTabs = new List<FundingSummaryReportTab>();
+            var fundingSummaryTabs = new List<IFundingSummaryReportTab>();
 
             var footer = PopulateReportFooter(referenceDataVersions, reportGenerationTime);
 
+            var academicYearDictionary = _yearConfiguration.YearToAcademicYearDictionary();
+
             foreach (var conRefNumber in conRefNumbers)
             {
-                var baseModels = BuildBaseModels(currentCollectionYear, baseIlrYear);
+                var baseModels = BuildBaseModels(currentCollectionYear, baseIlrYear, academicYearDictionary);
 
                 var file = esfSourceFiles.FirstOrDefault(sf => sf.ConRefNumber.CaseInsensitiveEquals(conRefNumber));
 
-                var header = PopulateReportHeader(file, ilrYearlyFileData, ukPrn, orgData.Name, conRefNumber, currentCollectionYear, baseIlrYear);
+                var header = PopulateReportHeader(file, ilrYearlyFileData, ukPrn, orgData.Name, conRefNumber, currentCollectionYear, baseIlrYear, academicYearDictionary);
 
                 var fundingSummaryModels = PopulateReportData(reportGroupHeaderDictionary, baseModels, periodisedEsf.GetValueOrDefault(conRefNumber), periodisedILR.GetValueOrDefault(conRefNumber));
 
                 fundingSummaryTabs.Add(new FundingSummaryReportTab
                 {
+                    Title = FundingSummaryReportConstants.BodyTitle,
                     TabName = conRefNumber,
                     Header = header,
                     Footer = footer,
@@ -258,9 +262,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
           string providerName,
           string conRefNumber,
           int collectionYear,
-          int baseIlrYear)
+          int baseIlrYear,
+          IDictionary<int, string> academicYearDictionary)
         {
-            var ilrFileDetailModels = BuildBaseIlrFileDetailModels(collectionYear, baseIlrYear);
+            var ilrFileDetailModels = BuildBaseIlrFileDetailModels(collectionYear, baseIlrYear, academicYearDictionary);
 
             foreach (var model in ilrFileDetailModels)
             {
@@ -440,7 +445,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return Convert.ToDateTime(dateString).ToString("dd/MM/yyyy hh:mm:ss");
         }
 
-        private List<FundingSummaryModel> BuildBaseModels(int collectionYear, int baseIlrYear)
+        private List<FundingSummaryModel> BuildBaseModels(int collectionYear, int baseIlrYear, IDictionary<int, string> academicYearDictionary)
         {
             var year = baseIlrYear;
 
@@ -448,17 +453,21 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
             while (year <= collectionYear)
             {
-                models.Add(new FundingSummaryModel { Year = year });
+                models.Add(new FundingSummaryModel
+                {
+                    Year = year,
+                    AcademicYear = academicYearDictionary.GetValueOrDefault(year)
+                });
+
                 year++;
             }
 
             return models;
         }
 
-        private List<IlrFileDetail> BuildBaseIlrFileDetailModels(int collectionYear, int baseIlrYear)
+        private List<IlrFileDetail> BuildBaseIlrFileDetailModels(int collectionYear, int baseIlrYear, IDictionary<int, string> academicYearDictionary)
         {
             var year = baseIlrYear;
-            var academicYearDictionary = _yearConfiguration.YearToAcademicYearDictionary();
 
             var models = new List<IlrFileDetail>();
 

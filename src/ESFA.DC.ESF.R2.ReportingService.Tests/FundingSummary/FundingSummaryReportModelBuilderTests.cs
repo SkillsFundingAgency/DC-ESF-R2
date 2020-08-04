@@ -804,10 +804,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 { 2020, "2020/21" }
             };
 
-            var fundingConfig = new Mock<IFundingSummaryYearConfiguration>();
-            fundingConfig.Setup(x => x.YearToAcademicYearDictionary()).Returns(yearToAcademicYearDictionary);
-
-            NewBuilder(fundingConfig: fundingConfig.Object).PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020, 2018)
+            NewBuilder().PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020, 2018, yearToAcademicYearDictionary)
                 .Should().BeEquivalentTo(expectedHeader);
         }
 
@@ -877,10 +874,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 { 2019, "2019/20" }
             };
 
-            var fundingConfig = new Mock<IFundingSummaryYearConfiguration>();
-            fundingConfig.Setup(x => x.YearToAcademicYearDictionary()).Returns(yearToAcademicYearDictionary);
-
-            NewBuilder(fundingConfig: fundingConfig.Object).PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2019, 2018)
+            NewBuilder().PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2019, 2018, yearToAcademicYearDictionary)
                 .Should().BeEquivalentTo(expectedHeader);
         }
 
@@ -935,10 +929,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 { 2020, "2020/21" }
             };
 
-            var fundingConfig = new Mock<IFundingSummaryYearConfiguration>();
-            fundingConfig.Setup(x => x.YearToAcademicYearDictionary()).Returns(yearToAcademicYearDictionary);
-
-            NewBuilder(fundingConfig: fundingConfig.Object).PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020, 2018)
+            NewBuilder().PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020, 2018, yearToAcademicYearDictionary)
                 .Should().BeEquivalentTo(expectedHeader);
         }
 
@@ -1014,10 +1005,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 { 2020, "2020/21" }
             };
 
-            var fundingConfig = new Mock<IFundingSummaryYearConfiguration>();
-            fundingConfig.Setup(x => x.YearToAcademicYearDictionary()).Returns(yearToAcademicYearDictionary);
-
-            NewBuilder(fundingConfig: fundingConfig.Object).PopulateReportHeader(null, ilrFileDetails, 12345678, "OrgName", "Not Applicable", 2020, 2018)
+            NewBuilder().PopulateReportHeader(null, ilrFileDetails, 12345678, "OrgName", "Not Applicable", 2020, 2018, yearToAcademicYearDictionary)
                 .Should().BeEquivalentTo(expectedHeader);
         }
 
@@ -1180,6 +1168,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 new FundingSummaryReportTab
                 {
                     TabName = "Not Applicable",
+                    Title = "European Social Fund 2014-2020 (round 2)",
                     Header = new FundingSummaryReportHeaderModel
                     {
                         ContractReferenceNumber = "Not Applicable",
@@ -1229,6 +1218,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                         new FundingSummaryModel
                         {
                             Year = 2020,
+                            AcademicYear = "2020/21",
                             LearnerAssessmentPlans = new LearnerAssessmentPlan
                             {
                                 GroupHeader = Year2020GroupHeader("Learner Assessment and Plan"),
@@ -1277,6 +1267,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                         new FundingSummaryModel
                         {
                             Year = 2019,
+                            AcademicYear = "2019/20",
                             LearnerAssessmentPlans = new LearnerAssessmentPlan
                             {
                                 GroupHeader = Year2019GroupHeader("Learner Assessment and Plan"),
@@ -1325,6 +1316,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                         new FundingSummaryModel
                         {
                             Year = 2018,
+                            AcademicYear = "2018/19",
                             LearnerAssessmentPlans = new LearnerAssessmentPlan
                             {
                                 GroupHeader = Year2018GroupHeader("Learner Assessment and Plan"),
@@ -1569,6 +1561,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 new FundingSummaryReportTab
                 {
                     TabName = "ConRef1",
+                    Title = "European Social Fund 2014-2020 (round 2)",
                     Header = new FundingSummaryReportHeaderModel
                     {
                         ContractReferenceNumber = "ConRef1",
@@ -1618,6 +1611,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                         new FundingSummaryModel
                         {
                             Year = 2020,
+                            AcademicYear = "2020/21",
                             LearnerAssessmentPlans = new LearnerAssessmentPlan
                             {
                                 GroupHeader = Year2020GroupHeader("Learner Assessment and Plan"),
@@ -1666,6 +1660,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                         new FundingSummaryModel
                         {
                             Year = 2019,
+                            AcademicYear = "2019/20",
                             LearnerAssessmentPlans = new LearnerAssessmentPlan
                             {
                                 GroupHeader = Year2019GroupHeader("Learner Assessment and Plan"),
@@ -1714,6 +1709,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                         new FundingSummaryModel
                         {
                             Year = 2018,
+                            AcademicYear = "2018/19",
                             LearnerAssessmentPlans = new LearnerAssessmentPlan
                             {
                                 GroupHeader = Year2018GroupHeader("Learner Assessment and Plan"),
@@ -1764,6 +1760,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 new FundingSummaryReportTab
                 {
                     TabName = "ConRef2",
+                    Title = "European Social Fund 2014-2020 (round 2)",
                     Header = new FundingSummaryReportHeaderModel
                     {
                         ContractReferenceNumber = "ConRef2",
@@ -1813,6 +1810,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                         new FundingSummaryModel
                         {
                             Year = 2020,
+                            AcademicYear = "2020/21",
                             LearnerAssessmentPlans = new LearnerAssessmentPlan
                             {
                                 GroupHeader = Year2020GroupHeader("Learner Assessment and Plan"),
@@ -1861,6 +1859,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                         new FundingSummaryModel
                         {
                             Year = 2019,
+                            AcademicYear = "2019/20",
                             LearnerAssessmentPlans = new LearnerAssessmentPlan
                             {
                                 GroupHeader = Year2019GroupHeader("Learner Assessment and Plan"),
@@ -1909,6 +1908,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                         new FundingSummaryModel
                         {
                             Year = 2018,
+                            AcademicYear = "2018/19",
                             LearnerAssessmentPlans = new LearnerAssessmentPlan
                             {
                                 GroupHeader = Year2018GroupHeader("Learner Assessment and Plan"),
