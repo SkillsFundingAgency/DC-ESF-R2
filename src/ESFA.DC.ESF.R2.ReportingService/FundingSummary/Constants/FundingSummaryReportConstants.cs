@@ -8,6 +8,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Constants
 
         // Learner Assessment Plan
         public const string Header_LearnerAssessment = "Learner Assessment and Plan";
+        public const string Total_LearnerAssessment = "Total Learner Assessment and Plan (£)";
         public const string Deliverable_ILR_ST01 = "ILR ST01 Learner Assessment and Plan (£)";
         public const string Deliverable_ESF_ST01 = "SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)";
 
@@ -36,11 +37,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Constants
 
         // Community Grant
         public const string Header_CommunityGrant = "Community Grant";
+        public const string Total_CommunityGrant = "Total Community Grant (£)";
         public const string Deliverable_ESF_CG01 = "SUPPDATA CG01 Community Grant Payment (£)";
         public const string Deliverable_ESF_CG02 = "SUPPDATA CG02 Community Grant Management Cost (£)";
 
         // Specification Defined
         public const string Header_SpecificationDefined = "Specification Defined";
+        public const string Total_SpecificationDefined = "Total Specification Defined (£)";
         public const string Deliverable_ESF_SD01 = "SUPPDATA SD01 Progression Within Work (£)";
         public const string Deliverable_ESF_SD02 = "SUPPDATA SD02 LEP Agreed Delivery Plan (£)";
 

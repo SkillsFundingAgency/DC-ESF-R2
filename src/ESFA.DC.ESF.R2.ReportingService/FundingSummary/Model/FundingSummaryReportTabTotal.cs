@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Constants;
 
 namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 {
@@ -7,12 +8,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
     {
         public FundingSummaryReportTabTotal(ICollection<FundingSummaryModel> body)
         {
-            IlrST01 = body.Sum(x => x.LearnerAssessmentPlans.IlrST01.Total);
-            EsfST01 = body.Sum(x => x.LearnerAssessmentPlans.EsfST01.Total);
-            EsfCG01 = body.Sum(x => x.CommunityGrants.EsfCG01.Total);
-            EsfCG02 = body.Sum(x => x.CommunityGrants.EsfCG02.Total);
-            EsfSD01 = body.Sum(x => x.SpecificationDefineds.EsfSD01.Total);
-            EsfSD02 = body.Sum(x => x.SpecificationDefineds.EsfSD02.Total);
+            IlrST01 = body.Sum(x => x.LearnerAssessmentPlans.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ILR_ST01).Sum(rv => rv.Total));
+            EsfST01 = body.Sum(x => x.LearnerAssessmentPlans.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ESF_ST01).Sum(rv => rv.Total));
+            EsfCG01 = body.Sum(x => x.CommunityGrants.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ESF_CG01).Sum(rv => rv.Total));
+            EsfCG02 = body.Sum(x => x.CommunityGrants.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ESF_CG02).Sum(rv => rv.Total));
+            EsfSD01 = body.Sum(x => x.CommunityGrants.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ESF_SD01).Sum(rv => rv.Total));
+            EsfSD02 = body.Sum(x => x.CommunityGrants.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ESF_SD02).Sum(rv => rv.Total));
             IlrRQ01StartFunding = body.Sum(x => x.RegulatedLearnings.IlrRQ01StartFunding.Total);
             IlrRQ01AchFunding = body.Sum(x => x.RegulatedLearnings.IlrRQ01AchFunding.Total);
             IlrRQ01Total = body.Sum(x => x.RegulatedLearnings.IlrRQ01SubGroup.Total);

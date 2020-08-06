@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.Interface;
 
 namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 {
@@ -8,7 +11,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 
         public string AcademicYear { get; set; }
 
-        public LearnerAssessmentPlan LearnerAssessmentPlans { get; set; }
+        public string ConRefNumber { get; set; }
+
+        public IDeliverableCategory LearnerAssessmentPlans { get; set; }
 
         public RegulatedLearning RegulatedLearnings { get; set; }
 
@@ -16,20 +21,36 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 
         public Progression Progressions { get; set; }
 
-        public CommunityGrant CommunityGrants { get; set; }
+        public IDeliverableCategory CommunityGrants { get; set; }
 
-        public SpecificationDefined SpecificationDefineds { get; set; }
+        public IDeliverableCategory SpecificationDefineds { get; set; }
 
         public PeriodisedReportValue MonthlyTotals => BuildMonthlyTotals();
 
         public PeriodisedReportValue CumulativeMonthlyTotals => BuildCumulativeMonthlyTotals();
+
+        public ICollection<IDeliverableCategory> DeliverableCategories => GetCategories();
+
+        public decimal? YearTotal { get; set; }
+
+        public decimal? CumulativeYearTotal { get; set; }
+
+        private ICollection<IDeliverableCategory> GetCategories()
+        {
+            return new List<IDeliverableCategory>
+            {
+                LearnerAssessmentPlans,
+                CommunityGrants,
+                SpecificationDefineds
+            };
+        }
 
         private decimal Sum(params decimal?[] values) => values.Where(x => x.HasValue).Sum(x => x.Value);
 
         private PeriodisedReportValue BuildMonthlyTotals()
         {
             return new PeriodisedReportValue(
-                "Total (£)",
+                string.Concat(ConRefNumber, " Total (£)"),
                 Sum(LearnerAssessmentPlans?.Totals.April, CommunityGrants?.Totals.April, SpecificationDefineds?.Totals.April, RegulatedLearnings?.Totals.April, NonRegulatedLearnings?.Totals.April, Progressions?.Totals.April),
                 Sum(LearnerAssessmentPlans?.Totals.May, CommunityGrants?.Totals.May, SpecificationDefineds?.Totals.May, RegulatedLearnings?.Totals.May, NonRegulatedLearnings?.Totals.May, Progressions?.Totals.May),
                 Sum(LearnerAssessmentPlans?.Totals.June, CommunityGrants?.Totals.June, SpecificationDefineds?.Totals.June, RegulatedLearnings?.Totals.June, NonRegulatedLearnings?.Totals.June, Progressions?.Totals.June),
@@ -47,7 +68,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
         private PeriodisedReportValue BuildCumulativeMonthlyTotals()
         {
             return new PeriodisedReportValue(
-                "Cumulative (£)",
+                string.Concat(ConRefNumber, " Cumulative (£)"),
                 Sum(MonthlyTotals.April),
                 Sum(MonthlyTotals.April, MonthlyTotals.May),
                 Sum(MonthlyTotals.April, MonthlyTotals.May, MonthlyTotals.June),

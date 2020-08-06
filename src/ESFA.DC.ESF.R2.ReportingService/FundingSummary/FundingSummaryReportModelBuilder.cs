@@ -107,7 +107,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
                 var header = PopulateReportHeader(file, ilrYearlyFileData, ukPrn, orgData.Name, conRefNumber, currentCollectionYear, baseIlrYear, academicYearDictionary);
 
-                var fundingSummaryModels = PopulateReportData(reportGroupHeaderDictionary, baseModels, periodisedEsf.GetValueOrDefault(conRefNumber), periodisedILR.GetValueOrDefault(conRefNumber));
+                var fundingSummaryModels = PopulateReportData(conRefNumber, reportGroupHeaderDictionary, baseModels, periodisedEsf.GetValueOrDefault(conRefNumber), periodisedILR.GetValueOrDefault(conRefNumber));
 
                 fundingSummaryTabs.Add(new FundingSummaryReportTab
                 {
@@ -123,6 +123,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
         }
 
         public ICollection<FundingSummaryModel> PopulateReportData(
+            string conRefNumber,
             IDictionary<int, string[]> reportGroupHeaderDictionary,
             ICollection<FundingSummaryModel> models,
             IDictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>> periodisedEsf,
@@ -132,27 +133,47 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             {
                 var header = reportGroupHeaderDictionary.GetValueOrDefault(model.Year);
 
+                model.ConRefNumber = conRefNumber;
                 model.LearnerAssessmentPlans = BuildLearnerAssessmentPlans(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
                 model.RegulatedLearnings = BuildRegulatedLearning(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
                 model.NonRegulatedLearnings = BuildNonRegulatedLearning(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
                 model.Progressions = BuildProgressions(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
                 model.CommunityGrants = BuildCommunityGrants(header, periodisedEsf.GetValueOrDefault(model.Year));
                 model.SpecificationDefineds = BuildSpecificationDefined(header, periodisedEsf.GetValueOrDefault(model.Year));
+
+                model.YearTotal = model.MonthlyTotals.July;
+                model.CumulativeYearTotal = model.MonthlyTotals.July;
+            }
+
+            var modelCount = models.Count();
+            int i = 2;
+            while (i <= modelCount)
+            {
+                var model = models.Skip(i - 1).Take(1).FirstOrDefault();
+
+                var previousYearTotal = models.Skip(i - 2).Take(1).FirstOrDefault().YearTotal;
+
+                model.CumulativeYearTotal = model.YearTotal + previousYearTotal;
+
+                i++;
             }
 
             return models;
         }
 
-        public LearnerAssessmentPlan BuildLearnerAssessmentPlans(string[] headers, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues, IDictionary<string, IEnumerable<PeriodisedValue>> ilrValues)
+        public IDeliverableCategory BuildLearnerAssessmentPlans(string[] headers, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues, IDictionary<string, IEnumerable<PeriodisedValue>> ilrValues)
         {
             var ilrST01 = ilrValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_ST01)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
             var esfST01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_ST01);
 
-            return new LearnerAssessmentPlan
+            return new DeliverableCategory(FundingSummaryReportConstants.Total_LearnerAssessment, false)
             {
                 GroupHeader = BuildFundingHeader(FundingSummaryReportConstants.Header_LearnerAssessment, headers),
-                IlrST01 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_ST01, ilrST01),
-                EsfST01 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_ST01, esfST01),
+                ReportValues = new List<IPeriodisedReportValue>
+                {
+                    BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_ST01, ilrST01),
+                    BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_ST01, esfST01),
+                }
             };
         }
 
@@ -211,29 +232,35 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             };
         }
 
-        public CommunityGrant BuildCommunityGrants(string[] headers, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues)
+        public IDeliverableCategory BuildCommunityGrants(string[] headers, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues)
         {
             var cg01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_CG01);
             var cg02 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_CG02);
 
-            return new CommunityGrant
+            return new DeliverableCategory(FundingSummaryReportConstants.Total_CommunityGrant, false)
             {
                 GroupHeader = BuildFundingHeader(FundingSummaryReportConstants.Header_CommunityGrant, headers),
-                EsfCG01 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_CG01, cg01),
-                EsfCG02 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_CG02, cg02),
+                ReportValues = new List<IPeriodisedReportValue>
+                {
+                    BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_CG01, cg01),
+                    BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_CG02, cg02),
+                }
             };
         }
 
-        public SpecificationDefined BuildSpecificationDefined(string[] headers, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues)
+        public IDeliverableCategory BuildSpecificationDefined(string[] headers, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues)
         {
             var sd01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_SD01);
             var sd02 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_SD02);
 
-            return new SpecificationDefined
+            return new DeliverableCategory(FundingSummaryReportConstants.Total_SpecificationDefined, false)
             {
                 GroupHeader = BuildFundingHeader(FundingSummaryReportConstants.Header_SpecificationDefined, headers),
-                EsfSD01 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_SD01, sd01),
-                EsfSD02 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_SD02, sd02),
+                ReportValues = new List<IPeriodisedReportValue>
+                {
+                    BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_SD01, sd01),
+                    BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_SD02, sd02),
+                }
             };
         }
 

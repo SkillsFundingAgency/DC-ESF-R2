@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.Interface;
 
 namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 {
-    public class PeriodisedReportValue
+    public class PeriodisedReportValue : IPeriodisedReportValue
     {
         public PeriodisedReportValue(
             string title,
