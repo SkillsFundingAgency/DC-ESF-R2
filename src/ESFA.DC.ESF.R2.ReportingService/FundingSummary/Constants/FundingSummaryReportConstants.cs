@@ -5,6 +5,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Constants
     public static class FundingSummaryReportConstants
     {
         public const string BodyTitle = "European Social Fund 2014-2020 (round 2)";
+        public const string Default_SubCateogryTitle = "Default Category should not render";
+
+        public const string NotApplicable = "n/a";
+        public const string DecimalFormat = "#,##0.00";
+        public const string GrandTotalHeader = "Grand Total";
 
         // Learner Assessment Plan
         public const string Header_LearnerAssessment = "Learner Assessment and Plan";
@@ -14,18 +19,27 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Constants
 
         // Regulated Learning
         public const string Header_RegulatedLearning = "Regulated Learning";
+        public const string Total_RegulatedLearning = "Total Regulated Learning (£)";
+        public const string SubCategoryHeader_IlrRegulatedLearning = "ILR Total RQ01 Regulated Learning (£)";
         public const string Deliverable_ILR_RQ01_Start = "ILR RQ01 Regulated Learning - Start Funding (£)";
         public const string Deliverable_ILR_RQ01_Ach = "ILR RQ01 Regulated Learning - Achievement Funding (£)";
         public const string Deliverable_ESF_RQ01 = "SUPPDATA RQ01 Regulated Learning Authorised Claims (£)";
 
         // Non Regulated Learning
-        public const string Header_NonRegulatedLearning = "Non Regulated Learning";
-        public const string Deliverable_ILR_NR01_Start = "ILR NR01 Non Regulated Learning - Start Funding (£)";
-        public const string Deliverable_ILR_NR01_Ach = "ILR NR01 Non Regulated Learning - Achievement Funding (£)";
-        public const string Deliverable_ESF_NR01 = "SUPPDATA NR01 Non Regulated Learning Authorised Claims (£)";
+        public const string Header_NonRegulatedActivity = "Non Regulated Activity";
+        public const string Total_NonRegulatedActivity = "Total Non Regulated Activity (£)";
+        public const string SubCategoryHeader_IlrNonRegulatedActivity = "ILR Total NR01 Non Regulated Activity (£)";
+        public const string Deliverable_ILR_NR01_Start = "ILR NR01 Non Regulated Activity - Start Funding (£)";
+        public const string Deliverable_ILR_NR01_Ach = "ILR NR01 Non Regulated Activity - Achievement Funding (£)";
+        public const string Deliverable_ESF_NR01 = "SUPPDATA NR01 Non Regulated Activity Authorised Claims (£)";
 
         // Progression and Sustained Progression
         public const string Header_Progression = "Progression and Sustained Progression";
+        public const string Total_Progression = "Total Progression and Sustained Progression (£)";
+        public const string SubCategoryHeader_PG01 = "Total Paid Employment Progression (£)";
+        public const string SubCategoryHeader_PG03 = "Total Education Progression (£)";
+        public const string SubCategoryHeader_PG04 = "Total Apprenticeship Progression (£)";
+        public const string SubCategoryHeader_PG05 = "Total Traineeship Progression (£)";
         public const string Deliverable_ILR_PG01 = "ILR PG01 Progression Paid Employment (£)";
         public const string Deliverable_ESF_PG01 = "SUPPDATA PG01 Progression Paid Employment Adjustments (£)";
         public const string Deliverable_ILR_PG03 = "ILR PG03 Progression Education (£)";

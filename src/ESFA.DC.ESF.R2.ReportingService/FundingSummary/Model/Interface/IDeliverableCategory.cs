@@ -6,9 +6,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.Interface
     {
         GroupHeader GroupHeader { get; }
 
-        bool HasSubCategories { get; }
-
-        ICollection<IPeriodisedReportValue> ReportValues { get; }
+        ICollection<IDeliverableSubCategory> DeliverableSubCategories { get; }
 
         PeriodisedReportValue Totals { get; }
     }

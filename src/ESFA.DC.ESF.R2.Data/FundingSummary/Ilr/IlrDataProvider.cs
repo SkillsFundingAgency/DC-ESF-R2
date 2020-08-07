@@ -13,7 +13,7 @@ namespace ESFA.DC.ESF.R2.Data.FundingSummary.Ilr
 {
     public class IlrDataProvider : IIlrDataProvider
     {
-        private readonly string IlrfileDetailsSql = @"SELECT TOP (1) f.[Filename], f.[SubmittedTime], c.[FilePreparationDate]
+        private readonly string IlrfileDetailsSql = @"SELECT TOP (1) f.[Filename], f.[SubmittedTime] AS LastSubmission, c.[FilePreparationDate]
                                                       FROM [dbo].[FileDetails] f
                                                       INNER JOIN [Valid].[CollectionDetails] c 
                                                       ON c.[UKPRN] = f.[UKPRN]
@@ -128,7 +128,14 @@ namespace ESFA.DC.ESF.R2.Data.FundingSummary.Ilr
             {
                 var result = await connection.QueryAsync<ILRFileDetails>(IlrfileDetailsSql, new { ukprn });
 
-                return result.FirstOrDefault();
+                var fileDetail = result.FirstOrDefault();
+                
+                if (fileDetail != null)
+                {
+                    fileDetail.Year = year;
+                }
+
+                return fileDetail;
             }
         }
 

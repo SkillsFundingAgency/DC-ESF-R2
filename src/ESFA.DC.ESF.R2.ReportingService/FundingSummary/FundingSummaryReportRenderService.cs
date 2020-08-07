@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Aspose.Cells;
+using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Constants;
 using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Interface;
 using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model;
 using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.Interface;
@@ -17,19 +18,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
         private const int StartYear = 19;
         private const int EndYear = 20;
 
-        private const string NotApplicable = "N/A";
-        private const string DecimalFormat = "#,##0.00";
-
         private const int StartColumn = 0;
         private const int DefaultBodyColumnCount = 7;
 
         private readonly Style _defaultStyle;
-        private readonly Style _textWrappedStyle;
         private readonly Style _futureMonthStyle;
         private readonly Style _reportTitleStyle;
         private readonly Style _deliverableGroupStyle;
-        private readonly Style _fundLineGroupStyle;
+        private readonly Style _deliverableSubGroupStyle;
+        private readonly Style _deliverableLineStyle;
         private readonly Style _headerAndFooterStyle;
+        private readonly Style _reportMonthlyTotalsStyle;
 
         private readonly StyleFlag _styleFlag = new StyleFlag()
         {
@@ -41,7 +40,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             FontItalic = true
         };
 
-        private readonly StyleFlag _leftAlignStyleFlag = new StyleFlag()
+        private readonly StyleFlag _horizontalAlignStyleFlag = new StyleFlag()
         {
             HorizontalAlignment = true,
         };
@@ -51,12 +50,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             var cellsFactory = new CellsFactory();
 
             _defaultStyle = cellsFactory.CreateStyle();
-            _textWrappedStyle = cellsFactory.CreateStyle();
             _futureMonthStyle = cellsFactory.CreateStyle();
             _reportTitleStyle = cellsFactory.CreateStyle();
             _deliverableGroupStyle = cellsFactory.CreateStyle();
-            _fundLineGroupStyle = cellsFactory.CreateStyle();
+            _deliverableSubGroupStyle = cellsFactory.CreateStyle();
+            _deliverableLineStyle = cellsFactory.CreateStyle();
             _headerAndFooterStyle = cellsFactory.CreateStyle();
+            _reportMonthlyTotalsStyle = cellsFactory.CreateStyle();
 
             ConfigureStyles();
         }
@@ -86,9 +86,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
         {
             worksheet.AutoFitColumn(0);
 
-            var columnStyle = worksheet.Cells.Columns[0].Style;
-            columnStyle.HorizontalAlignment = TextAlignmentType.Left;
-            worksheet.Cells.Columns[0].ApplyStyle(columnStyle, _leftAlignStyleFlag);
+            var firstColumnAlignStyle = worksheet.Cells.Columns[0].Style;
+            firstColumnAlignStyle.HorizontalAlignment = TextAlignmentType.Left;
+            worksheet.Cells.Columns[0].ApplyStyle(firstColumnAlignStyle, _horizontalAlignStyleFlag);
         }
 
         private int CalculateColumns(int bodyCount)
@@ -119,6 +119,42 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 ApplyStyleToRow(worksheet, row, _headerAndFooterStyle);
 
                 row++;
+            }
+
+            var column = 3;
+            var ilrHeaderRow = 1;
+
+            worksheet.Cells.ImportObjectArray(
+            new object[]
+            {
+                string.Empty,
+                "ILR File : ",
+                "Last ILR File Update : ",
+                "File Preparation Date : ",
+                string.Empty,
+            },
+            ilrHeaderRow,
+            column,
+            true);
+
+            foreach (var ilrDetail in header.IlrFileDetails)
+            {
+                column = NextColumn(column);
+
+                worksheet.Cells.ImportObjectArray(
+                new object[]
+                {
+                    ilrDetail.AcademicYear,
+                    ilrDetail.IlrFile,
+                    ilrDetail.LastIlrFileUpdate,
+                    ilrDetail.FilePrepDate,
+                    ilrDetail.MostRecent,
+                },
+                ilrHeaderRow,
+                column,
+                true);
+
+                column = NextColumn(column);
             }
 
             return worksheet;
@@ -163,7 +199,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             var baseYearData = fundingSummaryReportTab.Body.Where(x => x.Year == baseYear).FirstOrDefault();
             var subsequentYearsData = fundingSummaryReportTab.Body.Where(x => x.Year > baseYear).OrderBy(x => x.Year).ToList();
 
-            RenderDeliverables(worksheet, baseYearData, subsequentYearsData, row);
+            RenderDeliverables(worksheet, baseYearData, subsequentYearsData, fundingSummaryReportTab.FundingSummaryReportTabTotals, row);
 
             return worksheet;
         }
@@ -172,25 +208,74 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             Worksheet worksheet,
             FundingSummaryModel baseModel,
             ICollection<FundingSummaryModel> subsequentModels,
+            FundingSummaryReportTabTotal fundingSummaryReportTabTotal,
             int row)
         {
-            RenderBaseFundingYear(worksheet, baseModel, row);
-
-            var column = NextColumn(worksheet);
+            int column;
+            column = RenderBaseFundingYear(worksheet, baseModel, row);
 
             foreach (var model in subsequentModels)
             {
                 column = RenderSubsequentFundingYear(worksheet, model, column, row);
             }
 
-            column = NextColumn(worksheet);
-
+            column = NextMaxColumn(worksheet);
             RenderTotals(worksheet, baseModel, subsequentModels, column, row);
+
+            column = NextMaxColumn(worksheet);
+            RenderGrandTotals(worksheet, subsequentModels.Count() + 1, column, row);
 
             return worksheet;
         }
 
-        private Worksheet RenderBaseFundingYear(Worksheet worksheet, FundingSummaryModel fundingSummaryModel, int row)
+        private Worksheet RenderGrandTotals(Worksheet worksheet, int yearsCount, int column, int row)
+        {
+            var maxRow = worksheet.Cells.GetLastDataRow(column - 1);
+
+            row = NextRowWithBreak(row);
+
+            BuildCell(worksheet, FundingSummaryReportConstants.GrandTotalHeader, row, column);
+            row = NextRow(row);
+
+            int rowCounter = row;
+            while (rowCounter <= maxRow)
+            {
+                var value = worksheet.Cells.GetCell(rowCounter, column - 1)?.Value;
+
+                if (value == null)
+                {
+                    BuildCell(worksheet, value, rowCounter, column);
+                }
+                else if (value?.ToString().Contains("Subtotal") == true)
+                {
+                    BuildCell(worksheet, FundingSummaryReportConstants.GrandTotalHeader, rowCounter, column);
+                }
+                else
+                {
+                    var fundingValues = new List<object>
+                    {
+                        value
+                    };
+
+                    int years = 2;
+                    while (years <= yearsCount)
+                    {
+                        fundingValues.Add(worksheet.Cells.GetCell(rowCounter, column - years)?.Value);
+                        years++;
+                    }
+
+                    BuildCell(worksheet, fundingValues.Sum(x => decimal.Parse(x.ToString())), rowCounter, column);
+                }
+
+                rowCounter++;
+            }
+
+            BuildCell(worksheet, FundingSummaryReportConstants.NotApplicable, maxRow, column);
+
+            return worksheet;
+        }
+
+        private int RenderBaseFundingYear(Worksheet worksheet, FundingSummaryModel fundingSummaryModel, int row)
         {
             foreach (var category in fundingSummaryModel.DeliverableCategories)
             {
@@ -205,7 +290,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
             RenderBaseMonthlyTotals(worksheet, fundingSummaryModel, row);
 
-            return worksheet;
+            return LastColumnForRow(worksheet, row);
         }
 
         private Worksheet RenderBaseMonthlyTotals(Worksheet worksheet, FundingSummaryModel fundingSummaryModel, int row)
@@ -214,40 +299,58 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
             BuildBaseRow(worksheet, fundingSummaryModel.MonthlyTotals, row);
 
-            ApplyStyleToRow(worksheet, row, _reportTitleStyle);
-
             row = NextRow(row);
 
             BuildBaseRow(worksheet, fundingSummaryModel.CumulativeMonthlyTotals, row);
-
-            ApplyStyleToRow(worksheet, row, _reportTitleStyle);
 
             return worksheet;
         }
 
         private Worksheet RenderBaseDeliverables(Worksheet worksheet, IDeliverableCategory category, int row)
         {
-            var deliverableRow = row;
-            foreach (var value in category.ReportValues)
+            foreach (var subCategory in category.DeliverableSubCategories)
             {
-                deliverableRow = NextMaxRow(worksheet);
+                if (subCategory.DisplayTitle)
+                {
+                    foreach (var value in subCategory.ReportValues)
+                    {
+                        row = NextMaxRow(worksheet);
 
-                BuildBaseRow(worksheet, value, deliverableRow);
+                        BuildBaseRow(worksheet, value, row);
+                        ApplyStyleToRow(worksheet, row, _deliverableLineStyle);
+                    }
+
+                    row = NextMaxRow(worksheet);
+
+                    BuildBaseSubCatRow(worksheet, subCategory, row);
+                    ApplyStyleToRow(worksheet, row, _deliverableSubGroupStyle);
+                }
+                else
+                {
+                    foreach (var value in subCategory.ReportValues)
+                    {
+                        row = NextMaxRow(worksheet);
+
+                        BuildBaseRow(worksheet, value, row);
+
+                        ApplyStyleToRow(worksheet, row, _deliverableLineStyle);
+                    }
+                }
             }
 
-            deliverableRow = NextMaxRow(worksheet);
+            row = NextMaxRow(worksheet);
 
             //totals
-            BuildBaseRow(worksheet, category.Totals, deliverableRow);
+            BuildBaseRow(worksheet, category.Totals, row);
 
-            ApplyStyleToRow(worksheet, deliverableRow, _deliverableGroupStyle);
+            ApplyStyleToRow(worksheet, row, _deliverableGroupStyle);
 
             return worksheet;
         }
 
         private int RenderSubsequentFundingYear(Worksheet worksheet, FundingSummaryModel fundingSummaryModel, int column, int row)
         {
-            column = NextColumn(worksheet);
+            column = NextColumn(column);
 
             foreach (var category in fundingSummaryModel.DeliverableCategories)
             {
@@ -260,7 +363,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
             RenderSubsequentMonthlyTotals(worksheet, fundingSummaryModel, column, row);
 
-            return column;
+            return worksheet.Cells.MaxDataColumn;
         }
 
         private Worksheet RenderSubsequentMonthlyTotals(Worksheet worksheet, FundingSummaryModel fundingSummaryModel, int column, int row)
@@ -282,11 +385,34 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
         private int RenderSubsequentDeliverables(Worksheet worksheet, IDeliverableCategory category, int column, int row)
         {
-            foreach (var value in category.ReportValues)
+            foreach (var subCategory in category.DeliverableSubCategories)
             {
-                row = NextRow(row);
+                if (subCategory.DisplayTitle)
+                {
+                    foreach (var value in subCategory.ReportValues)
+                    {
+                        row = NextRow(row);
 
-                BuildRow(worksheet, value, row, column);
+                        BuildRow(worksheet, value, row, column);
+                        ApplyStyleToRow(worksheet, row, _deliverableLineStyle);
+                    }
+
+                    row = NextRow(row);
+
+                    BuildSubCatRow(worksheet, subCategory, row, column);
+                    ApplyStyleToRow(worksheet, row, _deliverableSubGroupStyle);
+                }
+                else
+                {
+                    foreach (var value in subCategory.ReportValues)
+                    {
+                        row = NextRow(row);
+
+                        BuildRow(worksheet, value, row, column);
+
+                        ApplyStyleToRow(worksheet, row, _deliverableLineStyle);
+                    }
+                }
             }
 
             row = NextRow(row);
@@ -300,7 +426,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
         private Worksheet RenderSubsequentDeliverableTotals(Worksheet worksheet, IDeliverableCategory category, int row)
         {
             var deliverableRow = NextMaxRow(worksheet);
-            var column = NextColumn(worksheet);
+            var column = NextMaxColumn(worksheet);
 
             BuildRow(worksheet, category.Totals, deliverableRow, column);
 
@@ -318,89 +444,77 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
             foreach (var model in subsequentModels)
             {
-                column = NextColumn(worksheet);
+                column = NextMaxColumn(worksheet);
 
                 RenderColumnTotal(worksheet, model, string.Concat(model.AcademicYear, " Subtotal"), column, row);
             }
 
-            RenderColumnTotal(worksheet, baseModel, "Grand Total", column, row);
-
             return worksheet;
         }
 
-        private Worksheet RenderColumnTotal(
-          Worksheet worksheet,
-          FundingSummaryModel model,
-          string header,
-          int column,
-          int row)
+        private Worksheet RenderColumnTotal(Worksheet worksheet, FundingSummaryModel model, string header, int column, int row)
         {
+            column = NextMaxColumn(worksheet);
+
             foreach (var category in model.DeliverableCategories)
             {
                 row = NextRowWithBreak(row);
-                worksheet.Cells.ImportObjectArray(
-                        new object[]
-                        {
-                        header
-                        },
-                        row,
-                        column,
-                        false);
+
+                BuildCell(worksheet, header, row, column);
 
                 row = RenderDeliverableColumnTotals(worksheet, category, column, row);
             }
 
             row = NextRowWithBreak(row);
 
-            worksheet.Cells.ImportObjectArray(
-                new object[]
-                {
-                    model.YearTotal
-                },
-                row,
-                column,
-                false);
+            BuildCell(worksheet, model.YearTotal, row, column);
+
+            ApplyStyleToRow(worksheet, row, _reportMonthlyTotalsStyle);
 
             row = NextRow(row);
 
-            worksheet.Cells.ImportObjectArray(
-                new object[]
-                {
-                    model.CumulativeYearTotal
-                },
-                row,
-                column,
-                false);
+            BuildCell(worksheet, model.CumulativeYearTotal, row, column);
+
+            ApplyStyleToRow(worksheet, row, _reportMonthlyTotalsStyle);
 
             return worksheet;
         }
 
         private int RenderDeliverableColumnTotals(Worksheet worksheet, IDeliverableCategory category, int column, int row)
         {
-            foreach (var model in category.ReportValues)
+            foreach (var subCategory in category.DeliverableSubCategories)
             {
-                row = NextRow(row);
+                if (subCategory.DisplayTitle)
+                {
+                    foreach (var value in subCategory.ReportValues)
+                    {
+                        row = NextRow(row);
 
-                worksheet.Cells.ImportObjectArray(
-                   new object[]
-                   {
-                       model.Total
-                   },
-                   row,
-                   column,
-                   false);
+                        BuildCell(worksheet, value.Total, row, column);
+
+                        ApplyStyleToRow(worksheet, row, _deliverableLineStyle);
+                    }
+
+                    row = NextRow(row);
+
+                    BuildCell(worksheet, subCategory.Totals.Total, row, column);
+
+                    ApplyStyleToRow(worksheet, row, _deliverableSubGroupStyle);
+                }
+                else
+                {
+                    foreach (var value in subCategory.ReportValues)
+                    {
+                        row = NextRow(row);
+
+                        BuildCell(worksheet, value.Total, row, column);
+                    }
+                }
             }
 
             row = NextRow(row);
 
-            worksheet.Cells.ImportObjectArray(
-                  new object[]
-                  {
-                       category.Totals.Total
-                  },
-                  row,
-                  column,
-                  false);
+            BuildCell(worksheet, category.Totals.Total, row, column);
 
             return row;
         }
@@ -418,6 +532,49 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 },
                 row,
                 0,
+                false);
+
+            return worksheet;
+        }
+
+        private Worksheet BuildBaseSubCatRow(Worksheet worksheet, IDeliverableSubCategory subCategory, int row)
+        {
+            worksheet.Cells.ImportObjectArray(
+                new object[]
+                {
+                    subCategory.SubCategoryTitle,
+                    subCategory.Totals.April,
+                    subCategory.Totals.May,
+                    subCategory.Totals.June,
+                    subCategory.Totals.July,
+                },
+                row,
+                0,
+                false);
+
+            return worksheet;
+        }
+
+        private Worksheet BuildSubCatRow(Worksheet worksheet, IDeliverableSubCategory subCategory, int row, int column)
+        {
+            worksheet.Cells.ImportObjectArray(
+                new object[]
+                {
+                    subCategory.Totals.August,
+                    subCategory.Totals.September,
+                    subCategory.Totals.October,
+                    subCategory.Totals.November,
+                    subCategory.Totals.December,
+                    subCategory.Totals.January,
+                    subCategory.Totals.February,
+                    subCategory.Totals.March,
+                    subCategory.Totals.April,
+                    subCategory.Totals.May,
+                    subCategory.Totals.June,
+                    subCategory.Totals.July,
+                },
+                row,
+                column,
                 false);
 
             return worksheet;
@@ -491,6 +648,20 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return worksheet;
         }
 
+        private Worksheet BuildCell(Worksheet worksheet, object value, int row, int column)
+        {
+            worksheet.Cells.ImportObjectArray(
+                new object[]
+                {
+                   value
+                },
+                row,
+                column,
+                false);
+
+            return worksheet;
+        }
+
         private int NextRow(int row)
         {
             return row + 1;
@@ -506,9 +677,19 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return worksheet.Cells.MaxRow + 1;
         }
 
-        private int NextColumn(Worksheet worksheet)
+        private int NextMaxColumn(Worksheet worksheet)
         {
             return worksheet.Cells.MaxDataColumn + 1;
+        }
+
+        private int NextColumn(int column)
+        {
+            return column + 1;
+        }
+
+        private int LastColumnForRow(Worksheet worksheet, int row)
+        {
+            return worksheet.Cells.GetRow(row).LastDataCell.Column;
         }
 
         private void ApplyStyleToRow(Worksheet worksheet, int row, Style style)
@@ -528,8 +709,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
         private void AddImageToReport(Worksheet worksheet)
         {
-           // worksheet.Cells.SetRowHeight(0, 27); // Adjust the image row height
-
             var assembly = Assembly.GetExecutingAssembly();
             string euFlag = assembly.GetManifestResourceNames().Single(str => str.EndsWith("ESF.png"));
             using (Stream stream = assembly.GetManifestResourceStream(euFlag))
@@ -543,11 +722,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
         {
             _defaultStyle.Font.Size = 10;
             _defaultStyle.Font.Name = "Arial";
-            _defaultStyle.SetCustom(DecimalFormat, false);
-
-            _textWrappedStyle.Font.Size = 10;
-            _textWrappedStyle.Font.Name = "Arial";
-            _textWrappedStyle.IsTextWrapped = true;
+            _defaultStyle.SetCustom(FundingSummaryReportConstants.DecimalFormat, false);
 
             _futureMonthStyle.Font.IsItalic = true;
 
@@ -556,20 +731,50 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             _reportTitleStyle.Font.Size = 13;
             _reportTitleStyle.Font.IsBold = true;
             _reportTitleStyle.Font.Name = "Arial";
-            _reportTitleStyle.SetCustom(DecimalFormat, false);
+            _reportTitleStyle.SetCustom(FundingSummaryReportConstants.DecimalFormat, false);
 
             _deliverableGroupStyle.ForegroundColor = Color.FromArgb(242, 242, 242);
             _deliverableGroupStyle.Pattern = BackgroundType.Solid;
             _deliverableGroupStyle.Font.Size = 11;
             _deliverableGroupStyle.Font.IsBold = true;
             _deliverableGroupStyle.Font.Name = "Arial";
-            _deliverableGroupStyle.SetCustom(DecimalFormat, false);
+            _deliverableGroupStyle.SetCustom(FundingSummaryReportConstants.DecimalFormat, false);
             _deliverableGroupStyle.HorizontalAlignment = TextAlignmentType.Right;
+            _deliverableGroupStyle.SetBorder(BorderType.TopBorder, CellBorderType.Medium, Color.Gray);
+            _deliverableGroupStyle.SetBorder(BorderType.BottomBorder, CellBorderType.Medium, Color.Gray);
+            _deliverableGroupStyle.SetBorder(BorderType.LeftBorder, CellBorderType.Medium, Color.Gray);
+            _deliverableGroupStyle.SetBorder(BorderType.RightBorder, CellBorderType.Medium, Color.Gray);
 
-            _fundLineGroupStyle.Font.Size = 11;
-            _fundLineGroupStyle.Font.IsBold = true;
-            _fundLineGroupStyle.Font.Name = "Arial";
-            _fundLineGroupStyle.SetCustom(DecimalFormat, false);
+            _deliverableSubGroupStyle.Font.Size = 11;
+            _deliverableSubGroupStyle.Font.IsBold = true;
+            _deliverableSubGroupStyle.Font.Name = "Arial";
+            _deliverableSubGroupStyle.SetCustom(FundingSummaryReportConstants.DecimalFormat, false);
+            _deliverableSubGroupStyle.HorizontalAlignment = TextAlignmentType.Right;
+            _deliverableSubGroupStyle.SetBorder(BorderType.TopBorder, CellBorderType.Medium, Color.Gray);
+            _deliverableSubGroupStyle.SetBorder(BorderType.BottomBorder, CellBorderType.Medium, Color.Gray);
+            _deliverableSubGroupStyle.SetBorder(BorderType.LeftBorder, CellBorderType.Medium, Color.Gray);
+            _deliverableSubGroupStyle.SetBorder(BorderType.RightBorder, CellBorderType.Medium, Color.Gray);
+
+            _deliverableLineStyle.Font.Size = 10;
+            _deliverableLineStyle.Font.Name = "Arial";
+            _deliverableLineStyle.IsTextWrapped = true;
+            _deliverableLineStyle.SetCustom(FundingSummaryReportConstants.DecimalFormat, false);
+            _deliverableLineStyle.HorizontalAlignment = TextAlignmentType.Right;
+            _deliverableLineStyle.SetBorder(BorderType.TopBorder, CellBorderType.Medium, Color.Gray);
+            _deliverableLineStyle.SetBorder(BorderType.BottomBorder, CellBorderType.Medium, Color.Gray);
+            _deliverableLineStyle.SetBorder(BorderType.LeftBorder, CellBorderType.Medium, Color.Gray);
+            _deliverableLineStyle.SetBorder(BorderType.RightBorder, CellBorderType.Medium, Color.Gray);
+
+            _reportMonthlyTotalsStyle.ForegroundColor = Color.FromArgb(191, 191, 191);
+            _reportMonthlyTotalsStyle.Pattern = BackgroundType.Solid;
+            _reportMonthlyTotalsStyle.Font.Size = 13;
+            _reportMonthlyTotalsStyle.Font.IsBold = true;
+            _reportMonthlyTotalsStyle.Font.Name = "Arial";
+            _reportMonthlyTotalsStyle.SetCustom(FundingSummaryReportConstants.DecimalFormat, false);
+            _reportMonthlyTotalsStyle.SetBorder(BorderType.TopBorder, CellBorderType.Medium, Color.Gray);
+            _reportMonthlyTotalsStyle.SetBorder(BorderType.BottomBorder, CellBorderType.Medium, Color.Gray);
+            _reportMonthlyTotalsStyle.SetBorder(BorderType.LeftBorder, CellBorderType.Medium, Color.Gray);
+            _reportMonthlyTotalsStyle.SetBorder(BorderType.RightBorder, CellBorderType.Medium, Color.Gray);
 
             _headerAndFooterStyle.Font.Size = 10;
             _headerAndFooterStyle.Font.Name = "Arial";

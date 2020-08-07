@@ -8,20 +8,24 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
     {
         public FundingSummaryReportTabTotal(ICollection<FundingSummaryModel> body)
         {
-            IlrST01 = body.Sum(x => x.LearnerAssessmentPlans.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ILR_ST01).Sum(rv => rv.Total));
-            EsfST01 = body.Sum(x => x.LearnerAssessmentPlans.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ESF_ST01).Sum(rv => rv.Total));
-            EsfCG01 = body.Sum(x => x.CommunityGrants.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ESF_CG01).Sum(rv => rv.Total));
-            EsfCG02 = body.Sum(x => x.CommunityGrants.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ESF_CG02).Sum(rv => rv.Total));
-            EsfSD01 = body.Sum(x => x.CommunityGrants.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ESF_SD01).Sum(rv => rv.Total));
-            EsfSD02 = body.Sum(x => x.CommunityGrants.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ESF_SD02).Sum(rv => rv.Total));
-            IlrRQ01StartFunding = body.Sum(x => x.RegulatedLearnings.IlrRQ01StartFunding.Total);
-            IlrRQ01AchFunding = body.Sum(x => x.RegulatedLearnings.IlrRQ01AchFunding.Total);
-            IlrRQ01Total = body.Sum(x => x.RegulatedLearnings.IlrRQ01SubGroup.Total);
-            EsfRQ01AuthClaims = body.Sum(x => x.RegulatedLearnings.EsfRQ01AuthClaims.Total);
-            IlrNR01StartFunding = body.Sum(x => x.NonRegulatedLearnings.IlrNR01StartFunding.Total);
-            IlrNR01AchFunding = body.Sum(x => x.NonRegulatedLearnings.IlrNR01AchFunding.Total);
-            IlrNR01Total = body.Sum(x => x.NonRegulatedLearnings.IlrNR01SubGroup.Total);
-            EsfNR01AuthClaims = body.Sum(x => x.NonRegulatedLearnings.EsfNR01AuthClaims.Total);
+            Total = body.Sum(x => x.YearTotal);
+            CumulativeTotal = "n/a";
+           // var t = body.Sum(x => x.DeliverableCategories.SelectMany(x => x.DeliverableSubCategories))
+
+           // IlrST01 = body.Sum(x => x.LearnerAssessmentPlans.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ILR_ST01).Sum(rv => rv.Total));
+           // EsfST01 = body.Sum(x => x.LearnerAssessmentPlans.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ESF_ST01).Sum(rv => rv.Total));
+           // EsfCG01 = body.Sum(x => x.CommunityGrants.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ESF_CG01).Sum(rv => rv.Total));
+           // EsfCG02 = body.Sum(x => x.CommunityGrants.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ESF_CG02).Sum(rv => rv.Total));
+           // EsfSD01 = body.Sum(x => x.CommunityGrants.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ESF_SD01).Sum(rv => rv.Total));
+           // EsfSD02 = body.Sum(x => x.CommunityGrants.ReportValues.Where(rv => rv.Title == FundingSummaryReportConstants.Deliverable_ESF_SD02).Sum(rv => rv.Total));
+            //IlrRQ01StartFunding = body.Sum(x => x.RegulatedLearnings.IlrRQ01StartFunding.Total);
+            //IlrRQ01AchFunding = body.Sum(x => x.RegulatedLearnings.IlrRQ01AchFunding.Total);
+            //IlrRQ01Total = body.Sum(x => x.RegulatedLearnings.IlrRQ01SubGroup.Total);
+            //EsfRQ01AuthClaims = body.Sum(x => x.RegulatedLearnings.EsfRQ01AuthClaims.Total);
+            //IlrNR01StartFunding = body.Sum(x => x.NonRegulatedActivities.IlrNR01StartFunding.Total);
+            //IlrNR01AchFunding = body.Sum(x => x.NonRegulatedActivities.IlrNR01AchFunding.Total);
+            //IlrNR01Total = body.Sum(x => x.NonRegulatedActivities.IlrNR01SubGroup.Total);
+            //EsfNR01AuthClaims = body.Sum(x => x.NonRegulatedActivities.EsfNR01AuthClaims.Total);
         }
 
         public decimal? IlrST01 { get; set; }
@@ -62,16 +66,20 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 
         public decimal? NonRegulatedLearningTotal => IlrNR01Total + EsfNR01AuthClaims;
 
-        public decimal? Total => BuildTotal();
+        public decimal? Total { get; set; }
 
-        private decimal? BuildTotal()
-        {
-            return
-                LearnerAssessmentPlanTotal +
-                CommunityGrantTotal +
-                SpecificationDefinedTotal +
-                RegulatedLearningTotal +
-                NonRegulatedLearningTotal;
-        }
+        public string CumulativeTotal { get; set; }
+
+        //public decimal? Total => BuildTotal();
+
+        //private decimal? BuildTotal()
+        //{
+        //    return
+        //        LearnerAssessmentPlanTotal +
+        //        CommunityGrantTotal +
+        //        SpecificationDefinedTotal +
+        //        RegulatedLearningTotal +
+        //        NonRegulatedLearningTotal;
+        //}
     }
 }

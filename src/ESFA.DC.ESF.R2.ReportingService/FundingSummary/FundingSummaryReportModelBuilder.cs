@@ -136,7 +136,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 model.ConRefNumber = conRefNumber;
                 model.LearnerAssessmentPlans = BuildLearnerAssessmentPlans(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
                 model.RegulatedLearnings = BuildRegulatedLearning(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
-                model.NonRegulatedLearnings = BuildNonRegulatedLearning(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
+                model.NonRegulatedActivities = BuildNonRegulatedActivity(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
                 model.Progressions = BuildProgressions(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
                 model.CommunityGrants = BuildCommunityGrants(header, periodisedEsf.GetValueOrDefault(model.Year));
                 model.SpecificationDefineds = BuildSpecificationDefined(header, periodisedEsf.GetValueOrDefault(model.Year));
@@ -166,48 +166,84 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             var ilrST01 = ilrValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_ST01)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
             var esfST01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_ST01);
 
-            return new DeliverableCategory(FundingSummaryReportConstants.Total_LearnerAssessment, false)
+            return new DeliverableCategory(FundingSummaryReportConstants.Total_LearnerAssessment)
             {
                 GroupHeader = BuildFundingHeader(FundingSummaryReportConstants.Header_LearnerAssessment, headers),
-                ReportValues = new List<IPeriodisedReportValue>
+                DeliverableSubCategories = new List<IDeliverableSubCategory>
                 {
-                    BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_ST01, ilrST01),
-                    BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_ST01, esfST01),
+                    new DeliverableSubCategory(FundingSummaryReportConstants.Default_SubCateogryTitle, false)
+                    {
+                        ReportValues = new List<IPeriodisedReportValue>
+                        {
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_ST01, ilrST01),
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_ST01, esfST01),
+                        }
+                    }
                 }
             };
         }
 
-        public RegulatedLearning BuildRegulatedLearning(string[] headers, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues, IDictionary<string, IEnumerable<PeriodisedValue>> ilrValues)
+        public IDeliverableCategory BuildRegulatedLearning(string[] headers, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues, IDictionary<string, IEnumerable<PeriodisedValue>> ilrValues)
         {
             var ilrRQ01Start = ilrValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_RQ01)?.Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.IlrStartEarningsAttribute));
             var ilrRQ01Ach = ilrValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_RQ01)?.Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.IlrAchievementEarningsAttribute));
             var esfRQ01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_RQ01)?.Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.EsfReferenceTypeAuthorisedClaims));
 
-            return new RegulatedLearning
+            return new DeliverableCategory(FundingSummaryReportConstants.Total_RegulatedLearning)
             {
                 GroupHeader = BuildFundingHeader(FundingSummaryReportConstants.Header_RegulatedLearning, headers),
-                IlrRQ01StartFunding = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_RQ01_Start, ilrRQ01Start),
-                IlrRQ01AchFunding = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_RQ01_Ach, ilrRQ01Ach),
-                EsfRQ01AuthClaims = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_RQ01, esfRQ01),
+                DeliverableSubCategories = new List<IDeliverableSubCategory>
+                {
+                    new DeliverableSubCategory(FundingSummaryReportConstants.SubCategoryHeader_IlrRegulatedLearning, true)
+                    {
+                        ReportValues = new List<IPeriodisedReportValue>
+                        {
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_RQ01_Start, ilrRQ01Start),
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_RQ01_Ach, ilrRQ01Ach),
+                        }
+                    },
+                    new DeliverableSubCategory(FundingSummaryReportConstants.Default_SubCateogryTitle, false)
+                    {
+                        ReportValues = new List<IPeriodisedReportValue>
+                        {
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_RQ01, esfRQ01),
+                        }
+                    }
+                }
             };
         }
 
-        public NonRegulatedLearning BuildNonRegulatedLearning(string[] headers, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues, IDictionary<string, IEnumerable<PeriodisedValue>> ilrValues)
+        public IDeliverableCategory BuildNonRegulatedActivity(string[] headers, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues, IDictionary<string, IEnumerable<PeriodisedValue>> ilrValues)
         {
             var ilrNR01Start = ilrValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_NR01)?.Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.IlrStartEarningsAttribute));
             var ilrNR01Ach = ilrValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_NR01)?.Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.IlrAchievementEarningsAttribute));
             var esfNR01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_NR01)?.Where(x => x.AttributeName.CaseInsensitiveEquals(FundingSummaryReportConstants.EsfReferenceTypeAuthorisedClaims));
 
-            return new NonRegulatedLearning
+            return new DeliverableCategory(FundingSummaryReportConstants.Total_NonRegulatedActivity)
             {
-                GroupHeader = BuildFundingHeader(FundingSummaryReportConstants.Header_NonRegulatedLearning, headers),
-                IlrNR01StartFunding = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_NR01_Start, ilrNR01Start),
-                IlrNR01AchFunding = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_NR01_Ach, ilrNR01Ach),
-                EsfNR01AuthClaims = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_NR01, esfNR01),
+                GroupHeader = BuildFundingHeader(FundingSummaryReportConstants.Header_NonRegulatedActivity, headers),
+                DeliverableSubCategories = new List<IDeliverableSubCategory>
+                {
+                    new DeliverableSubCategory(FundingSummaryReportConstants.SubCategoryHeader_IlrNonRegulatedActivity, true)
+                    {
+                        ReportValues = new List<IPeriodisedReportValue>
+                        {
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_NR01_Start, ilrNR01Start),
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_NR01_Ach, ilrNR01Ach),
+                        }
+                    },
+                    new DeliverableSubCategory(FundingSummaryReportConstants.Default_SubCateogryTitle, false)
+                    {
+                        ReportValues = new List<IPeriodisedReportValue>
+                        {
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_NR01, esfNR01),
+                        }
+                    }
+                }
             };
         }
 
-        public Progression BuildProgressions(string[] headers, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues, IDictionary<string, IEnumerable<PeriodisedValue>> ilrValues)
+        public IDeliverableCategory BuildProgressions(string[] headers, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues, IDictionary<string, IEnumerable<PeriodisedValue>> ilrValues)
         {
             var ilrPG01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG01)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
             var esfPG01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG01);
@@ -218,17 +254,44 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             var ilrPG05 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG05)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
             var esfPG05 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG05);
 
-            return new Progression
+            return new DeliverableCategory(FundingSummaryReportConstants.Total_Progression)
             {
                 GroupHeader = BuildFundingHeader(FundingSummaryReportConstants.Header_Progression, headers),
-                IlrPG01 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_PG01, ilrPG01),
-                EsfPG01 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_PG01, esfPG01),
-                IlrPG03 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_PG03, ilrPG03),
-                EsfPG03 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_PG03, esfPG03),
-                IlrPG04 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_PG04, ilrPG04),
-                EsfPG04 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_PG04, esfPG04),
-                IlrPG05 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_PG05, ilrPG05),
-                EsfPG05 = BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_PG05, esfPG05),
+                DeliverableSubCategories = new List<IDeliverableSubCategory>
+                {
+                    new DeliverableSubCategory(FundingSummaryReportConstants.SubCategoryHeader_PG01, true)
+                    {
+                        ReportValues = new List<IPeriodisedReportValue>
+                        {
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_PG01, ilrPG01),
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_PG01, esfPG01),
+                        }
+                    },
+                    new DeliverableSubCategory(FundingSummaryReportConstants.SubCategoryHeader_PG03, true)
+                    {
+                        ReportValues = new List<IPeriodisedReportValue>
+                        {
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_PG03, ilrPG03),
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_PG03, esfPG03),
+                        }
+                    },
+                    new DeliverableSubCategory(FundingSummaryReportConstants.SubCategoryHeader_PG04, true)
+                    {
+                        ReportValues = new List<IPeriodisedReportValue>
+                        {
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_PG04, ilrPG04),
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_PG04, esfPG04),
+                        }
+                    },
+                    new DeliverableSubCategory(FundingSummaryReportConstants.SubCategoryHeader_PG05, true)
+                    {
+                        ReportValues = new List<IPeriodisedReportValue>
+                        {
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ILR_PG05, ilrPG05),
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_PG05, esfPG05),
+                        }
+                    },
+                }
             };
         }
 
@@ -237,13 +300,19 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             var cg01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_CG01);
             var cg02 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_CG02);
 
-            return new DeliverableCategory(FundingSummaryReportConstants.Total_CommunityGrant, false)
+            return new DeliverableCategory(FundingSummaryReportConstants.Total_CommunityGrant)
             {
                 GroupHeader = BuildFundingHeader(FundingSummaryReportConstants.Header_CommunityGrant, headers),
-                ReportValues = new List<IPeriodisedReportValue>
+                DeliverableSubCategories = new List<IDeliverableSubCategory>
                 {
-                    BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_CG01, cg01),
-                    BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_CG02, cg02),
+                    new DeliverableSubCategory(FundingSummaryReportConstants.Default_SubCateogryTitle, false)
+                    {
+                        ReportValues = new List<IPeriodisedReportValue>
+                        {
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_CG01, cg01),
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_CG02, cg02),
+                        }
+                    }
                 }
             };
         }
@@ -253,13 +322,19 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             var sd01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_SD01);
             var sd02 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_SD02);
 
-            return new DeliverableCategory(FundingSummaryReportConstants.Total_SpecificationDefined, false)
+            return new DeliverableCategory(FundingSummaryReportConstants.Total_SpecificationDefined)
             {
                 GroupHeader = BuildFundingHeader(FundingSummaryReportConstants.Header_SpecificationDefined, headers),
-                ReportValues = new List<IPeriodisedReportValue>
+                DeliverableSubCategories = new List<IDeliverableSubCategory>
                 {
-                    BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_SD01, sd01),
-                    BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_SD02, sd02),
+                    new DeliverableSubCategory(FundingSummaryReportConstants.Default_SubCateogryTitle, false)
+                    {
+                        ReportValues = new List<IPeriodisedReportValue>
+                        {
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_SD01, sd01),
+                            BuildPeriodisedReportValue(FundingSummaryReportConstants.Deliverable_ESF_SD02, sd02),
+                        }
+                    }
                 }
             };
         }
