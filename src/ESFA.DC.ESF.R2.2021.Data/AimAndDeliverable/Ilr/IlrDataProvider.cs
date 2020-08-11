@@ -94,7 +94,7 @@ namespace ESFA.DC.ESF.R2._2021.Data.AimAndDeliverable.Ilr
                                                         AND LD.LearnRefNumber = LDFAM.LearnRefNumber
                                                         AND LD.AimSeqNumber = LDFAM.AimSeqNumber
                                                     LEFT JOIN CTE_ProviderSpecDeliveryMonitoring PSDM
-                                                            ON LD.UKPRN = PSLM.UKPRN
+                                                            ON LD.UKPRN = PSDM.UKPRN
                                                             AND LD.LearnRefNumber = PSDM.LearnRefNumber
                                                             AND LD.AimSeqNumber = PSDM.AimSeqNumber
                                                     LEFT JOIN Rulebase.ESF_LearningDelivery ESFLD
