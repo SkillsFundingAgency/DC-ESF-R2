@@ -31,7 +31,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
             August = august;
             September = september;
             October = october;
-            Novemeber = november;
+            November = november;
             December = december;
             January = january;
             February = february;
@@ -58,7 +58,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 
         public decimal? October { get; set; }
 
-        public decimal? Novemeber { get; set; }
+        public decimal? November { get; set; }
 
         public decimal? December { get; set; }
 

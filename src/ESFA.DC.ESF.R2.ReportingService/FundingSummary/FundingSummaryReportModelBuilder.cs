@@ -141,8 +141,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 model.CommunityGrants = BuildCommunityGrants(header, periodisedEsf.GetValueOrDefault(model.Year));
                 model.SpecificationDefineds = BuildSpecificationDefined(header, periodisedEsf.GetValueOrDefault(model.Year));
 
+                model.PreviousYearCumulativeTotal = models.FirstOrDefault(x => x.Year == model.Year - 1)?.CumulativeYearTotal;
+
                 model.YearTotal = model.MonthlyTotals.July;
-                model.CumulativeYearTotal = model.MonthlyTotals.July;
+                model.CumulativeYearTotal = model.MonthlyTotals.Total;
             }
 
             var modelCount = models.Count();
@@ -245,13 +247,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
         public IDeliverableCategory BuildProgressions(string[] headers, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues, IDictionary<string, IEnumerable<PeriodisedValue>> ilrValues)
         {
-            var ilrPG01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG01)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
+            var ilrPG01 = ilrValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG01)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
             var esfPG01 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG01);
-            var ilrPG03 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG03)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
+            var ilrPG03 = ilrValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG03)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
             var esfPG03 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG03);
-            var ilrPG04 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG04)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
+            var ilrPG04 = ilrValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG04)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
             var esfPG04 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG04);
-            var ilrPG05 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG05)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
+            var ilrPG05 = ilrValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG05)?.Where(x => _ilrAttributeSet.Contains(x.AttributeName));
             var esfPG05 = esfValues.GetValueOrDefault(DeliverableCodeConstants.DeliverableCode_PG05);
 
             return new DeliverableCategory(FundingSummaryReportConstants.Total_Progression)
@@ -346,7 +348,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                     periodisedValues?.Sum(x => x.August) ?? 0m,
                     periodisedValues?.Sum(x => x.September) ?? 0m,
                     periodisedValues?.Sum(x => x.October) ?? 0m,
-                    periodisedValues?.Sum(x => x.Novemeber) ?? 0m,
+                    periodisedValues?.Sum(x => x.November) ?? 0m,
                     periodisedValues?.Sum(x => x.December) ?? 0m,
                     periodisedValues?.Sum(x => x.January) ?? 0m,
                     periodisedValues?.Sum(x => x.February) ?? 0m,
@@ -507,19 +509,19 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return supplementaryData.Select(x => new PeriodisedValue(
                 conRef,
                 deliverableCode,
-                x.ReferenceType,
-                x.CalendarMonth == 8 ? x.Value : 0,
-                x.CalendarMonth == 9 ? x.Value : 0,
-                x.CalendarMonth == 10 ? x.Value : 0,
-                x.CalendarMonth == 11 ? x.Value : 0,
-                x.CalendarMonth == 12 ? x.Value : 0,
-                x.CalendarMonth == 1 ? x.Value : 0,
-                x.CalendarMonth == 2 ? x.Value : 0,
-                x.CalendarMonth == 3 ? x.Value : 0,
-                x.CalendarMonth == 4 ? x.Value : 0,
-                x.CalendarMonth == 5 ? x.Value : 0,
-                x.CalendarMonth == 6 ? x.Value : 0,
-                x.CalendarMonth == 7 ? x.Value : 0));
+                x.CostType,
+                x.CalendarMonth == 8 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
+                x.CalendarMonth == 9 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
+                x.CalendarMonth == 10 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
+                x.CalendarMonth == 11 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
+                x.CalendarMonth == 12 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
+                x.CalendarMonth == 1 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
+                x.CalendarMonth == 2 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
+                x.CalendarMonth == 3 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
+                x.CalendarMonth == 4 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
+                x.CalendarMonth == 5 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
+                x.CalendarMonth == 6 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
+                x.CalendarMonth == 7 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0));
         }
 
         private string GetSecondYearFromReportYear(int year)

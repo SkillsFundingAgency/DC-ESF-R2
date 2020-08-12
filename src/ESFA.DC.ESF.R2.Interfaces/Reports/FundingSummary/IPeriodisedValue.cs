@@ -22,7 +22,7 @@
 
         decimal? October { get; }
 
-        decimal? Novemeber { get; }
+        decimal? November { get; }
 
         decimal? December { get; }
 

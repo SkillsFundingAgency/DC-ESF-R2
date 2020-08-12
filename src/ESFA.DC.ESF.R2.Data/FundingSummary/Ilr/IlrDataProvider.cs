@@ -23,7 +23,7 @@ namespace ESFA.DC.ESF.R2.Data.FundingSummary.Ilr
         private readonly string EsfReturnPeriodSql = @"SELECT DISTINCT([CollectionReturnCode])
                                                        FROM [dbo].[LatestProviderSubmission]
                                                        WHERE [UKPRN] = @ukprn
-                                                       AND [CollectionType] = '@collectionType'";
+                                                       AND [CollectionType] = @collectionType";
 
         private readonly string EsfFundingDataSql = @"SELECT 
                                                         [UKPRN],
@@ -32,7 +32,7 @@ namespace ESFA.DC.ESF.R2.Data.FundingSummary.Ilr
                                                         [ConRefNumber],
                                                         [DeliverableCode],
                                                         [LearnRefNumber],
-                                                        '@collectionYear' AS FundingYear,
+                                                        @collectionYear AS FundingYear,
                                                         [Period_1] AS Period1, 
                                                         [Period_2] AS Period2,
                                                         [Period_3] AS Period3,
@@ -47,8 +47,8 @@ namespace ESFA.DC.ESF.R2.Data.FundingSummary.Ilr
                                                         [Period_12] AS Period12
                                                       FROM [dbo].[ESFFundingData]
                                                       WHERE [UKPRN] = @ukprn
-                                                      AND [CollectionType] = '@collectionType'
-                                                      AND [CollectionReturnCode] = '@returnCode'";
+                                                      AND [CollectionType] = @collectionType
+                                                      AND [CollectionReturnCode] = @returnCode";
 
         private readonly IDictionary<int, Func<SqlConnection>> _ilrSqlConnectionFunc;
         private readonly Func<SqlConnection> _esfSqlConnectionFunc;
