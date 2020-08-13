@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>    
+    <ProjectReference Include="..\..\ESFA.DC.ESF.R2.Service.Config\ESFA.DC.ESF.R2.Service.Config.csproj" />    
     <ProjectReference Include="..\ESFA.DC.ILR.DataService.DataAccessLayer\ESFA.DC.ILR.DataService.DataAccessLayer.csproj">
       <PrivateAssets>all</PrivateAssets>
     </ProjectReference>    

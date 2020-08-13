@@ -13,8 +13,8 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
     {
         private readonly List<string> _SDCodes = new List<string>
         {
-            ValidationConstants.DeliverableCode_SD01,
-            ValidationConstants.DeliverableCode_SD02
+            DeliverableCodeConstants.DeliverableCode_SD01,
+            DeliverableCodeConstants.DeliverableCode_SD02
         };
 
         public CostTypeRule02(IValidationErrorMessageService errorMessageService)
@@ -32,9 +32,9 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
             var costType = model.CostType?.Trim();
 
             var errorCondition =
-                (deliverableCode.CaseInsensitiveEquals(ValidationConstants.DeliverableCode_CG01) && !costType.CaseInsensitiveEquals(ValidationConstants.CostType_Grant))
+                (deliverableCode.CaseInsensitiveEquals(DeliverableCodeConstants.DeliverableCode_CG01) && !costType.CaseInsensitiveEquals(ValidationConstants.CostType_Grant))
                 ||
-                (deliverableCode.CaseInsensitiveEquals(ValidationConstants.DeliverableCode_CG02)
+                (deliverableCode.CaseInsensitiveEquals(DeliverableCodeConstants.DeliverableCode_CG02)
                     && (!costType.CaseInsensitiveEquals(ValidationConstants.CostType_GrantManagement) && !costType.CaseInsensitiveEquals(ValidationConstants.CostType_OtherCosts)))
                 ||
                 (_SDCodes.Any(sd => sd.CaseInsensitiveEquals(deliverableCode)) && !costType.CaseInsensitiveEquals(ValidationConstants.CostType_UnitCost))
@@ -42,7 +42,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
                 (ESFConstants.UnitCostDeliverableCodes.Any(ucd => ucd.CaseInsensitiveEquals(deliverableCode)) &&
                     (!costType.CaseInsensitiveEquals(ValidationConstants.CostType_UnitCost) && !costType.CaseInsensitiveEquals(ValidationConstants.CostType_UnitCostDeduction)))
                 ||
-                ((deliverableCode.CaseInsensitiveEquals(ValidationConstants.DeliverableCode_NR01) || deliverableCode.CaseInsensitiveEquals(ValidationConstants.DeliverableCode_RQ01)) &&
+                ((deliverableCode.CaseInsensitiveEquals(DeliverableCodeConstants.DeliverableCode_NR01) || deliverableCode.CaseInsensitiveEquals(DeliverableCodeConstants.DeliverableCode_RQ01)) &&
                     !costType.CaseInsensitiveEquals(ValidationConstants.CostType_AuthorisedClaims));
 
             return !errorCondition;

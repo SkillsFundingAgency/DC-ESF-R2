@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using ESFA.DC.CsvService.Interface;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces;
-using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Models.Reports;
@@ -14,6 +13,7 @@ using ESFA.DC.ESF.R2.Models.Reports.FundingSummaryReport;
 using ESFA.DC.ESF.R2.ReportingService.Mappers;
 using ESFA.DC.ESF.R2.ReportingService.Reports;
 using ESFA.DC.ESF.R2.ReportingService.Services;
+using ESFA.DC.ESF.R2.Service.Config.Interfaces;
 using ESFA.DC.FileService.Interface;
 using ESFA.DC.ILR.DataService.Models;
 using FluentAssertions;
@@ -51,9 +51,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests
                 .Returns(Task.CompletedTask);
 
             Mock<IReferenceDataService> referenceDataService = new Mock<IReferenceDataService>();
-            referenceDataService.Setup(m => m.GetLarsVersion(It.IsAny<CancellationToken>())).Returns("123456");
-            referenceDataService.Setup(m => m.GetOrganisationVersion(It.IsAny<CancellationToken>())).Returns("234567");
-            referenceDataService.Setup(m => m.GetPostcodeVersion(It.IsAny<CancellationToken>())).Returns("345678");
+            referenceDataService.Setup(m => m.GetLarsVersion(It.IsAny<CancellationToken>())).ReturnsAsync("123456");
+            referenceDataService.Setup(m => m.GetOrganisationVersion(It.IsAny<CancellationToken>())).ReturnsAsync("234567");
+            referenceDataService.Setup(m => m.GetPostcodeVersion(It.IsAny<CancellationToken>())).ReturnsAsync("345678");
             referenceDataService.Setup(m => m.GetProviderName(It.IsAny<int>(), It.IsAny<CancellationToken>())).Returns("Foo College");
             referenceDataService.Setup(m =>
                     m.GetDeliverableUnitCosts(It.IsAny<string>(), It.IsAny<IList<string>>()))

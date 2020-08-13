@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -64,7 +65,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Services
             IEnumerable<SourceFileModel> sourceFiles,
             CancellationToken cancellationToken)
         {
-            var supplementaryDataModels = new Dictionary<string, IEnumerable<SupplementaryDataYearlyModel>>();
+            var supplementaryDataModels = new Dictionary<string, IEnumerable<SupplementaryDataYearlyModel>>(StringComparer.OrdinalIgnoreCase);
             foreach (var sourceFile in sourceFiles)
             {
                 var supplementaryData =

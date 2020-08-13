@@ -27,7 +27,5 @@ namespace ESFA.DC.ESF.R2.Models
         public string LearnAimRef { get; set; }
 
         public DateTime? SupplementaryDataPanelDate { get; set; }
-
-        public string OfficialSensitive { get; }
     }
 }

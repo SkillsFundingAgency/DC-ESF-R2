@@ -4,12 +4,11 @@ using ESFA.DC.ESF.FundingData.Database.EF;
 using ESFA.DC.ESF.FundingData.Database.EF.Interfaces;
 using ESFA.DC.ESF.R2.Database.EF;
 using ESFA.DC.ESF.R2.Database.EF.Interfaces;
-using ESFA.DC.ESF.R2.Interfaces.Config;
 using ESFA.DC.ESF.R2.Service.Config;
+using ESFA.DC.ESF.R2.Service.Config.Interfaces;
 using ESFA.DC.ESF.R2.Stateless.Handlers;
 using ESFA.DC.ESF.R2.Stateless.Modules;
 using ESFA.DC.FileService.Config;
-using ESFA.DC.ILR.DataService.Models;
 using ESFA.DC.ILR.DataService.Services;
 using ESFA.DC.JobContextManager.Interface;
 using ESFA.DC.JobContextManager.Model;
@@ -65,7 +64,7 @@ namespace ESFA.DC.ESF.R2.Stateless
         private static void RegisterPersistence(ContainerBuilder containerBuilder, IServiceFabricConfigurationService serviceFabricConfigurationService)
         {
             var ilrConfig = serviceFabricConfigurationService.GetConfigSectionAs<ILRConfiguration>("ILRSection");
-            containerBuilder.RegisterInstance(ilrConfig).As<ILRConfiguration>().SingleInstance();
+            containerBuilder.RegisterInstance(ilrConfig).As<IILRConfiguration>().SingleInstance();
             containerBuilder.RegisterModule(new DependencyInjectionModule
             {
                 Configuration = ilrConfig

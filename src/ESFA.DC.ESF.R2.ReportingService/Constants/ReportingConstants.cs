@@ -20,10 +20,6 @@
         public const string ILR1920 = "ILR1920";
         public const string ILR2021 = "ILR2021";
 
-        public const string IlrHeader1819 = "2018/19";
-        public const string IlrHeader1920 = "2019/20";
-        public const string IlrHeader2021 = "2020/21";
-
         public const string ESFR21819 = "ESFR2-1819";
         public const string ESFR21920 = "ESFR2-1920";
 
@@ -42,6 +38,7 @@
         public const string R13 = "R13";
         public const string R14 = "R14";
 
+        public const string LongDateFormat = "dd/MM/yyyy HH:mm";
         public const string ShortDateFormat = "dd/MM/yyyy";
         public const string TimeFormat = "HH:mm:ss";
 

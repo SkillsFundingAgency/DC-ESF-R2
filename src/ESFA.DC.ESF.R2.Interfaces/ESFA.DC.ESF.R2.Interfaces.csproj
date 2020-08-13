@@ -36,13 +36,10 @@
     <CodeAnalysisRuleSet>ESFA.DC.ESF.R2.Interfaces.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Config\IESFConfiguration.cs" />
-    <Compile Include="Config\IFCSConfiguration.cs" />
-    <Compile Include="Config\ILoggerOptions.cs" />
-    <Compile Include="Config\IReferenceDataConfig.cs" />
-    <Compile Include="Config\IVersionInfo.cs" />
     <Compile Include="Constants\AcademicYearConstants.cs" />
+    <Compile Include="Constants\DeliverableCodeConstants.cs" />
     <Compile Include="Constants\ESFConstants.cs" />
+    <Compile Include="Constants\IlrConstants.cs" />
     <Compile Include="Controllers\IReportingController.cs" />
     <Compile Include="Controllers\IServiceController.cs" />
     <Compile Include="Controllers\IStorageController.cs" />
@@ -71,13 +68,11 @@
     <Compile Include="IEsfJobContext.cs" />
     <Compile Include="PersistenceStorageKeys.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReferenceData\IIlrFile.cs" />
-    <Compile Include="ReferenceData\IEsfSuppDataFile.cs" />
-    <Compile Include="ReferenceData\IOrganisationReferenceData.cs" />
-    <Compile Include="ReferenceData\IReferenceDataVersions.cs" />
-    <Compile Include="ReferenceData\IReferenceDataRoot.cs" />
     <Compile Include="Reports\AimAndDeliverable\IIlrDataProvider.cs" />
-    <Compile Include="Reports\IModelBuilder.cs" />
+    <Compile Include="Reports\FundingSummary\IFundingSummaryReportDataProvider.cs" />
+    <Compile Include="Reports\FundingSummary\IFundingSummaryYearConfiguration.cs" />
+    <Compile Include="Reports\FundingSummary\IIlrDataProvider.cs" />
+    <Compile Include="Reports\FundingSummary\IPeriodisedValue.cs" />
     <Compile Include="Reports\AimAndDeliverable\IAimAndDeliverableDataProvider.cs" />
     <Compile Include="Reports\AimAndDeliverable\IFcsDataProvider.cs" />
     <Compile Include="Reports\AimAndDeliverable\ILarsDataProvider.cs" />
@@ -142,7 +137,7 @@
       <Name>ESFA.DC.ESF.R2.Database.EF</Name>
     </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Models\ESFA.DC.ESF.R2.Models.csproj">
-      <Project>{5e5aac56-e3d6-4a45-9028-d8a992e422b0}</Project>
+      <Project>{D442AA8D-E165-4AF4-B8B8-9C25BCE17258}</Project>
       <Name>ESFA.DC.ESF.R2.Models</Name>
     </ProjectReference>
   </ItemGroup>

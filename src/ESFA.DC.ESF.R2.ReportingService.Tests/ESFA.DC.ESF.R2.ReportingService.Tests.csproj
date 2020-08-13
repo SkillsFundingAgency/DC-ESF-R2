@@ -225,6 +225,7 @@
     <Compile Include="AimAndDeliverable\AimAndDeliverableModelBuilderTests.cs" />
     <Compile Include="Builders\AimAndDeliverableBuilder.cs" />
     <Compile Include="Builders\SupplementaryDataModelBuilder.cs" />
+    <Compile Include="FundingSummary\FundingSummaryReportDataProviderTests.cs" />
     <Compile Include="FundingSummary\FundingSummaryReportModelBuilderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestAimAndDeliverableReport.cs" />
@@ -270,12 +271,16 @@
       <Name>ESFA.DC.ESF.R2.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Models\ESFA.DC.ESF.R2.Models.csproj">
-      <Project>{5E5AAC56-E3D6-4A45-9028-D8A992E422B0}</Project>
+      <Project>{D442AA8D-E165-4AF4-B8B8-9C25BCE17258}</Project>
       <Name>ESFA.DC.ESF.R2.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.ReportingService\ESFA.DC.ESF.R2.ReportingService.csproj">
       <Project>{DE38A36B-C220-4227-B10C-35E24C44EDCE}</Project>
       <Name>ESFA.DC.ESF.R2.ReportingService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ESFA.DC.ESF.R2.Service.Config\ESFA.DC.ESF.R2.Service.Config.csproj">
+      <Project>{5CDFB079-A857-42CF-95F8-F6AF0FE0C179}</Project>
+      <Name>ESFA.DC.ESF.R2.Service.Config</Name>
     </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Utils\ESFA.DC.ESF.R2.Utils.csproj">
       <Project>{51402a23-1dda-435e-bbb7-869458d02bce}</Project>

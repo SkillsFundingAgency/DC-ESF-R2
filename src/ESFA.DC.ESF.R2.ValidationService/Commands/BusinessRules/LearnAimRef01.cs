@@ -1,4 +1,5 @@
-﻿using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
+﻿using ESFA.DC.ESF.R2.Interfaces.Constants;
+using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
 using ESFA.DC.ESF.R2.Utils;
@@ -19,8 +20,8 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
 
         public bool IsValid(SupplementaryDataModel model)
         {
-            return (!model.DeliverableCode.CaseInsensitiveEquals(ValidationConstants.DeliverableCode_NR01)
-                        && !model.DeliverableCode.CaseInsensitiveEquals(ValidationConstants.DeliverableCode_RQ01))
+            return (!model.DeliverableCode.CaseInsensitiveEquals(DeliverableCodeConstants.DeliverableCode_NR01)
+                        && !model.DeliverableCode.CaseInsensitiveEquals(DeliverableCodeConstants.DeliverableCode_RQ01))
                    || !string.IsNullOrEmpty(model.LearnAimRef?.Trim());
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ESFA.DC.ESF.R2.Interfaces.Constants;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
@@ -12,23 +13,23 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
     {
         private readonly List<string> _validValues = new List<string>
         {
-            ValidationConstants.DeliverableCode_ST01,
-            ValidationConstants.DeliverableCode_CG01,
-            ValidationConstants.DeliverableCode_CG02,
-            ValidationConstants.DeliverableCode_SD01,
-            ValidationConstants.DeliverableCode_SD02,
-            ValidationConstants.DeliverableCode_SD10,
-            ValidationConstants.DeliverableCode_NR01,
-            ValidationConstants.DeliverableCode_RQ01,
-            ValidationConstants.DeliverableCode_PG01,
-            ValidationConstants.DeliverableCode_PG03,
-            ValidationConstants.DeliverableCode_PG04,
-            ValidationConstants.DeliverableCode_PG05,
-            ValidationConstants.DeliverableCode_SU15,
-            ValidationConstants.DeliverableCode_SU21,
-            ValidationConstants.DeliverableCode_SU22,
-            ValidationConstants.DeliverableCode_SU23,
-            ValidationConstants.DeliverableCode_SU24
+            DeliverableCodeConstants.DeliverableCode_ST01,
+            DeliverableCodeConstants.DeliverableCode_CG01,
+            DeliverableCodeConstants.DeliverableCode_CG02,
+            DeliverableCodeConstants.DeliverableCode_SD01,
+            DeliverableCodeConstants.DeliverableCode_SD02,
+            DeliverableCodeConstants.DeliverableCode_SD10,
+            DeliverableCodeConstants.DeliverableCode_NR01,
+            DeliverableCodeConstants.DeliverableCode_RQ01,
+            DeliverableCodeConstants.DeliverableCode_PG01,
+            DeliverableCodeConstants.DeliverableCode_PG03,
+            DeliverableCodeConstants.DeliverableCode_PG04,
+            DeliverableCodeConstants.DeliverableCode_PG05,
+            DeliverableCodeConstants.DeliverableCode_SU15,
+            DeliverableCodeConstants.DeliverableCode_SU21,
+            DeliverableCodeConstants.DeliverableCode_SU22,
+            DeliverableCodeConstants.DeliverableCode_SU23,
+            DeliverableCodeConstants.DeliverableCode_SU24
         };
 
         public DeliverableCodeRule01(IValidationErrorMessageService errorMessageService)

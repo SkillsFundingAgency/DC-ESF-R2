@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using ESFA.DC.ESF.R2.Service.Config.Interfaces;
 using ESFA.DC.ILR.DataService.DataAccessLayer.Repositories.ILR1819;
 using ESFA.DC.ILR.DataService.DataAccessLayer.Repositories.ILR1920;
 using ESFA.DC.ILR.DataService.ILR1819EF.Rulebase;
@@ -7,14 +8,13 @@ using ESFA.DC.ILR.DataService.ILR1920EF.Rulebase;
 using ESFA.DC.ILR.DataService.ILR1920EF.Valid;
 using ESFA.DC.ILR.DataService.Interfaces.Repositories;
 using ESFA.DC.ILR.DataService.Interfaces.Services;
-using ESFA.DC.ILR.DataService.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ESFA.DC.ILR.DataService.Services
 {
     public class DependencyInjectionModule : Module
     {
-        public ILRConfiguration Configuration { get; set; }
+        public IILRConfiguration Configuration { get; set; }
 
         protected override void Load(ContainerBuilder builder)
         {

@@ -1,6 +1,6 @@
 ﻿namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 {
-    public sealed class FundingSummaryFooterModel
+    public sealed class FundingSummaryReportFooterModel
     {
         public string ApplicationVersion { get; set; }
 

@@ -52,7 +52,7 @@
       <Name>ESFA.DC.ESF.R2.Database.EF</Name>
     </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Interfaces\ESFA.DC.ESF.R2.Interfaces.csproj">
-      <Project>{3eb1948d-7f0f-446f-a8b3-c3ab19531fe6}</Project>
+      <Project>{3EB1948D-7F0F-446F-A8B3-C3AB19531FE6}</Project>
       <Name>ESFA.DC.ESF.R2.Interfaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\ESFA.DC.ESF.R2.Models\ESFA.DC.ESF.R2.Models.csproj">

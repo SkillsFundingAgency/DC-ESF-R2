@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ESFA.DC.ESF.R2.Interfaces.Constants;
 using ESFA.DC.ESF.R2.Interfaces.DataAccessLayer;
 using ESFA.DC.ESF.R2.Interfaces.Validation;
 using ESFA.DC.ESF.R2.Models;
@@ -35,7 +36,7 @@ namespace ESFA.DC.ESF.R2.ValidationService.Commands.BusinessRules
         public bool IsValid(SupplementaryDataModel model)
         {
             if (string.IsNullOrWhiteSpace(model.LearnAimRef)
-                || !(model.DeliverableCode ?? string.Empty).CaseInsensitiveEquals(ValidationConstants.DeliverableCode_NR01))
+                || !(model.DeliverableCode ?? string.Empty).CaseInsensitiveEquals(DeliverableCodeConstants.DeliverableCode_NR01))
             {
                 return true;
             }

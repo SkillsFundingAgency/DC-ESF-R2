@@ -21,7 +21,6 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
         private readonly Func<IUlnContext> _ulnContext;
 
         private readonly object _ulnLock = new object();
-        private readonly object _larsDeliveryLock = new object();
 
         public ReferenceDataRepository(
             Func<IPostcodesContext> postcodes,
@@ -35,7 +34,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             _ulnContext = ulnContext;
         }
 
-        public string GetPostcodeVersion(CancellationToken cancellationToken)
+        public async Task<string> GetPostcodeVersion(CancellationToken cancellationToken)
         {
             string version;
 
@@ -43,30 +42,27 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
             using (var context = _postcodes())
             {
-                version = context.VersionInfos
+                version = await context.VersionInfos
                     .OrderByDescending(v => v.VersionNumber)
                     .Select(v => $"{v.VersionNumber} : {v.ModifiedAt:dd MMM yyyy hh:mm:ss}")
-                    .FirstOrDefault();
+                    .FirstOrDefaultAsync(cancellationToken);
             }
 
             return version;
         }
 
-        public string GetLarsVersion(CancellationToken cancellationToken)
+        public async Task<string> GetLarsVersion(CancellationToken cancellationToken)
         {
             string version;
 
             cancellationToken.ThrowIfCancellationRequested();
 
-            lock (_larsDeliveryLock)
+            using (var context = _larsContext())
             {
-                using (var context = _larsContext())
-                {
-                    version = context.LARS_Versions
-                        .OrderByDescending(v => v.MainDataSchemaName)
-                        .Select(lv => $"{lv.MainDataSchemaName} : {lv.ModifiedOn:dd MMM yyyy hh:mm:ss}")
-                        .FirstOrDefault();
-                }
+                version = await context.LARS_Versions
+                    .OrderByDescending(v => v.MainDataSchemaName)
+                    .Select(lv => $"{lv.MainDataSchemaName} : {lv.ModifiedOn:dd MMM yyyy hh:mm:ss}")
+                    .FirstOrDefaultAsync(cancellationToken);
             }
 
             return version;
@@ -105,7 +101,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             return learningDeliveries;
         }
 
-        public string GetOrganisationVersion(CancellationToken cancellationToken)
+        public async Task<string> GetOrganisationVersion(CancellationToken cancellationToken)
         {
             string version;
 
@@ -113,10 +109,27 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
             using (var context = _organisations())
             {
-                version = context.OrgVersions
+                version = await context.OrgVersions
                     .OrderByDescending(v => v.MainDataSchemaName)
                     .Select(lv => $"{lv.MainDataSchemaName} : {lv.ModifiedOn:dd MMM yyyy hh:mm:ss}")
-                    .FirstOrDefault();
+                    .FirstOrDefaultAsync(cancellationToken);
+            }
+
+            return version;
+        }
+
+        public async Task<string> GetOrganisationReferenceVersion(CancellationToken cancellationToken)
+        {
+            string version;
+
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using (var context = _organisations())
+            {
+                version = await context.OrgVersions
+                    .OrderByDescending(v => v.MainDataSchemaName)
+                    .Select(lv => $"{lv.MainDataSchemaName} : {lv.ModifiedOn:dd MMM yyyy hh:mm:ss}")
+                    .FirstOrDefaultAsync(cancellationToken);
             }
 
             return version;

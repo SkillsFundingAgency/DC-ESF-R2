@@ -1,4 +1,4 @@
-﻿using ESFA.DC.ESF.R2.Interfaces.Config;
+﻿using ESFA.DC.ESF.R2.Service.Config.Interfaces;
 
 namespace ESFA.DC.ESF.R2.Service.Config
 {

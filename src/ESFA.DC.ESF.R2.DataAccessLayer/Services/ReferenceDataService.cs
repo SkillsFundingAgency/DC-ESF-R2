@@ -28,19 +28,19 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer.Services
 
         public int CurrentPeriod { get; set; }
 
-        public string GetPostcodeVersion(CancellationToken cancellationToken)
+        public async Task<string> GetPostcodeVersion(CancellationToken cancellationToken)
         {
-            return _referenceDataRepository.GetPostcodeVersion(cancellationToken);
+            return await _referenceDataRepository.GetPostcodeVersion(cancellationToken);
         }
 
-        public string GetLarsVersion(CancellationToken cancellationToken)
+        public async Task<string> GetLarsVersion(CancellationToken cancellationToken)
         {
-            return _referenceDataRepository.GetLarsVersion(cancellationToken);
+            return await _referenceDataRepository.GetLarsVersion(cancellationToken);
         }
 
-        public string GetOrganisationVersion(CancellationToken cancellationToken)
+        public async Task<string> GetOrganisationVersion(CancellationToken cancellationToken)
         {
-            return _referenceDataRepository.GetOrganisationVersion(cancellationToken);
+            return await _referenceDataRepository.GetOrganisationVersion(cancellationToken);
         }
 
         public string GetProviderName(int ukPrn, CancellationToken cancellationToken)

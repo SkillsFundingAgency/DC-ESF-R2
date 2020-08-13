@@ -1,4 +1,4 @@
-﻿namespace ESFA.DC.ESF.R2.Interfaces.Config
+﻿namespace ESFA.DC.ESF.R2.Service.Config.Interfaces
 {
     public interface IFCSConfiguration
     {
