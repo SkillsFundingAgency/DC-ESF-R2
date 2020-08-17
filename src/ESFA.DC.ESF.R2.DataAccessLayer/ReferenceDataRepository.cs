@@ -15,6 +15,10 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 {
     public class ReferenceDataRepository : IReferenceDataRepository
     {
+        private readonly string _postcodeVersionSource = "OnsPostcodes";
+        private readonly string _schemaVersionPreFix = "Schema Version : ";
+        private readonly string _refDataDateTimeFormat = "dd MMM yyyy hh:mm:ss";
+
         private readonly Func<IPostcodesContext> _postcodes;
         private readonly Func<ILARSContext> _larsContext;
         private readonly Func<IOrganisationsContext> _organisations;
@@ -42,9 +46,10 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
             using (var context = _postcodes())
             {
-                version = await context.VersionInfos
+                version = await context.VersionInfos?
+                    .Where(x => x.DataSource == _postcodeVersionSource)
                     .OrderByDescending(v => v.VersionNumber)
-                    .Select(v => $"{v.VersionNumber} : {v.ModifiedAt:dd MMM yyyy hh:mm:ss}")
+                    .Select(v => string.Concat(_schemaVersionPreFix, v.VersionNumber, " ", v.ModifiedAt.ToString(_refDataDateTimeFormat)))
                     .FirstOrDefaultAsync(cancellationToken);
             }
 
@@ -59,9 +64,9 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
             using (var context = _larsContext())
             {
-                version = await context.LARS_Versions
-                    .OrderByDescending(v => v.MainDataSchemaName)
-                    .Select(lv => $"{lv.MainDataSchemaName} : {lv.ModifiedOn:dd MMM yyyy hh:mm:ss}")
+                version = await context.LARS_DataGenerations
+                    .OrderByDescending(v => v.DataGeneratedOn)
+                    .Select(lv => string.Concat(lv.Comment, " ", lv.DataGeneratedOn.ToString(_refDataDateTimeFormat)))
                     .FirstOrDefaultAsync(cancellationToken);
             }
 
@@ -109,26 +114,9 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
 
             using (var context = _organisations())
             {
-                version = await context.OrgVersions
-                    .OrderByDescending(v => v.MainDataSchemaName)
-                    .Select(lv => $"{lv.MainDataSchemaName} : {lv.ModifiedOn:dd MMM yyyy hh:mm:ss}")
-                    .FirstOrDefaultAsync(cancellationToken);
-            }
-
-            return version;
-        }
-
-        public async Task<string> GetOrganisationReferenceVersion(CancellationToken cancellationToken)
-        {
-            string version;
-
-            cancellationToken.ThrowIfCancellationRequested();
-
-            using (var context = _organisations())
-            {
-                version = await context.OrgVersions
-                    .OrderByDescending(v => v.MainDataSchemaName)
-                    .Select(lv => $"{lv.MainDataSchemaName} : {lv.ModifiedOn:dd MMM yyyy hh:mm:ss}")
+                version = await context.OrgDataGenerations
+                    .OrderByDescending(v => v.DataGeneratedOn)
+                    .Select(lv => string.Concat(lv.Comment, " ", lv.DataGeneratedOn.ToString(_refDataDateTimeFormat)))
                     .FirstOrDefaultAsync(cancellationToken);
             }
 
