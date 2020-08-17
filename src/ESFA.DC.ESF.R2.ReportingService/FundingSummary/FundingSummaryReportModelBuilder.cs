@@ -371,15 +371,19 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
         {
             var ilrFileDetailModels = BuildBaseIlrFileDetailModels(collectionYear, baseIlrYear, academicYearDictionary);
 
+            var lastSupplementaryDataFileUpdateUk = sourceFile?.SuppliedDate.HasValue ?? false ? _dateTimeProvider.ConvertUtcToUk(sourceFile.SuppliedDate.Value) : (DateTime?)null;
+
             foreach (var model in ilrFileDetailModels)
             {
                 var ilrData = ilrFileData?.Where(x => x?.Year == model.Year).FirstOrDefault();
 
                 if (ilrData != null)
                 {
+                    var lastIlrFileUpdateUk = ilrData.LastSubmission.HasValue ? _dateTimeProvider.ConvertUtcToUk(ilrData.LastSubmission.Value) : (DateTime?)null;
+
                     model.IlrFile = !string.IsNullOrWhiteSpace(ilrData?.FileName) ? Path.GetFileName(ilrData?.FileName) : null;
                     model.FilePrepDate = ilrData?.FilePreparationDate?.ToString(ReportingConstants.ShortDateFormat);
-                    model.LastIlrFileUpdate = ilrData?.LastSubmission?.ToString(ReportingConstants.LongDateFormat);
+                    model.LastIlrFileUpdate = lastIlrFileUpdateUk?.ToString(ReportingConstants.LongDateFormat);
                 }
             }
 
@@ -390,7 +394,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 ContractReferenceNumber = conRefNumber,
                 SecurityClassification = ReportingConstants.Classification,
                 SupplementaryDataFile = !string.IsNullOrWhiteSpace(sourceFile?.FileName) ? Path.GetFileName(sourceFile?.FileName) : null,
-                LastSupplementaryDataFileUpdate = sourceFile?.SuppliedDate?.ToString(ReportingConstants.LongDateFormat),
+                LastSupplementaryDataFileUpdate = lastSupplementaryDataFileUpdateUk?.ToString(ReportingConstants.LongDateFormat),
                 IlrFileDetails = ilrFileDetailModels
             };
 

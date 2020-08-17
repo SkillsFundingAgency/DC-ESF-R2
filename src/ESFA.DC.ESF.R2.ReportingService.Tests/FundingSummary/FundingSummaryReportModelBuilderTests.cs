@@ -785,6 +785,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
         [Fact]
         public void PopulateReportHeader()
         {
+            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
+
+            dateTimeProviderMock.Setup(x => x.ConvertUtcToUk(It.IsAny<DateTime>())).Returns<DateTime>(x => x);
+
             var esfFile = new SourceFileModel
             {
                 ConRefNumber = "ConRef",
@@ -865,13 +869,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 { 2020, "2020/21" }
             };
 
-            NewBuilder().PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020, 2018, yearToAcademicYearDictionary)
+            NewBuilder(dateTimeProviderMock.Object).PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020, 2018, yearToAcademicYearDictionary)
                 .Should().BeEquivalentTo(expectedHeader);
         }
 
         [Fact]
         public void PopulateReportHeader_1920()
         {
+            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
+
+            dateTimeProviderMock.Setup(x => x.ConvertUtcToUk(It.IsAny<DateTime>())).Returns<DateTime>(x => x);
+
             var esfFile = new SourceFileModel
             {
                 ConRefNumber = "ConRef",
@@ -935,13 +943,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 { 2019, "2019/20" }
             };
 
-            NewBuilder().PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2019, 2018, yearToAcademicYearDictionary)
+            NewBuilder(dateTimeProviderMock.Object).PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2019, 2018, yearToAcademicYearDictionary)
                 .Should().BeEquivalentTo(expectedHeader);
         }
 
         [Fact]
         public void PopulateReportHeader_NoPreviousIlr()
         {
+            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
+
+            dateTimeProviderMock.Setup(x => x.ConvertUtcToUk(It.IsAny<DateTime>())).Returns<DateTime>(x => x);
+
             var esfFile = new SourceFileModel
             {
                 ConRefNumber = "ConRef",
@@ -990,13 +1002,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 { 2020, "2020/21" }
             };
 
-            NewBuilder().PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020, 2018, yearToAcademicYearDictionary)
+            NewBuilder(dateTimeProviderMock.Object).PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020, 2018, yearToAcademicYearDictionary)
                 .Should().BeEquivalentTo(expectedHeader);
         }
 
         [Fact]
         public void PopulateReportHeader_NoEsf()
         {
+            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
+
+            dateTimeProviderMock.Setup(x => x.ConvertUtcToUk(It.IsAny<DateTime>())).Returns<DateTime>(x => x);
+
             var ilrFileDetails = new List<ILRFileDetails>
             {
                 new ILRFileDetails
@@ -1066,7 +1082,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 { 2020, "2020/21" }
             };
 
-            NewBuilder().PopulateReportHeader(null, ilrFileDetails, 12345678, "OrgName", "Not Applicable", 2020, 2018, yearToAcademicYearDictionary)
+            NewBuilder(dateTimeProviderMock.Object).PopulateReportHeader(null, ilrFileDetails, 12345678, "OrgName", "Not Applicable", 2020, 2018, yearToAcademicYearDictionary)
                 .Should().BeEquivalentTo(expectedHeader);
         }
 
