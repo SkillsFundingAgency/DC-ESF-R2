@@ -141,9 +141,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 model.CommunityGrants = BuildCommunityGrants(header, periodisedEsf.GetValueOrDefault(model.Year));
                 model.SpecificationDefineds = BuildSpecificationDefined(header, periodisedEsf.GetValueOrDefault(model.Year));
 
-                model.PreviousYearCumulativeTotal = models.FirstOrDefault(x => x.Year == model.Year - 1)?.CumulativeYearTotal;
-
-                model.YearTotal = model.MonthlyTotals.July;
+                model.YearTotal = model.MonthlyTotals.Total;
                 model.CumulativeYearTotal = model.MonthlyTotals.Total;
             }
 
@@ -151,11 +149,12 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             int i = 2;
             while (i <= modelCount)
             {
-                var model = models.Skip(i - 1).Take(1).FirstOrDefault();
+                var model = models.OrderBy(x => x.Year).Skip(i - 1).Take(1).FirstOrDefault();
 
-                var previousYearTotal = models.Skip(i - 2).Take(1).FirstOrDefault().YearTotal;
+                var previousCumuativeYearTotal = models.OrderBy(x => x.Year).Skip(i - 2).Take(1).FirstOrDefault().CumulativeYearTotal;
 
-                model.CumulativeYearTotal = model.YearTotal + previousYearTotal;
+                model.CumulativeYearTotal = model.YearTotal + previousCumuativeYearTotal;
+                model.PreviousYearCumulativeTotal = previousCumuativeYearTotal;
 
                 i++;
             }
@@ -371,19 +370,15 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
         {
             var ilrFileDetailModels = BuildBaseIlrFileDetailModels(collectionYear, baseIlrYear, academicYearDictionary);
 
-            var lastSupplementaryDataFileUpdateUk = sourceFile?.SuppliedDate.HasValue ?? false ? _dateTimeProvider.ConvertUtcToUk(sourceFile.SuppliedDate.Value) : (DateTime?)null;
-
             foreach (var model in ilrFileDetailModels)
             {
                 var ilrData = ilrFileData?.Where(x => x?.Year == model.Year).FirstOrDefault();
 
                 if (ilrData != null)
                 {
-                    var lastIlrFileUpdateUk = ilrData.LastSubmission.HasValue ? _dateTimeProvider.ConvertUtcToUk(ilrData.LastSubmission.Value) : (DateTime?)null;
-
                     model.IlrFile = !string.IsNullOrWhiteSpace(ilrData?.FileName) ? Path.GetFileName(ilrData?.FileName) : null;
                     model.FilePrepDate = ilrData?.FilePreparationDate?.ToString(ReportingConstants.ShortDateFormat);
-                    model.LastIlrFileUpdate = lastIlrFileUpdateUk?.ToString(ReportingConstants.LongDateFormat);
+                    model.LastIlrFileUpdate = ilrData?.LastSubmission?.ToString(ReportingConstants.LongDateFormat);
                 }
             }
 
@@ -394,7 +389,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 ContractReferenceNumber = conRefNumber,
                 SecurityClassification = ReportingConstants.Classification,
                 SupplementaryDataFile = !string.IsNullOrWhiteSpace(sourceFile?.FileName) ? Path.GetFileName(sourceFile?.FileName) : null,
-                LastSupplementaryDataFileUpdate = lastSupplementaryDataFileUpdateUk?.ToString(ReportingConstants.LongDateFormat),
+                LastSupplementaryDataFileUpdate = sourceFile?.SuppliedDate?.ToString(ReportingConstants.LongDateFormat),
                 IlrFileDetails = ilrFileDetailModels
             };
 

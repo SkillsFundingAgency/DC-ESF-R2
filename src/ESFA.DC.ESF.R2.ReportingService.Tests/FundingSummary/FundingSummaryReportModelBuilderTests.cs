@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ESFA.DC.DateTimeProvider.Interface;
 using ESFA.DC.ESF.R2.Interfaces.Reports.FundingSummary;
 using ESFA.DC.ESF.R2.Models;
@@ -378,8 +379,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 new FundingSummaryModel
                 {
                     Year = 2020,
-                    YearTotal = 3M,
-                    CumulativeYearTotal = 27M,
+                    YearTotal = 27M,
+                    CumulativeYearTotal = 54M,
+                    PreviousYearCumulativeTotal = 27m,
                     LearnerAssessmentPlans = new DeliverableCategory("Total Learner Assessment and Plan (£)")
                     {
                         GroupHeader = Year2020GroupHeader("Learner Assessment and Plan"),
@@ -512,8 +514,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 new FundingSummaryModel
                 {
                     Year = 2019,
-                    YearTotal = 2M,
-                    CumulativeYearTotal = 5M,
+                    YearTotal = 19M,
+                    CumulativeYearTotal = 27M,
+                    PreviousYearCumulativeTotal = 8m,
                     LearnerAssessmentPlans = new DeliverableCategory("Total Learner Assessment and Plan (£)")
                     {
                         GroupHeader = Year2019GroupHeader("Learner Assessment and Plan"),
@@ -646,8 +649,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 new FundingSummaryModel
                 {
                     Year = 2018,
-                    YearTotal = 1M,
-                    CumulativeYearTotal = 3M,
+                    YearTotal = 8M,
+                    CumulativeYearTotal = 8M,
                     LearnerAssessmentPlans = new DeliverableCategory("Total Learner Assessment and Plan (£)")
                     {
                         GroupHeader = Year2018GroupHeader("Learner Assessment and Plan"),
@@ -783,12 +786,37 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
         }
 
         [Fact]
+        public void PopulateReportData_CheckYearlyTotals()
+        {
+            string conRefNumber = null;
+            var baseModels = new List<FundingSummaryModel>
+            {
+                new FundingSummaryModel { Year = 2020 },
+                new FundingSummaryModel { Year = 2019 },
+                new FundingSummaryModel { Year = 2018 }
+            };
+
+            var esfValues = EsfValuesDictionary();
+            var ilrValues = IlrValuesDictionary();
+
+            var models = NewBuilder().PopulateReportData(conRefNumber, HeaderDictionary(), baseModels, esfValues, ilrValues);
+
+            models.Where(x => x.Year == 2018).FirstOrDefault().YearTotal.Should().Be(8);
+            models.Where(x => x.Year == 2018).FirstOrDefault().CumulativeYearTotal.Should().Be(8);
+            models.Where(x => x.Year == 2018).FirstOrDefault().PreviousYearCumulativeTotal.Should().BeNull();
+
+            models.Where(x => x.Year == 2019).FirstOrDefault().YearTotal.Should().Be(19);
+            models.Where(x => x.Year == 2019).FirstOrDefault().CumulativeYearTotal.Should().Be(27);
+            models.Where(x => x.Year == 2019).FirstOrDefault().PreviousYearCumulativeTotal.Should().Be(8);
+
+            models.Where(x => x.Year == 2020).FirstOrDefault().YearTotal.Should().Be(27);
+            models.Where(x => x.Year == 2020).FirstOrDefault().CumulativeYearTotal.Should().Be(54);
+            models.Where(x => x.Year == 2020).FirstOrDefault().PreviousYearCumulativeTotal.Should().Be(27);
+        }
+
+        [Fact]
         public void PopulateReportHeader()
         {
-            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
-
-            dateTimeProviderMock.Setup(x => x.ConvertUtcToUk(It.IsAny<DateTime>())).Returns<DateTime>(x => x);
-
             var esfFile = new SourceFileModel
             {
                 ConRefNumber = "ConRef",
@@ -869,17 +897,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 { 2020, "2020/21" }
             };
 
-            NewBuilder(dateTimeProviderMock.Object).PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020, 2018, yearToAcademicYearDictionary)
+            NewBuilder().PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020, 2018, yearToAcademicYearDictionary)
                 .Should().BeEquivalentTo(expectedHeader);
         }
 
         [Fact]
         public void PopulateReportHeader_1920()
         {
-            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
-
-            dateTimeProviderMock.Setup(x => x.ConvertUtcToUk(It.IsAny<DateTime>())).Returns<DateTime>(x => x);
-
             var esfFile = new SourceFileModel
             {
                 ConRefNumber = "ConRef",
@@ -943,17 +967,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 { 2019, "2019/20" }
             };
 
-            NewBuilder(dateTimeProviderMock.Object).PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2019, 2018, yearToAcademicYearDictionary)
+            NewBuilder().PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2019, 2018, yearToAcademicYearDictionary)
                 .Should().BeEquivalentTo(expectedHeader);
         }
 
         [Fact]
         public void PopulateReportHeader_NoPreviousIlr()
         {
-            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
-
-            dateTimeProviderMock.Setup(x => x.ConvertUtcToUk(It.IsAny<DateTime>())).Returns<DateTime>(x => x);
-
             var esfFile = new SourceFileModel
             {
                 ConRefNumber = "ConRef",
@@ -1002,17 +1022,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 { 2020, "2020/21" }
             };
 
-            NewBuilder(dateTimeProviderMock.Object).PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020, 2018, yearToAcademicYearDictionary)
+            NewBuilder().PopulateReportHeader(esfFile, ilrFileDetails, 12345678, "OrgName", "ConRef", 2020, 2018, yearToAcademicYearDictionary)
                 .Should().BeEquivalentTo(expectedHeader);
         }
 
         [Fact]
         public void PopulateReportHeader_NoEsf()
         {
-            var dateTimeProviderMock = new Mock<IDateTimeProvider>();
-
-            dateTimeProviderMock.Setup(x => x.ConvertUtcToUk(It.IsAny<DateTime>())).Returns<DateTime>(x => x);
-
             var ilrFileDetails = new List<ILRFileDetails>
             {
                 new ILRFileDetails
@@ -1082,7 +1098,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 { 2020, "2020/21" }
             };
 
-            NewBuilder(dateTimeProviderMock.Object).PopulateReportHeader(null, ilrFileDetails, 12345678, "OrgName", "Not Applicable", 2020, 2018, yearToAcademicYearDictionary)
+            NewBuilder().PopulateReportHeader(null, ilrFileDetails, 12345678, "OrgName", "Not Applicable", 2020, 2018, yearToAcademicYearDictionary)
                 .Should().BeEquivalentTo(expectedHeader);
         }
 
