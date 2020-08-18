@@ -15,9 +15,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 {
     public class FundingSummaryReportRenderService : IFundingSummaryReportRenderService
     {
-        private const int StartYear = 19;
-        private const int EndYear = 20;
-
         private const int StartColumn = 0;
         private const int DefaultBodyColumnCount = 7;
 
@@ -199,16 +196,15 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             var baseYearData = fundingSummaryReportTab.Body.Where(x => x.Year == baseYear).FirstOrDefault();
             var subsequentYearsData = fundingSummaryReportTab.Body.Where(x => x.Year > baseYear).OrderBy(x => x.Year).ToList();
 
-            RenderDeliverables(worksheet, baseYearData, subsequentYearsData, fundingSummaryReportTab.FundingSummaryReportTabTotals, row);
+            RenderDeliverables(worksheet, baseYearData, subsequentYearsData, row);
 
             return worksheet;
         }
 
         private Worksheet RenderDeliverables(
             Worksheet worksheet,
-            FundingSummaryModel baseModel,
-            ICollection<FundingSummaryModel> subsequentModels,
-            FundingSummaryReportTabTotal fundingSummaryReportTabTotal,
+            FundingSummaryReportEarnings baseModel,
+            ICollection<FundingSummaryReportEarnings> subsequentModels,
             int row)
         {
             int column;
@@ -275,7 +271,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return worksheet;
         }
 
-        private int RenderBaseFundingYear(Worksheet worksheet, FundingSummaryModel fundingSummaryModel, int row)
+        private int RenderBaseFundingYear(Worksheet worksheet, FundingSummaryReportEarnings fundingSummaryModel, int row)
         {
             foreach (var category in fundingSummaryModel.DeliverableCategories)
             {
@@ -293,7 +289,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return LastColumnForRow(worksheet, row);
         }
 
-        private Worksheet RenderBaseMonthlyTotals(Worksheet worksheet, FundingSummaryModel fundingSummaryModel, int row)
+        private Worksheet RenderBaseMonthlyTotals(Worksheet worksheet, FundingSummaryReportEarnings fundingSummaryModel, int row)
         {
             row = NextMaxRow(worksheet) + 1;
 
@@ -348,7 +344,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return worksheet;
         }
 
-        private int RenderSubsequentFundingYear(Worksheet worksheet, FundingSummaryModel fundingSummaryModel, int column, int row)
+        private int RenderSubsequentFundingYear(Worksheet worksheet, FundingSummaryReportEarnings fundingSummaryModel, int column, int row)
         {
             column = NextColumn(column);
 
@@ -366,7 +362,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return worksheet.Cells.MaxDataColumn;
         }
 
-        private Worksheet RenderSubsequentMonthlyTotals(Worksheet worksheet, FundingSummaryModel fundingSummaryModel, int column, int row)
+        private Worksheet RenderSubsequentMonthlyTotals(Worksheet worksheet, FundingSummaryReportEarnings fundingSummaryModel, int column, int row)
         {
             row = NextRowWithBreak(row);
 
@@ -435,8 +431,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
         private Worksheet RenderTotals(
           Worksheet worksheet,
-          FundingSummaryModel baseModel,
-          ICollection<FundingSummaryModel> subsequentModels,
+          FundingSummaryReportEarnings baseModel,
+          ICollection<FundingSummaryReportEarnings> subsequentModels,
           int column,
           int row)
         {
@@ -452,7 +448,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return worksheet;
         }
 
-        private Worksheet RenderColumnTotal(Worksheet worksheet, FundingSummaryModel model, string header, int column, int row)
+        private Worksheet RenderColumnTotal(Worksheet worksheet, FundingSummaryReportEarnings model, string header, int column, int row)
         {
             column = NextMaxColumn(worksheet);
 

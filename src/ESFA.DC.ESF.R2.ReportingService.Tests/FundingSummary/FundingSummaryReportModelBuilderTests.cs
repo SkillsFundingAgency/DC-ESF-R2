@@ -17,7 +17,7 @@ using Xunit;
 
 namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
 {
-    public class FundingSummaryReportModelBuilderTests
+    public class FundingSummaryReportModelBuilderTests : AbstractFundingSummaryReportTests
     {
         [Fact]
         public void BuildPeriodisedReportValue()
@@ -363,418 +363,433 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
         public void PopulateReportData()
         {
             string conRefNumber = null;
-            var baseModels = new List<FundingSummaryModel>
+            var baseModels = new List<FundingSummaryReportEarnings>
             {
-                new FundingSummaryModel { Year = 2020 },
-                new FundingSummaryModel { Year = 2019 },
-                new FundingSummaryModel { Year = 2018 }
+                new FundingSummaryReportEarnings { Year = 2020 },
+                new FundingSummaryReportEarnings { Year = 2019 },
+                new FundingSummaryReportEarnings { Year = 2018 }
             };
 
             var esfValues = EsfValuesDictionary();
             var ilrValues = IlrValuesDictionary();
 
             var models = NewBuilder().PopulateReportData(conRefNumber, HeaderDictionary(), baseModels, esfValues, ilrValues);
-            var expectedModels = new List<FundingSummaryModel>
+            var expectedModels = new List<FundingSummaryReportEarnings>
             {
-                new FundingSummaryModel
+                new FundingSummaryReportEarnings
                 {
                     Year = 2020,
                     YearTotal = 27M,
-                    CumulativeYearTotal = 54M,
-                    PreviousYearCumulativeTotal = 27m,
-                    LearnerAssessmentPlans = new DeliverableCategory("Total Learner Assessment and Plan (£)")
+                    CumulativeYearTotal = 48M,
+                    PreviousYearCumulativeTotal = 21m,
+                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", 3m, 3m, 3m, 0m, 0m, 3m, 2m, 3m, 2m, 3m, 2m, 3m),
+                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)", 24m, 27m, 30m, 30m, 30m, 33m, 35m, 38m, 40m, 43m, 45m, 48m),
+                    DeliverableCategories = new List<IDeliverableCategory>
                     {
-                        GroupHeader = Year2020GroupHeader("Learner Assessment and Plan"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>
+                        new DeliverableCategory("Total Learner Assessment and Plan (£)")
                         {
-                            new DeliverableSubCategory("Default Category should not render", false)
+                            GroupHeader = Year2020GroupHeader("Learner Assessment and Plan"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("Default Category should not render", false)
                                 {
-                                    new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
-                                    new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
+                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                                    }
                                 }
                             }
-                        }
-                    },
-                    RegulatedLearnings = new DeliverableCategory("Total Regulated Learning (£)")
-                    {
-                        GroupHeader = Year2020GroupHeader("Regulated Learning"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>()
+                        },
+                        new DeliverableCategory("Total Regulated Learning (£)")
                         {
-                            new DeliverableSubCategory("ILR Total RQ01 Regulated Learning (£)", true)
+                            GroupHeader = Year2020GroupHeader("Regulated Learning"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>()
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("ILR Total RQ01 Regulated Learning (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
-                                    ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
-                                }
-                            },
-                            new DeliverableSubCategory("Default Category should not render", false)
-                            {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                                        ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                                    }
+                                },
+                                new DeliverableSubCategory("Default Category should not render", false)
                                 {
-                                    ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                                    }
                                 }
                             }
-                        }
-                    },
-                    NonRegulatedActivities = new DeliverableCategory("Total Non Regulated Activity (£)")
-                    {
-                        GroupHeader = Year2020GroupHeader("Non Regulated Activity"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>
+                        },
+                        new DeliverableCategory("Total Non Regulated Activity (£)")
                         {
-                            new DeliverableSubCategory("ILR Total NR01 Non Regulated Activity (£)", true)
+                            GroupHeader = Year2020GroupHeader("Non Regulated Activity"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("ILR Total NR01 Non Regulated Activity (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Activity - Achievement Funding (£)"),
-                                    ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Activity - Start Funding (£)")
-                                }
-                            },
-                            new DeliverableSubCategory("Default Category should not render", false)
-                            {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Activity - Achievement Funding (£)"),
+                                        ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Activity - Start Funding (£)")
+                                    }
+                                },
+                                new DeliverableSubCategory("Default Category should not render", false)
                                 {
-                                    ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Activity Authorised Claims (£)")
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Activity Authorised Claims (£)")
+                                    }
                                 }
                             }
-                        }
-                    },
-                    CommunityGrants = new DeliverableCategory("Total Community Grant (£)")
-                    {
-                        GroupHeader = Year2020GroupHeader("Community Grant"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>
+                        },
+                        new DeliverableCategory("Total Community Grant (£)")
                         {
-                            new DeliverableSubCategory("Default Category should not render", false)
+                            GroupHeader = Year2020GroupHeader("Community Grant"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("Default Category should not render", false)
                                 {
-                                    ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)")
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)")
+                                    }
                                 }
                             }
-                        }
-                    },
-                    SpecificationDefineds = new DeliverableCategory("Total Specification Defined (£)")
-                    {
-                        GroupHeader = Year2020GroupHeader("Specification Defined"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>
+                        },
+                        new DeliverableCategory("Total Specification Defined (£)")
                         {
-                            new DeliverableSubCategory("Default Category should not render", false)
+                            GroupHeader = Year2020GroupHeader("Specification Defined"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("Default Category should not render", false)
                                 {
-                                    ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                                    }
                                 }
                             }
-                        }
-                    },
-                    Progressions = new DeliverableCategory("Total Progression and Sustained Progression (£)")
-                    {
-                        GroupHeader = Year2020GroupHeader("Progression and Sustained Progression"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>
+                        },
+                        new DeliverableCategory("Total Progression and Sustained Progression (£)")
                         {
-                            new DeliverableSubCategory("Total Paid Employment Progression (£)", true)
+                            GroupHeader = Year2020GroupHeader("Progression and Sustained Progression"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("Total Paid Employment Progression (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
-                                }
-                            },
-                            new DeliverableSubCategory("Total Education Progression (£)", true)
-                            {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                                    }
+                                },
+                                new DeliverableSubCategory("Total Education Progression (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
-                                }
-                            },
-                            new DeliverableSubCategory("Total Apprenticeship Progression (£)", true)
-                            {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                                    }
+                                },
+                                new DeliverableSubCategory("Total Apprenticeship Progression (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
-                                }
-                            },
-                            new DeliverableSubCategory("Total Traineeship Progression (£)", true)
-                            {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                                    }
+                                },
+                                new DeliverableSubCategory("Total Traineeship Progression (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                                    }
                                 }
                             }
                         }
                     }
                 },
-                new FundingSummaryModel
+                new FundingSummaryReportEarnings
                 {
                     Year = 2019,
                     YearTotal = 19M,
-                    CumulativeYearTotal = 27M,
-                    PreviousYearCumulativeTotal = 8m,
-                    LearnerAssessmentPlans = new DeliverableCategory("Total Learner Assessment and Plan (£)")
+                    CumulativeYearTotal = 21M,
+                    PreviousYearCumulativeTotal = 2m,
+                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
+                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)", 4m, 6m, 8m, 8m, 8m, 10m, 11m, 13m, 15m, 17m, 19m, 21m),
+                    DeliverableCategories = new List<IDeliverableCategory>
                     {
-                        GroupHeader = Year2019GroupHeader("Learner Assessment and Plan"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>
+                        new DeliverableCategory("Total Learner Assessment and Plan (£)")
                         {
-                            new DeliverableSubCategory("Default Category should not render", false)
+                            GroupHeader = Year2019GroupHeader("Learner Assessment and Plan"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("Default Category should not render", false)
                                 {
-                                    new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
-                                    new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m)
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
+                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m)
+                                    }
                                 }
                             }
-                        }
-                    },
-                    RegulatedLearnings = new DeliverableCategory("Total Regulated Learning (£)")
-                    {
-                        GroupHeader = Year2019GroupHeader("Regulated Learning"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>()
+                        },
+                        new DeliverableCategory("Total Regulated Learning (£)")
                         {
-                            new DeliverableSubCategory("ILR Total RQ01 Regulated Learning (£)", true)
+                            GroupHeader = Year2019GroupHeader("Regulated Learning"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>()
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("ILR Total RQ01 Regulated Learning (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
-                                    ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
-                                }
-                            },
-                            new DeliverableSubCategory("Default Category should not render", false)
-                            {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                                        ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                                    }
+                                },
+                                new DeliverableSubCategory("Default Category should not render", false)
                                 {
-                                    ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                                    }
                                 }
                             }
-                        }
-                    },
-                    NonRegulatedActivities = new DeliverableCategory("Total Non Regulated Activity (£)")
-                    {
-                        GroupHeader = Year2019GroupHeader("Non Regulated Activity"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>
+                        },
+                        new DeliverableCategory("Total Non Regulated Activity (£)")
                         {
-                            new DeliverableSubCategory("ILR Total NR01 Non Regulated Activity (£)", true)
+                            GroupHeader = Year2019GroupHeader("Non Regulated Activity"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("ILR Total NR01 Non Regulated Activity (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Activity - Achievement Funding (£)"),
-                                    ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Activity - Start Funding (£)")
-                                }
-                            },
-                            new DeliverableSubCategory("Default Category should not render", false)
-                            {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Activity - Achievement Funding (£)"),
+                                        ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Activity - Start Funding (£)")
+                                    }
+                                },
+                                new DeliverableSubCategory("Default Category should not render", false)
                                 {
-                                    ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Activity Authorised Claims (£)")
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Activity Authorised Claims (£)")
+                                    }
                                 }
                             }
-                        }
-                    },
-                    CommunityGrants = new DeliverableCategory("Total Community Grant (£)")
-                    {
-                        GroupHeader = Year2019GroupHeader("Community Grant"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>
+                        },
+                        new DeliverableCategory("Total Community Grant (£)")
                         {
-                            new DeliverableSubCategory("Default Category should not render", false)
+                            GroupHeader = Year2019GroupHeader("Community Grant"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("Default Category should not render", false)
                                 {
-                                    ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)")
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)")
+                                    }
                                 }
                             }
-                        }
-                    },
-                    SpecificationDefineds = new DeliverableCategory("Total Specification Defined (£)")
-                    {
-                        GroupHeader = Year2019GroupHeader("Specification Defined"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>
+                        },
+                        new DeliverableCategory("Total Specification Defined (£)")
                         {
-                            new DeliverableSubCategory("Default Category should not render", false)
+                            GroupHeader = Year2019GroupHeader("Specification Defined"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("Default Category should not render", false)
                                 {
-                                    ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                                    }
                                 }
                             }
-                        }
-                    },
-                    Progressions = new DeliverableCategory("Total Progression and Sustained Progression (£)")
-                    {
-                        GroupHeader = Year2019GroupHeader("Progression and Sustained Progression"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>
+                        },
+                        new DeliverableCategory("Total Progression and Sustained Progression (£)")
                         {
-                            new DeliverableSubCategory("Total Paid Employment Progression (£)", true)
+                            GroupHeader = Year2019GroupHeader("Progression and Sustained Progression"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("Total Paid Employment Progression (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
-                                }
-                            },
-                            new DeliverableSubCategory("Total Education Progression (£)", true)
-                            {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                                    }
+                                },
+                                new DeliverableSubCategory("Total Education Progression (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
-                                }
-                            },
-                            new DeliverableSubCategory("Total Apprenticeship Progression (£)", true)
-                            {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                                    }
+                                },
+                                new DeliverableSubCategory("Total Apprenticeship Progression (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
-                                }
-                            },
-                            new DeliverableSubCategory("Total Traineeship Progression (£)", true)
-                            {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                                    }
+                                },
+                                new DeliverableSubCategory("Total Traineeship Progression (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                                    }
                                 }
                             }
                         }
                     }
                 },
-                new FundingSummaryModel
+                new FundingSummaryReportEarnings
                 {
                     Year = 2018,
-                    YearTotal = 8M,
-                    CumulativeYearTotal = 8M,
-                    LearnerAssessmentPlans = new DeliverableCategory("Total Learner Assessment and Plan (£)")
+                    YearTotal = 2M,
+                    CumulativeYearTotal = 2M,
+                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 1m, 0m, 1m),
+                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 1m, 1m, 2m),
+                    DeliverableCategories = new List<IDeliverableCategory>
                     {
-                        GroupHeader = Year2018GroupHeader("Learner Assessment and Plan"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>
+                        new DeliverableCategory("Total Learner Assessment and Plan (£)")
                         {
-                            new DeliverableSubCategory("Default Category should not render", false)
+                            GroupHeader = Year2018GroupHeader("Learner Assessment and Plan"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("Default Category should not render", false)
                                 {
-                                    new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m),
-                                    new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m),
+                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                                    }
                                 }
                             }
-                        }
-                    },
-                    RegulatedLearnings = new DeliverableCategory("Total Regulated Learning (£)")
-                    {
-                        GroupHeader = Year2018GroupHeader("Regulated Learning"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>()
+                        },
+                        new DeliverableCategory("Total Regulated Learning (£)")
                         {
-                            new DeliverableSubCategory("ILR Total RQ01 Regulated Learning (£)", true)
+                            GroupHeader = Year2018GroupHeader("Regulated Learning"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>()
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("ILR Total RQ01 Regulated Learning (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
-                                    ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
-                                }
-                            },
-                            new DeliverableSubCategory("Default Category should not render", false)
-                            {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                                        ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                                    }
+                                },
+                                new DeliverableSubCategory("Default Category should not render", false)
                                 {
-                                    ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                                    }
                                 }
                             }
-                        }
-                    },
-                    NonRegulatedActivities = new DeliverableCategory("Total Non Regulated Activity (£)")
-                    {
-                        GroupHeader = Year2018GroupHeader("Non Regulated Activity"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>
+                        },
+                        new DeliverableCategory("Total Non Regulated Activity (£)")
                         {
-                            new DeliverableSubCategory("ILR Total NR01 Non Regulated Activity (£)", true)
+                            GroupHeader = Year2018GroupHeader("Non Regulated Activity"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("ILR Total NR01 Non Regulated Activity (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Activity - Achievement Funding (£)"),
-                                    ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Activity - Start Funding (£)")
-                                }
-                            },
-                            new DeliverableSubCategory("Default Category should not render", false)
-                            {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Activity - Achievement Funding (£)"),
+                                        ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Activity - Start Funding (£)")
+                                    }
+                                },
+                                new DeliverableSubCategory("Default Category should not render", false)
                                 {
-                                    ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Activity Authorised Claims (£)")
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Activity Authorised Claims (£)")
+                                    }
                                 }
                             }
-                        }
-                    },
-                    CommunityGrants = new DeliverableCategory("Total Community Grant (£)")
-                    {
-                        GroupHeader = Year2018GroupHeader("Community Grant"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>
+                        },
+                        new DeliverableCategory("Total Community Grant (£)")
                         {
-                            new DeliverableSubCategory("Default Category should not render", false)
+                            GroupHeader = Year2018GroupHeader("Community Grant"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("Default Category should not render", false)
                                 {
-                                    ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)")
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)")
+                                    }
                                 }
                             }
-                        }
-                    },
-                    SpecificationDefineds = new DeliverableCategory("Total Specification Defined (£)")
-                    {
-                        GroupHeader = Year2018GroupHeader("Specification Defined"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>
+                        },
+                        new DeliverableCategory("Total Specification Defined (£)")
                         {
-                            new DeliverableSubCategory("Default Category should not render", false)
+                            GroupHeader = Year2018GroupHeader("Specification Defined"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("Default Category should not render", false)
                                 {
-                                    ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                                    }
                                 }
                             }
-                        }
-                    },
-                    Progressions = new DeliverableCategory("Total Progression and Sustained Progression (£)")
-                    {
-                        GroupHeader = Year2018GroupHeader("Progression and Sustained Progression"),
-                        DeliverableSubCategories = new List<IDeliverableSubCategory>
+                        },
+                        new DeliverableCategory("Total Progression and Sustained Progression (£)")
                         {
-                            new DeliverableSubCategory("Total Paid Employment Progression (£)", true)
+                            GroupHeader = Year2018GroupHeader("Progression and Sustained Progression"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
                             {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                new DeliverableSubCategory("Total Paid Employment Progression (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
-                                }
-                            },
-                            new DeliverableSubCategory("Total Education Progression (£)", true)
-                            {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                                    }
+                                },
+                                new DeliverableSubCategory("Total Education Progression (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
-                                }
-                            },
-                            new DeliverableSubCategory("Total Apprenticeship Progression (£)", true)
-                            {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                                    }
+                                },
+                                new DeliverableSubCategory("Total Apprenticeship Progression (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
-                                }
-                            },
-                            new DeliverableSubCategory("Total Traineeship Progression (£)", true)
-                            {
-                                ReportValues = new List<IPeriodisedReportValue>
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                                    }
+                                },
+                                new DeliverableSubCategory("Total Traineeship Progression (£)", true)
                                 {
-                                    ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
-                                    ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                                    }
                                 }
                             }
                         }
@@ -789,11 +804,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
         public void PopulateReportData_CheckYearlyTotals()
         {
             string conRefNumber = null;
-            var baseModels = new List<FundingSummaryModel>
+            var baseModels = new List<FundingSummaryReportEarnings>
             {
-                new FundingSummaryModel { Year = 2020 },
-                new FundingSummaryModel { Year = 2019 },
-                new FundingSummaryModel { Year = 2018 }
+                new FundingSummaryReportEarnings { Year = 2020 },
+                new FundingSummaryReportEarnings { Year = 2019 },
+                new FundingSummaryReportEarnings { Year = 2018 }
             };
 
             var esfValues = EsfValuesDictionary();
@@ -801,17 +816,17 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
 
             var models = NewBuilder().PopulateReportData(conRefNumber, HeaderDictionary(), baseModels, esfValues, ilrValues);
 
-            models.Where(x => x.Year == 2018).FirstOrDefault().YearTotal.Should().Be(8);
-            models.Where(x => x.Year == 2018).FirstOrDefault().CumulativeYearTotal.Should().Be(8);
+            models.Where(x => x.Year == 2018).FirstOrDefault().YearTotal.Should().Be(2);
+            models.Where(x => x.Year == 2018).FirstOrDefault().CumulativeYearTotal.Should().Be(2);
             models.Where(x => x.Year == 2018).FirstOrDefault().PreviousYearCumulativeTotal.Should().BeNull();
 
             models.Where(x => x.Year == 2019).FirstOrDefault().YearTotal.Should().Be(19);
-            models.Where(x => x.Year == 2019).FirstOrDefault().CumulativeYearTotal.Should().Be(27);
-            models.Where(x => x.Year == 2019).FirstOrDefault().PreviousYearCumulativeTotal.Should().Be(8);
+            models.Where(x => x.Year == 2019).FirstOrDefault().CumulativeYearTotal.Should().Be(21);
+            models.Where(x => x.Year == 2019).FirstOrDefault().PreviousYearCumulativeTotal.Should().Be(2);
 
             models.Where(x => x.Year == 2020).FirstOrDefault().YearTotal.Should().Be(27);
-            models.Where(x => x.Year == 2020).FirstOrDefault().CumulativeYearTotal.Should().Be(54);
-            models.Where(x => x.Year == 2020).FirstOrDefault().PreviousYearCumulativeTotal.Should().Be(27);
+            models.Where(x => x.Year == 2020).FirstOrDefault().CumulativeYearTotal.Should().Be(48);
+            models.Where(x => x.Year == 2020).FirstOrDefault().PreviousYearCumulativeTotal.Should().Be(21);
         }
 
         [Fact]
@@ -1126,187 +1141,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
 
             NewBuilder(versionInfo: versionInfo.Object).PopulateReportFooter(referenceDataVersions, "01/02/2020").Should().BeEquivalentTo(expectedFooter);
         }
-
-        private IDictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>> EsfValuesDictionary()
-        {
-            return new Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>
-            {
-                {
-                    2020,  new Dictionary<string, IEnumerable<PeriodisedValue>>
-                    {
-                        {
-                            "ST01", new List<PeriodisedValue>
-                            {
-                                new PeriodisedValue("ConRef1", "ST01", "Authorised Claims", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m)
-                            }
-                        }
-                    }
-                },
-                {
-                    2018,  new Dictionary<string, IEnumerable<PeriodisedValue>>
-                    {
-                        {
-                            "ST01", new List<PeriodisedValue>
-                            {
-                                new PeriodisedValue("ConRef1", "ST01", "Authorised Claims", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m)
-                            }
-                        }
-                    }
-                }
-            };
-        }
-
-        private IDictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>> IlrValuesDictionary()
-        {
-            return new Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>
-            {
-                {
-                    2020,  new Dictionary<string, IEnumerable<PeriodisedValue>>
-                    {
-                        {
-                            "ST01", new List<PeriodisedValue>
-                            {
-                                new PeriodisedValue("ConRef1", "ST01", "StartEarnings", 1m, 1m, 1m, 0m, 0m, 1m, null, 1m, 1m, 1m, 1m, 1m),
-                                new PeriodisedValue("ConRef1", "ST01", "AchievementEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m)
-                            }
-                        }
-                    }
-                },
-                {
-                    2019,  new Dictionary<string, IEnumerable<PeriodisedValue>>
-                    {
-                        {
-                            "ST01", new List<PeriodisedValue>
-                            {
-                                new PeriodisedValue("ConRef1", "ST01", "StartEarnings", 1m, 1m, 1m, 0m, 0m, 1m, null, 1m, 1m, 1m, 1m, 1m),
-                                new PeriodisedValue("ConRef1", "ST01", "AchievementEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m)
-                            }
-                        }
-                    }
-                }
-            };
-        }
-
-        private string[] HeaderStringArray() => new string[]
-        {
-            "August 2020",
-            "September 2020",
-            "October 2020",
-            "November 2020",
-            "December 2020",
-            "January 2021",
-            "February 2021",
-            "March 2021",
-            "April 2021",
-            "May 2021",
-            "June 2021",
-            "July 2021"
-        };
-
-        private GroupHeader Year2020GroupHeader(string title) => new GroupHeader(
-            title,
-            "August 2020",
-            "September 2020",
-            "October 2020",
-            "November 2020",
-            "December 2020",
-            "January 2021",
-            "February 2021",
-            "March 2021",
-            "April 2021",
-            "May 2021",
-            "June 2021",
-            "July 2021");
-
-        private GroupHeader Year2019GroupHeader(string title) => new GroupHeader(
-            title,
-            "August 2019",
-            "September 2019",
-            "October 2019",
-            "November 2019",
-            "December 2019",
-            "January 2020",
-            "February 2020",
-            "March 2020",
-            "April 2020",
-            "May 2020",
-            "June 2020",
-            "July 2020");
-
-        private GroupHeader Year2018GroupHeader(string title) => new GroupHeader(
-            title,
-            "August 2018",
-            "September 2018",
-            "October 2018",
-            "November 2018",
-            "December 2018",
-            "January 2019",
-            "February 2019",
-            "March 2019",
-            "April 2019",
-            "May 2019",
-            "June 2019",
-            "July 2019");
-
-        private IDictionary<int, string[]> HeaderDictionary()
-        {
-            return new Dictionary<int, string[]>
-            {
-                {
-                    2020, new string[]
-                    {
-                        "August 2020",
-                        "September 2020",
-                        "October 2020",
-                        "November 2020",
-                        "December 2020",
-                        "January 2021",
-                        "February 2021",
-                        "March 2021",
-                        "April 2021",
-                        "May 2021",
-                        "June 2021",
-                        "July 2021"
-                    }
-                },
-                {
-                    2019, new string[]
-                    {
-                        "August 2019",
-                        "September 2019",
-                        "October 2019",
-                        "November 2019",
-                        "December 2019",
-                        "January 2020",
-                        "February 2020",
-                        "March 2020",
-                        "April 2020",
-                        "May 2020",
-                        "June 2020",
-                        "July 2020"
-                    }
-                },
-                {
-                    2018, new string[]
-                    {
-                        "August 2018",
-                        "September 2018",
-                        "October 2018",
-                        "November 2018",
-                        "December 2018",
-                        "January 2019",
-                        "February 2019",
-                        "March 2019",
-                        "April 2019",
-                        "May 2019",
-                        "June 2019",
-                        "July 2019"
-                    }
-                }
-            };
-        }
-
-        private PeriodisedReportValue ZeroFundedPeriodisedValues(string title) => new PeriodisedReportValue(title, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m);
 
         private FundingSummaryReportModelBuilder NewBuilder(
             IDateTimeProvider dateTimeProvider = null,

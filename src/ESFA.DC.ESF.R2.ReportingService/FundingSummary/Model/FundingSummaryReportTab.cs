@@ -13,13 +13,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 
         public FundingSummaryReportFooterModel Footer { get; set; }
 
-        public ICollection<FundingSummaryModel> Body { get; set; }
-
-        public FundingSummaryReportTabTotal FundingSummaryReportTabTotals => BuildTabTotals();
-
-        private FundingSummaryReportTabTotal BuildTabTotals()
-        {
-            return new FundingSummaryReportTabTotal(Body);
-        }
+        public ICollection<FundingSummaryReportEarnings> Body { get; set; }
     }
 }
