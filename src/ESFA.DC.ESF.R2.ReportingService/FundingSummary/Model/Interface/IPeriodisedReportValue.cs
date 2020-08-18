@@ -2,32 +2,10 @@
 {
      public interface IPeriodisedReportValue
      {
-         string Title { get; }
+        string Title { get; }
 
-         decimal? April { get; }
+        decimal?[] MonthlyValues { get; set; }
 
-         decimal? May { get; }
-
-         decimal? June { get; }
-
-         decimal? July { get; }
-
-         decimal? August { get; }
-
-         decimal? September { get; }
-
-         decimal? October { get; }
-
-         decimal? November { get; }
-
-         decimal? December { get; }
-
-         decimal? January { get; }
-
-         decimal? February { get; }
-
-         decimal? March { get; }
-
-         decimal? Total { get; }
+        decimal? Total { get; }
     }
 }

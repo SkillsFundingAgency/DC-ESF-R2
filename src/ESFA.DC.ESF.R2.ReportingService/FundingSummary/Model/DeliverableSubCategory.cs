@@ -24,18 +24,18 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
         {
             return new PeriodisedReportValue(
                 SubCategoryTitle,
-                ReportValues.Sum(x => x.August ?? 0),
-                ReportValues.Sum(x => x.September ?? 0),
-                ReportValues.Sum(x => x.October ?? 0),
-                ReportValues.Sum(x => x.November ?? 0),
-                ReportValues.Sum(x => x.December ?? 0),
-                ReportValues.Sum(x => x.January ?? 0),
-                ReportValues.Sum(x => x.February ?? 0),
-                ReportValues.Sum(x => x.March ?? 0),
-                ReportValues.Sum(x => x.April ?? 0),
-                ReportValues.Sum(x => x.May ?? 0),
-                ReportValues.Sum(x => x.June ?? 0),
-                ReportValues.Sum(x => x.July ?? 0));
+                ReportValues.Sum(x => x.MonthlyValues[0] ?? 0),
+                ReportValues.Sum(x => x.MonthlyValues[1] ?? 0),
+                ReportValues.Sum(x => x.MonthlyValues[2] ?? 0),
+                ReportValues.Sum(x => x.MonthlyValues[3] ?? 0),
+                ReportValues.Sum(x => x.MonthlyValues[4] ?? 0),
+                ReportValues.Sum(x => x.MonthlyValues[5] ?? 0),
+                ReportValues.Sum(x => x.MonthlyValues[6] ?? 0),
+                ReportValues.Sum(x => x.MonthlyValues[7] ?? 0),
+                ReportValues.Sum(x => x.MonthlyValues[8] ?? 0),
+                ReportValues.Sum(x => x.MonthlyValues[9] ?? 0),
+                ReportValues.Sum(x => x.MonthlyValues[10] ?? 0),
+                ReportValues.Sum(x => x.MonthlyValues[11] ?? 0));
         }
     }
 }

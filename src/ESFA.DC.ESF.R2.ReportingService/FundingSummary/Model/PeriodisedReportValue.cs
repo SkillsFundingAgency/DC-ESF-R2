@@ -1,4 +1,5 @@
-﻿using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.Interface;
+﻿using System.Linq;
+using ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.Interface;
 
 namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 {
@@ -20,63 +21,32 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
             decimal? july)
         {
             Title = title;
-            April = april;
-            May = may;
-            June = june;
-            July = july;
-            August = august;
-            September = september;
-            October = october;
-            November = november;
-            December = december;
-            January = january;
-            February = february;
-            March = march;
-    }
+            MonthlyValues = new[]
+            {
+                august,
+                september,
+                october,
+                november,
+                december,
+                january,
+                february,
+                march,
+                april,
+                may,
+                june,
+                july
+            };
+        }
 
         public string Title { get; set; }
 
-        public decimal? April { get; set; }
-
-        public decimal? May { get; set; }
-
-        public decimal? June { get; set; }
-
-        public decimal? July { get; set; }
-
-        public decimal? August { get; set; }
-
-        public decimal? September { get; set; }
-
-        public decimal? October { get; set; }
-
-        public decimal? November { get; set; }
-
-        public decimal? December { get; set; }
-
-        public decimal? January { get; set; }
-
-        public decimal? February { get; set; }
-
-        public decimal? March { get; set; }
+        public decimal?[] MonthlyValues { get; set; }
 
         public decimal? Total => BuildTotal();
 
         private decimal? BuildTotal()
         {
-            return
-                April +
-                May +
-                June +
-                July +
-                August +
-                September +
-                October +
-                November +
-                December +
-                January +
-                February +
-                March;
+            return MonthlyValues?.Sum(x => x ?? 0m);
         }
     }
 }
