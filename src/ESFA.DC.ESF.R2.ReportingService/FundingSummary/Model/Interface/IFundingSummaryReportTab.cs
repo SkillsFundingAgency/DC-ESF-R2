@@ -12,8 +12,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model.Interface
 
         FundingSummaryReportFooterModel Footer { get; }
 
-        ICollection<FundingSummaryModel> Body { get; }
-
-        FundingSummaryReportTabTotal FundingSummaryReportTabTotals { get; }
+        ICollection<FundingSummaryReportEarnings> Body { get; }
     }
 }
