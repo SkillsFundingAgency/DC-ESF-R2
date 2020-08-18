@@ -67,7 +67,9 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
 
         private void RegisterYearSpecificServices(ContainerBuilder container, IEsfJobContext esfJobContext)
         {
-            if (esfJobContext.CollectionYear == AcademicYearConstants.Year1920)
+            int[] crossOverReturnPeriods = new[] { 1, 2 };
+
+            if (esfJobContext.CollectionYear == AcademicYearConstants.Year1920 || (esfJobContext.CollectionYear == AcademicYearConstants.Year2021 && crossOverReturnPeriods.Contains(esfJobContext.CurrentPeriod)))
             {
                 container.Register(c =>
                 {
