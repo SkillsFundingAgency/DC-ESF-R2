@@ -30,6 +30,8 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
 {
     public class JobContextMessageHandler : IMessageHandler<JobContextMessage>
     {
+        private readonly string ESF2021CollectionName = "ESFR2-2021";
+
         private readonly ILifetimeScope _lifetimeScope;
         private readonly ILogger _logger;
 
@@ -69,7 +71,7 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
         {
             int[] crossOverReturnPeriods = new[] { 1, 2 };
 
-            if (esfJobContext.CollectionYear == AcademicYearConstants.Year1920 || (esfJobContext.CollectionYear == AcademicYearConstants.Year2021 && crossOverReturnPeriods.Contains(esfJobContext.CurrentPeriod)))
+            if (esfJobContext.CollectionYear == AcademicYearConstants.Year1920 || (esfJobContext.CollectionName == ESF2021CollectionName && esfJobContext.CollectionYear == AcademicYearConstants.Year2021 && crossOverReturnPeriods.Contains(esfJobContext.CurrentPeriod)))
             {
                 container.Register(c =>
                 {
