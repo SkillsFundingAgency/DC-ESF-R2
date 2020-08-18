@@ -79,7 +79,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 conRefNumbers = new HashSet<string>(orgData.ConRefNumbers, StringComparer.OrdinalIgnoreCase);
             }
 
-            var currentCollectionYearString = CalculateCollectionYear(esfJobContext.CurrentPeriod, esfJobContext.StartCollectionYearAbbreviation);
+            var currentCollectionYearString = CalculateCollectionYear(esfJobContext.CurrentPeriod, esfJobContext.StartCollectionYearAbbreviation, esfJobContext.CollectionName);
             var currentCollectionYear = int.Parse(currentCollectionYearString);
 
             var reportGroupHeaderDictionary = _yearConfiguration.PeriodisedValuesHeaderDictionary(currentCollectionYear);
