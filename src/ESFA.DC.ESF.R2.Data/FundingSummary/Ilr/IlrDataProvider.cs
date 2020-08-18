@@ -13,6 +13,8 @@ namespace ESFA.DC.ESF.R2.Data.FundingSummary.Ilr
 {
     public class IlrDataProvider : IIlrDataProvider
     {
+        private readonly string R14 = "R14";
+
         private readonly string IlrfileDetailsSql = @"SELECT TOP (1) f.[Filename], f.[SubmittedTime] AS LastSubmission, c.[FilePreparationDate]
                                                       FROM [dbo].[FileDetails] f
                                                       INNER JOIN [Valid].[CollectionDetails] c 
@@ -91,9 +93,13 @@ namespace ESFA.DC.ESF.R2.Data.FundingSummary.Ilr
                 {
                     taskList.Add(GetAcademicYearIlrData(ukprn, year.Key, year.Value, returnPeriod, cancellationToken));
                 }
-                else
+                else if(year.Key == currentYear -1)
                 {
                     taskList.Add(GetAcademicYearIlrData(ukprn, year.Key, year.Value, previousYearReturnPeriod, cancellationToken));
+                }
+                else
+                {
+                    taskList.Add(GetAcademicYearIlrData(ukprn, year.Key, year.Value, R14, cancellationToken));
                 }
             }
 

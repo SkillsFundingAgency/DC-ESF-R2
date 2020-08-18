@@ -26,6 +26,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
     {
         private const string NotApplicable = "Not Applicable";
 
+        private readonly int[] _crossOverReturnPeriods = new[] { 1, 2 };
+
         private readonly HashSet<string> _ilrAttributeSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
             FundingSummaryReportConstants.IlrStartEarningsAttribute,
@@ -76,7 +78,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 conRefNumbers = new HashSet<string>(orgData.ConRefNumbers, StringComparer.OrdinalIgnoreCase);
             }
 
-            var currentCollectionYearString = string.Concat("20", esfJobContext.StartCollectionYearAbbreviation);
+            var currentCollectionYearString = CalculateCollectionYear(esfJobContext.CurrentPeriod, esfJobContext.StartCollectionYearAbbreviation);
             var currentCollectionYear = int.Parse(currentCollectionYearString);
 
             var reportGroupHeaderDictionary = _yearConfiguration.PeriodisedValuesHeaderDictionary(currentCollectionYear);
@@ -593,6 +595,21 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             }
 
             return models;
+        }
+
+        private string CalculateCollectionYear(int returnPeriod, string startCollectionYearAbbreviation)
+        {
+            if (_crossOverReturnPeriods.Contains(returnPeriod))
+            {
+                if (int.TryParse(startCollectionYearAbbreviation, out var startYear))
+                {
+                    startYear--;
+
+                    return string.Concat("20", startYear);
+                }
+            }
+
+            return string.Concat("20", startCollectionYearAbbreviation);
         }
     }
 }
