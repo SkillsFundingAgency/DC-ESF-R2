@@ -101,13 +101,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
             foreach (var conRefNumber in conRefNumbers)
             {
-                var baseModels = BuildBaseModels(currentCollectionYear, baseIlrYear, academicYearDictionary);
+                var models = BuildBodyTemplateForYears(currentCollectionYear, baseIlrYear, academicYearDictionary);
 
                 var file = esfSourceFiles.FirstOrDefault(sf => sf.ConRefNumber.CaseInsensitiveEquals(conRefNumber));
 
                 var header = PopulateReportHeader(file, ilrYearlyFileData, ukPrn, orgData.Name, conRefNumber, currentCollectionYear, baseIlrYear, academicYearDictionary);
 
-                var fundingSummaryModels = PopulateReportData(conRefNumber, reportGroupHeaderDictionary, baseModels, periodisedEsf.GetValueOrDefault(conRefNumber), periodisedILR.GetValueOrDefault(conRefNumber));
+                var fundingSummaryModels = PopulateReportData(conRefNumber, reportGroupHeaderDictionary, models, periodisedEsf.GetValueOrDefault(conRefNumber), periodisedILR.GetValueOrDefault(conRefNumber));
 
                 fundingSummaryTabs.Add(new FundingSummaryReportTab
                 {
@@ -122,10 +122,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return fundingSummaryTabs;
         }
 
-        public ICollection<FundingSummaryModel> PopulateReportData(
+        public ICollection<FundingSummaryReportEarnings> PopulateReportData(
             string conRefNumber,
             IDictionary<int, string[]> reportGroupHeaderDictionary,
-            ICollection<FundingSummaryModel> models,
+            ICollection<FundingSummaryReportEarnings> models,
             IDictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>> periodisedEsf,
             IDictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>> periodisedILR)
         {
@@ -134,32 +134,41 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 var header = reportGroupHeaderDictionary.GetValueOrDefault(model.Year);
 
                 model.ConRefNumber = conRefNumber;
-                model.LearnerAssessmentPlans = BuildLearnerAssessmentPlans(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
-                model.RegulatedLearnings = BuildRegulatedLearning(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
-                model.NonRegulatedActivities = BuildNonRegulatedActivity(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
-                model.Progressions = BuildProgressions(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year));
-                model.CommunityGrants = BuildCommunityGrants(header, periodisedEsf.GetValueOrDefault(model.Year));
-                model.SpecificationDefineds = BuildSpecificationDefined(header, periodisedEsf.GetValueOrDefault(model.Year));
 
-                model.YearTotal = model.MonthlyTotals.Total;
-                model.CumulativeYearTotal = model.MonthlyTotals.Total;
+                model.DeliverableCategories = new List<IDeliverableCategory>
+                {
+                    BuildLearnerAssessmentPlans(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year)),
+                    BuildRegulatedLearning(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year)),
+                    BuildNonRegulatedActivity(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year)),
+                    BuildProgressions(header, periodisedEsf.GetValueOrDefault(model.Year), periodisedILR.GetValueOrDefault(model.Year)),
+                    BuildCommunityGrants(header, periodisedEsf.GetValueOrDefault(model.Year)),
+                    BuildSpecificationDefined(header, periodisedEsf.GetValueOrDefault(model.Year))
+                };
             }
 
-            var modelCount = models.Count();
-            int i = 2;
-            while (i <= modelCount)
+            var modelsArray = models.OrderBy(x => x.Year).ToArray();
+            var modelLength = modelsArray.Length;
+
+            modelsArray[0].MonthlyTotals = BuildMonthlyTotalsForArrayIndex(0, conRefNumber, modelsArray);
+            modelsArray[0].YearTotal = modelsArray[0].MonthlyTotals.Total;
+            modelsArray[0].CumulativeYearTotal = modelsArray[0].MonthlyTotals.Total;
+            modelsArray[0].CumulativeMonthlyTotals = BuildCumulativeMonthlyTotalsForArrayIndex(0, conRefNumber, modelsArray);
+
+            for (int i = 1; i < modelLength; i++)
             {
-                var model = models.OrderBy(x => x.Year).Skip(i - 1).Take(1).FirstOrDefault();
+                modelsArray[i].MonthlyTotals = BuildMonthlyTotalsForArrayIndex(i, conRefNumber, modelsArray);
+                modelsArray[i].YearTotal = modelsArray[i].MonthlyTotals.Total;
+                modelsArray[i].CumulativeYearTotal = modelsArray[i].MonthlyTotals.Total;
 
-                var previousCumuativeYearTotal = models.OrderBy(x => x.Year).Skip(i - 2).Take(1).FirstOrDefault().CumulativeYearTotal;
+                var previousCumuativeYearTotal = modelsArray[i - 1].CumulativeYearTotal;
 
-                model.CumulativeYearTotal = model.YearTotal + previousCumuativeYearTotal;
-                model.PreviousYearCumulativeTotal = previousCumuativeYearTotal;
+                modelsArray[i].CumulativeYearTotal = modelsArray[i].YearTotal + previousCumuativeYearTotal;
+                modelsArray[i].PreviousYearCumulativeTotal = previousCumuativeYearTotal;
 
-                i++;
+                modelsArray[i].CumulativeMonthlyTotals = BuildCumulativeMonthlyTotalsForArrayIndex(i, conRefNumber, modelsArray);
             }
 
-            return models;
+            return modelsArray;
         }
 
         public IDeliverableCategory BuildLearnerAssessmentPlans(string[] headers, IDictionary<string, IEnumerable<PeriodisedValue>> esfValues, IDictionary<string, IEnumerable<PeriodisedValue>> ilrValues)
@@ -368,7 +377,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
           int baseIlrYear,
           IDictionary<int, string> academicYearDictionary)
         {
-            var ilrFileDetailModels = BuildBaseIlrFileDetailModels(collectionYear, baseIlrYear, academicYearDictionary);
+            var ilrFileDetailModels = BuildIlrFileDetailModelsForYears(collectionYear, baseIlrYear, academicYearDictionary);
 
             foreach (var model in ilrFileDetailModels)
             {
@@ -548,15 +557,15 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return Convert.ToDateTime(dateString).ToString("dd/MM/yyyy hh:mm:ss");
         }
 
-        private List<FundingSummaryModel> BuildBaseModels(int collectionYear, int baseIlrYear, IDictionary<int, string> academicYearDictionary)
+        private List<FundingSummaryReportEarnings> BuildBodyTemplateForYears(int collectionYear, int baseIlrYear, IDictionary<int, string> academicYearDictionary)
         {
             var year = baseIlrYear;
 
-            var models = new List<FundingSummaryModel>();
+            var models = new List<FundingSummaryReportEarnings>();
 
             while (year <= collectionYear)
             {
-                models.Add(new FundingSummaryModel
+                models.Add(new FundingSummaryReportEarnings
                 {
                     Year = year,
                     AcademicYear = academicYearDictionary.GetValueOrDefault(year)
@@ -568,7 +577,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return models;
         }
 
-        private List<IlrFileDetail> BuildBaseIlrFileDetailModels(int collectionYear, int baseIlrYear, IDictionary<int, string> academicYearDictionary)
+        private List<IlrFileDetail> BuildIlrFileDetailModelsForYears(int collectionYear, int baseIlrYear, IDictionary<int, string> academicYearDictionary)
         {
             var year = baseIlrYear;
 
@@ -588,6 +597,110 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             }
 
             return models;
+        }
+
+        private decimal Sum(params decimal?[] values) => values.Where(x => x.HasValue).Sum(x => x.Value);
+
+        private PeriodisedReportValue BuildMonthlyTotals(int index, string conRefNumber, ICollection<IDeliverableCategory> categories)
+        {
+            return new PeriodisedReportValue(
+                string.Concat(conRefNumber, " Total (£)"),
+                categories.Sum(x => x.Totals.August),
+                categories.Sum(x => x.Totals.September),
+                categories.Sum(x => x.Totals.October),
+                categories.Sum(x => x.Totals.November),
+                categories.Sum(x => x.Totals.December),
+                categories.Sum(x => x.Totals.January),
+                categories.Sum(x => x.Totals.February),
+                categories.Sum(x => x.Totals.March),
+                categories.Sum(x => x.Totals.April),
+                categories.Sum(x => x.Totals.May),
+                categories.Sum(x => x.Totals.June),
+                categories.Sum(x => x.Totals.July));
+        }
+
+        private PeriodisedReportValue BuildMonthlyTotalsForArrayIndex(int index, string conRefNumber, FundingSummaryReportEarnings[] models)
+        {
+            var categories = models[index].DeliverableCategories;
+
+            if (index > 0)
+            {
+                return new PeriodisedReportValue(
+                    string.Concat(conRefNumber, " Total (£)"),
+                    categories.Sum(x => x.Totals.August),
+                    categories.Sum(x => x.Totals.September),
+                    categories.Sum(x => x.Totals.October),
+                    categories.Sum(x => x.Totals.November),
+                    categories.Sum(x => x.Totals.December),
+                    categories.Sum(x => x.Totals.January),
+                    categories.Sum(x => x.Totals.February),
+                    categories.Sum(x => x.Totals.March),
+                    categories.Sum(x => x.Totals.April),
+                    categories.Sum(x => x.Totals.May),
+                    categories.Sum(x => x.Totals.June),
+                    categories.Sum(x => x.Totals.July));
+            }
+            else
+            {
+                return new PeriodisedReportValue(
+                    string.Concat(conRefNumber, " Total (£)"),
+                    0m,
+                    0m,
+                    0m,
+                    0m,
+                    0m,
+                    0m,
+                    0m,
+                    0m,
+                    categories.Sum(x => x.Totals.April),
+                    categories.Sum(x => x.Totals.May),
+                    categories.Sum(x => x.Totals.June),
+                    categories.Sum(x => x.Totals.July));
+            }
+        }
+
+        private PeriodisedReportValue BuildCumulativeMonthlyTotalsForArrayIndex(int index, string conRefNumber, FundingSummaryReportEarnings[] models)
+        {
+            var monthlyTotals = models[index].MonthlyTotals;
+
+            if (index > 0)
+            {
+                var previousYearCumulativeTotal = models[index].PreviousYearCumulativeTotal;
+
+                return new PeriodisedReportValue(
+                  string.Concat(conRefNumber, " Cumulative (£)"),
+                  Sum(monthlyTotals.August, previousYearCumulativeTotal),
+                  Sum(monthlyTotals.August, monthlyTotals.September, previousYearCumulativeTotal),
+                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, previousYearCumulativeTotal),
+                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, previousYearCumulativeTotal),
+                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, monthlyTotals.December, previousYearCumulativeTotal),
+                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, monthlyTotals.December, monthlyTotals.January, previousYearCumulativeTotal),
+                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, monthlyTotals.December, monthlyTotals.January, monthlyTotals.February, previousYearCumulativeTotal),
+                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, monthlyTotals.December, monthlyTotals.January, monthlyTotals.February, monthlyTotals.March, previousYearCumulativeTotal),
+                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, monthlyTotals.December, monthlyTotals.January, monthlyTotals.February, monthlyTotals.March, monthlyTotals.April, previousYearCumulativeTotal),
+                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, monthlyTotals.December, monthlyTotals.January, monthlyTotals.February, monthlyTotals.March, monthlyTotals.April, monthlyTotals.May, previousYearCumulativeTotal),
+                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, monthlyTotals.December, monthlyTotals.January, monthlyTotals.February, monthlyTotals.March, monthlyTotals.April, monthlyTotals.May, monthlyTotals.June, previousYearCumulativeTotal),
+                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, monthlyTotals.December, monthlyTotals.January, monthlyTotals.February, monthlyTotals.March, monthlyTotals.April, monthlyTotals.May, monthlyTotals.June, monthlyTotals.July, previousYearCumulativeTotal));
+            }
+            else
+            {
+                var previousYearCumulativeTotal = 0m;
+
+                return new PeriodisedReportValue(
+                  string.Concat(conRefNumber, " Cumulative (£)"),
+                  0m,
+                  0m,
+                  0m,
+                  0m,
+                  0m,
+                  0m,
+                  0m,
+                  0m,
+                  Sum(monthlyTotals.April, previousYearCumulativeTotal),
+                  Sum(monthlyTotals.April, monthlyTotals.May, previousYearCumulativeTotal),
+                  Sum(monthlyTotals.April, monthlyTotals.May, monthlyTotals.June, previousYearCumulativeTotal),
+                  Sum(monthlyTotals.April, monthlyTotals.May, monthlyTotals.June, monthlyTotals.July, previousYearCumulativeTotal));
+            }
         }
     }
 }
