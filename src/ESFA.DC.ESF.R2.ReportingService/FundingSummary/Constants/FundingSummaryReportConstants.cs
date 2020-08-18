@@ -67,5 +67,23 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Constants
         public const string IlrAAdditionalProgCostEarningsAttribute = "AdditionalProgCostEarnings";
         public const string IlrProgressionEarningsAttribute = "ProgressionEarnings";
         public const string EsfReferenceTypeAuthorisedClaims = "Authorised Claims";
+
+        // Render constants
+        public const string HeaderProviderName = "Provider Name : ";
+        public const string HeaderUkprn = "UKPRN : ";
+        public const string HeaderContractNumber = "Contract Reference Number : ";
+        public const string HeaderEsfFileName = "Round 2 Supplementary Data File : ";
+        public const string HeaderEsfFileUpdated = "Last Round 2 Supplementary Data File Update : ";
+        public const string HeaderClassification = "Security Classification : ";
+
+        public const string HeaderIlrFileName = "ILR File : ";
+        public const string HeaderIlrFileUpdated = "Last ILR File Update : ";
+        public const string HeaderIlrFilePrepDate = "File Preparation Date : ";
+
+        public const string FooterApplicationVersion = "Application Version : ";
+        public const string FooterLARSData = "LARS Data : ";
+        public const string FooterPostcodeData = "Postcode Data : ";
+        public const string FooterOrgData = "Organisation Data : ";
+        public const string FooterReportGenerated = "Report generated at : ";
     }
 }

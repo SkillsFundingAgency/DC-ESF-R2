@@ -612,18 +612,18 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             {
                 return new PeriodisedReportValue(
                     string.Concat(conRefNumber, " Total (£)"),
-                    categories.Sum(x => x.Totals.August),
-                    categories.Sum(x => x.Totals.September),
-                    categories.Sum(x => x.Totals.October),
-                    categories.Sum(x => x.Totals.November),
-                    categories.Sum(x => x.Totals.December),
-                    categories.Sum(x => x.Totals.January),
-                    categories.Sum(x => x.Totals.February),
-                    categories.Sum(x => x.Totals.March),
-                    categories.Sum(x => x.Totals.April),
-                    categories.Sum(x => x.Totals.May),
-                    categories.Sum(x => x.Totals.June),
-                    categories.Sum(x => x.Totals.July));
+                    categories.Sum(x => x.Totals.MonthlyValues[0]),
+                    categories.Sum(x => x.Totals.MonthlyValues[1]),
+                    categories.Sum(x => x.Totals.MonthlyValues[2]),
+                    categories.Sum(x => x.Totals.MonthlyValues[3]),
+                    categories.Sum(x => x.Totals.MonthlyValues[4]),
+                    categories.Sum(x => x.Totals.MonthlyValues[5]),
+                    categories.Sum(x => x.Totals.MonthlyValues[6]),
+                    categories.Sum(x => x.Totals.MonthlyValues[7]),
+                    categories.Sum(x => x.Totals.MonthlyValues[8]),
+                    categories.Sum(x => x.Totals.MonthlyValues[9]),
+                    categories.Sum(x => x.Totals.MonthlyValues[10]),
+                    categories.Sum(x => x.Totals.MonthlyValues[11]));
             }
             else
             {
@@ -637,16 +637,16 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                     0m,
                     0m,
                     0m,
-                    categories.Sum(x => x.Totals.April),
-                    categories.Sum(x => x.Totals.May),
-                    categories.Sum(x => x.Totals.June),
-                    categories.Sum(x => x.Totals.July));
+                    categories.Sum(x => x.Totals.MonthlyValues[8]),
+                    categories.Sum(x => x.Totals.MonthlyValues[9]),
+                    categories.Sum(x => x.Totals.MonthlyValues[10]),
+                    categories.Sum(x => x.Totals.MonthlyValues[11]));
             }
         }
 
         private PeriodisedReportValue BuildCumulativeMonthlyTotalsForArrayIndex(int index, string conRefNumber, FundingSummaryReportEarnings[] models)
         {
-            var monthlyTotals = models[index].MonthlyTotals;
+            var monthlyTotals = models[index].MonthlyTotals.MonthlyValues;
 
             if (index > 0)
             {
@@ -654,18 +654,18 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
                 return new PeriodisedReportValue(
                   string.Concat(conRefNumber, " Cumulative (£)"),
-                  Sum(monthlyTotals.August, previousYearCumulativeTotal),
-                  Sum(monthlyTotals.August, monthlyTotals.September, previousYearCumulativeTotal),
-                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, previousYearCumulativeTotal),
-                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, previousYearCumulativeTotal),
-                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, monthlyTotals.December, previousYearCumulativeTotal),
-                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, monthlyTotals.December, monthlyTotals.January, previousYearCumulativeTotal),
-                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, monthlyTotals.December, monthlyTotals.January, monthlyTotals.February, previousYearCumulativeTotal),
-                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, monthlyTotals.December, monthlyTotals.January, monthlyTotals.February, monthlyTotals.March, previousYearCumulativeTotal),
-                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, monthlyTotals.December, monthlyTotals.January, monthlyTotals.February, monthlyTotals.March, monthlyTotals.April, previousYearCumulativeTotal),
-                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, monthlyTotals.December, monthlyTotals.January, monthlyTotals.February, monthlyTotals.March, monthlyTotals.April, monthlyTotals.May, previousYearCumulativeTotal),
-                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, monthlyTotals.December, monthlyTotals.January, monthlyTotals.February, monthlyTotals.March, monthlyTotals.April, monthlyTotals.May, monthlyTotals.June, previousYearCumulativeTotal),
-                  Sum(monthlyTotals.August, monthlyTotals.September, monthlyTotals.October, monthlyTotals.November, monthlyTotals.December, monthlyTotals.January, monthlyTotals.February, monthlyTotals.March, monthlyTotals.April, monthlyTotals.May, monthlyTotals.June, monthlyTotals.July, previousYearCumulativeTotal));
+                  Sum(monthlyTotals[0], previousYearCumulativeTotal),
+                  Sum(monthlyTotals[0], monthlyTotals[1], previousYearCumulativeTotal),
+                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], previousYearCumulativeTotal),
+                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], previousYearCumulativeTotal),
+                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4], previousYearCumulativeTotal),
+                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4], monthlyTotals[5], previousYearCumulativeTotal),
+                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4], monthlyTotals[5], monthlyTotals[6], previousYearCumulativeTotal),
+                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4], monthlyTotals[5], monthlyTotals[6], monthlyTotals[7], previousYearCumulativeTotal),
+                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4], monthlyTotals[5], monthlyTotals[6], monthlyTotals[7], monthlyTotals[8], previousYearCumulativeTotal),
+                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4], monthlyTotals[5], monthlyTotals[6], monthlyTotals[7], monthlyTotals[8], monthlyTotals[9], previousYearCumulativeTotal),
+                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4], monthlyTotals[5], monthlyTotals[6], monthlyTotals[7], monthlyTotals[8], monthlyTotals[9], monthlyTotals[10], previousYearCumulativeTotal),
+                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4], monthlyTotals[5], monthlyTotals[6], monthlyTotals[7], monthlyTotals[8], monthlyTotals[9], monthlyTotals[10], monthlyTotals[11], previousYearCumulativeTotal));
             }
             else
             {
@@ -681,10 +681,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                   0m,
                   0m,
                   0m,
-                  Sum(monthlyTotals.April, previousYearCumulativeTotal),
-                  Sum(monthlyTotals.April, monthlyTotals.May, previousYearCumulativeTotal),
-                  Sum(monthlyTotals.April, monthlyTotals.May, monthlyTotals.June, previousYearCumulativeTotal),
-                  Sum(monthlyTotals.April, monthlyTotals.May, monthlyTotals.June, monthlyTotals.July, previousYearCumulativeTotal));
+                  Sum(monthlyTotals[8], previousYearCumulativeTotal),
+                  Sum(monthlyTotals[8], monthlyTotals[9], previousYearCumulativeTotal),
+                  Sum(monthlyTotals[8], monthlyTotals[9], monthlyTotals[10], previousYearCumulativeTotal),
+                  Sum(monthlyTotals[8], monthlyTotals[9], monthlyTotals[10], monthlyTotals[11], previousYearCumulativeTotal));
             }
         }
 
