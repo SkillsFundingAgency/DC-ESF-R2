@@ -25,6 +25,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
     public class FundingSummaryReportModelBuilder : IFundingSummaryReportModelBuilder
     {
         private const string NotApplicable = "Not Applicable";
+        private const string ESF2021CollectionName = "ESFR2-2021";
 
         private readonly int[] _crossOverReturnPeriods = new[] { 1, 2 };
 
@@ -78,7 +79,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 conRefNumbers = new HashSet<string>(orgData.ConRefNumbers, StringComparer.OrdinalIgnoreCase);
             }
 
-            var currentCollectionYearString = CalculateCollectionYear(esfJobContext.CurrentPeriod, esfJobContext.StartCollectionYearAbbreviation);
+            var currentCollectionYearString = CalculateCollectionYear(esfJobContext.CurrentPeriod, esfJobContext.StartCollectionYearAbbreviation, esfJobContext.CollectionName);
             var currentCollectionYear = int.Parse(currentCollectionYearString);
 
             var reportGroupHeaderDictionary = _yearConfiguration.PeriodisedValuesHeaderDictionary(currentCollectionYear);
@@ -592,9 +593,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return models;
         }
 
-        private string CalculateCollectionYear(int returnPeriod, string startCollectionYearAbbreviation)
+        private string CalculateCollectionYear(int returnPeriod, string startCollectionYearAbbreviation, string collectionName)
         {
-            if (_crossOverReturnPeriods.Contains(returnPeriod))
+            if (collectionName == ESF2021CollectionName && _crossOverReturnPeriods.Contains(returnPeriod))
             {
                 if (int.TryParse(startCollectionYearAbbreviation, out var startYear))
                 {
