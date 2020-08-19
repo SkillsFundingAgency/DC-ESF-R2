@@ -420,6 +420,56 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             };
         }
 
+        public IDictionary<string, Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>> PeriodiseIlr(IEnumerable<string> conRefNumbers, IEnumerable<FM70PeriodisedValues> fm70Data)
+        {
+            var contractsFromIlr = fm70Data.Select(x => x.ConRefNumber).Distinct().ToList();
+
+            return conRefNumbers.Contains(NotApplicable) || !contractsFromIlr.Any(x => conRefNumbers.Contains(x)) ?
+                new Dictionary<string, Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>>(StringComparer.OrdinalIgnoreCase)
+                {
+                    { NotApplicable, new Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>() }
+                } :
+
+                fm70Data?
+                .GroupBy(x => conRefNumbers.Contains(x.ConRefNumber) ? x.ConRefNumber : NotApplicable)
+                .ToDictionary(
+                cr => cr.Key,
+                crv => crv.Select(x => x)
+                .GroupBy(x => x.FundingYear)
+                .ToDictionary(
+                    fy => fy.Key,
+                    fyv => fyv.Select(x => x)
+                    .GroupBy(x => x.DeliverableCode)
+                    .ToDictionary(
+                        dc => dc.Key,
+                        dcv => MapIlrPeriodisedValues(crv.Key, dcv.Key, dcv.ToList()),
+                        StringComparer.OrdinalIgnoreCase)));
+        }
+
+        public IDictionary<string, Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>> PeriodiseEsfSuppData(IEnumerable<string> conRefNumbers, IDictionary<string, IEnumerable<SupplementaryDataYearlyModel>> supplementaryData)
+        {
+            if (conRefNumbers.Contains(NotApplicable))
+            {
+                return new Dictionary<string, Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>>(StringComparer.OrdinalIgnoreCase)
+                {
+                    { NotApplicable, new Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>() }
+                };
+            }
+
+            return conRefNumbers
+                .ToDictionary(
+                conRef => conRef,
+                conRef => supplementaryData.GetValueOrDefault(conRef)?
+                .ToDictionary(
+                    key => key.FundingYear,
+                    value => value.SupplementaryData.ToList()
+                    .GroupBy(dc => dc.DeliverableCode)
+                    .ToDictionary(
+                        d => d.Key,
+                        p => MapEsfPeriodisedValues(conRef, p.Key, p.ToList()),
+                        StringComparer.OrdinalIgnoreCase)) ?? new Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>());
+        }
+
         private GroupHeader BuildFundingHeader(string headerTitle, string[] headers)
         {
             return new GroupHeader(
@@ -436,24 +486,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 headers[9],
                 headers[10],
                 headers[11]);
-        }
-
-        private IDictionary<string, Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>> PeriodiseIlr(IEnumerable<string> conRefNumbers, IEnumerable<FM70PeriodisedValues> fm70Data)
-        {
-            return fm70Data?
-                .GroupBy(x => conRefNumbers.Contains(x.ConRefNumber) ? x.ConRefNumber : NotApplicable)
-                .ToDictionary(
-                cr => cr.Key,
-                crv => crv.Select(x => x)
-                .GroupBy(x => x.FundingYear)
-                .ToDictionary(
-                    fy => fy.Key,
-                    fyv => fyv.Select(x => x)
-                    .GroupBy(x => x.DeliverableCode)
-                    .ToDictionary(
-                        dc => dc.Key,
-                        dcv => MapIlrPeriodisedValues(crv.Key, dcv.Key, dcv.ToList()),
-                        StringComparer.OrdinalIgnoreCase)));
         }
 
         private IEnumerable<PeriodisedValue> MapIlrPeriodisedValues(string conRef, string deliverableCode, IEnumerable<FM70PeriodisedValues> fm70Data)
@@ -474,45 +506,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 x.Period10 ?? 0,
                 x.Period11 ?? 0,
                 x.Period12 ?? 0));
-        }
-
-        private IDictionary<string, Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>> PeriodiseEsfSuppData(IEnumerable<string> conRefNumbers, IDictionary<string, IEnumerable<SupplementaryDataYearlyModel>> supplementaryData)
-        {
-            var conRefDictionary = new Dictionary<string, Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>>();
-
-            foreach (var conRef in supplementaryData)
-            {
-                if (conRefNumbers.Contains(conRef.Key))
-                {
-                    conRefDictionary.Add(
-                        conRef.Key,
-                        conRef.Value
-                        .ToDictionary(
-                        key => key.FundingYear,
-                        value => value.SupplementaryData.ToList()
-                        .GroupBy(dc => dc.DeliverableCode)
-                        .ToDictionary(
-                            d => d.Key,
-                            p => MapEsfPeriodisedValues(conRef.Key, p.Key, p.ToList()),
-                            StringComparer.OrdinalIgnoreCase)));
-                }
-                else
-                {
-                    conRefDictionary.Add(
-                        NotApplicable,
-                        conRef.Value
-                        .ToDictionary(
-                        key => key.FundingYear,
-                        value => value.SupplementaryData.ToList()
-                        .GroupBy(dc => dc.DeliverableCode)
-                        .ToDictionary(
-                            d => d.Key,
-                            p => MapEsfPeriodisedValues(conRef.Key, p.Key, p.ToList()),
-                            StringComparer.OrdinalIgnoreCase)));
-                }
-            }
-
-            return conRefDictionary;
         }
 
         private IEnumerable<PeriodisedValue> MapEsfPeriodisedValues(string conRef, string deliverableCode, IEnumerable<SupplementaryDataModel> supplementaryData)
