@@ -1142,6 +1142,210 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             NewBuilder(versionInfo: versionInfo.Object).PopulateReportFooter(referenceDataVersions, "01/02/2020").Should().BeEquivalentTo(expectedFooter);
         }
 
+        [Fact]
+        public void PeriodiseIlr_EmptyILRData()
+        {
+            var conRefNumbers = new List<string> { "ConRef1", "ConRef2" };
+            var fm70Data = new List<FM70PeriodisedValues>();
+
+            var result = NewBuilder().PeriodiseIlr(conRefNumbers, fm70Data);
+
+            result.Should().ContainKey("Not Applicable");
+            result.Values.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void PeriodiseIlr_NoValidContract()
+        {
+            var conRefNumbers = new List<string> { "Not Applicable" };
+            var fm70Data = new List<FM70PeriodisedValues>();
+
+            var result = NewBuilder().PeriodiseIlr(conRefNumbers, fm70Data);
+
+            result.Should().ContainKey("Not Applicable");
+            result.Values.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void PeriodiseIlr_NoContractMatch()
+        {
+            var conRefNumbers = new List<string> { "ConRef1", "ConRef2" };
+            var fm70Data = new List<FM70PeriodisedValues>
+            {
+                new FM70PeriodisedValues
+                {
+                    AimSeqNumber = 1,
+                    ConRefNumber = "ConRef3",
+                    DeliverableCode = "Code3"
+                },
+                new FM70PeriodisedValues
+                {
+                    AimSeqNumber = 1,
+                    ConRefNumber = "ConRef4",
+                    DeliverableCode = "Code3"
+                }
+            };
+
+            var result = NewBuilder().PeriodiseIlr(conRefNumbers, fm70Data);
+
+            result.Should().ContainKey("Not Applicable");
+            result.Values.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void PeriodiseIlr_ContractMatch()
+        {
+            var conRefNumbers = new List<string> { "ConRef1", "ConRef2" };
+            var fm70Data = new List<FM70PeriodisedValues>
+            {
+                new FM70PeriodisedValues
+                {
+                    AimSeqNumber = 1,
+                    ConRefNumber = "ConRef1",
+                    DeliverableCode = "Code3"
+                },
+                new FM70PeriodisedValues
+                {
+                    AimSeqNumber = 1,
+                    ConRefNumber = "ConRef2",
+                    DeliverableCode = "Code3"
+                }
+            };
+
+            var result = NewBuilder().PeriodiseIlr(conRefNumbers, fm70Data);
+
+            result.Should().ContainKeys("ConRef1", "ConRef2");
+            result.Values.Should().HaveCount(2);
+        }
+
+        [Fact]
+        public void PeriodiseEsfSuppData_EmptyEsfData()
+        {
+            var conRefNumbers = new List<string> { "ConRef1", "ConRef2" };
+            var esfData = new Dictionary<string, IEnumerable<SupplementaryDataYearlyModel>>();
+
+            var result = NewBuilder().PeriodiseEsfSuppData(conRefNumbers, esfData);
+
+            result.Should().ContainKeys("ConRef1", "ConRef2");
+        }
+
+        [Fact]
+        public void PeriodiseEsfSuppData_NoValidContract()
+        {
+            var conRefNumbers = new List<string> { "Not Applicable" };
+            var esfData = new Dictionary<string, IEnumerable<SupplementaryDataYearlyModel>>
+            {
+                { "ConRef1", new List<SupplementaryDataYearlyModel>() }
+            };
+
+            var result = NewBuilder().PeriodiseEsfSuppData(conRefNumbers, esfData);
+
+            result.Should().ContainKey("Not Applicable");
+            result.Values.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public void PeriodiseEsfSuppData_NoContractMatch()
+        {
+            var emptyResultValue = new Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>();
+
+            var conRefNumbers = new List<string> { "ConRef1", "ConRef2" };
+            var esfData = new Dictionary<string, IEnumerable<SupplementaryDataYearlyModel>>
+            {
+                { "ConRef3", new List<SupplementaryDataYearlyModel>() },
+                { "ConRef4", new List<SupplementaryDataYearlyModel>() }
+            };
+
+            var result = NewBuilder().PeriodiseEsfSuppData(conRefNumbers, esfData);
+
+            result.Should().ContainKeys("ConRef1", "ConRef2");
+            result.Values.Should().HaveCount(2);
+            result["ConRef1"].Values.Should().BeEquivalentTo(emptyResultValue);
+            result["ConRef2"].Values.Should().BeEquivalentTo(emptyResultValue);
+        }
+
+        [Fact]
+        public void PeriodiseEsfSuppData_ContractMatch()
+        {
+            var suppDataList1 = new List<SupplementaryDataYearlyModel>
+            {
+                new SupplementaryDataYearlyModel
+                {
+                    FundingYear = 2019,
+                    SupplementaryData = new List<SupplementaryDataModel>
+                    {
+                        new SupplementaryDataModel
+                        {
+                            DeliverableCode = "Code1"
+                        }
+                    }
+                }
+            };
+
+            var suppDataList2 = new List<SupplementaryDataYearlyModel>
+            {
+                new SupplementaryDataYearlyModel
+                {
+                    FundingYear = 2020,
+                    SupplementaryData = new List<SupplementaryDataModel>
+                    {
+                        new SupplementaryDataModel
+                        {
+                            DeliverableCode = "Code1"
+                        }
+                    }
+                }
+            };
+
+            var conRefNumbers = new List<string> { "ConRef1", "ConRef2" };
+            var esfData = new Dictionary<string, IEnumerable<SupplementaryDataYearlyModel>>
+            {
+                { "ConRef1", suppDataList1 },
+                { "ConRef2", suppDataList2 }
+            };
+
+            var result = NewBuilder().PeriodiseEsfSuppData(conRefNumbers, esfData);
+
+            result.Should().ContainKeys("ConRef1", "ConRef2");
+            result.Values.Should().HaveCount(2);
+            result["ConRef1"].Keys.Contains(2019);
+            result["ConRef2"].Keys.Contains(2020);
+        }
+
+        [Fact]
+        public void PeriodiseEsfSuppData_MixedContractMatch()
+        {
+            var emptyResultValue = new Dictionary<int, Dictionary<string, IEnumerable<PeriodisedValue>>>();
+            var suppDataList = new List<SupplementaryDataYearlyModel>
+            {
+                new SupplementaryDataYearlyModel
+                {
+                    FundingYear = 2019,
+                    SupplementaryData = new List<SupplementaryDataModel>
+                    {
+                        new SupplementaryDataModel
+                        {
+                            DeliverableCode = "Code1"
+                        }
+                    }
+                }
+            };
+
+            var conRefNumbers = new List<string> { "ConRef1", "ConRef2" };
+            var esfData = new Dictionary<string, IEnumerable<SupplementaryDataYearlyModel>>
+            {
+                { "ConRef1", suppDataList },
+                { "ConRef3", new List<SupplementaryDataYearlyModel>() }
+            };
+
+            var result = NewBuilder().PeriodiseEsfSuppData(conRefNumbers, esfData);
+
+            result.Should().ContainKeys("ConRef1", "ConRef2");
+            result.Values.Should().HaveCount(2);
+            result["ConRef1"].Keys.Contains(2019);
+            result["ConRef2"].Values.Should().BeEquivalentTo(emptyResultValue);
+        }
+
         private FundingSummaryReportModelBuilder NewBuilder(
             IDateTimeProvider dateTimeProvider = null,
             IFundingSummaryReportDataProvider dataProvider = null,
