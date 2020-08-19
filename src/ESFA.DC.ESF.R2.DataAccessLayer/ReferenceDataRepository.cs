@@ -49,7 +49,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
                 version = await context.VersionInfos?
                     .Where(x => x.DataSource == _postcodeVersionSource)
                     .OrderByDescending(v => v.VersionNumber)
-                    .Select(v => string.Concat(_schemaVersionPreFix, v.VersionNumber, " ", v.ModifiedAt.ToString(_refDataDateTimeFormat)))
+                    .Select(v => string.Concat(_schemaVersionPreFix, v.VersionNumber, " - ", v.ModifiedAt.ToString(_refDataDateTimeFormat)))
                     .FirstOrDefaultAsync(cancellationToken);
             }
 
@@ -66,7 +66,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             {
                 version = await context.LARS_DataGenerations
                     .OrderByDescending(v => v.DataGeneratedOn)
-                    .Select(lv => string.Concat(lv.Comment, " ", lv.DataGeneratedOn.ToString(_refDataDateTimeFormat)))
+                    .Select(lv => string.Concat(lv.Comment, " - ", lv.DataGeneratedOn.ToString(_refDataDateTimeFormat)))
                     .FirstOrDefaultAsync(cancellationToken);
             }
 
@@ -116,7 +116,7 @@ namespace ESFA.DC.ESF.R2.DataAccessLayer
             {
                 version = await context.OrgDataGenerations
                     .OrderByDescending(v => v.DataGeneratedOn)
-                    .Select(lv => string.Concat(lv.Comment, " ", lv.DataGeneratedOn.ToString(_refDataDateTimeFormat)))
+                    .Select(lv => string.Concat(lv.Comment, " - ", lv.DataGeneratedOn.ToString(_refDataDateTimeFormat)))
                     .FirstOrDefaultAsync(cancellationToken);
             }
 
