@@ -82,6 +82,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             var currentCollectionYearString = CalculateCollectionYear(esfJobContext.CurrentPeriod, esfJobContext.StartCollectionYearAbbreviation, esfJobContext.CollectionName);
             var currentCollectionYear = int.Parse(currentCollectionYearString);
 
+            var dataRetrievalCollectionYearString = string.Concat("20", esfJobContext.StartCollectionYearAbbreviation);
+            var dataRetrievalCollectionYear = int.Parse(dataRetrievalCollectionYearString);
+
             var reportGroupHeaderDictionary = _yearConfiguration.PeriodisedValuesHeaderDictionary(currentCollectionYear);
 
             var esfSourceFiles = await _dataProvider.GetImportFilesAsync(esfJobContext.UkPrn, cancellationToken);
@@ -91,7 +94,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             var supplementaryData = await _dataProvider.GetSupplementaryDataAsync(currentCollectionYear, esfSourceFiles, cancellationToken);
 
             var ilrYearlyFileData = await _dataProvider.GetIlrFileDetailsAsync(ukPrn, reportGroupHeaderDictionary.Keys, cancellationToken);
-            var fm70YearlyData = await _dataProvider.GetYearlyIlrDataAsync(ukPrn, currentCollectionYear, esfJobContext.ReturnPeriod, _yearConfiguration.YearToCollectionDictionary(), cancellationToken);
+            var fm70YearlyData = await _dataProvider.GetYearlyIlrDataAsync(ukPrn, dataRetrievalCollectionYear, esfJobContext.ReturnPeriod, _yearConfiguration.YearToCollectionDictionary(), cancellationToken);
 
             var periodisedEsf = PeriodiseEsfSuppData(conRefNumbers, supplementaryData);
             var periodisedILR = PeriodiseIlr(conRefNumbers, fm70YearlyData.SelectMany(x => x.Fm70PeriodisedValues));
