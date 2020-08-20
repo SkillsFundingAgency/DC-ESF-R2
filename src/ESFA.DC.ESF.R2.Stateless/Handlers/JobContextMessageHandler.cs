@@ -18,6 +18,7 @@ using ESFA.DC.JobContextManager.Model;
 using ESFA.DC.Logging.Interfaces;
 using AimAndDeliverable1920Mapper = ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Mapper._1920.AimAndDeliverableMapper;
 using AimAndDeliverable2021Mapper = ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable.Mapper._2021.AimAndDeliverableMapper;
+using EsfIlrFundingSummaryDataProvider = ESFA.DC.ESF.R2.Data.FundingSummary.Ilr.EsfIlrDataProvider;
 using Ilr1920AimAndDeliverableDataProvider = ESFA.DC.ESF.R2._1920.Data.AimAndDeliverable.Ilr;
 using Ilr2021AimAndDeliverableDataProvider = ESFA.DC.ESF.R2._2021.Data.AimAndDeliverable.Ilr;
 using IlrAimAndDeliverableDataProviderInterface = ESFA.DC.ESF.R2.Interfaces.Reports.AimAndDeliverable.IIlrDataProvider;
@@ -84,7 +85,7 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
 
                 container.RegisterType<AimAndDeliverable1920Mapper>().As<AbstractAimAndDeliverableMapper>();
 
-            container.Register(c =>
+                container.Register(c =>
                 {
                     var ilrConfig = c.Resolve<IILRConfiguration>();
                     var esfConfig = c.Resolve<IESFConfiguration>();
@@ -100,6 +101,11 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
                         { AcademicYearConstants.Year2019, Ilr1920SqlFunc },
                         { AcademicYearConstants.Year2018, Ilr1819SqlFunc }
                     };
+
+                    if (esfJobContext.CollectionName == ESF2021CollectionName)
+                    {
+                        return new EsfIlrFundingSummaryDataProvider(connectionDictionary, EsfSqlFunc, returnPeriodLookup);
+                    }
 
                     return new IlrFundingSummaryDataProvider(connectionDictionary, EsfSqlFunc, returnPeriodLookup);
                 }).As<IlrFundingSummaryDataProviderInterface>();
@@ -135,6 +141,11 @@ namespace ESFA.DC.ESF.R2.Stateless.Handlers
                         { AcademicYearConstants.Year2019, Ilr1920SqlFunc },
                         { AcademicYearConstants.Year2018, Ilr1819SqlFunc }
                     };
+
+                    if (esfJobContext.CollectionName == ESF2021CollectionName)
+                    {
+                        return new EsfIlrFundingSummaryDataProvider(connectionDictionary, EsfSqlFunc, returnPeriodLookup);
+                    }
 
                     return new IlrFundingSummaryDataProvider(connectionDictionary, EsfSqlFunc, returnPeriodLookup);
                 }).As<IlrFundingSummaryDataProviderInterface>();

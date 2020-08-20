@@ -13,8 +13,6 @@ namespace ESFA.DC.ESF.R2.Data.FundingSummary.Ilr
 {
     public class IlrDataProvider : IIlrDataProvider
     {
-        private readonly string R14 = "R14";
-
         private readonly string IlrfileDetailsSql = @"SELECT TOP (1) f.[Filename], f.[SubmittedTime] AS LastSubmission, c.[FilePreparationDate]
                                                       FROM [dbo].[FileDetails] f
                                                       INNER JOIN [Valid].[CollectionDetails] c 
@@ -54,7 +52,9 @@ namespace ESFA.DC.ESF.R2.Data.FundingSummary.Ilr
 
         private readonly IDictionary<int, Func<SqlConnection>> _ilrSqlConnectionFunc;
         private readonly Func<SqlConnection> _esfSqlConnectionFunc;
-        private readonly IReturnPeriodLookup _returnPeriodLookup;
+
+        protected readonly IReturnPeriodLookup _returnPeriodLookup;
+        protected readonly string R14 = "R14";
 
         public IlrDataProvider(
             IDictionary<int, Func<SqlConnection>> ilrSqlConnectionFunc,
@@ -80,7 +80,7 @@ namespace ESFA.DC.ESF.R2.Data.FundingSummary.Ilr
             return fileDetails;
         }
 
-        public async Task<ICollection<FM70PeriodisedValues>> GetIlrPeriodisedValuesAsync(int ukprn, int currentYear, string returnPeriod, IDictionary<int, string> ilrYearsToCollectionDictionary, CancellationToken cancellationToken)
+        public virtual async Task<ICollection<FM70PeriodisedValues>> GetIlrPeriodisedValuesAsync(int ukprn, int currentYear, string returnPeriod, IDictionary<int, string> ilrYearsToCollectionDictionary, CancellationToken cancellationToken)
         {
             var taskList = new List<Task<IEnumerable<FM70PeriodisedValues>>>();
             var periodisedValues = new List<FM70PeriodisedValues>();
@@ -110,7 +110,7 @@ namespace ESFA.DC.ESF.R2.Data.FundingSummary.Ilr
             return periodisedValues;
         }
 
-        private async Task<IEnumerable<FM70PeriodisedValues>> GetAcademicYearIlrData(int ukprn, int collectionYear, string collectionType, string collectionReturnCode, CancellationToken cancellationToken)
+        protected async Task<IEnumerable<FM70PeriodisedValues>> GetAcademicYearIlrData(int ukprn, int collectionYear, string collectionType, string collectionReturnCode, CancellationToken cancellationToken)
         {
             int.TryParse(collectionReturnCode.Substring(1), out var returnPeriod);
 
