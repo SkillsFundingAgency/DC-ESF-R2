@@ -18,46 +18,25 @@
             string headerJuly)
         {
             Title = title;
-            HeaderApril = headerApril;
-            HeaderMay = headerMay;
-            HeaderJune = headerJune;
-            HeaderJuly = headerJuly;
-            HeaderAugust = headerAugust;
-            HeaderSeptember = headerSeptember;
-            HeaderOctober = headerOctober;
-            HeaderNovember = headerNovember;
-            HeaderDecember = headerDecember;
-            HeaderJanuary = headerJanuary;
-            HeaderFebruary = headerFebruary;
-            HeaderMarch = headerMarch;
+            Months = new string[]
+            {
+                headerAugust,
+                headerSeptember,
+                headerOctober,
+                headerNovember,
+                headerDecember,
+                headerJanuary,
+                headerFebruary,
+                headerMarch,
+                headerApril,
+                headerMay,
+                headerJune,
+                headerJuly
+            };
         }
 
         public string Title { get; set; }
 
-        public string HeaderApril { get; set; }
-
-        public string HeaderMay { get; set; }
-
-        public string HeaderJune { get; set; }
-
-        public string HeaderJuly { get; set; }
-
-        public string HeaderAugust { get; set; }
-
-        public string HeaderSeptember { get; set; }
-
-        public string HeaderOctober { get; set; }
-
-        public string HeaderNovember { get; set; }
-
-        public string HeaderDecember { get; set; }
-
-        public string HeaderJanuary { get; set; }
-
-        public string HeaderFebruary { get; set; }
-
-        public string HeaderMarch { get; set; }
-
-        public decimal Total { get; set; }
+        public string[] Months { get; set; }
     }
 }

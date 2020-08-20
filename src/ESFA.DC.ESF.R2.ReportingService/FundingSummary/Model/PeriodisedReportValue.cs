@@ -23,30 +23,30 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
             Title = title;
             MonthlyValues = new[]
             {
-                august,
-                september,
-                october,
-                november,
-                december,
-                january,
-                february,
-                march,
-                april,
-                may,
-                june,
-                july
+                august ?? 0,
+                september ?? 0,
+                october ?? 0,
+                november ?? 0,
+                december ?? 0,
+                january ?? 0,
+                february ?? 0,
+                march ?? 0,
+                april ?? 0,
+                may ?? 0,
+                june ?? 0,
+                july ?? 0
             };
         }
 
         public string Title { get; set; }
 
-        public decimal?[] MonthlyValues { get; set; }
+        public decimal[] MonthlyValues { get; set; }
 
-        public decimal? Total => BuildTotal();
+        public decimal Total => BuildTotal();
 
-        private decimal? BuildTotal()
+        private decimal BuildTotal()
         {
-            return MonthlyValues?.Sum(x => x ?? 0m);
+            return MonthlyValues.Sum(x => x);
         }
     }
 }

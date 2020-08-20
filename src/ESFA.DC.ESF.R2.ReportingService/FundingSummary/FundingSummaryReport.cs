@@ -56,7 +56,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 {
                     var worksheet = _excelFileService.GetWorksheetFromWorkbook(workbook, tab.TabName);
 
-                    await _renderService.Render(tab, worksheet);
+                    await _renderService.Render(esfJobContext, tab, worksheet);
                 }
 
                 await _excelFileService.SaveWorkbookAsync(workbook, fileName, esfJobContext.BlobContainerName, cancellationToken);

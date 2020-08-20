@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ESFA.DC.DateTimeProvider.Interface;
@@ -23,7 +24,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
     public class FundingSummaryReportTests : AbstractFundingSummaryReportTests
     {
         [Fact]
-        public async Task GenerateReport()
+        public async Task GenerateReport_TwoFundingYears()
         {
             var ukprn = 12345678;
             var jobid = 1;
@@ -42,25 +43,80 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 {
                     Title = FundingSummaryReportConstants.BodyTitle,
                     TabName = "ConRef1",
-                    Header = TestHeader("ConRef1"),
-                    Body = TestBodyModels(),
+                    Header = TestHeader("ConRef1", 2),
+                    Body = TestBodyModels(2),
                     Footer = TestFooter()
                 },
                 new FundingSummaryReportTab
                 {
                     Title = FundingSummaryReportConstants.BodyTitle,
                     TabName = "ConRef2",
-                    Header = TestHeader("ConRef2"),
-                    Body = TestBodyModels(),
+                    Header = TestHeader("ConRef2", 2),
+                    Body = TestBodyModels(2),
                     Footer = TestFooter()
                 }
             };
 
             esfJobContext.Setup(x => x.UkPrn).Returns(ukprn);
             esfJobContext.Setup(x => x.JobId).Returns(jobid);
-            esfJobContext.Setup(x => x.StartCollectionYearAbbreviation).Returns("21");
-            esfJobContext.Setup(x => x.ReturnPeriod).Returns("R01");
-            esfJobContext.Setup(x => x.CurrentPeriod).Returns(1);
+            esfJobContext.Setup(x => x.StartCollectionYearAbbreviation).Returns("19");
+            esfJobContext.Setup(x => x.CollectionYear).Returns(1920);
+            esfJobContext.Setup(x => x.ReturnPeriod).Returns("R07");
+            esfJobContext.Setup(x => x.CurrentPeriod).Returns(7);
+            esfJobContext.Setup(x => x.BlobContainerName).Returns(reportFolder);
+
+            var modelBuilder = new Mock<IFundingSummaryReportModelBuilder>();
+            var renderService = new FundingSummaryReportRenderService();
+            var dateTimeProvider = new Mock<IDateTimeProvider>();
+            var fileService = new FileSystemFileService();
+            var excelFileService = new ExcelFileService(fileService);
+
+            modelBuilder.Setup(x => x.Build(esfJobContext.Object, cancellationToken)).ReturnsAsync(testModels);
+
+            await NewReport(modelBuilder.Object, renderService, dateTimeProvider.Object, excelFileService)
+                .GenerateReport(esfJobContext.Object, sourceFile.Object, wrapper, cancellationToken);
+        }
+
+        [Fact]
+        public async Task GenerateReport_ThreeFundingYears()
+        {
+            var ukprn = 12345678;
+            var jobid = 1;
+            var reportFolder = "FundingSummary";
+
+            TestFixture(reportFolder, ukprn, jobid);
+
+            var esfJobContext = new Mock<IEsfJobContext>();
+            var sourceFile = new Mock<ISourceFileModel>();
+            var wrapper = new SupplementaryDataWrapper();
+            var cancellationToken = CancellationToken.None;
+
+            var testModels = new List<IFundingSummaryReportTab>
+            {
+                new FundingSummaryReportTab
+                {
+                    Title = FundingSummaryReportConstants.BodyTitle,
+                    TabName = "ConRef1",
+                    Header = TestHeader("ConRef1", 3),
+                    Body = TestBodyModels(3),
+                    Footer = TestFooter()
+                },
+                new FundingSummaryReportTab
+                {
+                    Title = FundingSummaryReportConstants.BodyTitle,
+                    TabName = "ConRef2",
+                    Header = TestHeader("ConRef2", 3),
+                    Body = TestBodyModels(3),
+                    Footer = TestFooter()
+                }
+            };
+
+            esfJobContext.Setup(x => x.UkPrn).Returns(ukprn);
+            esfJobContext.Setup(x => x.JobId).Returns(jobid);
+            esfJobContext.Setup(x => x.StartCollectionYearAbbreviation).Returns("20");
+            esfJobContext.Setup(x => x.CollectionYear).Returns(2021);
+            esfJobContext.Setup(x => x.ReturnPeriod).Returns("R05");
+            esfJobContext.Setup(x => x.CurrentPeriod).Returns(5);
             esfJobContext.Setup(x => x.BlobContainerName).Returns(reportFolder);
 
             var modelBuilder = new Mock<IFundingSummaryReportModelBuilder>();
@@ -96,9 +152,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             };
         }
 
-        private FundingSummaryReportHeaderModel TestHeader(string conRefNumber)
+        private FundingSummaryReportHeaderModel TestHeader(string conRefNumber, int years)
         {
-            return new FundingSummaryReportHeaderModel
+            var header = new FundingSummaryReportHeaderModel
             {
                 Ukprn = "12345678",
                 ContractReferenceNumber = conRefNumber,
@@ -125,166 +181,33 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                         MostRecent = "(most recent closed collection for year)",
                         LastIlrFileUpdate = "01/08/2019 09:00",
                         FilePrepDate = "01/08/2019 09:00",
-                    },
-                    new IlrFileDetail
-                    {
-                        Year = 2020,
-                        AcademicYear = "2020/21",
-                        IlrFile = "Ilr2021.xml",
-                        LastIlrFileUpdate = "01/08/2020 09:00",
-                        FilePrepDate = "01/08/2020 09:00",
                     }
                 }
             };
+
+            if (years == 3)
+            {
+                header.IlrFileDetails.Add(new IlrFileDetail
+                {
+                    Year = 2020,
+                    AcademicYear = "2020/21",
+                    IlrFile = "Ilr2021.xml",
+                    LastIlrFileUpdate = "01/08/2020 09:00",
+                    FilePrepDate = "01/08/2020 09:00",
+                });
+            }
+
+            return header;
         }
 
-        private ICollection<FundingSummaryReportEarnings> TestBodyModels()
+        private ICollection<FundingSummaryReportEarnings> TestBodyModels(int years)
         {
-            return new List<FundingSummaryReportEarnings>
+            var models = new List<FundingSummaryReportEarnings>
             {
                 new FundingSummaryReportEarnings
                 {
-                    Year = 2020,
-                    YearTotal = 27M,
-                    CumulativeYearTotal = 48M,
-                    PreviousYearCumulativeTotal = 21m,
-                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", 3m, 3m, 3m, 0m, 0m, 3m, 2m, 3m, 2m, 3m, 2m, 3m),
-                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)", 24m, 27m, 30m, 30m, 30m, 33m, 35m, 38m, 40m, 43m, 45m, 48m),
-                    DeliverableCategories = new List<IDeliverableCategory>
-                    {
-                        new DeliverableCategory("Total Learner Assessment and Plan (£)")
-                        {
-                            GroupHeader = Year2020GroupHeader("Learner Assessment and Plan"),
-                            DeliverableSubCategories = new List<IDeliverableSubCategory>
-                            {
-                                new DeliverableSubCategory("Default Category should not render", false)
-                                {
-                                    ReportValues = new List<IPeriodisedReportValue>
-                                    {
-                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
-                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
-                                    }
-                                }
-                            }
-                        },
-                        new DeliverableCategory("Total Regulated Learning (£)")
-                        {
-                            GroupHeader = Year2020GroupHeader("Regulated Learning"),
-                            DeliverableSubCategories = new List<IDeliverableSubCategory>()
-                            {
-                                new DeliverableSubCategory("ILR Total RQ01 Regulated Learning (£)", true)
-                                {
-                                    ReportValues = new List<IPeriodisedReportValue>
-                                    {
-                                        ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
-                                        ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
-                                    }
-                                },
-                                new DeliverableSubCategory("Default Category should not render", false)
-                                {
-                                    ReportValues = new List<IPeriodisedReportValue>
-                                    {
-                                        ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
-                                    }
-                                }
-                            }
-                        },
-                        new DeliverableCategory("Total Non Regulated Activity (£)")
-                        {
-                            GroupHeader = Year2020GroupHeader("Non Regulated Activity"),
-                            DeliverableSubCategories = new List<IDeliverableSubCategory>
-                            {
-                                new DeliverableSubCategory("ILR Total NR01 Non Regulated Activity (£)", true)
-                                {
-                                    ReportValues = new List<IPeriodisedReportValue>
-                                    {
-                                        ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Activity - Achievement Funding (£)"),
-                                        ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Activity - Start Funding (£)")
-                                    }
-                                },
-                                new DeliverableSubCategory("Default Category should not render", false)
-                                {
-                                    ReportValues = new List<IPeriodisedReportValue>
-                                    {
-                                        ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Activity Authorised Claims (£)")
-                                    }
-                                }
-                            }
-                        },
-                        new DeliverableCategory("Total Community Grant (£)")
-                        {
-                            GroupHeader = Year2020GroupHeader("Community Grant"),
-                            DeliverableSubCategories = new List<IDeliverableSubCategory>
-                            {
-                                new DeliverableSubCategory("Default Category should not render", false)
-                                {
-                                    ReportValues = new List<IPeriodisedReportValue>
-                                    {
-                                        ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
-                                        ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)")
-                                    }
-                                }
-                            }
-                        },
-                        new DeliverableCategory("Total Specification Defined (£)")
-                        {
-                            GroupHeader = Year2020GroupHeader("Specification Defined"),
-                            DeliverableSubCategories = new List<IDeliverableSubCategory>
-                            {
-                                new DeliverableSubCategory("Default Category should not render", false)
-                                {
-                                    ReportValues = new List<IPeriodisedReportValue>
-                                    {
-                                        ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
-                                        ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
-                                    }
-                                }
-                            }
-                        },
-                        new DeliverableCategory("Total Progression and Sustained Progression (£)")
-                        {
-                            GroupHeader = Year2020GroupHeader("Progression and Sustained Progression"),
-                            DeliverableSubCategories = new List<IDeliverableSubCategory>
-                            {
-                                new DeliverableSubCategory("Total Paid Employment Progression (£)", true)
-                                {
-                                    ReportValues = new List<IPeriodisedReportValue>
-                                    {
-                                        ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
-                                        ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
-                                    }
-                                },
-                                new DeliverableSubCategory("Total Education Progression (£)", true)
-                                {
-                                    ReportValues = new List<IPeriodisedReportValue>
-                                    {
-                                        ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
-                                        ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
-                                    }
-                                },
-                                new DeliverableSubCategory("Total Apprenticeship Progression (£)", true)
-                                {
-                                    ReportValues = new List<IPeriodisedReportValue>
-                                    {
-                                        ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
-                                        ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
-                                    }
-                                },
-                                new DeliverableSubCategory("Total Traineeship Progression (£)", true)
-                                {
-                                    ReportValues = new List<IPeriodisedReportValue>
-                                    {
-                                        ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
-                                        ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                new FundingSummaryReportEarnings
-                {
                     Year = 2019,
+                    AcademicYear = "2019/20",
                     YearTotal = 19M,
                     CumulativeYearTotal = 21M,
                     PreviousYearCumulativeTotal = 2m,
@@ -425,6 +348,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 new FundingSummaryReportEarnings
                 {
                     Year = 2018,
+                    AcademicYear = "2018/19",
                     YearTotal = 2M,
                     CumulativeYearTotal = 2M,
                     MonthlyTotals = new PeriodisedReportValue(" Total (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 1m, 0m, 1m),
@@ -441,7 +365,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                                     ReportValues = new List<IPeriodisedReportValue>
                                     {
                                         new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m),
-                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 1m, 0m, 1m)
                                     }
                                 }
                             }
@@ -562,6 +486,153 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     }
                 }
             };
+
+            if (years == 3)
+            {
+                models.Add(new FundingSummaryReportEarnings
+                {
+                    Year = 2020,
+                    AcademicYear = "2020/21",
+                    YearTotal = 27M,
+                    CumulativeYearTotal = 48M,
+                    PreviousYearCumulativeTotal = 21m,
+                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", 3m, 3m, 3m, 0m, 0m, 3m, 2m, 3m, 2m, 3m, 2m, 3m),
+                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)", 24m, 27m, 30m, 30m, 30m, 33m, 35m, 38m, 40m, 43m, 45m, 48m),
+                    DeliverableCategories = new List<IDeliverableCategory>
+                    {
+                        new DeliverableCategory("Total Learner Assessment and Plan (£)")
+                        {
+                            GroupHeader = Year2020GroupHeader("Learner Assessment and Plan"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
+                            {
+                                new DeliverableSubCategory("Default Category should not render", false)
+                                {
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
+                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                                    }
+                                }
+                            }
+                        },
+                        new DeliverableCategory("Total Regulated Learning (£)")
+                        {
+                            GroupHeader = Year2020GroupHeader("Regulated Learning"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>()
+                            {
+                                new DeliverableSubCategory("ILR Total RQ01 Regulated Learning (£)", true)
+                                {
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Achievement Funding (£)"),
+                                        ZeroFundedPeriodisedValues("ILR RQ01 Regulated Learning - Start Funding (£)"),
+                                    }
+                                },
+                                new DeliverableSubCategory("Default Category should not render", false)
+                                {
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)")
+                                    }
+                                }
+                            }
+                        },
+                        new DeliverableCategory("Total Non Regulated Activity (£)")
+                        {
+                            GroupHeader = Year2020GroupHeader("Non Regulated Activity"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
+                            {
+                                new DeliverableSubCategory("ILR Total NR01 Non Regulated Activity (£)", true)
+                                {
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Activity - Achievement Funding (£)"),
+                                        ZeroFundedPeriodisedValues("ILR NR01 Non Regulated Activity - Start Funding (£)")
+                                    }
+                                },
+                                new DeliverableSubCategory("Default Category should not render", false)
+                                {
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("SUPPDATA NR01 Non Regulated Activity Authorised Claims (£)")
+                                    }
+                                }
+                            }
+                        },
+                        new DeliverableCategory("Total Community Grant (£)")
+                        {
+                            GroupHeader = Year2020GroupHeader("Community Grant"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
+                            {
+                                new DeliverableSubCategory("Default Category should not render", false)
+                                {
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("SUPPDATA CG01 Community Grant Payment (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA CG02 Community Grant Management Cost (£)")
+                                    }
+                                }
+                            }
+                        },
+                        new DeliverableCategory("Total Specification Defined (£)")
+                        {
+                            GroupHeader = Year2020GroupHeader("Specification Defined"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
+                            {
+                                new DeliverableSubCategory("Default Category should not render", false)
+                                {
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("SUPPDATA SD01 Progression Within Work (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA SD02 LEP Agreed Delivery Plan (£)")
+                                    }
+                                }
+                            }
+                        },
+                        new DeliverableCategory("Total Progression and Sustained Progression (£)")
+                        {
+                            GroupHeader = Year2020GroupHeader("Progression and Sustained Progression"),
+                            DeliverableSubCategories = new List<IDeliverableSubCategory>
+                            {
+                                new DeliverableSubCategory("Total Paid Employment Progression (£)", true)
+                                {
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR PG01 Progression Paid Employment (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA PG01 Progression Paid Employment Adjustments (£)"),
+                                    }
+                                },
+                                new DeliverableSubCategory("Total Education Progression (£)", true)
+                                {
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR PG03 Progression Education (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA PG03 Progression Education Adjustments (£)"),
+                                    }
+                                },
+                                new DeliverableSubCategory("Total Apprenticeship Progression (£)", true)
+                                {
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR PG04 Progression Apprenticeship (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)"),
+                                    }
+                                },
+                                new DeliverableSubCategory("Total Traineeship Progression (£)", true)
+                                {
+                                    ReportValues = new List<IPeriodisedReportValue>
+                                    {
+                                        ZeroFundedPeriodisedValues("ILR PG05 Progression Traineeship (£)"),
+                                        ZeroFundedPeriodisedValues("SUPPDATA PG05 Progression Traineeship Adjustments (£)"),
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            return models.OrderByDescending(x => x.Year).ToList();
         }
 
         FundingSummaryReport NewReport(

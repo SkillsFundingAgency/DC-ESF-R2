@@ -9,8 +9,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 
         public string AcademicYear { get; set; }
 
-        public int CurrentPeriod { get; set; }
-
         public string ConRefNumber { get; set; }
 
         public PeriodisedReportValue MonthlyTotals { get; set; }

@@ -4,8 +4,8 @@
      {
         string Title { get; }
 
-        decimal?[] MonthlyValues { get; set; }
+        decimal[] MonthlyValues { get; set; }
 
-        decimal? Total { get; }
+        decimal Total { get; }
     }
 }
