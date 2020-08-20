@@ -357,20 +357,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
         public PeriodisedReportValue BuildPeriodisedReportValue(string title, IEnumerable<PeriodisedValue> periodisedValues)
         {
-            return new PeriodisedReportValue(
-                    title,
-                    periodisedValues?.Sum(x => x.August) ?? 0m,
-                    periodisedValues?.Sum(x => x.September) ?? 0m,
-                    periodisedValues?.Sum(x => x.October) ?? 0m,
-                    periodisedValues?.Sum(x => x.November) ?? 0m,
-                    periodisedValues?.Sum(x => x.December) ?? 0m,
-                    periodisedValues?.Sum(x => x.January) ?? 0m,
-                    periodisedValues?.Sum(x => x.February) ?? 0m,
-                    periodisedValues?.Sum(x => x.March) ?? 0m,
-                    periodisedValues?.Sum(x => x.April) ?? 0m,
-                    periodisedValues?.Sum(x => x.May) ?? 0m,
-                    periodisedValues?.Sum(x => x.June) ?? 0m,
-                    periodisedValues?.Sum(x => x.July) ?? 0m);
+            return new PeriodisedReportValue(title, BuildPeriodisedReportValueTTotals(periodisedValues ?? Enumerable.Empty<PeriodisedValue>()));
         }
 
         public FundingSummaryReportHeaderModel PopulateReportHeader(
@@ -497,18 +484,21 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 conRef,
                 deliverableCode,
                 x.AttributeName,
-                x.Period1 ?? 0,
-                x.Period2 ?? 0,
-                x.Period3 ?? 0,
-                x.Period4 ?? 0,
-                x.Period5 ?? 0,
-                x.Period6 ?? 0,
-                x.Period7 ?? 0,
-                x.Period8 ?? 0,
-                x.Period9 ?? 0,
-                x.Period10 ?? 0,
-                x.Period11 ?? 0,
-                x.Period12 ?? 0));
+                new decimal[]
+                {
+                    x.Period1 ?? 0,
+                    x.Period2 ?? 0,
+                    x.Period3 ?? 0,
+                    x.Period4 ?? 0,
+                    x.Period5 ?? 0,
+                    x.Period6 ?? 0,
+                    x.Period7 ?? 0,
+                    x.Period8 ?? 0,
+                    x.Period9 ?? 0,
+                    x.Period10 ?? 0,
+                    x.Period11 ?? 0,
+                    x.Period12 ?? 0
+                }));
         }
 
         private IEnumerable<PeriodisedValue> MapEsfPeriodisedValues(string conRef, string deliverableCode, IEnumerable<SupplementaryDataModel> supplementaryData)
@@ -517,18 +507,21 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
                 conRef,
                 deliverableCode,
                 x.CostType,
-                x.CalendarMonth == 8 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
-                x.CalendarMonth == 9 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
-                x.CalendarMonth == 10 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
-                x.CalendarMonth == 11 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
-                x.CalendarMonth == 12 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
-                x.CalendarMonth == 1 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
-                x.CalendarMonth == 2 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
-                x.CalendarMonth == 3 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
-                x.CalendarMonth == 4 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
-                x.CalendarMonth == 5 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
-                x.CalendarMonth == 6 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0,
-                x.CalendarMonth == 7 ? x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value : 0));
+                new decimal[]
+                {
+                    x.CalendarMonth == 8 ? (x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value) ?? 0m : 0m,
+                    x.CalendarMonth == 9 ? (x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value) ?? 0m : 0m,
+                    x.CalendarMonth == 10 ? (x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value) ?? 0m : 0m,
+                    x.CalendarMonth == 11 ? (x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value) ?? 0m : 0m,
+                    x.CalendarMonth == 12 ? (x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value) ?? 0m : 0m,
+                    x.CalendarMonth == 1 ? (x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value) ?? 0m : 0m,
+                    x.CalendarMonth == 2 ? (x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value) ?? 0m : 0m,
+                    x.CalendarMonth == 3 ? (x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value) ?? 0m : 0m,
+                    x.CalendarMonth == 4 ? (x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value) ?? 0m : 0m,
+                    x.CalendarMonth == 5 ? (x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value) ?? 0m : 0m,
+                    x.CalendarMonth == 6 ? (x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value) ?? 0m : 0m,
+                    x.CalendarMonth == 7 ? (x.CostType.CaseInsensitiveEquals(ESFConstants.UnitCostDeductionCostType) ? x.Value * -1 : x.Value) ?? 0m : 0m
+                }));
         }
 
         private string GetSecondYearFromReportYear(int year)
@@ -598,90 +591,85 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             return models;
         }
 
-        private decimal Sum(params decimal?[] values) => values.Where(x => x.HasValue).Sum(x => x.Value);
+        private decimal Sum(params decimal?[] values)
+        {
+            return values.Where(x => x.HasValue).Sum(x => x.Value);
+        }
 
         private PeriodisedReportValue BuildMonthlyTotalsForArrayIndex(int index, string conRefNumber, FundingSummaryReportEarnings[] models)
         {
-            var categories = models[index].DeliverableCategories;
+            var totals = BuildPeriodisedReportValueTTotals(models[index].DeliverableCategories);
 
             if (index > 0)
             {
                 return new PeriodisedReportValue(
                     string.Concat(conRefNumber, " Total (£)"),
-                    categories.Sum(x => x.Totals.MonthlyValues[0]),
-                    categories.Sum(x => x.Totals.MonthlyValues[1]),
-                    categories.Sum(x => x.Totals.MonthlyValues[2]),
-                    categories.Sum(x => x.Totals.MonthlyValues[3]),
-                    categories.Sum(x => x.Totals.MonthlyValues[4]),
-                    categories.Sum(x => x.Totals.MonthlyValues[5]),
-                    categories.Sum(x => x.Totals.MonthlyValues[6]),
-                    categories.Sum(x => x.Totals.MonthlyValues[7]),
-                    categories.Sum(x => x.Totals.MonthlyValues[8]),
-                    categories.Sum(x => x.Totals.MonthlyValues[9]),
-                    categories.Sum(x => x.Totals.MonthlyValues[10]),
-                    categories.Sum(x => x.Totals.MonthlyValues[11]));
+                    totals);
             }
             else
             {
+                for (int i = 0; i < 8; i++)
+                {
+                    totals[i] = 0m;
+                }
+
                 return new PeriodisedReportValue(
                     string.Concat(conRefNumber, " Total (£)"),
-                    0m,
-                    0m,
-                    0m,
-                    0m,
-                    0m,
-                    0m,
-                    0m,
-                    0m,
-                    categories.Sum(x => x.Totals.MonthlyValues[8]),
-                    categories.Sum(x => x.Totals.MonthlyValues[9]),
-                    categories.Sum(x => x.Totals.MonthlyValues[10]),
-                    categories.Sum(x => x.Totals.MonthlyValues[11]));
+                    totals);
             }
         }
 
         private PeriodisedReportValue BuildCumulativeMonthlyTotalsForArrayIndex(int index, string conRefNumber, FundingSummaryReportEarnings[] models)
         {
             var monthlyTotals = models[index].MonthlyTotals.MonthlyValues;
+            var previousYearCumulativeTotal = index > 0 ? models[index].PreviousYearCumulativeTotal ?? 0m : 0m;
 
             if (index > 0)
             {
-                var previousYearCumulativeTotal = models[index].PreviousYearCumulativeTotal;
-
                 return new PeriodisedReportValue(
-                  string.Concat(conRefNumber, " Cumulative (£)"),
-                  Sum(monthlyTotals[0], previousYearCumulativeTotal),
-                  Sum(monthlyTotals[0], monthlyTotals[1], previousYearCumulativeTotal),
-                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], previousYearCumulativeTotal),
-                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], previousYearCumulativeTotal),
-                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4], previousYearCumulativeTotal),
-                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4], monthlyTotals[5], previousYearCumulativeTotal),
-                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4], monthlyTotals[5], monthlyTotals[6], previousYearCumulativeTotal),
-                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4], monthlyTotals[5], monthlyTotals[6], monthlyTotals[7], previousYearCumulativeTotal),
-                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4], monthlyTotals[5], monthlyTotals[6], monthlyTotals[7], monthlyTotals[8], previousYearCumulativeTotal),
-                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4], monthlyTotals[5], monthlyTotals[6], monthlyTotals[7], monthlyTotals[8], monthlyTotals[9], previousYearCumulativeTotal),
-                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4], monthlyTotals[5], monthlyTotals[6], monthlyTotals[7], monthlyTotals[8], monthlyTotals[9], monthlyTotals[10], previousYearCumulativeTotal),
-                  Sum(monthlyTotals[0], monthlyTotals[1], monthlyTotals[2], monthlyTotals[3], monthlyTotals[4], monthlyTotals[5], monthlyTotals[6], monthlyTotals[7], monthlyTotals[8], monthlyTotals[9], monthlyTotals[10], monthlyTotals[11], previousYearCumulativeTotal));
+                    string.Concat(conRefNumber, " Cumulative (£)"),
+                    BuildCumulativePeriodisedReportValueTTotals(monthlyTotals, previousYearCumulativeTotal, 12));
             }
             else
             {
-                var previousYearCumulativeTotal = 0m;
+                var totals = new List<decimal>
+                {
+                    0m,
+                    0m,
+                    0m,
+                    0m,
+                    0m,
+                    0m,
+                    0m,
+                    0m,
+                };
+
+                totals.AddRange(BuildCumulativePeriodisedReportValueTTotals(monthlyTotals, previousYearCumulativeTotal, 4, 8));
 
                 return new PeriodisedReportValue(
                   string.Concat(conRefNumber, " Cumulative (£)"),
-                  0m,
-                  0m,
-                  0m,
-                  0m,
-                  0m,
-                  0m,
-                  0m,
-                  0m,
-                  Sum(monthlyTotals[8], previousYearCumulativeTotal),
-                  Sum(monthlyTotals[8], monthlyTotals[9], previousYearCumulativeTotal),
-                  Sum(monthlyTotals[8], monthlyTotals[9], monthlyTotals[10], previousYearCumulativeTotal),
-                  Sum(monthlyTotals[8], monthlyTotals[9], monthlyTotals[10], monthlyTotals[11], previousYearCumulativeTotal));
+                  totals.ToArray());
             }
+        }
+
+        private decimal[] BuildPeriodisedReportValueTTotals(IEnumerable<PeriodisedValue> input)
+        {
+            return Enumerable.Range(0, 12).Select(s => input.Sum(x => x.MonthlyValues[s])).ToArray();
+        }
+
+        private decimal[] BuildPeriodisedReportValueTTotals(IEnumerable<IDeliverableCategory> input)
+        {
+            return Enumerable.Range(0, 12).Select(s => input.Sum(x => x.Totals.MonthlyValues[s])).ToArray();
+        }
+
+        private decimal[] BuildCumulativePeriodisedReportValueTTotals(decimal[] input, decimal previousYearCumulativeTotal, int range, int startIndex = 0)
+        {
+            return Enumerable.Range(0, range).Select(s => SumCumulativeMonths(input, previousYearCumulativeTotal, s + 1, startIndex)).ToArray();
+        }
+
+        private decimal SumCumulativeMonths(decimal[] monthlyTotals, decimal previousYearCumulativeTotal, int range, int startIndex)
+        {
+            return Enumerable.Range(startIndex, range).Sum(s => monthlyTotals[s]) + previousYearCumulativeTotal;
         }
 
         private string CalculateCollectionYear(int returnPeriod, string startCollectionYearAbbreviation, string collectionName)

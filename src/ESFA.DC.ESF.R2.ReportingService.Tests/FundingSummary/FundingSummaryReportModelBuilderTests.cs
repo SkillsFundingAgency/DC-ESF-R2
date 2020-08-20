@@ -25,11 +25,11 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             var title = "Title";
             IEnumerable<PeriodisedValue> periodisedValues = new List<PeriodisedValue>
             {
-                new PeriodisedValue("ConRef1", "Code1", "StartEarnings", 1m, 1m, 1m, 0m, 0m, 1m, null, 1m, 1m, 1m, 1m, 1m),
-                new PeriodisedValue("ConRef1", "Code1", "AchievementEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m)
+                new PeriodisedValue("ConRef1", "Code1", "StartEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 0m, 1m, 1m, 1m, 1m, 1m }),
+                new PeriodisedValue("ConRef1", "Code1", "AchievementEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
             };
 
-            var expectedValue = new PeriodisedReportValue("Title", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 1m, 2m, 1m, 2m);
+            var expectedValue = new PeriodisedReportValue("Title", new decimal[] { 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 1m, 2m, 1m, 2m });
 
             NewBuilder().BuildPeriodisedReportValue(title, periodisedValues).Should().BeEquivalentTo(expectedValue);
         }
@@ -42,14 +42,14 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 {
                     "SD01", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "SD01", "StartEarnings", 1m, 1m, 1m, 0m, 0m, 1m, null, 1m, 1m, 1m, 1m, 1m),
-                        new PeriodisedValue("ConRef1", "SD01", "AchievementEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m)
+                        new PeriodisedValue("ConRef1", "SD01", "StartEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 0m, 1m, 1m, 1m, 1m, 1m }),
+                        new PeriodisedValue("ConRef1", "SD01", "AchievementEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m })
                     }
                 },
                 {
                     "SD02", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "SD02", "AchievementEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m)
+                        new PeriodisedValue("ConRef1", "SD02", "AchievementEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                     }
                 }
             };
@@ -63,8 +63,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     {
                         ReportValues = new List<IPeriodisedReportValue>
                         {
-                            new PeriodisedReportValue("SUPPDATA SD01 Progression Within Work (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
-                            new PeriodisedReportValue("SUPPDATA SD02 LEP Agreed Delivery Plan (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                            new PeriodisedReportValue("SUPPDATA SD01 Progression Within Work (£)", new decimal[] { 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m }),
+                            new PeriodisedReportValue("SUPPDATA SD02 LEP Agreed Delivery Plan (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                         }
                     }
                 }
@@ -81,14 +81,14 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 {
                     "CG01", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "CG01", "StartEarnings", 1m, 1m, 1m, 0m, 0m, 1m, null, 1m, 1m, 1m, 1m, 1m),
-                        new PeriodisedValue("ConRef1", "CG01", "AchievementEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m)
+                        new PeriodisedValue("ConRef1", "CG01", "StartEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 0m, 1m, 1m, 1m, 1m, 1m }),
+                        new PeriodisedValue("ConRef1", "CG01", "AchievementEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m })
                     }
                 },
                 {
                     "CG02", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "CG02", "AchievementEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m) }
+                        new PeriodisedValue("ConRef1", "CG02", "AchievementEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m }) }
                 }
             };
 
@@ -101,8 +101,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     {
                         ReportValues = new List<IPeriodisedReportValue>
                         {
-                            new PeriodisedReportValue("SUPPDATA CG01 Community Grant Payment (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
-                            new PeriodisedReportValue("SUPPDATA CG02 Community Grant Management Cost (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                            new PeriodisedReportValue("SUPPDATA CG01 Community Grant Payment (£)", new decimal[] { 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m }),
+                            new PeriodisedReportValue("SUPPDATA CG02 Community Grant Management Cost (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                         }
                     }
                 }
@@ -119,7 +119,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 {
                     "NR01", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "NR01", "Authorised Claims", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m)
+                        new PeriodisedValue("ConRef1", "NR01", "Authorised Claims", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                     }
                 }
             };
@@ -129,8 +129,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 {
                     "NR01", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "NR01", "StartEarnings", 1m, 1m, 1m, 0m, 0m, 1m, null, 1m, 1m, 1m, 1m, 1m),
-                        new PeriodisedValue("ConRef1", "NR01", "AchievementEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m)
+                        new PeriodisedValue("ConRef1", "NR01", "StartEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 0m, 1m, 1m, 1m, 1m, 1m }),
+                        new PeriodisedValue("ConRef1", "NR01", "AchievementEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m })
                     }
                 }
             };
@@ -144,15 +144,15 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     {
                         ReportValues = new List<IPeriodisedReportValue>
                         {
-                            new PeriodisedReportValue("ILR NR01 Non Regulated Activity - Start Funding (£)", 1m, 1m, 1m, 0m, 0m, 1m, 0m, 1m, 1m, 1m, 1m, 1m),
-                            new PeriodisedReportValue("ILR NR01 Non Regulated Activity - Achievement Funding (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m)
+                            new PeriodisedReportValue("ILR NR01 Non Regulated Activity - Start Funding (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 0m, 1m, 1m, 1m, 1m, 1m }),
+                            new PeriodisedReportValue("ILR NR01 Non Regulated Activity - Achievement Funding (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m })
                         }
                     },
                     new DeliverableSubCategory("Default Category should not render", false)
                     {
                         ReportValues = new List<IPeriodisedReportValue>
                         {
-                            new PeriodisedReportValue("SUPPDATA NR01 Non Regulated Activity Authorised Claims (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                            new PeriodisedReportValue("SUPPDATA NR01 Non Regulated Activity Authorised Claims (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                         }
                     }
                 }
@@ -169,7 +169,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 {
                     "RQ01", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "RQ01", "Authorised Claims", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m)
+                        new PeriodisedValue("ConRef1", "RQ01", "Authorised Claims", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                     }
                 }
             };
@@ -179,8 +179,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 {
                     "RQ01", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "RQ01", "StartEarnings", 1m, 1m, 1m, 0m, 0m, 1m, null, 1m, 1m, 1m, 1m, 1m),
-                        new PeriodisedValue("ConRef1", "RQ01", "AchievementEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m)
+                        new PeriodisedValue("ConRef1", "RQ01", "StartEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 0m, 1m, 1m, 1m, 1m, 1m }),
+                        new PeriodisedValue("ConRef1", "RQ01", "AchievementEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m })
                     }
                 }
             };
@@ -194,15 +194,15 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     {
                         ReportValues = new List<IPeriodisedReportValue>
                         {
-                            new PeriodisedReportValue("ILR RQ01 Regulated Learning - Start Funding (£)", 1m, 1m, 1m, 0m, 0m, 1m, 0m, 1m, 1m, 1m, 1m, 1m),
-                            new PeriodisedReportValue("ILR RQ01 Regulated Learning - Achievement Funding (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m),
+                            new PeriodisedReportValue("ILR RQ01 Regulated Learning - Start Funding (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 0m, 1m, 1m, 1m, 1m, 1m }),
+                            new PeriodisedReportValue("ILR RQ01 Regulated Learning - Achievement Funding (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m }),
                         }
                     },
                     new DeliverableSubCategory("Default Category should not render", false)
                     {
                         ReportValues = new List<IPeriodisedReportValue>
                         {
-                            new PeriodisedReportValue("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                            new PeriodisedReportValue("SUPPDATA RQ01 Regulated Learning Authorised Claims (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                         }
                     }
                 }
@@ -219,26 +219,26 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 {
                     "PG01", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "PG01", "Authorised Claims", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m),
-                        new PeriodisedValue("ConRef1", "PG01", "StartEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m)
+                        new PeriodisedValue("ConRef1", "PG01", "Authorised Claims", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m }),
+                        new PeriodisedValue("ConRef1", "PG01", "StartEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                     }
                 },
                 {
                     "PG03", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "PG03", "Authorised Claims", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m),
+                        new PeriodisedValue("ConRef1", "PG03", "Authorised Claims", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m }),
                     }
                 },
                 {
                     "PG04", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "PG04", "Authorised Claims", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m),
+                        new PeriodisedValue("ConRef1", "PG04", "Authorised Claims", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m }),
                     }
                 },
                 {
                     "PG05", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "PG05", "Authorised Claims", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m),
+                        new PeriodisedValue("ConRef1", "PG05", "Authorised Claims", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m }),
                     }
                 }
             };
@@ -248,26 +248,26 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 {
                     "PG01", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "PG01", "StartEarnings", 1m, 1m, 1m, 0m, 0m, 1m, null, 1m, 1m, 1m, 1m, 1m),
-                        new PeriodisedValue("ConRef1", "PG01", "AchievementEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m)
+                        new PeriodisedValue("ConRef1", "PG01", "StartEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 0m, 1m, 1m, 1m, 1m, 1m }),
+                        new PeriodisedValue("ConRef1", "PG01", "AchievementEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m })
                     }
                 },
                 {
                     "PG03", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "PG03", "StartEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m),
+                        new PeriodisedValue("ConRef1", "PG03", "StartEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m }),
                     }
                 },
                 {
                     "PG04", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "PG04", "StartEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m),
+                        new PeriodisedValue("ConRef1", "PG04", "StartEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m }),
                     }
                 },
                 {
                     "PG05", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "PG05", "AchievementEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m),
+                        new PeriodisedValue("ConRef1", "PG05", "AchievementEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m }),
                     }
                 }
             };
@@ -281,32 +281,32 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     {
                         ReportValues = new List<IPeriodisedReportValue>()
                         {
-                            new PeriodisedReportValue("ILR PG01 Progression Paid Employment (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
-                            new PeriodisedReportValue("SUPPDATA PG01 Progression Paid Employment Adjustments (£)", 2m, 2m, 2m, 0m, 0m, 2m, 2m, 2m, 0m, 2m, 0m, 2m)
+                            new PeriodisedReportValue("ILR PG01 Progression Paid Employment (£)", new decimal[] { 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m }),
+                            new PeriodisedReportValue("SUPPDATA PG01 Progression Paid Employment Adjustments (£)", new decimal[] { 2m, 2m, 2m, 0m, 0m, 2m, 2m, 2m, 0m, 2m, 0m, 2m })
                         }
                     },
                     new DeliverableSubCategory("Total Education Progression (£)", true)
                     {
                         ReportValues = new List<IPeriodisedReportValue>()
                         {
-                            new PeriodisedReportValue("ILR PG03 Progression Education (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m),
-                            new PeriodisedReportValue("SUPPDATA PG03 Progression Education Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                            new PeriodisedReportValue("ILR PG03 Progression Education (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m }),
+                            new PeriodisedReportValue("SUPPDATA PG03 Progression Education Adjustments (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                         }
                     },
                     new DeliverableSubCategory("Total Apprenticeship Progression (£)", true)
                     {
                         ReportValues = new List<IPeriodisedReportValue>()
                         {
-                            new PeriodisedReportValue("ILR PG04 Progression Apprenticeship (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m),
-                            new PeriodisedReportValue("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                            new PeriodisedReportValue("ILR PG04 Progression Apprenticeship (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m }),
+                            new PeriodisedReportValue("SUPPDATA PG04 Progression Apprenticeship Adjustments (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                         }
                     },
                     new DeliverableSubCategory("Total Traineeship Progression (£)", true)
                     {
                         ReportValues = new List<IPeriodisedReportValue>()
                         {
-                            new PeriodisedReportValue("ILR PG05 Progression Traineeship (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m),
-                            new PeriodisedReportValue("SUPPDATA PG05 Progression Traineeship Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                            new PeriodisedReportValue("ILR PG05 Progression Traineeship (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m }),
+                            new PeriodisedReportValue("SUPPDATA PG05 Progression Traineeship Adjustments (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                         }
                     }
                 }
@@ -323,7 +323,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 {
                     "ST01", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "ST01", "Authorised Claims", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m)
+                        new PeriodisedValue("ConRef1", "ST01", "Authorised Claims", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                     }
                 }
             };
@@ -333,8 +333,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                 {
                     "ST01", new List<PeriodisedValue>
                     {
-                        new PeriodisedValue("ConRef1", "ST01", "StartEarnings", 1m, 1m, 1m, 0m, 0m, 1m, null, 1m, 1m, 1m, 1m, 1m),
-                        new PeriodisedValue("ConRef1", "ST01", "AchievementEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m)
+                        new PeriodisedValue("ConRef1", "ST01", "StartEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 0m, 1m, 1m, 1m, 1m, 1m }),
+                        new PeriodisedValue("ConRef1", "ST01", "AchievementEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m })
                     }
                 }
             };
@@ -348,8 +348,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     {
                         ReportValues = new List<IPeriodisedReportValue>
                         {
-                            new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
-                            new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                            new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", new decimal[] { 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m }),
+                            new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                         }
                     }
                 }
@@ -382,8 +382,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     YearTotal = 27M,
                     CumulativeYearTotal = 48M,
                     PreviousYearCumulativeTotal = 21m,
-                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", 3m, 3m, 3m, 0m, 0m, 3m, 2m, 3m, 2m, 3m, 2m, 3m),
-                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)", 24m, 27m, 30m, 30m, 30m, 33m, 35m, 38m, 40m, 43m, 45m, 48m),
+                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", new decimal[] { 3m, 3m, 3m, 0m, 0m, 3m, 2m, 3m, 2m, 3m, 2m, 3m }),
+                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)",  new decimal[] { 24m, 27m, 30m, 30m, 30m, 33m, 35m, 38m, 40m, 43m, 45m, 48m }),
                     DeliverableCategories = new List<IDeliverableCategory>
                     {
                         new DeliverableCategory("Total Learner Assessment and Plan (£)")
@@ -395,8 +395,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                                 {
                                     ReportValues = new List<IPeriodisedReportValue>
                                     {
-                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
-                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)",  new decimal[] { 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m }),
+                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)",  new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                                     }
                                 }
                             }
@@ -522,8 +522,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     YearTotal = 19M,
                     CumulativeYearTotal = 21M,
                     PreviousYearCumulativeTotal = 2m,
-                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
-                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)", 4m, 6m, 8m, 8m, 8m, 10m, 11m, 13m, 15m, 17m, 19m, 21m),
+                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", new decimal[] { 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m }),
+                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)", new decimal[] { 4m, 6m, 8m, 8m, 8m, 10m, 11m, 13m, 15m, 17m, 19m, 21m }),
                     DeliverableCategories = new List<IDeliverableCategory>
                     {
                         new DeliverableCategory("Total Learner Assessment and Plan (£)")
@@ -535,8 +535,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                                 {
                                     ReportValues = new List<IPeriodisedReportValue>
                                     {
-                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
-                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m)
+                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", new decimal[] { 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m }),
+                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", new decimal[] { 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m })
                                     }
                                 }
                             }
@@ -661,8 +661,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     Year = 2018,
                     YearTotal = 2M,
                     CumulativeYearTotal = 2M,
-                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 1m, 0m, 1m),
-                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 1m, 1m, 2m),
+                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", new decimal[] { 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 1m, 0m, 1m }),
+                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)", new decimal[] { 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 1m, 1m, 2m }),
                     DeliverableCategories = new List<IDeliverableCategory>
                     {
                         new DeliverableCategory("Total Learner Assessment and Plan (£)")
@@ -674,8 +674,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                                 {
                                     ReportValues = new List<IPeriodisedReportValue>
                                     {
-                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m),
-                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", new decimal[] { 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m }),
+                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                                     }
                                 }
                             }

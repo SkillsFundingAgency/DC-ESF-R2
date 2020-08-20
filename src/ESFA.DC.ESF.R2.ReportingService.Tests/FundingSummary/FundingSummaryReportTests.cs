@@ -211,8 +211,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     YearTotal = 19M,
                     CumulativeYearTotal = 21M,
                     PreviousYearCumulativeTotal = 2m,
-                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
-                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)", 4m, 6m, 8m, 8m, 8m, 10m, 11m, 13m, 15m, 17m, 19m, 21m),
+                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", new decimal[] { 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m }),
+                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)", new decimal[] { 4m, 6m, 8m, 8m, 8m, 10m, 11m, 13m, 15m, 17m, 19m, 21m }),
                     DeliverableCategories = new List<IDeliverableCategory>
                     {
                         new DeliverableCategory("Total Learner Assessment and Plan (£)")
@@ -224,8 +224,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                                 {
                                     ReportValues = new List<IPeriodisedReportValue>
                                     {
-                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
-                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m)
+                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", new decimal[] { 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m }),
+                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", new decimal[] { 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m })
                                     }
                                 }
                             }
@@ -351,8 +351,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     AcademicYear = "2018/19",
                     YearTotal = 2M,
                     CumulativeYearTotal = 2M,
-                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 1m, 0m, 1m),
-                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 1m, 1m, 2m),
+                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", new decimal[] { 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 1m, 0m, 1m }),
+                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)", new decimal[] { 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 1m, 1m, 2m }),
                     DeliverableCategories = new List<IDeliverableCategory>
                     {
                         new DeliverableCategory("Total Learner Assessment and Plan (£)")
@@ -364,8 +364,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                                 {
                                     ReportValues = new List<IPeriodisedReportValue>
                                     {
-                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m),
-                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 1m, 0m, 1m)
+                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", new decimal[] { 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m }),
+                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", new decimal[] { 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 1m, 0m, 1m })
                                     }
                                 }
                             }
@@ -496,8 +496,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                     YearTotal = 27M,
                     CumulativeYearTotal = 48M,
                     PreviousYearCumulativeTotal = 21m,
-                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", 3m, 3m, 3m, 0m, 0m, 3m, 2m, 3m, 2m, 3m, 2m, 3m),
-                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)", 24m, 27m, 30m, 30m, 30m, 33m, 35m, 38m, 40m, 43m, 45m, 48m),
+                    MonthlyTotals = new PeriodisedReportValue(" Total (£)", new decimal[] { 3m, 3m, 3m, 0m, 0m, 3m, 2m, 3m, 2m, 3m, 2m, 3m }),
+                    CumulativeMonthlyTotals = new PeriodisedReportValue(" Cumulative (£)", new decimal[] { 24m, 27m, 30m, 30m, 30m, 33m, 35m, 38m, 40m, 43m, 45m, 48m }),
                     DeliverableCategories = new List<IDeliverableCategory>
                     {
                         new DeliverableCategory("Total Learner Assessment and Plan (£)")
@@ -509,8 +509,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                                 {
                                     ReportValues = new List<IPeriodisedReportValue>
                                     {
-                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m),
-                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m)
+                                        new PeriodisedReportValue("ILR ST01 Learner Assessment and Plan (£)", new decimal[] { 2m, 2m, 2m, 0m, 0m, 2m, 1m, 2m, 2m, 2m, 2m, 2m }),
+                                        new PeriodisedReportValue("SUPPDATA ST01 Learner Assessment and Plan Adjustments (£)", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                                     }
                                 }
                             }

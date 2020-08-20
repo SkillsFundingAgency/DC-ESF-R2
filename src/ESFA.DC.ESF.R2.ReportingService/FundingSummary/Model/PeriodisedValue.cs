@@ -1,4 +1,5 @@
-﻿using ESFA.DC.ESF.R2.Interfaces.FundingSummary;
+﻿using System.Linq;
+using ESFA.DC.ESF.R2.Interfaces.FundingSummary;
 
 namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 {
@@ -8,35 +9,13 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
             string conRefNumber,
             string deliverableCode,
             string attributeName,
-            decimal? august,
-            decimal? september,
-            decimal? october,
-            decimal? november,
-            decimal? december,
-            decimal? january,
-            decimal? february,
-            decimal? march,
-            decimal? april,
-            decimal? may,
-            decimal? june,
-            decimal? july)
+            decimal[] values)
         {
             ConRefNumber = conRefNumber;
             DeliverableCode = deliverableCode;
             AttributeName = attributeName;
-            April = april;
-            May = may;
-            June = june;
-            July = july;
-            August = august;
-            September = september;
-            October = october;
-            November = november;
-            December = december;
-            January = january;
-            February = february;
-            March = march;
-    }
+            MonthlyValues = Enumerable.Range(0, 12).Select(s => values[s]).ToArray();
+        }
 
         public string ConRefNumber { get; set; }
 
@@ -44,28 +23,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
 
         public string AttributeName { get; set; }
 
-        public decimal? April { get; set; }
-
-        public decimal? May { get; set; }
-
-        public decimal? June { get; set; }
-
-        public decimal? July { get; set; }
-
-        public decimal? August { get; set; }
-
-        public decimal? September { get; set; }
-
-        public decimal? October { get; set; }
-
-        public decimal? November { get; set; }
-
-        public decimal? December { get; set; }
-
-        public decimal? January { get; set; }
-
-        public decimal? February { get; set; }
-
-        public decimal? March { get; set; }
+        public decimal[] MonthlyValues { get; set; }
     }
 }

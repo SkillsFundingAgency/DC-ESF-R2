@@ -7,35 +7,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Model
     {
         public PeriodisedReportValue(
             string title,
-            decimal? august,
-            decimal? september,
-            decimal? october,
-            decimal? november,
-            decimal? december,
-            decimal? january,
-            decimal? february,
-            decimal? march,
-            decimal? april,
-            decimal? may,
-            decimal? june,
-            decimal? july)
+            decimal[] values)
         {
             Title = title;
-            MonthlyValues = new[]
-            {
-                august ?? 0,
-                september ?? 0,
-                october ?? 0,
-                november ?? 0,
-                december ?? 0,
-                january ?? 0,
-                february ?? 0,
-                march ?? 0,
-                april ?? 0,
-                may ?? 0,
-                june ?? 0,
-                july ?? 0
-            };
+            MonthlyValues = Enumerable.Range(0, 12).Select(s => values[s]).ToArray();
         }
 
         public string Title { get; set; }

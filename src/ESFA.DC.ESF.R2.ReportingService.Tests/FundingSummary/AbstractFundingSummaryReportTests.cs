@@ -15,7 +15,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                         {
                             "ST01", new List<PeriodisedValue>
                             {
-                                new PeriodisedValue("ConRef1", "ST01", "Authorised Claims", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m)
+                                new PeriodisedValue("ConRef1", "ST01", "Authorised Claims", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                             }
                         }
                     }
@@ -26,7 +26,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                         {
                             "ST01", new List<PeriodisedValue>
                             {
-                                new PeriodisedValue("ConRef1", "ST01", "Authorised Claims", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, null, 1m, 0m, 1m)
+                                new PeriodisedValue("ConRef1", "ST01", "Authorised Claims", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 0m, 1m, 0m, 1m })
                             }
                         }
                     }
@@ -44,8 +44,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                         {
                             "ST01", new List<PeriodisedValue>
                             {
-                                new PeriodisedValue("ConRef1", "ST01", "StartEarnings", 1m, 1m, 1m, 0m, 0m, 1m, null, 1m, 1m, 1m, 1m, 1m),
-                                new PeriodisedValue("ConRef1", "ST01", "AchievementEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m)
+                                new PeriodisedValue("ConRef1", "ST01", "StartEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 0m, 1m, 1m, 1m, 1m, 1m }),
+                                new PeriodisedValue("ConRef1", "ST01", "AchievementEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m })
                             }
                         }
                     }
@@ -56,8 +56,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
                         {
                             "ST01", new List<PeriodisedValue>
                             {
-                                new PeriodisedValue("ConRef1", "ST01", "StartEarnings", 1m, 1m, 1m, 0m, 0m, 1m, null, 1m, 1m, 1m, 1m, 1m),
-                                new PeriodisedValue("ConRef1", "ST01", "AchievementEarnings", 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m)
+                                new PeriodisedValue("ConRef1", "ST01", "StartEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 0m, 1m, 1m, 1m, 1m, 1m }),
+                                new PeriodisedValue("ConRef1", "ST01", "AchievementEarnings", new decimal[] { 1m, 1m, 1m, 0m, 0m, 1m, 1m, 1m, 1m, 1m, 1m, 1m })
                             }
                         }
                     }
@@ -65,7 +65,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             };
         }
 
-        public PeriodisedReportValue ZeroFundedPeriodisedValues(string title) => new PeriodisedReportValue(title, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m);
+        public PeriodisedReportValue ZeroFundedPeriodisedValues(string title) => new PeriodisedReportValue(title, new decimal[] { 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m, 0m });
 
         public string[] HeaderStringArray() => new string[]
        {
