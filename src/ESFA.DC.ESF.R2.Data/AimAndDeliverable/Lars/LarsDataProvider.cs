@@ -17,7 +17,7 @@ namespace ESFA.DC.ESF.R2.Data.AimAndDeliverable.Lars
         private readonly Func<SqlConnection> _sqlConnectionFunc;
         private readonly IJsonSerializationService _jsonSerializationService;
 
-        private readonly string sql = @"SELECT  
+        private readonly string sql = @"SELECT DISTINCT
                                          L.[LearnAimRef]
                                         ,[LearnAimRefTitle]
                                         ,[NotionalNVQLevelV2]
@@ -33,13 +33,13 @@ namespace ESFA.DC.ESF.R2.Data.AimAndDeliverable.Lars
             _jsonSerializationService = jsonSerializationService;
         }
 
-        public async Task<ICollection<LARSLearningDelivery>> GetLarsLearningDeliveriesAsync(ICollection<LearningDelivery> learningDeliveries, CancellationToken cancellationToken)
+        public async Task<ICollection<LARSLearningDelivery>> GetLarsLearningDeliveriesAsync(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken)
         {
             using (var connection = _sqlConnectionFunc())
             {
-                var learnAimRefs = _jsonSerializationService.Serialize(learningDeliveries.Select(ld => ld.LearnAimRef).Distinct());
+                var learnAimRefsSerialized = _jsonSerializationService.Serialize(learnAimRefs);
 
-                var commandDefinition = new CommandDefinition(sql, new { learnAimRefs }, cancellationToken: cancellationToken);
+                var commandDefinition = new CommandDefinition(sql, new { learnAimRefsSerialized }, cancellationToken: cancellationToken);
 
                 var result = await connection.QueryAsync<LARSLearningDelivery>(commandDefinition);
 

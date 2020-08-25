@@ -42,9 +42,9 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
             return await _fcsDataProvider.GetFcsDeliverableCodeMappingsAsync(cancellationToken);
         }
 
-        public async Task<ICollection<LARSLearningDelivery>> GetLarsLearningDeliveriesAsync(ICollection<LearningDelivery> learningDeliveries, CancellationToken cancellationToken)
+        public async Task<ICollection<LARSLearningDelivery>> GetLarsLearningDeliveriesAsync(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken)
         {
-            return await _larsDataProvider.GetLarsLearningDeliveriesAsync(learningDeliveries, cancellationToken);
+            return await _larsDataProvider.GetLarsLearningDeliveriesAsync(learnAimRefs, cancellationToken);
         }
 
         public async Task<ICollection<LearningDelivery>> GetLearningDeliveriesAsync(int ukprn, CancellationToken cancellationToken)
