@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,7 +50,8 @@ namespace ESFA.DC.ESF.R2.ReportingService.AimAndDeliverable
 
             await Task.WhenAll(learningDeliveries, dpOutcomes, deliverablePeriods, esfDpOutcomes, fcsDeliverableCodeMappings);
 
-            var larsLearningDeliveries = await _aimAndDeliverableDataProvider.GetLarsLearningDeliveriesAsync(learningDeliveries.Result, cancellationToken);
+            var learnAimRefs = new HashSet<string>(learningDeliveries.Result.Select(l => l.LearnAimRef), StringComparer.OrdinalIgnoreCase);
+            var larsLearningDeliveries = await _aimAndDeliverableDataProvider.GetLarsLearningDeliveriesAsync(learnAimRefs, cancellationToken);
 
             var reportModels = _aimAndDeliverableModelBuilder.Build(esfJobContext, learningDeliveries.Result, dpOutcomes.Result, deliverablePeriods.Result, esfDpOutcomes.Result, larsLearningDeliveries, fcsDeliverableCodeMappings.Result);
 

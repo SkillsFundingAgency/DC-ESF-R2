@@ -15,7 +15,7 @@ namespace ESFA.DC.ESF.R2.Interfaces.Reports.AimAndDeliverable
 
         Task<ICollection<ESFDPOutcome>> GetEsfDpOutcomesAsync(int ukprn, CancellationToken cancellationToken);
 
-        Task<ICollection<LARSLearningDelivery>> GetLarsLearningDeliveriesAsync(ICollection<LearningDelivery> learningDeliveries, CancellationToken cancellationToken);
+        Task<ICollection<LARSLearningDelivery>> GetLarsLearningDeliveriesAsync(IEnumerable<string> learnAimRefs, CancellationToken cancellationToken);
 
         Task<ICollection<FCSDeliverableCodeMapping>> GetFcsDeliverableCodeMappingsAsync(CancellationToken cancellationToken);
     }
