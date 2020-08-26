@@ -22,7 +22,7 @@ namespace ESFA.DC.ESF.R2.Data.AimAndDeliverable.Lars
                                         ,[LearnAimRefTitle]
                                         ,[NotionalNVQLevelV2]
                                         ,[SectorSubjectAreaTier2]
-                                    FROM OPENJSON(@learnAimRefs) 
+                                    FROM OPENJSON(@learnAimRefsSerialized) 
                                     WITH (LearnAimRef nvarchar(8) '$') J 
                                     INNER JOIN [Core].[LARS_LearningDelivery] L
                                     ON L.[LearnAimRef] = J.[LearnAimRef]";
