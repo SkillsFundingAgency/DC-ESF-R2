@@ -62,7 +62,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
         protected int ColumnCount { get; set; }
 
-        public async Task Render(IEsfJobContext esfJobContext, IFundingSummaryReportTab fundingSummaryReportTab, Worksheet worksheet)
+        public async Task RenderAsync(IEsfJobContext esfJobContext, IFundingSummaryReportTab fundingSummaryReportTab, Worksheet worksheet)
         {
             var currentPeriod = GetCurrentPeriod(esfJobContext.CurrentPeriod);
 

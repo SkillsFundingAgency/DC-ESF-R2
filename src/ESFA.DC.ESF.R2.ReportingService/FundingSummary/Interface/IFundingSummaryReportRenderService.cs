@@ -7,6 +7,6 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary.Interface
 {
     public interface IFundingSummaryReportRenderService
     {
-        Task Render(IEsfJobContext esfJobContext, IFundingSummaryReportTab model, Worksheet workSheet);
+        Task RenderAsync(IEsfJobContext esfJobContext, IFundingSummaryReportTab model, Worksheet workSheet);
     }
 }
