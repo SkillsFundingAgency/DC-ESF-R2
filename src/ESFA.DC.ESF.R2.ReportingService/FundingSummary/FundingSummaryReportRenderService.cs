@@ -64,7 +64,10 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
 
         public async Task RenderAsync(IEsfJobContext esfJobContext, IFundingSummaryReportTab fundingSummaryReportTab, Worksheet worksheet)
         {
-            var currentPeriod = GetCurrentPeriod(esfJobContext.CurrentPeriod);
+            var maxReportYear = fundingSummaryReportTab.Body.Select(x => x.Year).Max();
+            var currentYear = int.Parse(string.Concat("20", esfJobContext.StartCollectionYearAbbreviation));
+
+            var currentPeriod = GetCurrentPeriod(maxReportYear, currentYear, esfJobContext.CurrentPeriod);
 
             ColumnCount = CalculateColumns(fundingSummaryReportTab.Body.Count());
 
@@ -570,9 +573,14 @@ namespace ESFA.DC.ESF.R2.ReportingService.FundingSummary
             }
         }
 
-        private int GetCurrentPeriod(int currentPeriod)
+        private int GetCurrentPeriod(int maxReportYear, int currentYear, int currentPeriod)
         {
-            return currentPeriod > 12 ? 12 : currentPeriod;
+            if (maxReportYear == currentYear)
+            {
+                return currentPeriod > 12 ? 12 : currentPeriod;
+            }
+
+            return 12;
         }
 
         private void ConfigureStyles()
