@@ -28,7 +28,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
         {
             var ukprn = 12345678;
             var jobid = 1;
-            var reportFolder = "FundingSummary";
+            var reportFolder = "FundingSummaryTestTwoYears";
 
             TestFixture(reportFolder, ukprn, jobid);
 
@@ -82,7 +82,7 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
         {
             var ukprn = 12345678;
             var jobid = 1;
-            var reportFolder = "FundingSummary";
+            var reportFolder = "FundingSummaryTestThreeYears";
 
             TestFixture(reportFolder, ukprn, jobid);
 
@@ -117,6 +117,60 @@ namespace ESFA.DC.ESF.R2.ReportingService.Tests.FundingSummary
             esfJobContext.Setup(x => x.CollectionYear).Returns(2021);
             esfJobContext.Setup(x => x.ReturnPeriod).Returns("R05");
             esfJobContext.Setup(x => x.CurrentPeriod).Returns(5);
+            esfJobContext.Setup(x => x.BlobContainerName).Returns(reportFolder);
+
+            var modelBuilder = new Mock<IFundingSummaryReportModelBuilder>();
+            var renderService = new FundingSummaryReportRenderService();
+            var dateTimeProvider = new Mock<IDateTimeProvider>();
+            var fileService = new FileSystemFileService();
+            var excelFileService = new ExcelFileService(fileService);
+
+            modelBuilder.Setup(x => x.Build(esfJobContext.Object, cancellationToken)).ReturnsAsync(testModels);
+
+            await NewReport(modelBuilder.Object, renderService, dateTimeProvider.Object, excelFileService)
+                .GenerateReport(esfJobContext.Object, sourceFile.Object, wrapper, cancellationToken);
+        }
+
+        [Fact]
+        public async Task GenerateReport_TwoFundingYearsCrossOverPeriod()
+        {
+            var ukprn = 12345678;
+            var jobid = 1;
+            var reportFolder = "FundingSummaryTestCrossOver";
+
+            TestFixture(reportFolder, ukprn, jobid);
+
+            var esfJobContext = new Mock<IEsfJobContext>();
+            var sourceFile = new Mock<ISourceFileModel>();
+            var wrapper = new SupplementaryDataWrapper();
+            var cancellationToken = CancellationToken.None;
+
+            var testModels = new List<IFundingSummaryReportTab>
+            {
+                new FundingSummaryReportTab
+                {
+                    Title = FundingSummaryReportConstants.BodyTitle,
+                    TabName = "ConRef1",
+                    Header = TestHeader("ConRef1", 2),
+                    Body = TestBodyModels(2),
+                    Footer = TestFooter()
+                },
+                new FundingSummaryReportTab
+                {
+                    Title = FundingSummaryReportConstants.BodyTitle,
+                    TabName = "ConRef2",
+                    Header = TestHeader("ConRef2", 2),
+                    Body = TestBodyModels(2),
+                    Footer = TestFooter()
+                }
+            };
+
+            esfJobContext.Setup(x => x.UkPrn).Returns(ukprn);
+            esfJobContext.Setup(x => x.JobId).Returns(jobid);
+            esfJobContext.Setup(x => x.StartCollectionYearAbbreviation).Returns("20");
+            esfJobContext.Setup(x => x.CollectionYear).Returns(2021);
+            esfJobContext.Setup(x => x.ReturnPeriod).Returns("R01");
+            esfJobContext.Setup(x => x.CurrentPeriod).Returns(1);
             esfJobContext.Setup(x => x.BlobContainerName).Returns(reportFolder);
 
             var modelBuilder = new Mock<IFundingSummaryReportModelBuilder>();
