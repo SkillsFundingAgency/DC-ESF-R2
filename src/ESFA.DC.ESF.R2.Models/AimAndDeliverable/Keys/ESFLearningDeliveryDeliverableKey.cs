@@ -28,7 +28,11 @@ namespace ESFA.DC.ESF.R2.Models.AimAndDeliverable.Keys
         {
             public bool Equals(ESFLearningDeliveryDeliverableKey x, ESFLearningDeliveryDeliverableKey y)
             {
-                return x.GetHashCode() == y.GetHashCode();
+                //return x.GetHashCode() == y.GetHashCode();
+
+                return x.LearnRefNumber.ToUpper() == y.LearnRefNumber.ToUpper() &&
+                       x.AimSequenceNumber == y.AimSequenceNumber &&
+                       x.DeliverableCode.ToUpper() == y.DeliverableCode.ToUpper();
             }
 
             public int GetHashCode(ESFLearningDeliveryDeliverableKey obj)
