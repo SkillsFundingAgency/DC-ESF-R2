@@ -30,8 +30,8 @@ namespace ESFA.DC.ESF.R2.Models.AimAndDeliverable.Keys
             {
                 //return x.GetHashCode() == y.GetHashCode();
 
-                return x.LearnRefNumber.ToUpper() == y.LearnRefNumber.ToUpper() &&
-                       x.AimSequenceNumber == y.AimSequenceNumber &&
+                return x.AimSequenceNumber == y.AimSequenceNumber &&
+                       x.LearnRefNumber.ToUpper() == y.LearnRefNumber.ToUpper() &&
                        x.DeliverableCode.ToUpper() == y.DeliverableCode.ToUpper();
             }
 
